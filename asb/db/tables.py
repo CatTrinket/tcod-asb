@@ -10,6 +10,7 @@ class Pokemon(TableBase):
     __singlename__ = 'pokemon'
 
     id = Column(Integer, primary_key=True)
+    name = Column(Unicode, nullable=False)
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
     trainer_id = Column(Integer, ForeignKey('trainers.id'))
