@@ -13,8 +13,8 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from asb.db.tables import TableBase
-target_metadata = TableBase.metadata
+from asb.models import Base
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
