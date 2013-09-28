@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import *
 
@@ -39,7 +39,8 @@ class Pokemon(TableBase):
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=False)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'))
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
+    ability_slot = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
     happiness = Column(Integer, nullable=False)
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
@@ -48,6 +49,16 @@ class Pokemon(TableBase):
     is_in_squad = Column(Boolean, nullable=False)
     can_evolve = Column(Boolean, nullable=False)
     form_uncertain = Column(Boolean, nullable=False)
+
+    # Set up a composite foreign key for ability
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['pokemon_form_id', 'ability_slot'],
+            ['pokemon_form_abilities.pokemon_form_id',
+             'pokemon_form_abilities.slot'],
+            name='pokemon_ability_fkey', use_alter=True
+        ),
+    )
 
 class PokemonForm(TableBase):
     """A particular form of a Pokémon.
@@ -81,7 +92,7 @@ class PokemonSpecies(TableBase):
     name = Column(Unicode, nullable=False)
     evolves_from_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         nullable=True)
-    rarity = Column(Integer, ForeignKey('rarities.id'), nullable=False)
+    rarity = Column(Integer, ForeignKey('rarities.id'), nullable=True)
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
 
@@ -95,8 +106,8 @@ class PokemonSpeciesEvolution(TableBase):
     experience = Column(Integer, nullable=True)
     happiness = Column(Integer, nullable=True)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
-    gender = Column(Integer, ForeignKey('genders.id'), nullable=True)
-    is_buyable = Column(Boolean, nullable=False)
+    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
+    buyable_price = Column(Integer, nullable=True)
     can_trade_instead = Column(Boolean, nullable=False)
 
 class Rarity(TableBase):
@@ -115,6 +126,7 @@ class Trainer(TableBase):
     name = Column(Unicode, nullable=False)
     money = Column(Integer, nullable=False)
     can_collect_allowance = Column(Boolean, nullable=False)
+    is_newbie = Column(Boolean, nullable=False)
     unclaimed_from_hack = Column(Boolean, nullable=False)
 
 class TrainerItem(TableBase):
