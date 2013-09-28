@@ -2,7 +2,7 @@
 
 from sys import argv
 import sqlalchemy as sqla
-import tables
+import asb.db.tables as tables
 
 # do this part from this directory
 
