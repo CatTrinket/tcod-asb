@@ -10,7 +10,11 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'pyramid',
+    'SQLAlchemy',
+    'transaction',
+    'pyramid_tm',
     'pyramid_debugtoolbar',
+    'zope.sqlalchemy',
     'waitress',
     ]
 
@@ -27,15 +31,16 @@ setup(name='asb',
       author='',
       author_email='',
       url='',
-      keywords='web pyramid pylons',
+      keywords='web wsgi bfg pylons pyramid',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
+      test_suite='asb',
       install_requires=requires,
-      tests_require=requires,
-      test_suite="asb",
       entry_points="""\
       [paste.app_factory]
       main = asb:main
+      [console_scripts]
+      initialize_asb_db = asb.scripts.initializedb:main
       """,
       )

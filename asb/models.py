@@ -1,10 +1,13 @@
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.types import *
+from zope.sqlalchemy import ZopeTransactionExtension
 
-TableBase = declarative_base()
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+Base = declarative_base()
 
-class Ability(TableBase):
+class Ability(Base):
     """An ability."""
     __tablename__ = 'abilities'
     __singlename__ = 'ability'
@@ -12,7 +15,7 @@ class Ability(TableBase):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode, nullable=False)
 
-class Gender(TableBase):
+class Gender(Base):
     """An enigma."""
     __tablename__ = 'genders'
     __singlename__ = 'gender'
@@ -20,7 +23,7 @@ class Gender(TableBase):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode, nullable=False)
 
-class Item(TableBase):
+class Item(Base):
     """A type of item."""
     __tablename__ = 'items'
     __singlename__ = 'item'
@@ -29,7 +32,7 @@ class Item(TableBase):
     name = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
 
-class Pokemon(TableBase):
+class Pokemon(Base):
     """An individual Pokémon owned by a trainer."""
     __tablename__ = 'pokemon'
     __singlename__ = 'pokemon'
@@ -60,7 +63,7 @@ class Pokemon(TableBase):
         ),
     )
 
-class PokemonForm(TableBase):
+class PokemonForm(Base):
     """A particular form of a Pokémon.
 
     If a Pokémon only has one form, it still has a row in this table.
@@ -72,7 +75,7 @@ class PokemonForm(TableBase):
     species_id = Column(Integer, ForeignKey('pokemon_species.id'))
     is_default = Column(Boolean, nullable=False)
 
-class PokemonFormAbility(TableBase):
+class PokemonFormAbility(Base):
     """One of a Pokémon form's abilities."""
     __tablename__ = 'pokemon_form_abilities'
     __singlename__ = 'pokemon_form_ability'
@@ -83,7 +86,7 @@ class PokemonFormAbility(TableBase):
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=False)
     is_hidden = Column(Boolean, nullable=False)
 
-class PokemonSpecies(TableBase):
+class PokemonSpecies(Base):
     """A species of Pokémon."""
     __tablename__ = 'pokemon_species'
     __singlename__ = 'pokemon_species'
@@ -96,7 +99,7 @@ class PokemonSpecies(TableBase):
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
 
-class PokemonSpeciesEvolution(TableBase):
+class PokemonSpeciesEvolution(Base):
     """The method by which a Pokémon species evolves."""
     __tablename__ = 'pokemon_species_evolution'
     __singlename__ = 'pokemon_species_evolution'
@@ -110,14 +113,14 @@ class PokemonSpeciesEvolution(TableBase):
     buyable_price = Column(Integer, nullable=True)
     can_trade_instead = Column(Boolean, nullable=False)
 
-class Rarity(TableBase):
+class Rarity(Base):
     """A Pokémon rarity."""
     __tablename__ = 'rarities'
     __singlename__ = 'rarity'
 
     id = Column(Integer, primary_key=True)
 
-class Trainer(TableBase):
+class Trainer(Base):
     """A member of the ASB league and user of this app thing."""
     __tablename__ = 'trainers'
     __singlename__ = 'trainer'
@@ -129,7 +132,7 @@ class Trainer(TableBase):
     is_newbie = Column(Boolean, nullable=False)
     unclaimed_from_hack = Column(Boolean, nullable=False)
 
-class TrainerItem(TableBase):
+class TrainerItem(Base):
     """An individual item owned by a trainer.
 
     Pokémon's held items are kept track of in the pokemon.held_item column.
