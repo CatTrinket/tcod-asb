@@ -1,6 +1,8 @@
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import relationship, scoped_session, sessionmaker
+from sqlalchemy.sql import and_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -144,3 +146,29 @@ class TrainerItem(Base):
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True,
         unique=True)
+
+Pokemon.ability = relationship(Ability,
+    secondary=PokemonFormAbility.__table__, uselist=False)
+Pokemon.form = relationship(PokemonForm)
+Pokemon.gender = relationship(Gender)
+Pokemon.item = relationship(Item,
+    secondary=TrainerItem.__table__, uselist=False)
+Pokemon.species = association_proxy('form', 'species')
+Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
+
+PokemonForm.species = relationship(PokemonSpecies)
+
+Trainer.pokemon = relationship(Pokemon, back_populates='trainer')
+Trainer.squad = relationship(Pokemon,
+    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad))
+Trainer.pc = relationship(Pokemon,
+    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad))
+
+Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
+    primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,
+                     TrainerItem.pokemon_id == None))
+Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
+
+TrainerItem.pokemon = relationship(Pokemon)
+Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
+    primaryjoin=and_(Trainer.id == TrainerItem.trainer_id, TrainerItem.pokemon_id == None))
