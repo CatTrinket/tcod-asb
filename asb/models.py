@@ -98,6 +98,13 @@ class PokemonSpecies(Base):
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
 
+    @property
+    def number(self):
+        if self.id < 10000:
+            return '{0:03}'.format(self.id)
+        else:
+            return 'A{0:02}'.format(self.id - 10000)
+
 class PokemonSpeciesEvolution(Base):
     """The method by which a Pokémon species evolves."""
     __tablename__ = 'pokemon_species_evolution'
@@ -168,7 +175,3 @@ Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
     primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,
                      TrainerItem.pokemon_id == None))
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
-
-TrainerItem.pokemon = relationship(Pokemon)
-Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
-    primaryjoin=and_(Trainer.id == TrainerItem.trainer_id, TrainerItem.pokemon_id == None))

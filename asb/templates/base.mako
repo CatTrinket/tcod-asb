@@ -4,7 +4,18 @@
     <title><%block name='title'>The ASB thing</%block></title>
 </head>
 <body>
-<p><a href="/pokemon">Pokémon list here</a></p>
+<ul>
+  <li>
+    <a href="/pokemon">Pokémon</a>
+    <ul>
+      <li><a href="/pokemon/species">Species list</a></li>
+    </ul>
+  </li>
+
+  <li>
+    <a href="/trainers">Trainers</a>
+  </li>
+</ul>
 ${next.body()}\
 </body>
 </html>

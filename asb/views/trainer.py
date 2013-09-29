@@ -2,7 +2,7 @@ from pyramid.view import view_config
 
 import asb.models as models
 
-@view_config(route_name='trainer_index', renderer='/indices/trainer.mako')
+@view_config(route_name='trainer_index', renderer='/indices/trainers.mako')
 def TrainerIndex(context, request):
     trainers = (
         models.DBSession.query(models.Trainer)

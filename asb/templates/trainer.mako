@@ -3,9 +3,8 @@
 
 <h1>${trainer.name}</h1>
 
-
 % for label, pokemon_list in [('Squad', trainer.squad), ('PC', trainer.pc)]:
-<p>
+
     ${label}:
     <ul>
         % for pokemon in pokemon_list:
@@ -16,7 +15,6 @@
 </li>
         % endfor
     </ul>
-</p>
 % endfor
 
 <p>

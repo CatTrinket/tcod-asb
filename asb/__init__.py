@@ -15,11 +15,19 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
     config.include('pyramid_mako')
+
     config.add_static_view('static', 'static', cache_max_age=3600)
+
     config.add_route('home', '/')
+
     config.add_route('pokemon_index', '/pokemon')
+    config.add_route('pokemon_species_index', '/pokemon/species')
     config.add_route('pokemon', '/pokemon/{id}')
+    config.add_route('pokemon_species', '/pokemon/species/{name}')
+
     config.add_route('trainer_index', '/trainers')
     config.add_route('trainer', '/trainers/{id}')
+
     config.scan()
+
     return config.make_wsgi_app()
