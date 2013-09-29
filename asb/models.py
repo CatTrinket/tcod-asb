@@ -46,9 +46,6 @@ class Pokemon(Base):
     ability_slot = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
     happiness = Column(Integer, nullable=False)
-    # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
-    held_item_id = Column(Integer, ForeignKey('trainer_items.id'),
-        nullable=True, unique=True)
     is_in_squad = Column(Boolean, nullable=False)
     can_evolve = Column(Boolean, nullable=False)
     form_uncertain = Column(Boolean, nullable=False)
@@ -144,3 +141,6 @@ class TrainerItem(Base):
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
+    # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True,
+        unique=True)
