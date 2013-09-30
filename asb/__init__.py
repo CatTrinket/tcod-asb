@@ -22,11 +22,11 @@ def main(global_config, **settings):
 
     config.add_route('pokemon_index', '/pokemon')
     config.add_route('pokemon_species_index', '/pokemon/species')
-    config.add_route('pokemon', '/pokemon/{id}')
-    config.add_route('pokemon_species', '/pokemon/species/{name}')
+    config.add_route('pokemon', '/pokemon/{identifier}')
+    config.add_route('pokemon_species', '/pokemon/species/{identifier}')
 
     config.add_route('trainer_index', '/trainers')
-    config.add_route('trainer', '/trainers/{id}')
+    config.add_route('trainer', '/trainers/{identifier}')
 
     config.scan()
 

@@ -1,7 +1,9 @@
+import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
-from sqlalchemy import func
+from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
+from asb.views.redirect import attempt_redirect
 
 @view_config(route_name='pokemon_index', renderer='/indices/pokemon.mako')
 def PokemonIndex(context, request):
@@ -15,11 +17,15 @@ def PokemonIndex(context, request):
 
 @view_config(route_name='pokemon', renderer='/pokemon.mako')
 def Pokemon(context, request):
-    pokemon = (
-        models.DBSession.query(models.Pokemon)
-        .filter_by(id=request.matchdict['id'])
-        .one()
-    )
+    try:
+        pokemon = (
+            models.DBSession.query(models.Pokemon)
+            .filter_by(identifier=request.matchdict['identifier'])
+            .one()
+        )
+    except NoResultFound:
+        attempt_redirect(request.matchdict['identifier'],
+            models.Pokemon, request)
 
     return {'pokemon': pokemon}
 
@@ -38,8 +44,7 @@ def PokemonSpeciesIndex(context, request):
 def PokemonSpecies(context, request):
     pokemon = (
         models.DBSession.query(models.PokemonSpecies)
-        .filter(func.lower(models.PokemonSpecies.name) ==
-                request.matchdict['name'])
+        .filter_by(identifier=request.matchdict['identifier'])
         .one()
     )
 

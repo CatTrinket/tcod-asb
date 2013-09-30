@@ -1,3 +1,6 @@
+import re
+import unicodedata
+
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
@@ -9,12 +12,40 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
+def identifier(name, id=None):
+    """Reduce a name to a URL-friendly yet human-readable identifier."""
+    # Step one: strip out diacritics
+    # XXX This won't simplify e.g. œ to oe
+    identifier = ''.join(char for char in unicodedata.normalize('NFD', name)
+        if not unicodedata.combining(char))
+
+    # Step two: convert to a bunch of alphanumeric words separated by hyphens
+    identifier = identifier.lower()
+    identifier = identifier.replace("'", '')
+    identifier = identifier.replace('♀', '-f')
+    identifier = identifier.replace('♂', '-m')
+    identifier = re.sub('[^a-z0-9]+', '-', identifier)
+    identifier = identifier.strip('-')
+
+    # Step three: tack on the ID if provided
+    if identifier and id is not None:
+        identifier = '{0}-{1}'.format(id, identifier)
+    elif id is not None:
+        identifier = str(id)
+    elif not identifier:
+        # Hopefully-avoidable step four: oh god help we still have nothing
+        raise ValueError('Name {0!r} reduces to empty identifier'.format(name))
+
+    return identifier
+
+
 class Ability(Base):
     """An ability."""
     __tablename__ = 'abilities'
     __singlename__ = 'ability'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
 class Gender(Base):
@@ -23,6 +54,7 @@ class Gender(Base):
     __singlename__ = 'gender'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
 class Item(Base):
@@ -31,6 +63,7 @@ class Item(Base):
     __singlename__ = 'item'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
 
@@ -40,6 +73,7 @@ class Pokemon(Base):
     __singlename__ = 'pokemon'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
@@ -71,8 +105,14 @@ class PokemonForm(Base):
     __singlename__ = 'pokemon_form'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     species_id = Column(Integer, ForeignKey('pokemon_species.id'))
     is_default = Column(Boolean, nullable=False)
+
+    @property
+    def name(self):
+        """To do"""
+        return self.species.name
 
 class PokemonFormAbility(Base):
     """One of a Pokémon form's abilities."""
@@ -91,6 +131,7 @@ class PokemonSpecies(Base):
     __singlename__ = 'pokemon_species'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
     evolves_from_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         nullable=True)
@@ -132,6 +173,7 @@ class Trainer(Base):
     __singlename__ = 'trainer'
 
     id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
     money = Column(Integer, nullable=False)
     can_collect_allowance = Column(Boolean, nullable=False)
