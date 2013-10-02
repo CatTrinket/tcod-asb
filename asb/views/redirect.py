@@ -1,4 +1,5 @@
 import pyramid.httpexceptions as httpexc
+from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
@@ -20,3 +21,8 @@ def attempt_redirect(bogus_identifier, table, request):
             request.current_route_path(identifier=identifier))
     else:
         raise httpexc.HTTPNotFound()
+
+@view_config(route_name='slash_redirect')
+def slash_redirect(context, request):
+    """Redirect away erroneous trailing slashes."""
+    raise httpexc.HTTPMovedPermanently(request.path.rstrip('/'))

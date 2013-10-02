@@ -28,6 +28,8 @@ def main(global_config, **settings):
     config.add_route('trainer_index', '/trainers')
     config.add_route('trainer', '/trainers/{identifier}')
 
+    config.add_route('slash_redirect', '/{path:.+}/')
+
     config.scan()
 
     return config.make_wsgi_app()
