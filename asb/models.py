@@ -16,7 +16,7 @@ def identifier(name, id=None):
     """Reduce a name to a URL-friendly yet human-readable identifier."""
     # Step one: strip out diacritics
     # XXX This won't simplify e.g. œ to oe
-    identifier = ''.join(char for char in unicodedata.normalize('NFD', name)
+    identifier = ''.join(char for char in unicodedata.normalize('NFKD', name)
         if not unicodedata.combining(char))
 
     # Step two: convert to a bunch of alphanumeric words separated by hyphens
