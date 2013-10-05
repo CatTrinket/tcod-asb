@@ -1,6 +1,6 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>Pokémon</%block>\
 <%namespace name="helpers" file="/helpers.mako"/>\
+<%block name='title'>Pokémon - The Cave of Dragonflies ASB</%block>\
 
 <table>
 <tr>

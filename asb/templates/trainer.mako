@@ -1,6 +1,6 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>${trainer.name} - Trainers</%block>\
 <%namespace name="helpers" file="/helpers.mako"/>\
+<%block name='title'>${trainer.name} - Trainers - The Cave of Dragonflies ASB</%block>\
 
 <h1>${trainer.name}</h1>
 

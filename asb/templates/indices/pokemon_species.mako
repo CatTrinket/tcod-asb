@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>Species list - Pokémon</%block>\
+<%block name='title'>Pokémon species - The Cave of Dragonflies ASB</%block>\
 
 <ul>
     % for p in pokemon:

@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>Trainers</%block>\
+<%block name='title'>Trainers - The Cave of Dragonflies ASB</%block>\
 
 <ul>
     % for t in trainers:

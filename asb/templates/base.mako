@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%block name='title'>The ASB thing</%block></title>
+    <title><%block name='title'>The Cave of Dragonflies ASB</%block></title>
     <link rel="stylesheet" href="/static/asb.css">
 </head>
 <body>

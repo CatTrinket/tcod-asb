@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>${pokemon.name} - Pokémon</%block>\
+<%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 <h1>${pokemon.name}</h1>
 
