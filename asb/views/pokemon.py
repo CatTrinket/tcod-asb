@@ -1,5 +1,6 @@
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
@@ -9,7 +10,15 @@ from asb.views.redirect import attempt_redirect
 def PokemonIndex(context, request):
     pokemon = (
         models.DBSession.query(models.Pokemon)
-        .order_by(models.Pokemon.id)
+        .order_by(models.Pokemon.pokemon_form_id, models.Pokemon.name)
+        .options(
+            joinedload('gender'),
+            joinedload('trainer'),
+            joinedload('form'),
+            joinedload('form.species'),
+            joinedload('ability'),
+            joinedload('item')
+        )
         .all()
     )
 

@@ -12,3 +12,8 @@ body {
 #menu > ul > li:hover > ul { display: block; position: absolute; background: white; }
 #menu > ul > li > ul > li > ul { border: none; }
 #menu > ul > li > ul > li > ul > li { padding-left: 1em; }
+
+/* Gender symbols */
+.gender-symbol-female { color: #F84070; }
+.gender-symbol-male { color: #00C0A8; }
+/*.gender-symbol-genderless { color: #808080; }*/

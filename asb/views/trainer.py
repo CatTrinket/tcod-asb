@@ -8,7 +8,7 @@ from asb.views.redirect import attempt_redirect
 def TrainerIndex(context, request):
     trainers = (
         models.DBSession.query(models.Trainer)
-        .order_by(models.Trainer.id)
+        .order_by(models.Trainer.name)
         .all()
     )
 
