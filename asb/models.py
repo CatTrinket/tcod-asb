@@ -1,7 +1,8 @@
 import re
 import unicodedata
 
-from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint
+import pbkdf2
+from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, Sequence
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
@@ -78,7 +79,8 @@ class Pokemon(Base):
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=False)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False,
+        onupdate='cascade')
     ability_slot = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
     happiness = Column(Integer, nullable=False)
@@ -172,25 +174,37 @@ class Trainer(Base):
     __tablename__ = 'trainers'
     __singlename__ = 'trainer'
 
-    id = Column(Integer, primary_key=True)
-    identifier = Column(Unicode, unique=True, nullable=False)
+    trainers_id_seq = Sequence('trainers_id_seq')
+
+    id = Column(Integer, trainers_id_seq, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False, default='')
     name = Column(Unicode, nullable=False)
-    money = Column(Integer, nullable=False)
-    can_collect_allowance = Column(Boolean, nullable=False)
-    is_newbie = Column(Boolean, nullable=False)
-    unclaimed_from_hack = Column(Boolean, nullable=False)
+    password_hash = Column(Unicode, nullable=True, default='')
+    money = Column(Integer, nullable=False, default=45)
+    can_collect_allowance = Column(Boolean, nullable=False, default=False)
+    is_newbie = Column(Boolean, nullable=False, default=True)
+    unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
+
+    def set_password(self, password):
+        """Hash and store the given password."""
+        self.password_hash = pbkdf2.crypt(password)
+
+    def check_password(self, password):
+        """Check the given password against the stored password hash."""
+        return pbkdf2.crypt(password, self.password_hash) == self.password_hash
+
+    def update_identifier(self):
+        """Like it says on the tin"""
+        self.identifier = identifier(self.name, id=self.id)
 
 class TrainerItem(Base):
-    """An individual item owned by a trainer.
-
-    Pokémon's held items are kept track of in the pokemon.held_item column.
-    """
-
+    """An individual item owned by a trainer."""
     __tablename__ = 'trainer_items'
     __singlename__ = 'trainer_item'
 
     id = Column(Integer, primary_key=True)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False,
+        onupdate='cascade')
     item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True,

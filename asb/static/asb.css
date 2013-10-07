@@ -17,3 +17,18 @@ body {
 .gender-symbol-female { color: #F84070; }
 .gender-symbol-male { color: #00C0A8; }
 /*.gender-symbol-genderless { color: #808080; }*/
+
+
+/* SPECIFIC PAGES */
+
+/* Registration form */
+#registration-form label { display: block; font-weight: bold; }
+#registration-form input { display: block; margin-left: 1.5em; }
+
+ul#what_do { list-style-type: none; padding: 0; }
+ul#what_do input { display: inline; }
+ul#what_do label { font-weight: normal; display: inline; }
+
+#registration-form p { font-style: italic; font-size: 0.9em; }
+
+#registration-form #submit { margin-left: 0; }
