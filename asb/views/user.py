@@ -126,8 +126,4 @@ def RegisterCommit(context, request):
     user.update_identifier()
     transaction.commit()
 
-    return httpexc.HTTPSeeOther('/register/done')
-
-@view_config(route_name='register_done', renderer='/registered.mako')
-def RegisterDone(context, request):
-    return {}
+    return httpexc.HTTPSeeOther('/')
