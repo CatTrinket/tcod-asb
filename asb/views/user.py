@@ -104,6 +104,17 @@ def RegisterCommit(context, request):
 
         user.id = id
         user.unclaimed_from_hack = False
+
+        # Same with all their Pokémon
+        if form.what_do.data == 'old':
+            nextval = select([models.Pokemon.pokemon_id_seq.next_value()])
+
+            for pokemon in user.pokemon:
+                id, = nextval.execute().fetchone()
+                pokemon.id = id
+
+                session.flush()
+                pokemon.update_identifier()
     else:
         # Create a new user
         identifier = 'temp-{0}'.format(username)

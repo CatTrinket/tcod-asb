@@ -73,7 +73,9 @@ class Pokemon(Base):
     __tablename__ = 'pokemon'
     __singlename__ = 'pokemon'
 
-    id = Column(Integer, primary_key=True)
+    pokemon_id_seq = Sequence('pokemon_id_seq')
+
+    id = Column(Integer, pokemon_id_seq, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
@@ -97,6 +99,10 @@ class Pokemon(Base):
             name='pokemon_ability_fkey', use_alter=True
         ),
     )
+
+    def update_identifier(self):
+        """"""
+        self.identifier = identifier(self.name, id=self.id)
 
 class PokemonForm(Base):
     """A particular form of a Pokémon.
@@ -221,7 +227,8 @@ Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
 PokemonForm.species = relationship(PokemonSpecies)
 
-Trainer.pokemon = relationship(Pokemon, back_populates='trainer')
+Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
+    order_by=Pokemon.id)
 Trainer.squad = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad))
 Trainer.pc = relationship(Pokemon,
