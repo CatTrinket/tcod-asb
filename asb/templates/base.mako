@@ -7,37 +7,24 @@
 <body>
 <section id="header">
 <div id="menu">
-<ul>
-  <li>
-    Your Account
-    <ul>
-      <li>Do things</li>
-      <li>idk</li>
-    </ul>
-  </li>
+<ul id="menu-user">
+% if False:  ## if logged in
+  <li>Account stuff</li>
+  <li>Buy stuff</li>
+  <li>idk</li>
+% else:
+  <li><a href="/register">Register</a></li>
+  <li>Login</li>
+% endif
+</ul>
 
-  <li>
-    ASB Marketplace
-    <ul>
-      <li>Buy stuff</li>
-    </ul>
-  </li>
-
-  <li>
-    Dex
-    <ul>
-      <li>
-        <a href="/pokemon">Pokémon</a>
-        <ul>
-          <li><a href="/pokemon/species">Species list</a></li>
-        </ul>
-      </li>
-    
-      <li><a href="/trainers">Trainers</a></li>
-      <li>Items</li>
-      <li>Moves?  Abilities?</li>
-    </ul>
-  </li>
+<ul id="menu-dex">
+  <li><a href="/pokemon">Pokémon</a></li>
+  <li><a href="/pokemon/species">Species</a></li>
+  <li><a href="/trainers">Trainers</a></li>
+  <li>Items</li>
+  <li>Moves?</li>
+  <li>Abilities?</li>
 </ul>
 </div>
 </section>

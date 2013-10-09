@@ -4,14 +4,10 @@ body {
 }
 
 /* Menu */
-#menu { margin: 1em; }
-#menu ul { list-style: none; padding: 0; border: 1px solid black; }
-#menu li { padding: 0 0.25em; }
-#menu > ul > li { display: inline-block; }
-#menu > ul > li > ul { display: none; }
-#menu > ul > li:hover > ul { display: block; position: absolute; background: white; }
-#menu > ul > li > ul > li > ul { border: none; }
-#menu > ul > li > ul > li > ul > li { padding-left: 1em; }
+#menu { margin: 1em; border: 1px solid black; }
+#menu > ul { list-style: none; padding: 0; text-align: center; margin: 0; }
+#menu > ul > li { display: inline-block; padding: 0; }
+#menu > ul > li + li::before { content: ' • '; }
 
 /* Gender symbols */
 .gender-symbol-female { color: #F84070; }
