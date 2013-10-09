@@ -8,6 +8,7 @@ from asb.views.redirect import attempt_redirect
 def TrainerIndex(context, request):
     trainers = (
         models.DBSession.query(models.Trainer)
+        .filter_by(unclaimed_from_hack=False)
         .order_by(models.Trainer.name)
         .all()
     )

@@ -10,6 +10,8 @@ from asb.views.redirect import attempt_redirect
 def PokemonIndex(context, request):
     pokemon = (
         models.DBSession.query(models.Pokemon)
+        .join(models.Pokemon.trainer)
+        .filter_by(unclaimed_from_hack=False)
         .order_by(models.Pokemon.pokemon_form_id, models.Pokemon.name)
         .options(
             joinedload('gender'),
