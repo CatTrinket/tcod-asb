@@ -79,8 +79,8 @@ class Pokemon(Base):
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=False)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False,
-        onupdate='cascade')
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
+        nullable=False)
     ability_slot = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False)
     happiness = Column(Integer, nullable=False)
@@ -203,12 +203,12 @@ class TrainerItem(Base):
     __singlename__ = 'trainer_item'
 
     id = Column(Integer, primary_key=True)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False,
-        onupdate='cascade')
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
+        nullable=False)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
-    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True,
-        unique=True)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
+        nullable=True, unique=True)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
