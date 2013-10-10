@@ -1,3 +1,8 @@
+<%
+    from asb.views.user import LoginForm
+    login_form = LoginForm()
+%>\
+\
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +11,9 @@
 </head>
 <body>
 <section id="header">
-<p style="text-align: center; margin: 0; padding: 2em;">banner goes here once I make it</p>
+<p style="text-align: center; margin: 0; padding: 2em; color: white;">
+  banner goes here once I make it
+</p>
 
 <div id="menu">
 <ul id="menu-user">
@@ -16,8 +23,14 @@
   <li>idk</li>
   <li>Log out</li>
 % else:
-  <li>Username [_____] Password [_____] [Log in]</li>
-  <li><a href="/register">Register</a></li>
+  <li id="register"><a href="/register">Register</a></li>
+  <li>
+    <form action="/login" method="POST" id="login">
+      ${login_form.username.label() | n} ${login_form.username() | n}
+      ${login_form.password.label() | n} ${login_form.password() | n}
+      ${login_form.log_in() | n}
+    </form>
+  </li>
 % endif
 </ul>
 

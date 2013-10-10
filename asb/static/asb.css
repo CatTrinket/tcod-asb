@@ -6,21 +6,32 @@ body {
     margin: 0;
 }
 
+a { text-decoration: none; }
+
 #header, #body { margin: 0; }
 
-#header { background: #5577BB; color: white; }
-#header a { color: #9FDFFF }
+#header { background: #5577BB; }
 
 #body { background: white; padding: 0.5em; }
+#body a { color: #335599; }
 
 /* Menu */
-#menu { margin: 0; background: #335599; }
+#menu { margin: 0; background: #335599; color: #C0CCE6; }
+#menu a { color: white; }
+
 #menu > ul { list-style: none; padding: 0; text-align: center; margin: 0; }
 #menu > ul > li { display: inline-block; padding: 0; }
 #menu > ul > li + li::before { content: ' • '; }
 
+#register { font-weight: bold; }
+
+/* Login form */
+#login { display: inline; }
+#login #username, #login #password { width: 10em; }
 
 /**** SHARED STUFF ****/
+
+.form-error { color: #CC0000; }
 
 /* Gender symbols */
 .gender-symbol-female { color: #FF4273; }
@@ -41,3 +52,6 @@ ul#what_do label { font-weight: normal; display: inline; }
 #registration-form p { font-style: italic; font-size: 0.9em; }
 
 #registration-form #submit { margin-left: 0; }
+
+/* Login page */
+#login-page-form p { text-align: center; }

@@ -28,6 +28,38 @@ class UsernameField(wtforms.StringField):
         except NoResultFound:
             self.data = (username, None)
 
+class LoginForm(wtforms.Form):
+    username = UsernameField('Username')
+    password = wtforms.PasswordField('Password')
+    log_in = wtforms.SubmitField('Log in')
+
+    # n.b. we don't want the username and password fields to present separate
+    # errors to the user because that might look like a security risk to the
+    # average person (even though there's a public userlist)
+
+    def validate_username(form, field):
+        """Make sure we actually found a current user for this username."""
+
+        username, user = field.data
+
+        if user is None or user.unclaimed_from_hack:
+            raise wtforms.validators.ValidationError
+
+    def validate_password(form, field):
+        """If we got a valid user, check their password against the password
+        we got.
+        """
+
+        username, user = form.username.data
+
+        if user is None or user.unclaimed_from_hack:
+            # The username field will raise an error; there's no sensible
+            # second error to be raised here
+            return None
+
+        if not user.check_password(field.data):
+            raise wtforms.validators.ValidationError
+
 class RegistrationForm(wtforms.Form):
     what_do = wtforms.RadioField(
         'What would you like to do?',
@@ -125,5 +157,22 @@ def RegisterCommit(context, request):
     user.set_password(form.password.data)
     user.update_identifier()
     transaction.commit()
+
+    return httpexc.HTTPSeeOther('/')
+
+@view_config(route_name='login', renderer='/login.mako',
+  request_method='GET')
+def LoginPage(context, request):
+    return {'form': LoginForm()}
+
+@view_config(route_name='login', renderer='/login.mako',
+  request_method='POST')
+def Login(context, request):
+    form = LoginForm(request.POST)
+
+    if not form.validate():
+        return {'form': form}
+
+    # blah
 
     return httpexc.HTTPSeeOther('/')

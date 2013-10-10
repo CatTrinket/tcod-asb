@@ -14,7 +14,7 @@
     % if form.username.errors:
     <ul>
         % for error in form.username.errors:
-        <li>${error}</li>
+        <li class="form-error">${error}</li>
         % endfor
     </ul>
     % endif
@@ -38,7 +38,7 @@
     % if pw_errors:
     <ul>
         % for error in pw_errors:
-        <li>${error}</li>
+        <li class="form-error">${error}</li>
         % endfor
     </ul>
     % endif
