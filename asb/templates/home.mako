@@ -1,4 +1,4 @@
 <%inherit file='/base.mako'/>\
-<%block name='title'>The ASB not-hack</%block>\
+<%block name='title'>The Cave of Dragonflies ASB</%block>\
 
 HI
