@@ -1,27 +1,17 @@
+/**** GLOBAL STUFF ****/
+
 body {
     font-size: 16px;
     font-family: DejaVu Sans, Verdana, sans-serif;
     margin: 0;
 }
 
-#header, #body {
-    border: none;
-    margin: 0;
-}
+#header, #body { margin: 0; }
 
-#header {
-    background: #5577BB;
-    color: white;
-}
+#header { background: #5577BB; color: white; }
+#header a { color: #9FDFFF }
 
-#header a {
-    color: #9FDFFF
-}
-
-#body {
-    background: white;
-    padding: 0.5em;
-}
+#body { background: white; padding: 0.5em; }
 
 /* Menu */
 #menu { margin: 0; background: #335599; }
@@ -29,13 +19,16 @@ body {
 #menu > ul > li { display: inline-block; padding: 0; }
 #menu > ul > li + li::before { content: ' • '; }
 
+
+/**** SHARED STUFF ****/
+
 /* Gender symbols */
-.gender-symbol-female { color: #F84070; }
-.gender-symbol-male { color: #00C0A8; }
-/*.gender-symbol-genderless { color: #808080; }*/
+.gender-symbol-female { color: #FF4273; }
+.gender-symbol-male { color: #00C5AD; }
+.gender-symbol-genderless { color: black; }
 
 
-/* SPECIFIC PAGES */
+/**** SPECIFIC PAGES ****/
 
 /* Registration form */
 #registration-form label { display: block; font-weight: bold; }
