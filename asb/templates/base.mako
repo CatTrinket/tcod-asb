@@ -1,6 +1,6 @@
 <%
     from asb.views.user import LoginForm
-    login_form = LoginForm()
+    login_form = LoginForm(csrf_context=request.session)
 %>\
 \
 <!DOCTYPE html>
@@ -26,6 +26,7 @@
   <li id="register"><a href="/register">Register</a></li>
   <li>
     <form action="/login" method="POST" id="login">
+      ${login_form.csrf_token(id='login-csrf') | n}
       ${login_form.username.label() | n} ${login_form.username() | n}
       ${login_form.password.label() | n} ${login_form.password() | n}
       ${login_form.log_in() | n}

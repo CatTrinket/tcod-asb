@@ -5,6 +5,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import select
 import transaction
 import wtforms
+import wtforms.ext.csrf
 
 import asb.models as models
 
@@ -28,10 +29,17 @@ class UsernameField(wtforms.StringField):
         except NoResultFound:
             self.data = (username, None)
 
-class LoginForm(wtforms.Form):
+class LoginForm(wtforms.ext.csrf.SecureForm):
     username = UsernameField('Username')
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
+
+    def generate_csrf_token(self, session):
+        return session.get_csrf_token()
+
+    def validate_csrf_token(form, field):
+        if field.data != field.current_token:
+            raise wtforms.validators.ValidationError('Invalid CSRF token')
 
     # n.b. we don't want the username and password fields to present separate
     # errors to the user because that might look like a security risk to the
@@ -60,7 +68,7 @@ class LoginForm(wtforms.Form):
         if not user.check_password(field.data):
             raise wtforms.validators.ValidationError
 
-class RegistrationForm(wtforms.Form):
+class RegistrationForm(wtforms.ext.csrf.SecureForm):
     what_do = wtforms.RadioField(
         'What would you like to do?',
 
@@ -81,6 +89,13 @@ class RegistrationForm(wtforms.Form):
     password_confirm = wtforms.PasswordField('Confirm')
     email = wtforms.StringField('Email (optional)')
     submit = wtforms.SubmitField('Register')
+
+    def generate_csrf_token(self, session):
+        return session.get_csrf_token()
+
+    def validate_csrf_token(form, field):
+        if field.data != field.current_token:
+            raise wtforms.validators.ValidationError('Invalid CSRF token')
 
     def validate_password_confirm(form, field):
         """Make sure the passwords match."""
@@ -114,14 +129,14 @@ class RegistrationForm(wtforms.Form):
 @view_config(route_name='register', renderer='/register.mako',
   request_method='GET')
 def Register(context, request):
-    return {'form': RegistrationForm()}
+    return {'form': RegistrationForm(csrf_context=request.session)}
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='POST')
 def RegisterCommit(context, request):
     session = models.DBSession()
 
-    form = RegistrationForm(request.POST)
+    form = RegistrationForm(request.POST, csrf_context=request.session)
 
     if not form.validate():
         return {'form': form}
@@ -163,12 +178,12 @@ def RegisterCommit(context, request):
 @view_config(route_name='login', renderer='/login.mako',
   request_method='GET')
 def LoginPage(context, request):
-    return {'form': LoginForm()}
+    return {'form': LoginForm(csrf_context=request.session)}
 
 @view_config(route_name='login', renderer='/login.mako',
   request_method='POST')
 def Login(context, request):
-    form = LoginForm(request.POST)
+    form = LoginForm(request.POST, csrf_context=request.session)
 
     if not form.validate():
         return {'form': form}

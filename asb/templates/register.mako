@@ -1,6 +1,17 @@
 <%inherit file='/base.mako'/>\
 <%block name="title">Register - The Cave of Dragonflies ASB</%block>
 <form action="/register" method="POST" id="registration-form">
+    ${form.csrf_token() | n}
+
+    % if form.csrf_token.errors:
+    <ul>
+        <li class="form-error">
+            Invalid CSRF token; the form probably expired.  Try again.
+        </li>
+    </ul>
+    % endif
+
+
     ${form.what_do.label() | n}
     ${form.what_do() | n}
 
