@@ -9,6 +9,8 @@
     <th>⚥</th>
     <th>Trainer</th>
     <th>Ability</th>
+    <th>XP</th>
+    <th>:3</th>
     <th>Item</th>
 </tr>
 
@@ -19,6 +21,8 @@
     <td>${helpers.gender_symbol(p.gender)}</td>
     <td><a href="/trainers/${p.trainer.identifier}">${p.trainer.name}</a></td>
     <td>${p.ability.name}</td>
+    <td>${p.experience | n, str}</td>
+    <td>${p.happiness | n, str}</td>
     <td>\
 % if p.item:
 ${p.item.name}\

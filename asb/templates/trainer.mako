@@ -12,6 +12,8 @@
     <th>Species</th>
     <th>⚥</th>
     <th>Ability</th>
+    <th>XP</th>
+    <th>:3</th>
     <th>Item</th>
 </tr>
 
@@ -21,6 +23,8 @@
     <td><a href="/pokemon/species/${pokemon.species.identifier}">${pokemon.species.name}</a></td>
     <td>${helpers.gender_symbol(pokemon.gender)}</td>
     <td>${pokemon.ability.name}</td>
+    <td>${pokemon.experience | n, str}</td>
+    <td>${pokemon.happiness | n, str}</td>
     <td>\
 % if pokemon.item:
 ${pokemon.item.name}\
