@@ -10,6 +10,10 @@ import wtforms.ext.csrf
 import asb.models as models
 
 class UsernameField(wtforms.StringField):
+    """A username field that also fetches the corresponding user, if any, from
+    the database.
+    """
+
     def _value(self):
         if self.data:
             return self.data[0]
@@ -30,6 +34,8 @@ class UsernameField(wtforms.StringField):
             self.data = (username, None)
 
 class LoginForm(wtforms.ext.csrf.SecureForm):
+    """A login form, used both at the top of every page and on /login."""
+
     username = UsernameField('Username')
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
@@ -69,6 +75,8 @@ class LoginForm(wtforms.ext.csrf.SecureForm):
             raise wtforms.validators.ValidationError
 
 class RegistrationForm(wtforms.ext.csrf.SecureForm):
+    """A registration form."""
+
     what_do = wtforms.RadioField(
         'What would you like to do?',
 
@@ -129,11 +137,17 @@ class RegistrationForm(wtforms.ext.csrf.SecureForm):
 @view_config(route_name='register', renderer='/register.mako',
   request_method='GET')
 def Register(context, request):
+    """Return a blank registration form."""
+
     return {'form': RegistrationForm(csrf_context=request.session)}
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='POST')
 def RegisterCommit(context, request):
+    """Process a registration form.  Send the user back to the form if there
+    are any errors; create their account otherwise.
+    """
+
     session = models.DBSession()
 
     form = RegistrationForm(request.POST, csrf_context=request.session)
@@ -178,11 +192,17 @@ def RegisterCommit(context, request):
 @view_config(route_name='login', renderer='/login.mako',
   request_method='GET')
 def LoginPage(context, request):
+    """Return a blank login form in the unlikely event that anyone ever GETs
+    /login.
+    """
+
     return {'form': LoginForm(csrf_context=request.session)}
 
 @view_config(route_name='login', renderer='/login.mako',
   request_method='POST')
 def Login(context, request):
+    """Process a login form."""
+
     form = LoginForm(request.POST, csrf_context=request.session)
 
     if not form.validate():

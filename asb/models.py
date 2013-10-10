@@ -15,6 +15,7 @@ Base = declarative_base()
 
 def identifier(name, id=None):
     """Reduce a name to a URL-friendly yet human-readable identifier."""
+
     # Step one: strip out diacritics
     # XXX This won't simplify e.g. œ to oe
     identifier = ''.join(char for char in unicodedata.normalize('NFKD', name)
@@ -42,6 +43,7 @@ def identifier(name, id=None):
 
 class Ability(Base):
     """An ability."""
+
     __tablename__ = 'abilities'
     __singlename__ = 'ability'
 
@@ -51,6 +53,7 @@ class Ability(Base):
 
 class Gender(Base):
     """An enigma."""
+
     __tablename__ = 'genders'
     __singlename__ = 'gender'
 
@@ -60,6 +63,7 @@ class Gender(Base):
 
 class Item(Base):
     """A type of item."""
+
     __tablename__ = 'items'
     __singlename__ = 'item'
 
@@ -70,6 +74,7 @@ class Item(Base):
 
 class Pokemon(Base):
     """An individual Pokémon owned by a trainer."""
+
     __tablename__ = 'pokemon'
     __singlename__ = 'pokemon'
 
@@ -109,6 +114,7 @@ class PokemonForm(Base):
 
     If a Pokémon only has one form, it still has a row in this table.
     """
+
     __tablename__ = 'pokemon_forms'
     __singlename__ = 'pokemon_form'
 
@@ -124,6 +130,7 @@ class PokemonForm(Base):
 
 class PokemonFormAbility(Base):
     """One of a Pokémon form's abilities."""
+
     __tablename__ = 'pokemon_form_abilities'
     __singlename__ = 'pokemon_form_ability'
 
@@ -135,6 +142,7 @@ class PokemonFormAbility(Base):
 
 class PokemonSpecies(Base):
     """A species of Pokémon."""
+
     __tablename__ = 'pokemon_species'
     __singlename__ = 'pokemon_species'
 
@@ -149,6 +157,10 @@ class PokemonSpecies(Base):
 
     @property
     def number(self):
+        """Return national dex number for canon Pokémon, or an "A##" number for
+        fakemon,
+        """
+
         if self.id < 10000:
             return '{0:03}'.format(self.id)
         else:
@@ -156,6 +168,7 @@ class PokemonSpecies(Base):
 
 class PokemonSpeciesEvolution(Base):
     """The method by which a Pokémon species evolves."""
+
     __tablename__ = 'pokemon_species_evolution'
     __singlename__ = 'pokemon_species_evolution'
 
@@ -170,6 +183,7 @@ class PokemonSpeciesEvolution(Base):
 
 class Rarity(Base):
     """A Pokémon rarity."""
+
     __tablename__ = 'rarities'
     __singlename__ = 'rarity'
 
@@ -177,6 +191,7 @@ class Rarity(Base):
 
 class Trainer(Base):
     """A member of the ASB league and user of this app thing."""
+
     __tablename__ = 'trainers'
     __singlename__ = 'trainer'
 
@@ -193,18 +208,22 @@ class Trainer(Base):
 
     def set_password(self, password):
         """Hash and store the given password."""
+
         self.password_hash = pbkdf2.crypt(password)
 
     def check_password(self, password):
         """Check the given password against the stored password hash."""
+
         return pbkdf2.crypt(password, self.password_hash) == self.password_hash
 
     def update_identifier(self):
-        """Like it says on the tin"""
+        """Like it says on the tin."""
+
         self.identifier = identifier(self.name, id=self.id)
 
 class TrainerItem(Base):
-    """An individual item owned by a trainer."""
+    """An individual item owned by a trainer and possibly held by a Pokémon."""
+
     __tablename__ = 'trainer_items'
     __singlename__ = 'trainer_item'
 
@@ -215,6 +234,9 @@ class TrainerItem(Base):
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
+
+# Relationships go down here so that we don't have to use strings for
+# everything
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)

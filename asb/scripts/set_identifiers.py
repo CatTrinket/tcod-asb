@@ -19,6 +19,8 @@ identifier_tables = [
 ]
 
 def set_identifiers(table, use_id=False):
+    """Set the identifier for each row in the given table."""
+
     rows = models.DBSession.query(table).all()
 
     print(table.__tablename__)
@@ -33,6 +35,8 @@ def set_identifiers(table, use_id=False):
 
 
 def main(argv=sys.argv):
+    """Figure things out when called from the command line."""
+
     if len(argv) != 2:
         print('usage: {0} config_uri'.format(argv[0]))
         exit(1)

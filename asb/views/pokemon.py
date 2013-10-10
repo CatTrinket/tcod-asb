@@ -8,6 +8,8 @@ from asb.views.redirect import attempt_redirect
 
 @view_config(route_name='pokemon_index', renderer='/indices/pokemon.mako')
 def PokemonIndex(context, request):
+    """The index page for everyone's Pokémon."""
+
     pokemon = (
         models.DBSession.query(models.Pokemon)
         .join(models.Pokemon.trainer)
@@ -28,6 +30,8 @@ def PokemonIndex(context, request):
 
 @view_config(route_name='pokemon', renderer='/pokemon.mako')
 def Pokemon(context, request):
+    """An individual Pokémon's info page."""
+
     try:
         pokemon = (
             models.DBSession.query(models.Pokemon)
@@ -43,6 +47,8 @@ def Pokemon(context, request):
 @view_config(route_name='pokemon_species_index',
              renderer='/indices/pokemon_species.mako')
 def PokemonSpeciesIndex(context, request):
+    """The index page for all the species of Pokémon."""
+
     pokemon = (
         models.DBSession.query(models.PokemonSpecies)
         .order_by(models.PokemonSpecies.id)
@@ -53,6 +59,8 @@ def PokemonSpeciesIndex(context, request):
 
 @view_config(route_name='pokemon_species', renderer='/pokemon_species.mako')
 def PokemonSpecies(context, request):
+    """A Pokémon species's dex page."""
+
     pokemon = (
         models.DBSession.query(models.PokemonSpecies)
         .filter_by(identifier=request.matchdict['identifier'])

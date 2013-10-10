@@ -6,6 +6,8 @@ from asb.views.redirect import attempt_redirect
 
 @view_config(route_name='trainer_index', renderer='/indices/trainers.mako')
 def TrainerIndex(context, request):
+    """The index of all the trainers in the league."""
+
     trainers = (
         models.DBSession.query(models.Trainer)
         .filter_by(unclaimed_from_hack=False)
@@ -17,6 +19,8 @@ def TrainerIndex(context, request):
 
 @view_config(route_name='trainer', renderer='/trainer.mako')
 def Trainer(context, request):
+    """A trainer's info page."""
+
     try:
         trainer = (
             models.DBSession.query(models.Trainer)
