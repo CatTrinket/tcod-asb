@@ -45,6 +45,17 @@
   <li>Abilities?</li>
 </ul>
 </div>
+
+<% flash = request.session.pop_flash() %>
+% if flash:
+<div id="flash">
+<ul>
+    % for message in flash:
+    <li>${message}</li>
+    % endfor
+</ul>
+</div>
+% endif
 </section>
 
 <section id="body">

@@ -25,8 +25,17 @@ def attempt_redirect(bogus_identifier, table, request):
             raise httpexc.HTTPNotFound()
 
         # Redirect
-        raise httpexc.HTTPMovedPermanently(
-            request.current_route_path(identifier=identifier))
+        old_path = request.path
+        new_path = request.current_route_path(identifier=identifier)
+
+        if slug:
+            # If there actually was a bogus slug, notify the user; if all we
+            # did was tack the name onto a lone ID, there's no need
+            request.session.flash("The ID and name in the URL you requested "
+                "didn't match up; you've been redirected from {0} to {1}"
+                .format(old_path, new_path))
+
+        raise httpexc.HTTPMovedPermanently(new_path)
     else:
         # Well, we don't even *have* an integer ID here, so never mind
         raise httpexc.HTTPNotFound()
