@@ -51,6 +51,16 @@ class Ability(Base):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
+class DamageClass(Base):
+    """A damage class (physical, special, or non-damaging)."""
+
+    __tablename__ = 'damage_classes'
+    __singlename__ = 'damage_class'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+
 class Gender(Base):
     """An enigma."""
 
@@ -72,6 +82,26 @@ class Item(Base):
     name = Column(Unicode, nullable=False)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
+
+class Move(Base):
+    """A move (a.k.a. an attack)."""
+
+    __tablename__ = 'moves'
+    __singlename__ = 'move'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+    type_id = Column(Integer, ForeignKey('types.id'), nullable=False)
+    damage_class_id = Column(Integer, ForeignKey('damage_classes.id'),
+        nullable=False)
+    damage = Column(Integer, nullable=True)
+    energy = Column(Integer, nullable=True)
+    accuracy = Column(Integer, nullable=True)
+    summary = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
+    target = Column(Unicode, nullable=False)  # XXX do something better later
+    category = Column(Unicode, nullable=True)  # XXX do something better later
 
 class Pokemon(Base):
     """An individual Pokémon owned by a trainer."""
