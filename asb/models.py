@@ -236,6 +236,16 @@ class TrainerItem(Base):
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
 
+class Type(Base):
+    """A type (Normal, Fire, etc.)"""
+
+    __tablename__ = 'types'
+    __singlename__ = 'type'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+
 # Relationships go down here so that we don't have to use strings for
 # everything
 
