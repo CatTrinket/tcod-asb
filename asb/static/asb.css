@@ -55,3 +55,7 @@ ul#what_do label { font-weight: normal; display: inline; }
 
 /* Login page */
 #login-page-form p { text-align: center; }
+
+/* Item list */
+/* The descriptions are long as hell so we do need a row separator */
+#item-table tr + tr { border-top: 1px solid #7799EE; }

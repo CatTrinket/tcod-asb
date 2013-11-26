@@ -28,6 +28,9 @@ def main(global_config, **settings):
     config.add_route('trainer_index', '/trainers')
     config.add_route('trainer', '/trainers/{identifier}')
 
+    config.add_route('item_index', '/items')
+    config.add_route('item', '/items/{identifier}')
+
     config.add_route('register', '/register')
     config.add_route('register_done', '/register/done')
     config.add_route('login', '/login')
