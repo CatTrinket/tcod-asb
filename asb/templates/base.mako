@@ -17,13 +17,14 @@
 
 <div id="menu">
 <ul id="menu-user">
-% if False:  ## if logged in
+% if request.user is not None:
+  <li class="menu-focus-link"><a href="/trainers/${request.user.identifier}">${request.user.name}</a></li>
   <li>Account stuff</li>
   <li>Buy stuff</li>
   <li>idk</li>
-  <li>Log out</li>
+  <li><a href="/logout?csrf_token=${request.session.get_csrf_token()}">Log out</a></li>
 % else:
-  <li id="register"><a href="/register">Register</a></li>
+  <li class="menu-focus-link"><a href="/register">Register</a></li>
   <li>
     <form action="/login" method="POST" id="login">
       ${login_form.csrf_token(id='login-csrf') | n}

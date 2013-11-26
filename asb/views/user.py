@@ -1,5 +1,6 @@
 import pbkdf2
 import pyramid.httpexceptions as httpexc
+import pyramid.security
 from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import select
@@ -8,6 +9,22 @@ import wtforms
 import wtforms.ext.csrf
 
 import asb.models as models
+
+def get_user(request):
+    id = pyramid.security.unauthenticated_userid(request)
+
+    if id is None:
+        return None
+
+    try:
+        user = (models.DBSession.query(models.Trainer)
+            .filter_by(id=id)
+            .one()
+        )
+    except NoResultFound:
+        return None
+
+    return user
 
 class UsernameField(wtforms.StringField):
     """A username field that also fetches the corresponding user, if any, from
@@ -208,6 +225,19 @@ def Login(context, request):
     if not form.validate():
         return {'form': form}
 
-    # blah
+    username, user = form.username.data
+    headers = pyramid.security.remember(request, user.id)
 
-    return httpexc.HTTPSeeOther('/')
+    return httpexc.HTTPSeeOther('/', headers=headers)
+
+@view_config(route_name='logout')
+def Logout(context, request):
+    if request.params['csrf_token'] == request.session.get_csrf_token():
+        headers = pyramid.security.forget(request)
+        return httpexc.HTTPSeeOther('/', headers=headers)
+    else:
+        # what do I do
+        request.session.flash('Invalid CSRF token; the logout link probably '
+            'expired.  Try again.')
+
+        return httpexc.HTTPSeeOther('/')

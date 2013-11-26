@@ -1,3 +1,5 @@
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
@@ -5,6 +7,7 @@ from .models import (
     DBSession,
     Base,
     )
+from .views import user
 
 
 def main(global_config, **settings):
@@ -15,6 +18,13 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
     config.include('pyramid_mako')
+
+    authn_policy = AuthTktAuthenticationPolicy(settings['secret'],
+        hashalg='sha512')
+    authz_policy = ACLAuthorizationPolicy()
+    config.set_authentication_policy(authn_policy)
+    config.set_authorization_policy(authz_policy)
+    config.add_request_method(user.get_user, 'user', reify=True)
 
     config.add_static_view('static', 'static', cache_max_age=3600)
 
@@ -32,8 +42,8 @@ def main(global_config, **settings):
     config.add_route('item', '/items/{identifier}')
 
     config.add_route('register', '/register')
-    config.add_route('register_done', '/register/done')
     config.add_route('login', '/login')
+    config.add_route('logout', '/logout')
 
     config.add_route('slash_redirect', '/{path:.+}/')
 
