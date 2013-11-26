@@ -648,13 +648,13 @@ id,identifier,name,evolves_from_species_id,rarity,is_starter,can_switch_forms
 647,keldeo,Keldeo,,,f,f
 648,meloetta,Meloetta,,,f,f
 649,genesect,Genesect,,,f,f
-650,chespin,Chespin,,,f,f
+650,chespin,Chespin,,,t,f
 651,quilladin,Quilladin,650,,f,f
 652,chesnaught,Chesnaught,651,,f,f
-653,fennekin,Fennekin,,,f,f
+653,fennekin,Fennekin,,,t,f
 654,braixen,Braixen,653,,f,f
 655,delphox,Delphox,654,,f,f
-656,froakie,Froakie,,,f,f
+656,froakie,Froakie,,,t,f
 657,frogadier,Frogadier,656,,f,f
 658,greninja,Greninja,657,,f,f
 659,bunnelby,Bunnelby,,,f,f
