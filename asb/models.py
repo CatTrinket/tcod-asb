@@ -50,6 +50,8 @@ class Ability(Base):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
+    summary = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
 
 class DamageClass(Base):
     """A damage class (physical, special, or non-damaging)."""
