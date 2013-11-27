@@ -4,9 +4,10 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
+from asb.resources import PokemonIndex, SpeciesIndex
 from asb.views.redirect import attempt_redirect
 
-@view_config(route_name='pokemon_index', renderer='/indices/pokemon.mako')
+@view_config(context=PokemonIndex, renderer='/indices/pokemon.mako')
 def PokemonIndex(context, request):
     """The index page for everyone's Pokémon."""
 
@@ -28,24 +29,13 @@ def PokemonIndex(context, request):
 
     return {'pokemon': pokemon}
 
-@view_config(route_name='pokemon', renderer='/pokemon.mako')
+@view_config(context=models.Pokemon, renderer='/pokemon.mako')
 def Pokemon(context, request):
     """An individual Pokémon's info page."""
 
-    try:
-        pokemon = (
-            models.DBSession.query(models.Pokemon)
-            .filter_by(identifier=request.matchdict['identifier'])
-            .one()
-        )
-    except NoResultFound:
-        attempt_redirect(request.matchdict['identifier'],
-            models.Pokemon, request)
+    return {'pokemon': context}
 
-    return {'pokemon': pokemon}
-
-@view_config(route_name='pokemon_species_index',
-             renderer='/indices/pokemon_species.mako')
+@view_config(context=SpeciesIndex, renderer='/indices/pokemon_species.mako')
 def PokemonSpeciesIndex(context, request):
     """The index page for all the species of Pokémon."""
 
@@ -57,14 +47,13 @@ def PokemonSpeciesIndex(context, request):
 
     return {'pokemon': pokemon}
 
-@view_config(route_name='pokemon_species', renderer='/pokemon_species.mako')
+@view_config(context=models.PokemonForm, renderer='/pokemon_species.mako')
 def PokemonSpecies(context, request):
-    """A Pokémon species's dex page."""
+    """The dex page of a Pokémon species.
 
-    pokemon = (
-        models.DBSession.query(models.PokemonSpecies)
-        .filter_by(identifier=request.matchdict['identifier'])
-        .one()
-    )
+    Under the hood, this is actually the dex page for a form.  But it's clearer
+    to present it as the page for a species and pretend the particular form is
+    just a detail.
+    """
 
-    return {'pokemon': pokemon}
+    return {'pokemon': context}

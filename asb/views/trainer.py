@@ -2,9 +2,10 @@ from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
+from asb.resources import TrainerIndex
 from asb.views.redirect import attempt_redirect
 
-@view_config(route_name='trainer_index', renderer='/indices/trainers.mako')
+@view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
 def TrainerIndex(context, request):
     """The index of all the trainers in the league."""
 
@@ -17,18 +18,8 @@ def TrainerIndex(context, request):
 
     return {'trainers': trainers}
 
-@view_config(route_name='trainer', renderer='/trainer.mako')
+@view_config(context=models.Trainer, renderer='/trainer.mako')
 def Trainer(context, request):
     """A trainer's info page."""
 
-    try:
-        trainer = (
-            models.DBSession.query(models.Trainer)
-            .filter_by(identifier=request.matchdict['identifier'])
-            .one()
-        )
-    except NoResultFound:
-        attempt_redirect(request.matchdict['identifier'],
-            models.Trainer, request)
-
-    return {'trainer': trainer}
+    return {'trainer': context}

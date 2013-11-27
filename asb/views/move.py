@@ -3,8 +3,9 @@ from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
+from asb.resources import MoveIndex
 
-@view_config(route_name='move_index', renderer='/indices/moves.mako')
+@view_config(context=MoveIndex, renderer='/indices/moves.mako')
 def MoveIndex(context, request):
     """The index of all the moves."""
 
@@ -16,7 +17,7 @@ def MoveIndex(context, request):
 
     return {'moves': moves}
 
-@view_config(route_name='move', renderer='/move.mako')
+@view_config(context=models.Move, renderer='/move.mako')
 def Move(context, request):
     """A move's dex page."""
 

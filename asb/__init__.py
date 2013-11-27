@@ -8,6 +8,7 @@ from .models import (
     Base,
     )
 from .views import user
+from asb.resources import get_root
 
 
 def main(global_config, **settings):
@@ -16,7 +17,7 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings, root_factory=get_root)
     config.include('pyramid_mako')
 
     authn_policy = AuthTktAuthenticationPolicy(settings['secret'],
@@ -28,29 +29,14 @@ def main(global_config, **settings):
 
     config.add_static_view('static', 'static', cache_max_age=3600)
 
+    # Add routes for one-off pages (most pages use traversal; see resources.py)
     config.add_route('home', '/')
-
-    config.add_route('pokemon_index', '/pokemon')
-    config.add_route('pokemon_species_index', '/pokemon/species')
-    config.add_route('pokemon', '/pokemon/{identifier}')
-    config.add_route('pokemon_species', '/pokemon/species/{identifier}')
-
-    config.add_route('trainer_index', '/trainers')
-    config.add_route('trainer', '/trainers/{identifier}')
-
-    config.add_route('ability_index', '/abilities')
-    config.add_route('ability', '/abilities/{identifier}')
-
-    config.add_route('item_index', '/items')
-    config.add_route('item', '/items/{identifier}')
-
-    config.add_route('move_index', '/moves')
-    config.add_route('move', '/moves/{identifier}')
 
     config.add_route('register', '/register')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
 
+    # A route to redirect away trailing slashes instead of just 404ing
     config.add_route('slash_redirect', '/{path:.+}/')
 
     config.scan()

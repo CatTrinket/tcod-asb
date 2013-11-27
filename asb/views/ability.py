@@ -3,8 +3,9 @@ from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
+from asb.resources import AbilityIndex
 
-@view_config(route_name='ability_index', renderer='/indices/abilities.mako')
+@view_config(context=AbilityIndex, renderer='/indices/abilities.mako')
 def AbilityIndex(context, request):
     """The index of all the different abilities."""
 
@@ -16,17 +17,8 @@ def AbilityIndex(context, request):
 
     return {'abilities': abilities}
 
-@view_config(route_name='ability', renderer='/ability.mako')
+@view_config(context=models.Ability, renderer='/ability.mako')
 def Ability(context, request):
     """An ability's dex page."""
 
-    try:
-        ability = (
-            models.DBSession.query(models.Ability)
-            .filter_by(identifier=request.matchdict['identifier'])
-            .one()
-        )
-    except NoResultFound:
-        raise httpexc.HTTPNotFound
-
-    return {'ability': ability}
+    return {'ability': context}
