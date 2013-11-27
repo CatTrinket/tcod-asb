@@ -75,6 +75,11 @@ td.gender, td.stat { text-align: center; }
 
 .effect-table tbody tr { vertical-align: top; }
 
+/* Icons are big and icon columns always come right before the name column
+   they're attached to, so they only need padding on the left */
+td.icon { padding: 0 0 0 0.5em; line-height: 2em; }
+td.icon img { vertical-align: middle; }
+
 /* Type icons */
 .type {
     display: inline-block;
