@@ -61,6 +61,34 @@ h2 {
 
 .form-error { color: #CC0000; }
 
+/* Type icons */
+.type {
+    display: inline-block;
+    width: 70px; height: 20px; border: 2px solid; border-radius: 12px;
+    text-align: center; vertical-align: middle; line-height: 20px;
+    color: white; text-shadow: black 1px 1px;
+    margin-top: -4px; /* Compensate for top border + half of extra height */
+}
+
+.type-normal { background: #ADAD7B; border-color: #735A4A; }
+.type-fire { background: #F75231; border-color: #943129; }
+.type-water { background: #6B94F7; border-color: #847B73; }
+.type-grass { background: #7BCE52; border-color: #5A8442; }
+.type-electric { background: #FFD631; border-color: #BDA53A; }
+.type-ice { background: #9CDEDE; border-color: #9494A5; }
+.type-fighting { background: #943129; border-color: #4A423A; }
+.type-poison { background: #A542A5; border-color: #4A3A52; }
+.type-ground { background: #E6C56B; border-color: #8C6B31; }
+.type-flying { background: #AD94F7; border-color: #7A5A9C; }
+.type-psychic { background: #FF5A8C; border-color: #946363; }
+.type-bug { background: #ADBD21; border-color: #7B9410; }
+.type-rock { background: #BDA53A; border-color: #8C6B31; }
+.type-ghost { background: #735A9C; border-color: #4A3A52; }
+.type-dragon { background: #733AFF; border-color: #4A3A94; }
+.type-dark { background: #735A4A; border-color: #4A423A; }
+.type-steel { background: #BDBDD6; border-color: #847B73; }
+.type-fairy { background: #FFA5E6; border-color: #B56B84; }
+
 /* Gender symbols */
 .gender-symbol-female { color: #FF4273; }
 .gender-symbol-male { color: #00C5AD; }
