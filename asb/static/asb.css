@@ -77,6 +77,8 @@ tbody > tr:hover { background: #DEE6F5; }
 td.focus-column { font-weight: bold; }
 td.gender, td.stat { text-align: center; }
 
+.effect-table tbody tr { vertical-align: top; }
+.stat-cell { text-align: center; }
 
 /**** SPECIFIC PAGES ****/
 
@@ -94,8 +96,3 @@ ul#what_do label { font-weight: normal; display: inline; }
 
 /* Login page */
 #login-page-form p { text-align: center; }
-
-/* Item list */
-/* Descriptions wrap pretty easily, so algining the name with the beginning
-   looks nicer */
-#item-table tbody tr { vertical-align: top; }

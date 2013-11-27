@@ -41,6 +41,9 @@ def main(global_config, **settings):
     config.add_route('item_index', '/items')
     config.add_route('item', '/items/{identifier}')
 
+    config.add_route('move_index', '/moves')
+    config.add_route('move', '/moves/{identifier}')
+
     config.add_route('register', '/register')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')

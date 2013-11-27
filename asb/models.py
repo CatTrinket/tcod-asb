@@ -279,6 +279,8 @@ class Type(Base):
 # Relationships go down here so that we don't have to use strings for
 # everything
 
+Move.type = relationship(Type)
+
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
 Pokemon.form = relationship(PokemonForm)
