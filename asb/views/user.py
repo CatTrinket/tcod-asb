@@ -11,6 +11,8 @@ import wtforms.ext.csrf
 import asb.models as models
 
 def get_user(request):
+    """Get the logged-in user or a request."""
+
     id = pyramid.security.unauthenticated_userid(request)
 
     if id is None:

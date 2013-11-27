@@ -17,6 +17,8 @@ class DexIndex:
     table = None
 
     def __getitem__(self, identifier):
+        """Get the requested resource from the database."""
+
         try:
             item = (models.DBSession.query(self.table)
                 .filter_by(identifier=identifier)
