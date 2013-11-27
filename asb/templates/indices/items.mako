@@ -12,7 +12,7 @@
 <tbody>
 % for item in items:
 <tr>
-    <td><a href="/items/${item.identifier}">${item.name}</a></td>
+    <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
     <td>${item.summary}</td>
 </tr>
 % endfor

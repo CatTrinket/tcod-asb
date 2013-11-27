@@ -59,7 +59,21 @@ h2 {
 
 /**** SHARED STUFF ****/
 
+/* WTForms error messages */
 .form-error { color: #CC0000; }
+
+/* Tables */
+table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
+td, th { padding: 0.5em; line-height: 1em; }
+
+thead { border-bottom: 2px solid #7799EE; }
+
+tbody > tr:hover { background: #DEE6F5; }
+
+td.focus-column { font-weight: bold; }
+td.gender, td.stat { text-align: center; }
+
+.effect-table tbody tr { vertical-align: top; }
 
 /* Type icons */
 .type {
@@ -94,19 +108,6 @@ h2 {
 .gender-symbol-male { color: #00C5AD; }
 .gender-symbol-genderless { color: black; }
 
-/* Tables */
-table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
-td, th { padding: 0.5em; line-height: 1em; }
-
-thead { border-bottom: 2px solid #7799EE; }
-
-tbody > tr:hover { background: #DEE6F5; }
-
-td.focus-column { font-weight: bold; }
-td.gender, td.stat { text-align: center; }
-
-.effect-table tbody tr { vertical-align: top; }
-.stat-cell { text-align: center; }
 
 /**** SPECIFIC PAGES ****/
 
