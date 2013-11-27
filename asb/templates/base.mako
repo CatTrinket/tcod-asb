@@ -40,9 +40,9 @@
   <li><a href="/trainers">Trainers</a></li>
   <li><a href="/pokemon">Pokémon</a></li>
   <li><a href="/pokemon/species">Species</a></li>
-  <li><a href="/items">Items</a></li>
   <li><a href="/moves">Moves</a></li>
-  <li>Abilities?</li>
+  <li><a href="/abilities">Abilities</a></li>
+  <li><a href="/items">Items</a></li>
 </ul>
 </div>
 
