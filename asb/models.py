@@ -2,6 +2,7 @@ import re
 import unicodedata
 
 import pbkdf2
+import pyramid.security as sec
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, Sequence
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
@@ -139,11 +140,30 @@ class Pokemon(Base):
     )
 
     def update_identifier(self):
-        """"""
+        """Update this Pokémon's identifier."""
+
         self.identifier = identifier(self.name, id=self.id)
 
+    @property
+    def __name__(self):
+        """Return this Pokémon's resource name for traversal."""
+
+        return self.identifier
+
+    @property
+    def __acl__(self):
+        """Return an list of permissions for Pyramid's authorization."""
+
+        return [
+            (sec.Allow, 'user:{0}'.format(self.trainer_id), 'edit:basics'),
+            (sec.Allow, 'admin', 'edit:basics'),
+            (sec.Allow, 'admin', 'edit:everything'),
+            (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
+        ]
+
+
 class PokemonForm(Base):
-    """A particular form of a Pokémon.
+    """A particular form of a Pokémon species.
 
     If a Pokémon only has one form, it still has a row in this table.
     """

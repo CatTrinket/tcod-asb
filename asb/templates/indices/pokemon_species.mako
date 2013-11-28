@@ -3,6 +3,6 @@
 
 <ul>
     % for p in pokemon:
-    <li><a href="/pokemon/species/${p.identifier}">#${p.number} ${p.name}</a></li>
+    <li><a href="/species/${p.identifier}">#${p.number} ${p.name}</a></li>
     % endfor
 </ul>

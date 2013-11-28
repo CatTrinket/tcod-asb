@@ -64,7 +64,9 @@ def get_root(request):
         'items': ItemIndex()
     })
     
-    for index in root.values():
+    for name, index in root.items():
         index.__parent__ = root
+        index.table.__parent__ = index
+        index.table.__name__ = name
 
     return root

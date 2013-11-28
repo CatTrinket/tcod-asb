@@ -3,4 +3,4 @@
 
 <h1>${pokemon.name}</h1>
 
-<p>AW YEAH, POKÉMON #${pokemon.number} IS <strong>${pokemon.name.upper()}</strong></p>
+<p>AW YEAH, POKÉMON #${pokemon.species.number} IS <strong>${pokemon.name.upper()}</strong></p>

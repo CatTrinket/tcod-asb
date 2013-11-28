@@ -28,6 +28,21 @@ def get_user(request):
 
     return user
 
+def get_user_roles(userid, request):
+    # XXX get DB ones
+
+    try:
+        user = (models.DBSession.query(models.Trainer)
+            .filter_by(id=userid)
+            .one()
+        )
+    except NoResultFound:
+        return None
+
+    roles = ['user:{0}'.format(userid)]
+
+    return roles
+
 class UsernameField(wtforms.StringField):
     """A username field that also fetches the corresponding user, if any, from
     the database.

@@ -37,7 +37,7 @@
 
     % if 'species' not in skip_cols:
     <td>
-        <a href="/pokemon/species/${p.species.identifier}">${p.species.name}</a>
+        <a href="/species/${p.species.identifier}">${p.species.name}</a>
     </td>
     % endif
 

@@ -39,7 +39,7 @@
 <ul id="menu-dex">
   <li><a href="/trainers">Trainers</a></li>
   <li><a href="/pokemon">Pokémon</a></li>
-  <li><a href="/pokemon/species">Species</a></li>
+  <li><a href="/species">Species</a></li>
   <li><a href="/moves">Moves</a></li>
   <li><a href="/abilities">Abilities</a></li>
   <li><a href="/items">Items</a></li>
