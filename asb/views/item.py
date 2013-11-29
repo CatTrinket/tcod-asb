@@ -6,7 +6,7 @@ import asb.models as models
 from asb.resources import ItemIndex
 
 @view_config(context=ItemIndex, renderer='/indices/items.mako')
-def ItemIndex(context, request):
+def item_index(context, request):
     """The index of all the different items."""
 
     items = (
@@ -18,7 +18,7 @@ def ItemIndex(context, request):
     return {'items': items}
 
 @view_config(context=models.Item, renderer='/item.mako')
-def Item(context, request):
+def item(context, request):
     """An item's dex page."""
 
     return {'item': context}

@@ -6,7 +6,7 @@ import asb.models as models
 from asb.resources import AbilityIndex
 
 @view_config(context=AbilityIndex, renderer='/indices/abilities.mako')
-def AbilityIndex(context, request):
+def ability_index(context, request):
     """The index of all the different abilities."""
 
     abilities = (
@@ -18,7 +18,7 @@ def AbilityIndex(context, request):
     return {'abilities': abilities}
 
 @view_config(context=models.Ability, renderer='/ability.mako')
-def Ability(context, request):
+def ability(context, request):
     """An ability's dex page."""
 
     return {'ability': context}

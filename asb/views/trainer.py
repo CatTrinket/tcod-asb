@@ -6,7 +6,7 @@ from asb.resources import TrainerIndex
 from asb.views.redirect import attempt_redirect
 
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
-def TrainerIndex(context, request):
+def trainer_index(context, request):
     """The index of all the trainers in the league."""
 
     trainers = (
@@ -19,7 +19,7 @@ def TrainerIndex(context, request):
     return {'trainers': trainers}
 
 @view_config(context=models.Trainer, renderer='/trainer.mako')
-def Trainer(context, request):
+def trainer(context, request):
     """A trainer's info page."""
 
     return {'trainer': context}

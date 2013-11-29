@@ -6,7 +6,7 @@ import asb.models as models
 from asb.resources import MoveIndex
 
 @view_config(context=MoveIndex, renderer='/indices/moves.mako')
-def MoveIndex(context, request):
+def move_index(context, request):
     """The index of all the moves."""
 
     moves = (
@@ -18,7 +18,7 @@ def MoveIndex(context, request):
     return {'moves': moves}
 
 @view_config(context=models.Move, renderer='/move.mako')
-def Move(context, request):
+def move(context, request):
     """A move's dex page."""
 
     try:

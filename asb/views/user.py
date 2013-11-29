@@ -170,14 +170,14 @@ class RegistrationForm(wtforms.ext.csrf.SecureForm):
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='GET')
-def Register(context, request):
+def register(context, request):
     """Return a blank registration form."""
 
     return {'form': RegistrationForm(csrf_context=request.session)}
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='POST')
-def RegisterCommit(context, request):
+def register_commit(context, request):
     """Process a registration form.  Send the user back to the form if there
     are any errors; create their account otherwise.
     """
@@ -225,7 +225,7 @@ def RegisterCommit(context, request):
 
 @view_config(route_name='login', renderer='/login.mako',
   request_method='GET')
-def LoginPage(context, request):
+def login_page(context, request):
     """Return a blank login form in the unlikely event that anyone ever GETs
     /login.
     """
@@ -234,7 +234,7 @@ def LoginPage(context, request):
 
 @view_config(route_name='login', renderer='/login.mako',
   request_method='POST')
-def Login(context, request):
+def login(context, request):
     """Process a login form."""
 
     form = LoginForm(request.POST, csrf_context=request.session)
@@ -248,7 +248,7 @@ def Login(context, request):
     return httpexc.HTTPSeeOther('/', headers=headers)
 
 @view_config(route_name='logout')
-def Logout(context, request):
+def logout(context, request):
     if request.params['csrf_token'] == request.session.get_csrf_token():
         headers = pyramid.security.forget(request)
         return httpexc.HTTPSeeOther('/', headers=headers)
