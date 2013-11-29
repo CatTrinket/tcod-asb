@@ -76,9 +76,14 @@ td.gender, td.stat { text-align: center; }
 .effect-table tbody tr { vertical-align: top; }
 
 /* Icons are big and icon columns always come right before the name column
-   they're attached to, so they only need padding on the left */
-td.icon { padding: 0 0 0 0.5em; line-height: 2em; }
+   they're attached to, so they need less padding */
+td.icon { padding: 0 0 0 0.5em; }
 td.icon img { vertical-align: middle; }
+td.icon + td { padding-left: 0.25em; }
+
+/* If you add this to tables with vertical centering, it pushes the row out by
+   1 px for some reason */
+.effect-table td.icon { line-height: 2em; }
 
 /* Checkboxes should be similarly cozy */
 td.ticky { padding: 0 0 0 0.5em; }

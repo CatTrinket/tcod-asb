@@ -1,35 +1,103 @@
+<%def name="link(db_resource)">
+## resource_url will add a trailing slash unless we do it this way
+<a href="${request.resource_url(db_resource.__parent__,
+    db_resource.__name__)}">${db_resource.name}</a>
+</%def>
+
+<%def name="name_header()">
+<th colspan="2">Name</th>
+</%def>
+
+<%def name="name_cell(pokemon)">
+<td class="icon"><img src="/static/images/pokemon-icons/${pokemon.form.species_id | str, n}.png" alt=""></td>
+<td class="focus-column">${link(pokemon)}</td>
+</%def>
+
+<%def name="species_header()">
+<th>Species</th>
+</%def>
+
+<%def name="species_cell(pokemon)">
+<td>${link(pokemon.species.default_form)}</td>
+</%def>
+
+<%def name="gender_header()">
+<th><abbr title="Gender">⚥</abbr></th>
+</%def>
+
+<%def name="gender_cell(pokemon)">
+<td class="gender">${gender_symbol(pokemon.gender)}</td>
+</%def>
+
+<%def name="trainer_header()">
+<th>Trainer</th>
+</%def>
+
+<%def name="trainer_cell(pokemon)">
+<td>${link(pokemon.trainer)}
+</%def>
+
+<%def name="ability_header()">
+<th>Ability</th>
+</%def>
+
+<%def name="ability_cell(pokemon)">
+<td>${link(pokemon.ability)}</td>
+</%def>
+
+<%def name="experience_header()">
+<th><abbr title="Experience">XP</abbr></th>
+</%def>
+
+<%def name="experience_cell(pokemon)">
+<td class="stat">${pokemon.experience | n, str}</td>
+</%def>
+
+<%def name="happiness_header()">
+<th><abbr title="Happiness">:3</abbr></th>
+</%def>
+
+<%def name="happiness_cell(pokemon)">
+<td class="stat">${pokemon.happiness | n, str}</td>
+</%def>
+
+<%def name="item_header()">
+<th colspan="2">Item</th>
+</%def>
+
+<%def name="item_cell(pokemon)">
+% if pokemon.item is not None:
+<td class="icon"><img src="/static/images/items/${pokemon.item.identifier}.png"></td>
+<td>${link(pokemon.item)}</td>
+% else:
+<td colspan="2"></td>
+% endif
+</%def>
+
 <%def name="pokemon_table(pokemon, skip_cols=[], extra_left_cols=[],
     extra_right_cols=[])">\
 <%
-  pokemon_table_columns = [
-      ('name', 'Name', None),
-      ('species', 'Species', None),
-      ('gender', '⚥', 'Gender'),
-      ('trainer', 'Trainer', None),
-      ('ability', 'Ability', None),
-      ('experience', 'XP', 'Experience'),
-      ('happiness', ':3', 'Happiness'),
-      ('item', 'Item', None)
-  ]
+  columns = []
+
+  columns.extend(extra_left_cols)
+
+  columns.extend(column for column in [
+      (name_header, name_cell),
+      (gender_header, gender_cell),
+      (species_header, species_cell),
+      (trainer_header, trainer_cell),
+      (ability_header, ability_cell),
+      (experience_header, experience_cell),
+      (happiness_header, happiness_cell),
+      (item_header, item_cell)
+  ] if column not in skip_cols)
+
+  columns.extend(extra_right_cols)
 %>
 <table>
 <thead>
 <tr>
-    % for header_func, cell_func in extra_left_cols:
-    ${header_func()}
-    % endfor
-
-    % for column, header, title in pokemon_table_columns:
-    % if column not in skip_cols:
-    % if title is not None:
-    <th><abbr title="${title}">${header}</abbr></th>
-    % else:
-    <th>${header}</th>
-    % endif
-    % endif
-    % endfor
-
-    % for header_func, cell_func in extra_right_cols:
+    % for header_func, cell_func in columns:
     ${header_func()}
     % endfor
 </tr>
@@ -38,51 +106,7 @@
 <tbody>
 % for p in pokemon:
 <tr>
-    % for header_func, cell_func in extra_left_cols:
-    ${cell_func(p)}
-    % endfor
-
-    % if 'name' not in skip_cols:
-    <td class='focus-column'>
-        <a href="/pokemon/${p.identifier}">${p.name}</a>
-    </td>
-    % endif
-
-    % if 'species' not in skip_cols:
-    <td>
-        <a href="/species/${p.species.identifier}">${p.species.name}</a>
-    </td>
-    % endif
-
-    % if 'gender' not in skip_cols:
-    <td class="gender">${gender_symbol(p.gender)}</td>
-    % endif
-
-    % if 'trainer' not in skip_cols:
-    <td><a href="/trainers/${p.trainer.identifier}">${p.trainer.name}</a></td>
-    % endif
-
-    % if 'ability' not in skip_cols:
-    <td>${p.ability.name}</td>
-    % endif
-
-    % if 'experience' not in skip_cols:
-    <td class="stat">${p.experience | n, str}</td>
-    % endif
-
-    % if 'happiness' not in skip_cols:
-    <td class="stat">${p.happiness | n, str}</td>
-    % endif
-
-    % if 'item' not in skip_cols:
-    <td>
-        % if p.item:
-        <a href="/items/${p.item.identifier}">${p.item.name}</a>
-        % endif
-    </td>
-    % endif
-
-    % for header_func, cell_func in extra_right_cols:
+    % for header_func, cell_func in columns:
     ${cell_func(p)}
     % endfor
 </tr>

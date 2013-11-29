@@ -54,6 +54,12 @@ class Ability(Base):
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
 
+    @property
+    def __name__(self):
+        """Return this ability's resource name for traversal."""
+
+        return self.identifier
+
 class DamageClass(Base):
     """A damage class (physical, special, or non-damaging)."""
 
@@ -86,6 +92,12 @@ class Item(Base):
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
 
+    @property
+    def __name__(self):
+        """Return this item's resource name for traversal."""
+
+        return self.identifier
+
 class Move(Base):
     """A move (a.k.a. an attack)."""
 
@@ -105,6 +117,12 @@ class Move(Base):
     description = Column(Unicode, nullable=False)
     target = Column(Unicode, nullable=False)  # XXX do something better later
     category = Column(Unicode, nullable=True)  # XXX do something better later
+
+    @property
+    def __name__(self):
+        """Return this move's resource name for traversal."""
+
+        return self.identifier
 
 class Pokemon(Base):
     """An individual Pokémon owned by a trainer."""
@@ -180,6 +198,12 @@ class PokemonForm(Base):
     def name(self):
         """To do"""
         return self.species.name
+
+    @property
+    def __name__(self):
+        """Return this form's resource name for traversal."""
+
+        return self.identifier
 
 class PokemonFormAbility(Base):
     """One of a Pokémon form's abilities."""
@@ -274,6 +298,12 @@ class Trainer(Base):
 
         self.identifier = identifier(self.name, id=self.id)
 
+    @property
+    def __name__(self):
+        """Return this trainer's resource name for traversal."""
+
+        return self.identifier
+
 class TrainerItem(Base):
     """An individual item owned by a trainer and possibly held by a Pokémon."""
 
@@ -312,7 +342,13 @@ Pokemon.item = relationship(Item,
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
-PokemonForm.species = relationship(PokemonSpecies)
+PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
+
+PokemonSpecies.forms = relationship(PokemonForm, back_populates='species')
+PokemonSpecies.default_form = relationship(PokemonForm,
+    primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
+        PokemonForm.is_default),
+    uselist=False)
 
 Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
     order_by=Pokemon.id)
