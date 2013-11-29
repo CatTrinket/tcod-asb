@@ -1,4 +1,5 @@
-<%def name="pokemon_table(pokemon, skip_cols=[])">\
+<%def name="pokemon_table(pokemon, skip_cols=[], extra_left_cols=[],
+    extra_right_cols=[])">\
 <%
   pokemon_table_columns = [
       ('name', 'Name', None),
@@ -14,6 +15,10 @@
 <table>
 <thead>
 <tr>
+    % for header_func, cell_func in extra_left_cols:
+    ${header_func()}
+    % endfor
+
     % for column, header, title in pokemon_table_columns:
     % if column not in skip_cols:
     % if title is not None:
@@ -23,12 +28,20 @@
     % endif
     % endif
     % endfor
+
+    % for header_func, cell_func in extra_right_cols:
+    ${header_func()}
+    % endfor
 </tr>
 </thead>
 
 <tbody>
 % for p in pokemon:
 <tr>
+    % for header_func, cell_func in extra_left_cols:
+    ${cell_func(p)}
+    % endfor
+
     % if 'name' not in skip_cols:
     <td class='focus-column'>
         <a href="/pokemon/${p.identifier}">${p.name}</a>
@@ -68,6 +81,10 @@
         % endif
     </td>
     % endif
+
+    % for header_func, cell_func in extra_right_cols:
+    ${cell_func(p)}
+    % endfor
 </tr>
 % endfor
 </table>

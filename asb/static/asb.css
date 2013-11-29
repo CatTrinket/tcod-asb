@@ -35,7 +35,7 @@ h2 {
     border-bottom: 1px solid #C0CCE6;
 }
 
-#body > h1:first-child { margin-top: -1rem; }
+#body > h1:first-child { margin-top: 0; }
 
 /* Menu */
 #menu { margin: 0; background: #335599; color: #C0CCE6; }
@@ -79,6 +79,9 @@ td.gender, td.stat { text-align: center; }
    they're attached to, so they only need padding on the left */
 td.icon { padding: 0 0 0 0.5em; line-height: 2em; }
 td.icon img { vertical-align: middle; }
+
+/* Checkboxes should be similarly cozy */
+td.ticky { padding: 0 0 0 0.5em; }
 
 /* Type icons */
 .type {

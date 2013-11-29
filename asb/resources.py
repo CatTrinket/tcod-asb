@@ -1,5 +1,6 @@
 """Define all the resources and the traversal tree."""
 
+import pyramid.security as sec
 from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
@@ -8,6 +9,11 @@ class Root(dict):
     """A root resource."""
     __name__ = None
     __parent__ = None
+
+    __acl__ = [
+        (sec.Allow, sec.Authenticated, 'manage-account'),
+        (sec.Deny, sec.Everyone, 'manage-account')
+    ]
 
 class DexIndex:
     """A resource for anything in the database whose info you'd want to look
@@ -53,8 +59,9 @@ class ItemIndex(DexIndex):
     __name__ = 'items'
     table = models.Item
 
-
 def get_root(request):
+    """Get a root object."""
+
     root = Root({
         'trainers': TrainerIndex(),
         'pokemon': PokemonIndex(),

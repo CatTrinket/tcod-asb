@@ -317,9 +317,11 @@ PokemonForm.species = relationship(PokemonSpecies)
 Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
     order_by=Pokemon.id)
 Trainer.squad = relationship(Pokemon,
-    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad))
+    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad),
+    order_by=Pokemon.id)
 Trainer.pc = relationship(Pokemon,
-    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad))
+    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad),
+    order_by=Pokemon.id)
 
 Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
     primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,

@@ -19,9 +19,8 @@
 <ul id="menu-user">
 % if request.user is not None:
   <li class="menu-focus-link"><a href="/trainers/${request.user.identifier}">${request.user.name}</a></li>
-  <li>Account stuff</li>
-  <li>Buy stuff</li>
-  <li>idk</li>
+  <li><a href="/pokemon/manage">Your Pokémon</a></li>
+  <li><a href="/items/manage">Your items</a></li>
   <li><a href="/logout?csrf_token=${request.session.get_csrf_token()}">Log out</a></li>
 % else:
   <li class="menu-focus-link"><a href="/register">Register</a></li>
