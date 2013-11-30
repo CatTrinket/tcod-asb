@@ -4,13 +4,13 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 import transaction
 import wtforms
-import wtforms.ext.csrf
 
 import asb.models as models
 from asb.resources import PokemonIndex, SpeciesIndex
 from asb.views.redirect import attempt_redirect
+from asb.forms import CSRFTokenForm, MultiCheckboxField
 
-class EditPokemonForm(wtforms.ext.csrf.SecureForm):
+class EditPokemonForm(CSRFTokenForm):
     """A form for editing a Pokémon.
 
     This will mean more than just its nickname, eventually.
@@ -19,24 +19,7 @@ class EditPokemonForm(wtforms.ext.csrf.SecureForm):
     name = wtforms.TextField('Name')
     save = wtforms.SubmitField('Save')
 
-    def generate_csrf_token(self, session):
-        return session.get_csrf_token()
-
-    def validate_csrf_token(form, field):
-        if field.data != field.current_token:
-            raise wtforms.validators.ValidationError('Invalid CSRF token')
-
-class MultiCheckboxField(wtforms.SelectMultipleField):
-    """A SelectMultipleField that presents its options as checkboxes.
-
-    Lifted from the WTForms docs, at the bottom of "Solving Specific Problems":
-    http://wtforms.readthedocs.org/en/latest/specific_problems.html
-    """
-
-    widget = wtforms.widgets.ListWidget(prefix_label=False)
-    option_widget = wtforms.widgets.CheckboxInput()
-
-class PokemonMovingForm(wtforms.ext.csrf.SecureForm):
+class PokemonMovingForm(CSRFTokenForm):
     """A form for selecting Pokémon to deposit or withdraw.
 
     Several parts of this form must be created dynamically, using
@@ -45,14 +28,6 @@ class PokemonMovingForm(wtforms.ext.csrf.SecureForm):
 
     pokemon = MultiCheckboxField(coerce=int)
     submit = wtforms.SubmitField()
-
-    def generate_csrf_token(self, session):
-        return session.get_csrf_token()
-
-    def validate_csrf_token(form, field):
-        if field.data != field.current_token:
-            raise wtforms.validators.ValidationError(
-                'Invalid CSRF token; please resubmit the form')
 
 def pokemon_deposit_form(trainer, request, use_post=True):
     """Return a PokemonMovingForm for depositing Pokémon."""

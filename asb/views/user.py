@@ -6,9 +6,9 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import select
 import transaction
 import wtforms
-import wtforms.ext.csrf
 
 import asb.models as models
+from asb.forms import CSRFTokenForm
 
 def get_user(request):
     """Get the logged-in user or a request."""
@@ -67,24 +67,16 @@ class UsernameField(wtforms.StringField):
         except NoResultFound:
             self.data = (username, None)
 
-class LoginForm(wtforms.ext.csrf.SecureForm):
+class LoginForm(CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
 
     username = UsernameField('Username')
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
 
-    def generate_csrf_token(self, session):
-        return session.get_csrf_token()
-
-    def validate_csrf_token(form, field):
-        if field.data != field.current_token:
-            raise wtforms.validators.ValidationError('Invalid CSRF token')
-
     # n.b. we don't want the username and password fields to present separate
     # errors to the user because that might look like a security risk to the
     # average person (even though there's a public userlist)
-
     def validate_username(form, field):
         """Make sure we actually found a current user for this username."""
 
@@ -131,13 +123,6 @@ class RegistrationForm(wtforms.ext.csrf.SecureForm):
     password_confirm = wtforms.PasswordField('Confirm')
     email = wtforms.StringField('Email (optional)')
     submit = wtforms.SubmitField('Register')
-
-    def generate_csrf_token(self, session):
-        return session.get_csrf_token()
-
-    def validate_csrf_token(form, field):
-        if field.data != field.current_token:
-            raise wtforms.validators.ValidationError('Invalid CSRF token')
 
     def validate_password_confirm(form, field):
         """Make sure the passwords match."""
