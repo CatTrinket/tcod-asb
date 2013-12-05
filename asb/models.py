@@ -192,6 +192,7 @@ class PokemonForm(Base):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     species_id = Column(Integer, ForeignKey('pokemon_species.id'))
+    form_order = Column(Integer, nullable=False)
     is_default = Column(Boolean, nullable=False)
 
     @property
