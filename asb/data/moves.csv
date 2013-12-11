@@ -598,8 +598,10 @@ id,identifier,name,type_id,damage_class_id,damage,energy,accuracy,summary,descri
 600,powder,Powder,12,3,,0,100,boop,boop,boop,
 601,geomancy,Geomancy,18,3,,0,,boop,boop,boop,
 602,magnetic-flux,Magnetic Flux,5,3,,0,,boop,boop,boop,
+603,happy-hour,Happy Hour,1,3,,1,,Raises prize money by $3.  Works once per Pokémon per battle.,Raises prize money by $3.  Works once per Pokémon per battle.,"",""
 604,electric-terrain,Electric Terrain,5,3,,0,,boop,boop,boop,
 605,dazzling-gleam,Dazzling Gleam,18,2,8,4,100,boop,boop,boop,
+606,celebrate,Celebrate,1,3,,1,,Summons a box.,Summons a box.,"",
 608,baby-doll-eyes,Baby-Doll Eyes,18,3,,0,100,boop,boop,boop,
 609,nuzzle,Nuzzle,5,1,2,1,100,boop,boop,boop,
 611,infestation,Infestation,12,2,2,1,100,boop,boop,boop,
@@ -607,4 +609,3 @@ id,identifier,name,type_id,damage_class_id,damage,energy,accuracy,summary,descri
 613,oblivion-wing,Oblivion Wing,10,2,8,4,100,boop,boop,boop,
 616,lands-wrath,Land's Wrath,9,1,9,5,100,boop,boop,boop,
 10001,chill,Chill,1,3,,,,"The user relaxes and settles down for a brief rest, recovering a small amount of energy in the process.","The user relaxes and settles down for a brief rest, recovering a small amount of energy in the process.",Self,Healing (energy)
-10002,happy-hour,Happy Hour,1,3,,1,,Raises prize money by $3.  Works once per Pokémon per battle.,Raises prize money by $3.  Works once per Pokémon per battle.,"",""
