@@ -11,7 +11,7 @@ from asb.forms import CSRFTokenForm, MultiCheckboxField
 class TakeItemsForm(CSRFTokenForm):
     """A form for selecting Pokémon whose held items to return to the bag."""
 
-    holders = MultiCheckboxField(coerce=int)
+    holders = MultiCheckboxField(coerce=int)  # Values will be ids
     take = wtforms.SubmitField('Take items')
 
 
@@ -30,8 +30,12 @@ def item_index(context, request):
 def _manage_items_queries(trainer):
     """Perform the queries needed for the "manage items" page and return the
     results.
+
+    The same queries are needed for both the GET and POST views, so this avoids
+    repeating some complex query code.
     """
 
+    # A subquery to count how many of each item a trainer has in their bag
     quantity = (
         models.DBSession.query(models.TrainerItem.item_id,
             func.count('*').label('quantity'))
@@ -41,6 +45,7 @@ def _manage_items_queries(trainer):
         .subquery()
     )
 
+    # Get the trainer's bag, including the quantity of each item w/ subquery
     holdable = (
         models.DBSession.query(models.Item, quantity.c.quantity)
         .join(quantity, models.Item.id == quantity.c.item_id)
@@ -48,6 +53,7 @@ def _manage_items_queries(trainer):
         .all()
     )
 
+    # Get a list of the trainer's Pokémon who are holding items
     holders = (
         models.DBSession.query(models.Pokemon)
         .filter(models.Pokemon.trainer_id == trainer.id)
@@ -86,6 +92,7 @@ def manage_items_commit(context, request):
 
     holdable, holders = _manage_items_queries(trainer)
 
+    # Validate the form
     take_form = TakeItemsForm(request.POST, csrf_context=request.session)
     take_form.holders.choices = [(pokemon.id, '') for pokemon in holders]
 
@@ -93,12 +100,14 @@ def manage_items_commit(context, request):
         return {'holdable': holdable, 'holders': holders,
             'take_form': take_form}
 
+    # Find the items held by the specified Pokémon
     to_take = (models.DBSession.query(models.TrainerItem)
         .filter(models.TrainerItem.pokemon_id.in_(
             take_form.holders.data))
         .all()
     )
 
+    # Return them to the bag
     for trainer_item in to_take:
         trainer_item.pokemon_id = None
 
@@ -117,15 +126,19 @@ def give_item(item, request):
 
     # Make sure this trainer actually has this item in their bag
     has_item = (models.DBSession.query(models.TrainerItem)
-        .filter(models.TrainerItem.trainer_id == request.user.id,
-                models.TrainerItem.item_id == item.id,
-                models.TrainerItem.pokemon_id == None)
+        .filter_by(trainer_id=request.user.id, item_id=item.id,
+            pokemon_id=None)
     )
 
     has_item, = models.DBSession.query(has_item.exists()).one()
 
     if not has_item:
         raise httpexc.HTTPForbidden("You don't have this item in your bag!")
+
+    # No form here.  WTForms can't do multiple submit buttons by default, and I
+    # don't feel like writing my own goddamn form class or whatever, so the
+    # template constructs a form manually with a submit button for each
+    # Pokémon.
 
     return {'item': item, 'csrf_failure': False}
 
@@ -134,9 +147,7 @@ def give_item(item, request):
 def give_item_commit(item, request):
     """Process a request to give an item to a Pokémon."""
 
-    # WTForms can't do multiple submit buttons by default, and I don't feel
-    # like writing my own goddamn form class or whatever, so we're going to be
-    # handling the POST data manually.
+    # Again, not using WTForms, so we have to handle POST data manually
 
     trainer = request.user
 
