@@ -276,6 +276,7 @@ class Rarity(Base):
     __singlename__ = 'rarity'
 
     id = Column(Integer, primary_key=True)
+    price = Column(Integer)
 
 class Trainer(Base):
     """A member of the ASB league and user of this app thing."""
