@@ -218,6 +218,16 @@ class PokemonFormAbility(Base):
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=False)
     is_hidden = Column(Boolean, nullable=False)
 
+class PokemonFormMove(Base):
+    """A move that a Pokémon form can use."""
+
+    __tablename__ = 'pokemon_form_moves'
+    __singlename__ = 'pokemon_form_move'
+
+    pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
+        primary_key=True)
+    move_id = Column(Integer, ForeignKey('moves.id'), primary_key=True)
+
 class PokemonSpecies(Base):
     """A species of Pokémon."""
 
@@ -344,6 +354,8 @@ Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
+PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
+    order_by=Move.name)
 
 PokemonSpecies.forms = relationship(PokemonForm, back_populates='species')
 PokemonSpecies.default_form = relationship(PokemonForm,
