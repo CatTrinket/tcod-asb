@@ -88,6 +88,9 @@ td.icon + td { padding-left: 0.25em; }
 /* Checkboxes should be similarly cozy */
 td.ticky { padding: 0 0 0 0.5em; }
 
+/* Buttons should only be cozy vertically*/
+td.button { padding: 0 0.5em; }
+
 /* Type icons */
 .type {
     display: inline-block;
@@ -138,3 +141,8 @@ ul#what_do label { font-weight: normal; display: inline; }
 
 /* Login page */
 #login-page-form p { text-align: center; }
+
+/* Manage items page */
+/* I'M SO ANNOYED that this doesn't really fit into any of the other "centered
+   column" classes */
+td.give { text-align: center }

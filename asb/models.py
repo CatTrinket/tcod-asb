@@ -350,6 +350,7 @@ Pokemon.form = relationship(PokemonForm)
 Pokemon.gender = relationship(Gender)
 Pokemon.item = relationship(Item,
     secondary=TrainerItem.__table__, uselist=False)
+Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 

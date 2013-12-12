@@ -1,7 +1,7 @@
-<%def name="link(db_resource)">
+<%def name="link(db_resource)">\
 ## resource_url will add a trailing slash unless we do it this way
 <a href="${request.resource_url(db_resource.__parent__,
-    db_resource.__name__)}">${db_resource.name}</a>
+    db_resource.__name__)}">${db_resource.name}</a>\
 </%def>
 
 <%def name="name_header()">
@@ -81,16 +81,16 @@
 
   columns.extend(extra_left_cols)
 
-  columns.extend(column for column in [
-      (name_header, name_cell),
-      (gender_header, gender_cell),
-      (species_header, species_cell),
-      (trainer_header, trainer_cell),
-      (ability_header, ability_cell),
-      (experience_header, experience_cell),
-      (happiness_header, happiness_cell),
-      (item_header, item_cell)
-  ] if column not in skip_cols)
+  columns.extend((header_func, cell_func) for name, header_func, cell_func in [
+      ('name', name_header, name_cell),
+      ('gender', gender_header, gender_cell),
+      ('species', species_header, species_cell),
+      ('trainer', trainer_header, trainer_cell),
+      ('ability', ability_header, ability_cell),
+      ('experience', experience_header, experience_cell),
+      ('happiness', happiness_header, happiness_cell),
+      ('item', item_header, item_cell)
+  ] if name not in skip_cols)
 
   columns.extend(extra_right_cols)
 %>
