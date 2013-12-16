@@ -7,7 +7,6 @@ import wtforms
 
 import asb.models as models
 from asb.resources import PokemonIndex, SpeciesIndex
-from asb.views.redirect import attempt_redirect
 from asb.forms import CSRFTokenForm, MultiCheckboxField
 
 class EditPokemonForm(CSRFTokenForm):

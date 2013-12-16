@@ -1,5 +1,7 @@
 """Define all the resources and the traversal tree."""
 
+import pyramid
+import pyramid.httpexceptions as httpexc
 import pyramid.security as sec
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -21,6 +23,7 @@ class DexIndex:
     """
 
     table = None
+    redirect_message = None
 
     def __getitem__(self, identifier):
         """Get the requested resource from the database."""
@@ -30,22 +33,84 @@ class DexIndex:
                 .filter_by(identifier=identifier)
                 .one())
         except NoResultFound:
-            raise KeyError
+            # Attempt to redirect
+            redirect = self._redirect(identifier)
 
-        return item
+            if redirect is None:
+                raise KeyError
+            else:
+                dummy_request = pyramid.request.Request.blank('/')
+                path = dummy_request.resource_path(
+                    redirect.__parent__, redirect.__name__)
 
-class TrainerIndex(DexIndex):
+                return httpexc.HTTPMovedPermanently(path, self.redirect_message)
+        else:
+            return item
+
+    def _redirect(self, identifier):
+        """Return an object to redirect to, or None if none is applicable.
+
+        Subclasses override this.
+        """
+
+        return None
+
+class IDRedirectResource(DexIndex):
+    """A DexIndex resource for anything whose identifier includes its ID, which
+    can redirect based on the ID if the slug is bogus.
+    """
+
+    redirect_message = ("The ID and name in the URL you requested didn't "
+        "match up; you've been redirected from {0} to {1}")
+
+    def _redirect(self, identifier):
+        """Attempt to redirect based on the ID."""
+
+        id, sep, slug = identifier.partition('-')
+
+        if not id.isnumeric():
+            # No ID portion.  Haha, well, never mind then.
+            return None
+
+        id = int(id)
+
+        # Retrieve the thing with this ID, if there is one
+        try:
+            item = (models.DBSession.query(self.table)
+                .filter_by(id=id)
+                .one())
+        except NoResultFound:
+            return None
+        else:
+            return item
+
+class TrainerIndex(IDRedirectResource):
     __name__ = 'trainers'
     table = models.Trainer
 
-class PokemonIndex(DexIndex):
+class PokemonIndex(IDRedirectResource):
     __name__ = 'pokemon'
     table = models.Pokemon
 
 class SpeciesIndex(DexIndex):
     """Actually a form index."""
+
     __name__ = 'species'
     table = models.PokemonForm
+
+    def _redirect(self, identifier):
+        """Redirect to the default form if the identifier matches a species but
+        not a form.
+        """
+
+        try:
+            species = (models.DBSession.query(models.PokemonSpecies)
+                .filter_by(identifier=identifier)
+                .one())
+        except NoResultFound:
+            return None
+        else:
+            return species.default_form
 
 class MoveIndex(DexIndex):
     __name__ = 'moves'

@@ -3,7 +3,6 @@ from sqlalchemy.orm.exc import NoResultFound
 
 import asb.models as models
 from asb.resources import TrainerIndex
-from asb.views.redirect import attempt_redirect
 
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
 def trainer_index(context, request):
