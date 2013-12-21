@@ -23,6 +23,9 @@ ${form.csrf_token | n, str}
     % if hasattr(subform.form, 'gender'):
     <dt>${subform.gender.label() | n}</dt>
     <dd>${subform.gender() | n}</dd>
+    % else:
+    <dt>Gender</dt>
+    <dd>${subform.species.genders[0].name.capitalize()}</dd>
     % endif
 
     % if hasattr(subform.form, 'ability'):

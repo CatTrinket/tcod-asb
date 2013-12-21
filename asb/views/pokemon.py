@@ -197,8 +197,7 @@ def pokemon_checkout_form(cart, request):
             name_ = wtforms.TextField('Name', default=species_.name)
 
             # Gender field, if the Pokémon can be more than one gender
-            if True:
-                # XXX actually do gender
+            if len(species_.genders) > 1:
                 gender = wtforms.SelectField('Gender', coerce=int,
                     choices=[(1, 'Female'), (2, 'Male')], default=1)
 
@@ -397,8 +396,7 @@ def pokemon_checkout_commit(context, request):
         if hasattr(subform, 'gender'):
             gender_id = subform.gender.data
         else:
-            # XXX
-            gender_id = 1
+            gender_id = subform.species.genders[0].id
 
         if hasattr(subform, 'ability'):
             ability_slot = subform.ability.data

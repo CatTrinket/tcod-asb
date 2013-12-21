@@ -269,6 +269,16 @@ class PokemonSpeciesEvolution(Base):
     buyable_price = Column(Integer, nullable=True)
     can_trade_instead = Column(Boolean, nullable=False)
 
+class PokemonSpeciesGender(Base):
+    """A gender a Pokémon species can have."""
+
+    __tablename__ = 'pokemon_species_genders'
+    __singlename__ = 'pokemon_species_gender'
+
+    pokemon_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
+        primary_key=True)
+    gender_id = Column(Integer, ForeignKey('genders.id'), primary_key=True)
+
 class Rarity(Base):
     """A Pokémon rarity."""
 
@@ -369,6 +379,8 @@ PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
     uselist=False)
+PokemonSpecies.genders = relationship(Gender,
+    secondary=PokemonSpeciesGender.__table__, order_by=Gender.id)
 PokemonSpecies.rarity = relationship(Rarity, back_populates='pokemon_species')
 
 Rarity.pokemon_species = relationship(PokemonSpecies,
