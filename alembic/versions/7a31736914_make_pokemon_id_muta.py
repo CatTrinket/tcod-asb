@@ -15,7 +15,7 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    # I forgot to add this in the first place so I don't have to drop it eheheh
+    op.drop_constraint('trainer_items_pokemon_id_fkey', 'trainer_items')
     op.create_foreign_key('trainer_items_pokemon_id_fkey',
         'trainer_items', 'pokemon',
         ['pokemon_id'], ['id'],
@@ -23,4 +23,5 @@ def upgrade():
 
 
 def downgrade():
+    # XXX whatever who cares nobody's downgraiding
     op.drop_constraint('trainer_items_pokemon_id_fkey', 'trainer_items')

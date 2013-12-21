@@ -124,6 +124,15 @@ td.button { padding: 0 0.5em; }
 .gender-symbol-male { color: #00C5AD; }
 .gender-symbol-genderless { color: black; }
 
+/* Form dls with dt and dd on the same line */
+form dt {
+    float: left; clear: left;
+    font-weight: bold; width: 5em; text-align: right;
+}
+form dt:after { content: ':' }
+form dd { margin-left: 5em /* factor in dt */;  padding-left: 0.5em; }
+form dt, form dd { height: 2em; line-height: 2em; }
+
 
 /**** SPECIFIC PAGES ****/
 

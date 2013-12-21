@@ -141,11 +141,11 @@ class Pokemon(Base):
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
     ability_slot = Column(Integer, nullable=False)
-    experience = Column(Integer, nullable=False)
-    happiness = Column(Integer, nullable=False)
-    is_in_squad = Column(Boolean, nullable=False)
-    can_evolve = Column(Boolean, nullable=False)
-    form_uncertain = Column(Boolean, nullable=False)
+    experience = Column(Integer, nullable=False, default=0)
+    happiness = Column(Integer, nullable=False, default=0)
+    is_in_squad = Column(Boolean, nullable=False, default=False)
+    can_evolve = Column(Boolean, nullable=False, default=False)
+    form_uncertain = Column(Boolean, nullable=False, default=False)
 
     # Set up a composite foreign key for ability
     __table_args__ = (
@@ -239,7 +239,7 @@ class PokemonSpecies(Base):
     name = Column(Unicode, nullable=False)
     evolves_from_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         nullable=True)
-    rarity = Column(Integer, ForeignKey('rarities.id'), nullable=True)
+    rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
 
@@ -355,15 +355,24 @@ Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
+PokemonForm.abilities = relationship(PokemonFormAbility,
+    order_by=PokemonFormAbility.slot)
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
     order_by=Move.name)
 
-PokemonSpecies.forms = relationship(PokemonForm, back_populates='species')
+PokemonFormAbility.ability = relationship(Ability)
+
+PokemonSpecies.forms = relationship(PokemonForm, back_populates='species',
+    order_by=PokemonForm.form_order)
 PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
     uselist=False)
+PokemonSpecies.rarity = relationship(Rarity, back_populates='pokemon_species')
+
+Rarity.pokemon_species = relationship(PokemonSpecies,
+    order_by=PokemonSpecies.id, back_populates='rarity')
 
 Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
     order_by=Pokemon.id)
