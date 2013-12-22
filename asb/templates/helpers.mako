@@ -9,7 +9,7 @@
 </%def>
 
 <%def name="name_cell(pokemon)">
-<td class="icon"><img src="/static/images/pokemon-icons/${pokemon.form.species_id | str, n}.png" alt=""></td>
+<td class="icon">${pokemon_form_icon(pokemon.form)}</td>
 <td class="focus-column">${link(pokemon)}</td>
 </%def>
 
@@ -163,6 +163,10 @@
 % endfor
 </tbody>
 </table>
+</%def>
+
+<%def name="pokemon_form_icon(form)">\
+<img src="/static/images/pokemon-icons/${form.identifier}.png" alt="">\
 </%def>
 
 <%def name="gender_symbol(gender)">\
