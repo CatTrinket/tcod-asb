@@ -192,13 +192,16 @@ class PokemonForm(Base):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     species_id = Column(Integer, ForeignKey('pokemon_species.id'))
+    form_name = Column(Unicode, nullable=True)
+    full_name = Column(Unicode, nullable=True)
     form_order = Column(Integer, nullable=False)
     is_default = Column(Boolean, nullable=False)
 
     @property
     def name(self):
-        """To do"""
-        return self.species.name
+        """Return a name for this Pokémon form."""
+
+        return self.full_name or self.species.name
 
     @property
     def __name__(self):
