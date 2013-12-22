@@ -231,6 +231,17 @@ class PokemonFormMove(Base):
         primary_key=True)
     move_id = Column(Integer, ForeignKey('moves.id'), primary_key=True)
 
+class PokemonFormType(Base):
+    """One of a Pokémon form's types."""
+
+    __tablename__ = 'pokemon_form_types'
+    __singlename__ = 'pokemon_form_type'
+
+    pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
+        primary_key=True)
+    slot = Column(Integer, primary_key=True)
+    type_id = Column(Integer, ForeignKey('types.id'))
+
 class PokemonSpecies(Base):
     """A species of Pokémon."""
 
@@ -402,3 +413,7 @@ Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
     primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,
                      TrainerItem.pokemon_id == None))
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
+
+Type.pokemon_forms = relationship(PokemonForm,
+    secondary=PokemonFormType.__table__, order_by=PokemonFormType.slot,
+    back_populates='types')
