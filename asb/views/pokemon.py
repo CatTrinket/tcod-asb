@@ -209,7 +209,8 @@ def pokemon_checkout_form(cart, request):
             # Form field, if the Pokémon has different forms
             if len(species_.forms) > 1:
                 form_ = wtforms.SelectField('Form', coerce=int,
-                    choices=[(f.id, f.form_name) for f in species_.forms],
+                    choices=[(f.id, f.form_name or 'Default')
+                        for f in species_.forms],
                     default=species_.default_form.id)
 
             species = species_  # Hang on to this; we'll need it
