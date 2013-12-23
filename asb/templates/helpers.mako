@@ -1,7 +1,7 @@
-<%def name="link(db_resource)">\
+<%def name="link(db_resource, text=None)">\
 ## resource_url will add a trailing slash unless we do it this way
 <a href="${request.resource_url(db_resource.__parent__,
-    db_resource.__name__)}">${db_resource.name}</a>\
+    db_resource.__name__)}">${text or db_resource.name}</a>\
 </%def>
 
 <%def name="name_header()">
@@ -18,7 +18,7 @@
 </%def>
 
 <%def name="species_cell(pokemon)">
-<td>${link(pokemon.species.default_form)}</td>
+<td>${link(pokemon.form, text=pokemon.species.name)}</td>
 </%def>
 
 <%def name="gender_header()">
@@ -159,6 +159,57 @@
     % endif
 
     <td>${move.summary}</td>
+</tr>
+% endfor
+</tbody>
+</table>
+</%def>
+
+<%def name="pokemon_form_table(forms, species_name=False,
+    extra_right_cols=[])">
+<table class="effect-table">
+<thead>
+<tr>
+    <th colspan="2">Pokémon</th>
+    <th>Type</th>
+    <th>Ability 1</th>
+    <th>Ability 2</th>
+    <th>Hidden Ability</th>
+    % for header_func, cell_func in extra_right_cols:
+    ${header_func()}
+    % endfor
+</tr>
+</thead>
+<tbody>
+% for form in forms:
+<%
+    abilities = [None, None, None]
+    for ability in form.abilities:
+        abilities[ability.slot - 1] = ability
+%>
+<tr>
+    <td class="icon">${pokemon_form_icon(form)}</td>
+    <td class="focus-column">${link(form, text=form.species.name if species_name else None)}</td>
+
+    <td>\
+% for type in form.types:
+<span class="type type-${type.identifier}">${type.name}</span>\
+% endfor
+</td>
+
+    % for ability in abilities:
+    % if ability is None:
+    <td></td>
+    % elif ability.is_hidden:
+    <td class="hidden-ability">${link(ability.ability)}</td>
+    % else:
+    <td>${link(ability.ability)}</td>
+    % endif
+    % endfor
+
+    % for header_func, cell_func in extra_right_cols:
+    ${cell_func(form)}
+    % endfor
 </tr>
 % endfor
 </tbody>

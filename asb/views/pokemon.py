@@ -426,11 +426,21 @@ def pokemon_checkout_commit(context, request):
 
 @view_config(context=SpeciesIndex, renderer='/indices/pokemon_species.mako')
 def species_index(context, request):
-    """The index page for all the species of Pokémon."""
+    """The index page for all the species of Pokémon.
+
+    (Forms, actually.  Whatever.)
+    """
 
     pokemon = (
-        models.DBSession.query(models.PokemonSpecies)
-        .order_by(models.PokemonSpecies.id)
+        models.DBSession.query(models.PokemonForm)
+        .options(
+             joinedload('species'),
+             subqueryload('abilities'),
+             subqueryload('abilities.ability'),
+             subqueryload('types')
+        )
+        .filter(models.PokemonForm.id < 20000)
+        .order_by(models.PokemonForm.order)
         .all()
     )
 

@@ -133,6 +133,9 @@ form dt:after { content: ':' }
 form dd { margin-left: 5em /* factor in dt */;  padding-left: 0.5em; }
 form dt, form dd { height: 2em; line-height: 2em; }
 
+/* Misc. */
+.hidden-ability { font-style: italic; }
+
 
 /**** SPECIFIC PAGES ****/
 

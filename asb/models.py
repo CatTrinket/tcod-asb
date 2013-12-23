@@ -386,6 +386,8 @@ PokemonForm.abilities = relationship(PokemonFormAbility,
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
     order_by=Move.name)
+PokemonForm.types = relationship(Type, secondary=PokemonFormType.__table__,
+    order_by=PokemonFormType.slot, back_populates='pokemon_forms')
 
 PokemonFormAbility.ability = relationship(Ability)
 

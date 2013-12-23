@@ -1,8 +1,5 @@
 <%inherit file='/base.mako'/>\
+<%namespace name="helpers" file="/helpers.mako"/>\
 <%block name='title'>Pokémon species - The Cave of Dragonflies ASB</%block>\
 
-<ul>
-    % for p in pokemon:
-    <li><a href="/species/${p.identifier}">#${p.number} ${p.name}</a></li>
-    % endfor
-</ul>
+${helpers.pokemon_form_table(pokemon)}
