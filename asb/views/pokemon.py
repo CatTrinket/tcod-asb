@@ -434,13 +434,14 @@ def species_index(context, request):
 
     pokemon = (
         models.DBSession.query(models.PokemonForm)
+        .join(models.PokemonSpecies)
         .options(
              joinedload('species'),
              subqueryload('abilities'),
              subqueryload('abilities.ability'),
              subqueryload('types')
         )
-        .filter(models.PokemonForm.id < 20000)
+        .filter(models.PokemonSpecies.is_fake == False)
         .order_by(models.PokemonForm.order)
         .all()
     )

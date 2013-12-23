@@ -37,7 +37,7 @@ ${quick_buy.csrf_token() | n}
     <tr><th>Name</th></tr>
 </thead>
 <tbody>
-    % for pokemon in (p for p in rarity.pokemon_species if p.id < 10000):
+    % for pokemon in (p for p in rarity.pokemon_species if not p.is_fake):
     <tr><td>${pokemon.name}</td></tr>
     % endfor
 </tbody>
