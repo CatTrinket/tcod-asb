@@ -21,13 +21,4 @@ def move_index(context, request):
 def move(context, request):
     """A move's dex page."""
 
-    try:
-        move = (
-            models.DBSession.query(models.Move)
-            .filter_by(identifier=request.matchdict['identifier'])
-            .one()
-        )
-    except NoResultFound:
-        raise httpexc.HTTPNotFound
-
-    return {'move': move}
+    return {'move': context}

@@ -370,6 +370,8 @@ class Type(Base):
 # everything
 
 Move.type = relationship(Type)
+Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
+    secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
@@ -385,7 +387,7 @@ PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
-    order_by=Move.name)
+    order_by=Move.name, back_populates='pokemon_forms')
 PokemonForm.types = relationship(Type, secondary=PokemonFormType.__table__,
     order_by=PokemonFormType.slot, back_populates='pokemon_forms')
 
