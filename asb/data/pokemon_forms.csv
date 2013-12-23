@@ -1,912 +1,912 @@
-id,identifier,species_id,form_name,full_name,form_order,is_default
-1,bulbasaur,1,,,1,t
-2,ivysaur,2,,,1,t
-3,venusaur,3,,,1,t
-4,charmander,4,,,1,t
-5,charmeleon,5,,,1,t
-6,charizard,6,,,1,t
-7,squirtle,7,,,1,t
-8,wartortle,8,,,1,t
-9,blastoise,9,,,1,t
-10,caterpie,10,,,1,t
-11,metapod,11,,,1,t
-12,butterfree,12,,,1,t
-13,weedle,13,,,1,t
-14,kakuna,14,,,1,t
-15,beedrill,15,,,1,t
-16,pidgey,16,,,1,t
-17,pidgeotto,17,,,1,t
-18,pidgeot,18,,,1,t
-19,rattata,19,,,1,t
-20,raticate,20,,,1,t
-21,spearow,21,,,1,t
-22,fearow,22,,,1,t
-23,ekans,23,,,1,t
-24,arbok,24,,,1,t
-25,pikachu,25,,,1,t
-26,raichu,26,,,1,t
-27,sandshrew,27,,,1,t
-28,sandslash,28,,,1,t
-29,nidoran-f,29,,,1,t
-30,nidorina,30,,,1,t
-31,nidoqueen,31,,,1,t
-32,nidoran-m,32,,,1,t
-33,nidorino,33,,,1,t
-34,nidoking,34,,,1,t
-35,clefairy,35,,,1,t
-36,clefable,36,,,1,t
-37,vulpix,37,,,1,t
-38,ninetales,38,,,1,t
-39,jigglypuff,39,,,1,t
-40,wigglytuff,40,,,1,t
-41,zubat,41,,,1,t
-42,golbat,42,,,1,t
-43,oddish,43,,,1,t
-44,gloom,44,,,1,t
-45,vileplume,45,,,1,t
-46,paras,46,,,1,t
-47,parasect,47,,,1,t
-48,venonat,48,,,1,t
-49,venomoth,49,,,1,t
-50,diglett,50,,,1,t
-51,dugtrio,51,,,1,t
-52,meowth,52,,,1,t
-53,persian,53,,,1,t
-54,psyduck,54,,,1,t
-55,golduck,55,,,1,t
-56,mankey,56,,,1,t
-57,primeape,57,,,1,t
-58,growlithe,58,,,1,t
-59,arcanine,59,,,1,t
-60,poliwag,60,,,1,t
-61,poliwhirl,61,,,1,t
-62,poliwrath,62,,,1,t
-63,abra,63,,,1,t
-64,kadabra,64,,,1,t
-65,alakazam,65,,,1,t
-66,machop,66,,,1,t
-67,machoke,67,,,1,t
-68,machamp,68,,,1,t
-69,bellsprout,69,,,1,t
-70,weepinbell,70,,,1,t
-71,victreebel,71,,,1,t
-72,tentacool,72,,,1,t
-73,tentacruel,73,,,1,t
-74,geodude,74,,,1,t
-75,graveler,75,,,1,t
-76,golem,76,,,1,t
-77,ponyta,77,,,1,t
-78,rapidash,78,,,1,t
-79,slowpoke,79,,,1,t
-80,slowbro,80,,,1,t
-81,magnemite,81,,,1,t
-82,magneton,82,,,1,t
-83,farfetchd,83,,,1,t
-84,doduo,84,,,1,t
-85,dodrio,85,,,1,t
-86,seel,86,,,1,t
-87,dewgong,87,,,1,t
-88,grimer,88,,,1,t
-89,muk,89,,,1,t
-90,shellder,90,,,1,t
-91,cloyster,91,,,1,t
-92,gastly,92,,,1,t
-93,haunter,93,,,1,t
-94,gengar,94,,,1,t
-95,onix,95,,,1,t
-96,drowzee,96,,,1,t
-97,hypno,97,,,1,t
-98,krabby,98,,,1,t
-99,kingler,99,,,1,t
-100,voltorb,100,,,1,t
-101,electrode,101,,,1,t
-102,exeggcute,102,,,1,t
-103,exeggutor,103,,,1,t
-104,cubone,104,,,1,t
-105,marowak,105,,,1,t
-106,hitmonlee,106,,,1,t
-107,hitmonchan,107,,,1,t
-108,lickitung,108,,,1,t
-109,koffing,109,,,1,t
-110,weezing,110,,,1,t
-111,rhyhorn,111,,,1,t
-112,rhydon,112,,,1,t
-113,chansey,113,,,1,t
-114,tangela,114,,,1,t
-115,kangaskhan,115,,,1,t
-116,horsea,116,,,1,t
-117,seadra,117,,,1,t
-118,goldeen,118,,,1,t
-119,seaking,119,,,1,t
-120,staryu,120,,,1,t
-121,starmie,121,,,1,t
-122,mr-mime,122,,,1,t
-123,scyther,123,,,1,t
-124,jynx,124,,,1,t
-125,electabuzz,125,,,1,t
-126,magmar,126,,,1,t
-127,pinsir,127,,,1,t
-128,tauros,128,,,1,t
-129,magikarp,129,,,1,t
-130,gyarados,130,,,1,t
-131,lapras,131,,,1,t
-132,ditto,132,,,1,t
-133,eevee,133,,,1,t
-134,vaporeon,134,,,1,t
-135,jolteon,135,,,1,t
-136,flareon,136,,,1,t
-137,porygon,137,,,1,t
-138,omanyte,138,,,1,t
-139,omastar,139,,,1,t
-140,kabuto,140,,,1,t
-141,kabutops,141,,,1,t
-142,aerodactyl,142,,,1,t
-143,snorlax,143,,,1,t
-144,articuno,144,,,1,t
-145,zapdos,145,,,1,t
-146,moltres,146,,,1,t
-147,dratini,147,,,1,t
-148,dragonair,148,,,1,t
-149,dragonite,149,,,1,t
-150,mewtwo,150,,,1,t
-151,mew,151,,,1,t
-152,chikorita,152,,,1,t
-153,bayleef,153,,,1,t
-154,meganium,154,,,1,t
-155,cyndaquil,155,,,1,t
-156,quilava,156,,,1,t
-157,typhlosion,157,,,1,t
-158,totodile,158,,,1,t
-159,croconaw,159,,,1,t
-160,feraligatr,160,,,1,t
-161,sentret,161,,,1,t
-162,furret,162,,,1,t
-163,hoothoot,163,,,1,t
-164,noctowl,164,,,1,t
-165,ledyba,165,,,1,t
-166,ledian,166,,,1,t
-167,spinarak,167,,,1,t
-168,ariados,168,,,1,t
-169,crobat,169,,,1,t
-170,chinchou,170,,,1,t
-171,lanturn,171,,,1,t
-172,pichu,172,,,1,t
-173,cleffa,173,,,1,t
-174,igglybuff,174,,,1,t
-175,togepi,175,,,1,t
-176,togetic,176,,,1,t
-177,natu,177,,,1,t
-178,xatu,178,,,1,t
-179,mareep,179,,,1,t
-180,flaaffy,180,,,1,t
-181,ampharos,181,,,1,t
-182,bellossom,182,,,1,t
-183,marill,183,,,1,t
-184,azumarill,184,,,1,t
-185,sudowoodo,185,,,1,t
-186,politoed,186,,,1,t
-187,hoppip,187,,,1,t
-188,skiploom,188,,,1,t
-189,jumpluff,189,,,1,t
-190,aipom,190,,,1,t
-191,sunkern,191,,,1,t
-192,sunflora,192,,,1,t
-193,yanma,193,,,1,t
-194,wooper,194,,,1,t
-195,quagsire,195,,,1,t
-196,espeon,196,,,1,t
-197,umbreon,197,,,1,t
-198,murkrow,198,,,1,t
-199,slowking,199,,,1,t
-200,misdreavus,200,,,1,t
-201,unown-a,201,A,Unown A,1,t
-202,wobbuffet,202,,,1,t
-203,girafarig,203,,,1,t
-204,pineco,204,,,1,t
-205,forretress,205,,,1,t
-206,dunsparce,206,,,1,t
-207,gligar,207,,,1,t
-208,steelix,208,,,1,t
-209,snubbull,209,,,1,t
-210,granbull,210,,,1,t
-211,qwilfish,211,,,1,t
-212,scizor,212,,,1,t
-213,shuckle,213,,,1,t
-214,heracross,214,,,1,t
-215,sneasel,215,,,1,t
-216,teddiursa,216,,,1,t
-217,ursaring,217,,,1,t
-218,slugma,218,,,1,t
-219,magcargo,219,,,1,t
-220,swinub,220,,,1,t
-221,piloswine,221,,,1,t
-222,corsola,222,,,1,t
-223,remoraid,223,,,1,t
-224,octillery,224,,,1,t
-225,delibird,225,,,1,t
-226,mantine,226,,,1,t
-227,skarmory,227,,,1,t
-228,houndour,228,,,1,t
-229,houndoom,229,,,1,t
-230,kingdra,230,,,1,t
-231,phanpy,231,,,1,t
-232,donphan,232,,,1,t
-233,porygon2,233,,,1,t
-234,stantler,234,,,1,t
-235,smeargle,235,,,1,t
-236,tyrogue,236,,,1,t
-237,hitmontop,237,,,1,t
-238,smoochum,238,,,1,t
-239,elekid,239,,,1,t
-240,magby,240,,,1,t
-241,miltank,241,,,1,t
-242,blissey,242,,,1,t
-243,raikou,243,,,1,t
-244,entei,244,,,1,t
-245,suicune,245,,,1,t
-246,larvitar,246,,,1,t
-247,pupitar,247,,,1,t
-248,tyranitar,248,,,1,t
-249,lugia,249,,,1,t
-250,ho-oh,250,,,1,t
-251,celebi,251,,,1,t
-252,treecko,252,,,1,t
-253,grovyle,253,,,1,t
-254,sceptile,254,,,1,t
-255,torchic,255,,,1,t
-256,combusken,256,,,1,t
-257,blaziken,257,,,1,t
-258,mudkip,258,,,1,t
-259,marshtomp,259,,,1,t
-260,swampert,260,,,1,t
-261,poochyena,261,,,1,t
-262,mightyena,262,,,1,t
-263,zigzagoon,263,,,1,t
-264,linoone,264,,,1,t
-265,wurmple,265,,,1,t
-266,silcoon,266,,,1,t
-267,beautifly,267,,,1,t
-268,cascoon,268,,,1,t
-269,dustox,269,,,1,t
-270,lotad,270,,,1,t
-271,lombre,271,,,1,t
-272,ludicolo,272,,,1,t
-273,seedot,273,,,1,t
-274,nuzleaf,274,,,1,t
-275,shiftry,275,,,1,t
-276,taillow,276,,,1,t
-277,swellow,277,,,1,t
-278,wingull,278,,,1,t
-279,pelipper,279,,,1,t
-280,ralts,280,,,1,t
-281,kirlia,281,,,1,t
-282,gardevoir,282,,,1,t
-283,surskit,283,,,1,t
-284,masquerain,284,,,1,t
-285,shroomish,285,,,1,t
-286,breloom,286,,,1,t
-287,slakoth,287,,,1,t
-288,vigoroth,288,,,1,t
-289,slaking,289,,,1,t
-290,nincada,290,,,1,t
-291,ninjask,291,,,1,t
-292,shedinja,292,,,1,t
-293,whismur,293,,,1,t
-294,loudred,294,,,1,t
-295,exploud,295,,,1,t
-296,makuhita,296,,,1,t
-297,hariyama,297,,,1,t
-298,azurill,298,,,1,t
-299,nosepass,299,,,1,t
-300,skitty,300,,,1,t
-301,delcatty,301,,,1,t
-302,sableye,302,,,1,t
-303,mawile,303,,,1,t
-304,aron,304,,,1,t
-305,lairon,305,,,1,t
-306,aggron,306,,,1,t
-307,meditite,307,,,1,t
-308,medicham,308,,,1,t
-309,electrike,309,,,1,t
-310,manectric,310,,,1,t
-311,plusle,311,,,1,t
-312,minun,312,,,1,t
-313,volbeat,313,,,1,t
-314,illumise,314,,,1,t
-315,roselia,315,,,1,t
-316,gulpin,316,,,1,t
-317,swalot,317,,,1,t
-318,carvanha,318,,,1,t
-319,sharpedo,319,,,1,t
-320,wailmer,320,,,1,t
-321,wailord,321,,,1,t
-322,numel,322,,,1,t
-323,camerupt,323,,,1,t
-324,torkoal,324,,,1,t
-325,spoink,325,,,1,t
-326,grumpig,326,,,1,t
-327,spinda,327,,,1,t
-328,trapinch,328,,,1,t
-329,vibrava,329,,,1,t
-330,flygon,330,,,1,t
-331,cacnea,331,,,1,t
-332,cacturne,332,,,1,t
-333,swablu,333,,,1,t
-334,altaria,334,,,1,t
-335,zangoose,335,,,1,t
-336,seviper,336,,,1,t
-337,lunatone,337,,,1,t
-338,solrock,338,,,1,t
-339,barboach,339,,,1,t
-340,whiscash,340,,,1,t
-341,corphish,341,,,1,t
-342,crawdaunt,342,,,1,t
-343,baltoy,343,,,1,t
-344,claydol,344,,,1,t
-345,lileep,345,,,1,t
-346,cradily,346,,,1,t
-347,anorith,347,,,1,t
-348,armaldo,348,,,1,t
-349,feebas,349,,,1,t
-350,milotic,350,,,1,t
-351,castform,351,,,1,t
-352,kecleon,352,,,1,t
-353,shuppet,353,,,1,t
-354,banette,354,,,1,t
-355,duskull,355,,,1,t
-356,dusclops,356,,,1,t
-357,tropius,357,,,1,t
-358,chimecho,358,,,1,t
-359,absol,359,,,1,t
-360,wynaut,360,,,1,t
-361,snorunt,361,,,1,t
-362,glalie,362,,,1,t
-363,spheal,363,,,1,t
-364,sealeo,364,,,1,t
-365,walrein,365,,,1,t
-366,clamperl,366,,,1,t
-367,huntail,367,,,1,t
-368,gorebyss,368,,,1,t
-369,relicanth,369,,,1,t
-370,luvdisc,370,,,1,t
-371,bagon,371,,,1,t
-372,shelgon,372,,,1,t
-373,salamence,373,,,1,t
-374,beldum,374,,,1,t
-375,metang,375,,,1,t
-376,metagross,376,,,1,t
-377,regirock,377,,,1,t
-378,regice,378,,,1,t
-379,registeel,379,,,1,t
-380,latias,380,,,1,t
-381,latios,381,,,1,t
-382,kyogre,382,,,1,t
-383,groudon,383,,,1,t
-384,rayquaza,384,,,1,t
-385,jirachi,385,,,1,t
-386,deoxys-normal,386,Normal Forme,Normal Deoxys,1,t
-387,turtwig,387,,,1,t
-388,grotle,388,,,1,t
-389,torterra,389,,,1,t
-390,chimchar,390,,,1,t
-391,monferno,391,,,1,t
-392,infernape,392,,,1,t
-393,piplup,393,,,1,t
-394,prinplup,394,,,1,t
-395,empoleon,395,,,1,t
-396,starly,396,,,1,t
-397,staravia,397,,,1,t
-398,staraptor,398,,,1,t
-399,bidoof,399,,,1,t
-400,bibarel,400,,,1,t
-401,kricketot,401,,,1,t
-402,kricketune,402,,,1,t
-403,shinx,403,,,1,t
-404,luxio,404,,,1,t
-405,luxray,405,,,1,t
-406,budew,406,,,1,t
-407,roserade,407,,,1,t
-408,cranidos,408,,,1,t
-409,rampardos,409,,,1,t
-410,shieldon,410,,,1,t
-411,bastiodon,411,,,1,t
-412,burmy-plant,412,Plant Cloak,Plant Burmy,1,t
-413,wormadam-plant,413,Plant Cloak,Plant Wormadam,1,t
-414,mothim,414,,,1,t
-415,combee,415,,,1,t
-416,vespiquen,416,,,1,t
-417,pachirisu,417,,,1,t
-418,buizel,418,,,1,t
-419,floatzel,419,,,1,t
-420,cherubi,420,,,1,t
-421,cherrim-overcast,421,Overcast Form,Overcast Cherrim,1,t
-422,shellos-west,422,West Sea,West Shellos,1,t
-423,gastrodon-west,423,West Sea,West Gastrodon,1,t
-424,ambipom,424,,,1,t
-425,drifloon,425,,,1,t
-426,drifblim,426,,,1,t
-427,buneary,427,,,1,t
-428,lopunny,428,,,1,t
-429,mismagius,429,,,1,t
-430,honchkrow,430,,,1,t
-431,glameow,431,,,1,t
-432,purugly,432,,,1,t
-433,chingling,433,,,1,t
-434,stunky,434,,,1,t
-435,skuntank,435,,,1,t
-436,bronzor,436,,,1,t
-437,bronzong,437,,,1,t
-438,bonsly,438,,,1,t
-439,mime-jr,439,,,1,t
-440,happiny,440,,,1,t
-441,chatot,441,,,1,t
-442,spiritomb,442,,,1,t
-443,gible,443,,,1,t
-444,gabite,444,,,1,t
-445,garchomp,445,,,1,t
-446,munchlax,446,,,1,t
-447,riolu,447,,,1,t
-448,lucario,448,,,1,t
-449,hippopotas,449,,,1,t
-450,hippowdon,450,,,1,t
-451,skorupi,451,,,1,t
-452,drapion,452,,,1,t
-453,croagunk,453,,,1,t
-454,toxicroak,454,,,1,t
-455,carnivine,455,,,1,t
-456,finneon,456,,,1,t
-457,lumineon,457,,,1,t
-458,mantyke,458,,,1,t
-459,snover,459,,,1,t
-460,abomasnow,460,,,1,t
-461,weavile,461,,,1,t
-462,magnezone,462,,,1,t
-463,lickilicky,463,,,1,t
-464,rhyperior,464,,,1,t
-465,tangrowth,465,,,1,t
-466,electivire,466,,,1,t
-467,magmortar,467,,,1,t
-468,togekiss,468,,,1,t
-469,yanmega,469,,,1,t
-470,leafeon,470,,,1,t
-471,glaceon,471,,,1,t
-472,gliscor,472,,,1,t
-473,mamoswine,473,,,1,t
-474,porygon-z,474,,,1,t
-475,gallade,475,,,1,t
-476,probopass,476,,,1,t
-477,dusknoir,477,,,1,t
-478,froslass,478,,,1,t
-479,rotom,479,,,1,t
-480,uxie,480,,,1,t
-481,mesprit,481,,,1,t
-482,azelf,482,,,1,t
-483,dialga,483,,,1,t
-484,palkia,484,,,1,t
-485,heatran,485,,,1,t
-486,regigigas,486,,,1,t
-487,giratina-altered,487,Altered Forme,Altered Giratina,1,t
-488,cresselia,488,,,1,t
-489,phione,489,,,1,t
-490,manaphy,490,,,1,t
-491,darkrai,491,,,1,t
-492,shaymin-land,492,Land Forme,Land Shaymin,1,t
-493,arceus-normal,493,Normal Type,Normal Arceus,1,t
-494,victini,494,,,1,t
-495,snivy,495,,,1,t
-496,servine,496,,,1,t
-497,serperior,497,,,1,t
-498,tepig,498,,,1,t
-499,pignite,499,,,1,t
-500,emboar,500,,,1,t
-501,oshawott,501,,,1,t
-502,dewott,502,,,1,t
-503,samurott,503,,,1,t
-504,patrat,504,,,1,t
-505,watchog,505,,,1,t
-506,lillipup,506,,,1,t
-507,herdier,507,,,1,t
-508,stoutland,508,,,1,t
-509,purrloin,509,,,1,t
-510,liepard,510,,,1,t
-511,pansage,511,,,1,t
-512,simisage,512,,,1,t
-513,pansear,513,,,1,t
-514,simisear,514,,,1,t
-515,panpour,515,,,1,t
-516,simipour,516,,,1,t
-517,munna,517,,,1,t
-518,musharna,518,,,1,t
-519,pidove,519,,,1,t
-520,tranquill,520,,,1,t
-521,unfezant,521,,,1,t
-522,blitzle,522,,,1,t
-523,zebstrika,523,,,1,t
-524,roggenrola,524,,,1,t
-525,boldore,525,,,1,t
-526,gigalith,526,,,1,t
-527,woobat,527,,,1,t
-528,swoobat,528,,,1,t
-529,drilbur,529,,,1,t
-530,excadrill,530,,,1,t
-531,audino,531,,,1,t
-532,timburr,532,,,1,t
-533,gurdurr,533,,,1,t
-534,conkeldurr,534,,,1,t
-535,tympole,535,,,1,t
-536,palpitoad,536,,,1,t
-537,seismitoad,537,,,1,t
-538,throh,538,,,1,t
-539,sawk,539,,,1,t
-540,sewaddle,540,,,1,t
-541,swadloon,541,,,1,t
-542,leavanny,542,,,1,t
-543,venipede,543,,,1,t
-544,whirlipede,544,,,1,t
-545,scolipede,545,,,1,t
-546,cottonee,546,,,1,t
-547,whimsicott,547,,,1,t
-548,petilil,548,,,1,t
-549,lilligant,549,,,1,t
-550,basculin-red-striped,550,Red-Striped Form,Red-Striped Basculin,1,t
-551,sandile,551,,,1,t
-552,krokorok,552,,,1,t
-553,krookodile,553,,,1,t
-554,darumaka,554,,,1,t
-555,darmanitan-standard,555,Standard Mode,Standard Darmanitan,1,t
-556,maractus,556,,,1,t
-557,dwebble,557,,,1,t
-558,crustle,558,,,1,t
-559,scraggy,559,,,1,t
-560,scrafty,560,,,1,t
-561,sigilyph,561,,,1,t
-562,yamask,562,,,1,t
-563,cofagrigus,563,,,1,t
-564,tirtouga,564,,,1,t
-565,carracosta,565,,,1,t
-566,archen,566,,,1,t
-567,archeops,567,,,1,t
-568,trubbish,568,,,1,t
-569,garbodor,569,,,1,t
-570,zorua,570,,,1,t
-571,zoroark,571,,,1,t
-572,minccino,572,,,1,t
-573,cinccino,573,,,1,t
-574,gothita,574,,,1,t
-575,gothorita,575,,,1,t
-576,gothitelle,576,,,1,t
-577,solosis,577,,,1,t
-578,duosion,578,,,1,t
-579,reuniclus,579,,,1,t
-580,ducklett,580,,,1,t
-581,swanna,581,,,1,t
-582,vanillite,582,,,1,t
-583,vanillish,583,,,1,t
-584,vanilluxe,584,,,1,t
-585,deerling-spring,585,Spring Form,Spring Deerling,1,t
-586,sawsbuck-spring,586,Spring Form,Spring Sawsbuck,1,t
-587,emolga,587,,,1,t
-588,karrablast,588,,,1,t
-589,escavalier,589,,,1,t
-590,foongus,590,,,1,t
-591,amoonguss,591,,,1,t
-592,frillish,592,,,1,t
-593,jellicent,593,,,1,t
-594,alomomola,594,,,1,t
-595,joltik,595,,,1,t
-596,galvantula,596,,,1,t
-597,ferroseed,597,,,1,t
-598,ferrothorn,598,,,1,t
-599,klink,599,,,1,t
-600,klang,600,,,1,t
-601,klinklang,601,,,1,t
-602,tynamo,602,,,1,t
-603,eelektrik,603,,,1,t
-604,eelektross,604,,,1,t
-605,elgyem,605,,,1,t
-606,beheeyem,606,,,1,t
-607,litwick,607,,,1,t
-608,lampent,608,,,1,t
-609,chandelure,609,,,1,t
-610,axew,610,,,1,t
-611,fraxure,611,,,1,t
-612,haxorus,612,,,1,t
-613,cubchoo,613,,,1,t
-614,beartic,614,,,1,t
-615,cryogonal,615,,,1,t
-616,shelmet,616,,,1,t
-617,accelgor,617,,,1,t
-618,stunfisk,618,,,1,t
-619,mienfoo,619,,,1,t
-620,mienshao,620,,,1,t
-621,druddigon,621,,,1,t
-622,golett,622,,,1,t
-623,golurk,623,,,1,t
-624,pawniard,624,,,1,t
-625,bisharp,625,,,1,t
-626,bouffalant,626,,,1,t
-627,rufflet,627,,,1,t
-628,braviary,628,,,1,t
-629,vullaby,629,,,1,t
-630,mandibuzz,630,,,1,t
-631,heatmor,631,,,1,t
-632,durant,632,,,1,t
-633,deino,633,,,1,t
-634,zweilous,634,,,1,t
-635,hydreigon,635,,,1,t
-636,larvesta,636,,,1,t
-637,volcarona,637,,,1,t
-638,cobalion,638,,,1,t
-639,terrakion,639,,,1,t
-640,virizion,640,,,1,t
-641,tornadus-incarnate,641,Incarnate Forme,Incarnate Tornadus,1,t
-642,thundurus-incarnate,642,Incarnate Forme,Incarnate Thundurus,1,t
-643,reshiram,643,,,1,t
-644,zekrom,644,,,1,t
-645,landorus-incarnate,645,Incarnate Forme,Incarnate Landorus,1,t
-646,kyurem,646,,,1,t
-647,keldeo-ordinary,647,Ordinary Form,Ordinary Keldeo,1,t
-648,meloetta-aria,648,Aria Forme,Aria Meloetta,1,t
-649,genesect,649,,,1,t
-650,chespin,650,,,1,t
-651,quilladin,651,,,1,t
-652,chesnaught,652,,,1,t
-653,fennekin,653,,,1,t
-654,braixen,654,,,1,t
-655,delphox,655,,,1,t
-656,froakie,656,,,1,t
-657,frogadier,657,,,1,t
-658,greninja,658,,,1,t
-659,bunnelby,659,,,1,t
-660,diggersby,660,,,1,t
-661,fletchling,661,,,1,t
-662,fletchinder,662,,,1,t
-663,talonflame,663,,,1,t
-664,scatterbug,664,,,1,t
-665,spewpa,665,,,1,t
-666,vivillon-meadow,666,Meadow Pattern,Meadow Vivillon,7,t
-667,litleo,667,,,1,t
-668,pyroar,668,,,1,t
-669,flabebe-red,669,Red Flower,Red Flabébé,1,t
-670,floette-red,670,Red Flower,Red Floette,1,t
-671,florges-red,671,Red Flower,Red Florges,1,t
-672,skiddo,672,,,1,t
-673,gogoat,673,,,1,t
-674,pancham,674,,,1,t
-675,pangoro,675,,,1,t
-676,furfrou,676,,,1,t
-677,espurr,677,,,1,t
-678,meowstic-female,678,Female,Female Meowstic,1,t
-679,honedge,679,,,1,t
-680,doublade,680,,,1,t
-681,aegislash-shield,681,Shield Forme,Shield Aegislash,1,t
-682,spritzee,682,,,1,t
-683,aromatisse,683,,,1,t
-684,swirlix,684,,,1,t
-685,slurpuff,685,,,1,t
-686,inkay,686,,,1,t
-687,malamar,687,,,1,t
-688,binacle,688,,,1,t
-689,barbaracle,689,,,1,t
-690,skrelp,690,,,1,t
-691,dragalge,691,,,1,t
-692,clauncher,692,,,1,t
-693,clawitzer,693,,,1,t
-694,helioptile,694,,,1,t
-695,heliolisk,695,,,1,t
-696,tyrunt,696,,,1,t
-697,tyrantrum,697,,,1,t
-698,amaura,698,,,1,t
-699,aurorus,699,,,1,t
-700,sylveon,700,,,1,t
-701,hawlucha,701,,,1,t
-702,dedenne,702,,,1,t
-703,carbink,703,,,1,t
-704,goomy,704,,,1,t
-705,sliggoo,705,,,1,t
-706,goodra,706,,,1,t
-707,klefki,707,,,1,t
-708,phantump,708,,,1,t
-709,trevenant,709,,,1,t
-710,pumpkaboo-average,710,Average Size,Average Pumpkaboo,2,t
-711,gourgeist-average,711,Average Size,Average Gourgeist,2,t
-712,bergmite,712,,,1,t
-713,avalugg,713,,,1,t
-714,noibat,714,,,1,t
-715,noivern,715,,,1,t
-716,xerneas-active,716,Active Mode,Active Xerneas,2,t
-717,yveltal,717,,,1,t
-718,zygarde,718,,,1,t
-10001,unown-b,201,B,Unown B,2,f
-10002,unown-c,201,C,Unown C,3,f
-10003,unown-d,201,D,Unown D,4,f
-10004,unown-e,201,E,Unown E,5,f
-10005,unown-f,201,F,Unown F,6,f
-10006,unown-g,201,G,Unown G,7,f
-10007,unown-h,201,H,Unown H,8,f
-10008,unown-i,201,I,Unown I,9,f
-10009,unown-j,201,J,Unown J,10,f
-10010,unown-k,201,K,Unown K,11,f
-10011,unown-l,201,L,Unown L,12,f
-10012,unown-m,201,M,Unown M,13,f
-10013,unown-n,201,N,Unown N,14,f
-10014,unown-o,201,O,Unown O,15,f
-10015,unown-p,201,P,Unown P,16,f
-10016,unown-q,201,Q,Unown Q,17,f
-10017,unown-r,201,R,Unown R,18,f
-10018,unown-s,201,S,Unown S,19,f
-10019,unown-t,201,T,Unown T,20,f
-10020,unown-u,201,U,Unown U,21,f
-10021,unown-v,201,V,Unown V,22,f
-10022,unown-w,201,W,Unown W,23,f
-10023,unown-x,201,X,Unown X,24,f
-10024,unown-y,201,Y,Unown Y,25,f
-10025,unown-z,201,Z,Unown Z,26,f
-10026,unown-exclamation,201,!,Unown !,27,f
-10027,unown-question,201,?,Unown ?,28,f
-10028,castform-sunny,351,Sunny Form,Sunny Castform,2,f
-10029,castform-rainy,351,Rainy Form,Rainy Castform,3,f
-10030,castform-snowy,351,Snowy Form,Snowy Castform,4,f
-10031,deoxys-attack,386,Attack Forme,Attack Deoxys,2,f
-10032,deoxys-defense,386,Defense Forme,Defense Deoxys,3,f
-10033,deoxys-speed,386,Speed Forme,Speed Deoxys,4,f
-10034,burmy-sandy,412,Sandy Cloak,Sandy Burmy,2,f
-10035,burmy-trash,412,Trash Cloak,Trash Burmy,3,f
-10036,wormadam-sandy,413,Sandy Cloak,Sandy Wormadam,2,f
-10037,wormadam-trash,413,Trash Cloak,Trash Wormadam,3,f
-10038,cherrim-sunshine,421,Sunshine Form,Sunshine Cherrim,2,f
-10039,shellos-east,422,East Sea,East Shellos,2,f
-10040,gastrodon-east,423,East Sea,East Gastrodon,2,f
-10041,rotom-heat,479,Heat Rotom,Heat Rotom,2,f
-10042,rotom-wash,479,Wash Rotom,Wash Rotom,3,f
-10043,rotom-frost,479,Frost Rotom,Frost Rotom,4,f
-10044,rotom-fan,479,Fan Rotom,Fan Rotom,5,f
-10045,rotom-mow,479,Mow Rotom,Mow Rotom,6,f
-10046,giratina-origin,487,Origin Forme,Origin Giratina,2,f
-10047,shaymin-sky,492,Sky Forme,Sky Shaymin,2,f
-10048,arceus-fire,493,Fire Type,Fire Arceus,2,f
-10049,arceus-water,493,Water Type,Water Arceus,3,f
-10050,arceus-grass,493,Grass Type,Grass Arceus,4,f
-10051,arceus-electric,493,Electric Type,Electric Arceus,5,f
-10052,arceus-ice,493,Ice Type,Ice Arceus,6,f
-10053,arceus-fighting,493,Fighting Type,Fighting Arceus,7,f
-10054,arceus-poison,493,Poison Type,Poison Arceus,8,f
-10055,arceus-ground,493,Ground Type,Ground Arceus,9,f
-10056,arceus-flying,493,Flying Type,Flying Arceus,10,f
-10057,arceus-psychic,493,Psychic Type,Psychic Arceus,11,f
-10058,arceus-bug,493,Bug Type,Bug Arceus,12,f
-10059,arceus-rock,493,Rock Type,Rock Arceus,13,f
-10060,arceus-ghost,493,Ghost Type,Ghost Arceus,14,f
-10061,arceus-dragon,493,Dragon Type,Dragon Arceus,15,f
-10062,arceus-dark,493,Dark Type,Dark Arceus,16,f
-10063,arceus-steel,493,Steel Type,Steel Arceus,17,f
-10064,arceus-fairy,493,Fairy Type,Fairy Arceus,18,f
-10065,basculin-blue-striped,550,Blue-Striped Form,Blue-Striped Basculin,2,f
-10066,darmanitan-zen,555,Zen Mode,Zen Darmanitan,2,f
-10067,deerling-summer,585,Summer Form,Summer Deerling,2,f
-10068,deerling-autumn,585,Autumn Form,Autumn Deerling,3,f
-10069,deerling-winter,585,Winter Form,Winter Deerling,4,f
-10070,sawsbuck-summer,586,Summer Form,Summer Sawsbuck,2,f
-10071,sawsbuck-autumn,586,Autumn Form,Autumn Sawsbuck,3,f
-10072,sawsbuck-winter,586,Winter Form,Winter Sawsbuck,4,f
-10073,tornadus-therian,641,Therian Forme,Therian Tornadus,2,f
-10074,thundurus-therian,642,Therian Forme,Therian Thundurus,2,f
-10075,landorus-therian,645,Therian Forme,Therian Landorus,2,f
-10076,kyurem-black,646,Black Kyurem,Black Kyurem,2,f
-10077,kyurem-white,646,White Kyurem,White Kyurem,3,f
-10078,keldeo-resolute,647,Resolute Form,Resolute Keldeo,2,f
-10079,meloetta-pirouette,648,Pirouette Forme,Pirouette Meloetta,2,f
-10080,genesect-burn,649,Burn Drive,Burn Genesect,2,f
-10081,genesect-douse,649,Douse Drive,Douse Genesect,3,f
-10082,genesect-shock,649,Shock Drive,Shock Genesect,4,f
-10083,genesect-chill,649,Chill Drive,Chill Genesect,5,f
-10084,vivillon-icy-snow,666,Icy Snow Pattern,Icy Snow Vivillon,1,f
-10085,vivillon-polar,666,Polar Pattern,Polar Vivillon,2,f
-10086,vivillon-tundra,666,Tundra Pattern,Tundra Vivillon,3,f
-10087,vivillon-continental,666,Continental Pattern,Continental Vivillon,4,f
-10088,vivillon-garden,666,Garden Pattern,Garden Vivillon,5,f
-10089,vivillon-elegant,666,Elegant Pattern,Elegant Vivillon,6,f
-10090,vivillon-modern,666,Modern Pattern,Modern Vivillon,8,f
-10091,vivillon-marine,666,Marine Pattern,Marine Vivillon,9,f
-10092,vivillon-archipelago,666,Archipelago Pattern,Archipelago Vivillon,10,f
-10093,vivillon-high-plains,666,High Plains Pattern,High Plains Vivillon,11,f
-10094,vivillon-sandstorm,666,Sandstorm Pattern,Sandstorm Vivillon,12,f
-10095,vivillon-river,666,River Pattern,River Vivillon,13,f
-10096,vivillon-monsoon,666,Monsoon Pattern,Monsoon Vivillon,14,f
-10097,vivillon-savanna,666,Savanna Pattern,Savanna Vivillon,15,f
-10098,vivillon-sun,666,Sun Pattern,Sun Vivillon,16,f
-10099,vivillon-ocean,666,Ocean Pattern,Ocean Vivillon,17,f
-10100,vivillon-jungle,666,Jungle Pattern,Jungle Vivillon,18,f
-10101,flabebe-yellow,669,Yellow Flower,Yellow Flabébé,2,f
-10102,flabebe-orange,669,Orange Flower,Orange Flabébé,3,f
-10103,flabebe-blue,669,Blue Flower,Blue Flabébé,4,f
-10104,flabebe-white,669,White Flower,White Flabébé,5,f
-10105,floette-yellow,670,Yellow Flower,Yellow Floette,2,f
-10106,floette-orange,670,Orange Flower,Orange Floette,3,f
-10107,floette-blue,670,Blue Flower,Blue Floette,4,f
-10108,floette-white,670,White Flower,White Floette,5,f
-10109,florges-yellow,671,Yellow Flower,Yellow Florges,2,f
-10110,florges-orange,671,Orange Flower,Orange Florges,3,f
-10111,florges-blue,671,Blue Flower,Blue Florges,4,f
-10112,florges-white,671,White Flower,White Florges,5,f
-10113,furfrou-heart,676,Heart Trim,Heart Furfrou,2,f
-10114,furfrou-star,676,Star Trim,Star Furfrou,3,f
-10115,furfrou-diamond,676,Diamond Trim,Diamond Furfrou,4,f
-10116,furfrou-la-reine,676,La Reine Trim,La Reine Furfrou,5,f
-10117,furfrou-kabuki,676,Kabuki Trim,Kabuki Furfrou,6,f
-10118,furfrou-pharaoh,676,Pharaoh Trim,Pharaoh Furfrou,7,f
-10119,furfrou-debutante,676,Debutante Trim,Debutante Furfrou,8,f
-10120,furfrou-matron,676,Matron Trim,Matron Furfrou,9,f
-10121,furfrou-dandy,676,Dandy Trim,Dandy Furfrou,10,f
-10122,meowstic-male,678,Male,Male Meowstic,2,f
-10123,aegislash-blade,681,Blade Forme,Blade Aegislash,2,f
-10124,pumpkaboo-small,710,Small Size,Small Pumpkaboo,1,f
-10125,pumpkaboo-large,710,Large Size,Large Pumpkaboo,3,f
-10126,pumpkaboo-super,710,Super Size,Super Pumpkaboo,4,f
-10127,gourgeist-small,711,Small Size,Small Gourgeist,1,f
-10128,gourgeist-large,711,Large Size,Large Gourgeist,3,f
-10129,gourgeist-super,711,Super Size,Super Gourgeist,4,f
-10130,xerneas-neutral,716,Neutral Mode,Neutral Xerneas,1,f
-10131,venusaur-mega,3,Mega Venusaur,Mega Venusaur,2,f
-10132,charizard-mega-x,6,Mega Charizard X,Mega Charizard X,2,f
-10133,charizard-mega-y,6,Mega Charizard Y,Mega Charizard Y,3,f
-10134,blastoise-mega,9,Mega Blastoise,Mega Blastoise,2,f
-10135,alakazam-mega,65,Mega Alakazam,Mega Alakazam,2,f
-10136,gengar-mega,94,Mega Gengar,Mega Gengar,2,f
-10137,kangaskhan-mega,115,Mega Kangaskhan,Mega Kangaskhan,2,f
-10138,pinsir-mega,127,Mega Pinsir,Mega Pinsir,2,f
-10139,gyarados-mega,130,Mega Gyarados,Mega Gyarados,2,f
-10140,aerodactyl-mega,142,Mega Aerodactyl,Mega Aerodactyl,2,f
-10141,mewtwo-mega-x,150,Mega Mewtwo X,Mega Mewtwo X,2,f
-10142,mewtwo-mega-y,150,Mega Mewtwo Y,Mega Mewtwo Y,3,f
-10143,ampharos-mega,181,Mega Ampharos,Mega Ampharos,2,f
-10144,scizor-mega,212,Mega Scizor,Mega Scizor,2,f
-10145,heracross-mega,214,Mega Heracross,Mega Heracross,2,f
-10146,houndoom-mega,229,Mega Houndoom,Mega Houndoom,2,f
-10147,tyranitar-mega,248,Mega Tyranitar,Mega Tyranitar,2,f
-10148,blaziken-mega,257,Mega Blaziken,Mega Blaziken,2,f
-10149,gardevoir-mega,282,Mega Gardevoir,Mega Gardevoir,2,f
-10150,mawile-mega,303,Mega Mawile,Mega Mawile,2,f
-10151,aggron-mega,306,Mega Aggron,Mega Aggron,2,f
-10152,medicham-mega,308,Mega Medicham,Mega Medicham,2,f
-10153,manectric-mega,310,Mega Manectric,Mega Manectric,2,f
-10154,banette-mega,354,Mega Banette,Mega Banette,2,f
-10155,absol-mega,359,Mega Absol,Mega Absol,2,f
-10156,garchomp-mega,445,Mega Garchomp,Mega Garchomp,2,f
-10157,lucario-mega,448,Mega Lucario,Mega Lucario,2,f
-10158,abomasnow-mega,460,Mega Abomasnow,Mega Abomasnow,2,f
-20001,enculli,10001,,,1,t
-20002,homuncull,10002,,,1,t
-20003,spraylet,10003,,,1,t
-20004,pandive,10004,,,1,t
-20005,osgrave,10005,,,1,t
-20006,myrid,10006,,,1,t
-20007,tsuki,10007,,,1,t
-20008,tsukiyurei,10008,,,1,t
-20009,tsukihayai,10009,,,1,t
-20010,tsukimaru,10010,,,1,t
-20011,sheebit,10011,,,1,t
-20012,terrabbit,10012,,,1,t
-20013,laissure,10013,,,1,t
-20014,rasqueon,10014,,,1,t
-20015,skelitten,10015,,,1,t
-20016,skeline,10016,,,1,t
-20017,cappun,10017,,,1,t
-20018,babydrake,10018,,,1,t
-20019,childora,10019,,,1,t
-20020,sabitten,10020,,,1,t
-20021,sabura,10021,,,1,t
-20022,saburea,10022,,,1,t
-20023,kitora,10023,,,1,t
-20024,zoritsune,10024,,,1,t
-20025,alrunnik,10025,,,1,t
-20026,skunkunne,10026,,,1,t
-20027,dragomelet,10027,,,1,t
-20028,wyrmarble,10028,,,1,t
-20029,obsidrake,10029,,,1,t
-20030,wyrmal,10030,,,1,t
-20031,ventorm,10031,,,1,t
-20032,hennic,10032,,,1,t
-20033,hennox,10033,,,1,t
-20034,frizard,10034,,,1,t
-20035,feurisdesche,10035,,,1,t
+id,identifier,species_id,form_name,full_name,form_order,is_default,order
+1,bulbasaur,1,,,1,t,1
+2,ivysaur,2,,,1,t,2
+3,venusaur,3,,,1,t,3
+4,charmander,4,,,1,t,5
+5,charmeleon,5,,,1,t,6
+6,charizard,6,,,1,t,7
+7,squirtle,7,,,1,t,10
+8,wartortle,8,,,1,t,11
+9,blastoise,9,,,1,t,12
+10,caterpie,10,,,1,t,14
+11,metapod,11,,,1,t,15
+12,butterfree,12,,,1,t,16
+13,weedle,13,,,1,t,17
+14,kakuna,14,,,1,t,18
+15,beedrill,15,,,1,t,19
+16,pidgey,16,,,1,t,20
+17,pidgeotto,17,,,1,t,21
+18,pidgeot,18,,,1,t,22
+19,rattata,19,,,1,t,23
+20,raticate,20,,,1,t,24
+21,spearow,21,,,1,t,25
+22,fearow,22,,,1,t,26
+23,ekans,23,,,1,t,27
+24,arbok,24,,,1,t,28
+25,pikachu,25,,,1,t,30
+26,raichu,26,,,1,t,31
+27,sandshrew,27,,,1,t,32
+28,sandslash,28,,,1,t,33
+29,nidoran-f,29,,,1,t,34
+30,nidorina,30,,,1,t,35
+31,nidoqueen,31,,,1,t,36
+32,nidoran-m,32,,,1,t,37
+33,nidorino,33,,,1,t,38
+34,nidoking,34,,,1,t,39
+35,clefairy,35,,,1,t,41
+36,clefable,36,,,1,t,42
+37,vulpix,37,,,1,t,43
+38,ninetales,38,,,1,t,44
+39,jigglypuff,39,,,1,t,46
+40,wigglytuff,40,,,1,t,47
+41,zubat,41,,,1,t,48
+42,golbat,42,,,1,t,49
+43,oddish,43,,,1,t,51
+44,gloom,44,,,1,t,52
+45,vileplume,45,,,1,t,53
+46,paras,46,,,1,t,55
+47,parasect,47,,,1,t,56
+48,venonat,48,,,1,t,57
+49,venomoth,49,,,1,t,58
+50,diglett,50,,,1,t,59
+51,dugtrio,51,,,1,t,60
+52,meowth,52,,,1,t,61
+53,persian,53,,,1,t,62
+54,psyduck,54,,,1,t,63
+55,golduck,55,,,1,t,64
+56,mankey,56,,,1,t,65
+57,primeape,57,,,1,t,66
+58,growlithe,58,,,1,t,67
+59,arcanine,59,,,1,t,68
+60,poliwag,60,,,1,t,69
+61,poliwhirl,61,,,1,t,70
+62,poliwrath,62,,,1,t,71
+63,abra,63,,,1,t,73
+64,kadabra,64,,,1,t,74
+65,alakazam,65,,,1,t,75
+66,machop,66,,,1,t,77
+67,machoke,67,,,1,t,78
+68,machamp,68,,,1,t,79
+69,bellsprout,69,,,1,t,80
+70,weepinbell,70,,,1,t,81
+71,victreebel,71,,,1,t,82
+72,tentacool,72,,,1,t,83
+73,tentacruel,73,,,1,t,84
+74,geodude,74,,,1,t,85
+75,graveler,75,,,1,t,86
+76,golem,76,,,1,t,87
+77,ponyta,77,,,1,t,88
+78,rapidash,78,,,1,t,89
+79,slowpoke,79,,,1,t,90
+80,slowbro,80,,,1,t,91
+81,magnemite,81,,,1,t,93
+82,magneton,82,,,1,t,94
+83,farfetchd,83,,,1,t,96
+84,doduo,84,,,1,t,97
+85,dodrio,85,,,1,t,98
+86,seel,86,,,1,t,99
+87,dewgong,87,,,1,t,100
+88,grimer,88,,,1,t,101
+89,muk,89,,,1,t,102
+90,shellder,90,,,1,t,103
+91,cloyster,91,,,1,t,104
+92,gastly,92,,,1,t,105
+93,haunter,93,,,1,t,106
+94,gengar,94,,,1,t,107
+95,onix,95,,,1,t,109
+96,drowzee,96,,,1,t,111
+97,hypno,97,,,1,t,112
+98,krabby,98,,,1,t,113
+99,kingler,99,,,1,t,114
+100,voltorb,100,,,1,t,115
+101,electrode,101,,,1,t,116
+102,exeggcute,102,,,1,t,117
+103,exeggutor,103,,,1,t,118
+104,cubone,104,,,1,t,119
+105,marowak,105,,,1,t,120
+106,hitmonlee,106,,,1,t,122
+107,hitmonchan,107,,,1,t,123
+108,lickitung,108,,,1,t,125
+109,koffing,109,,,1,t,127
+110,weezing,110,,,1,t,128
+111,rhyhorn,111,,,1,t,129
+112,rhydon,112,,,1,t,130
+113,chansey,113,,,1,t,133
+114,tangela,114,,,1,t,135
+115,kangaskhan,115,,,1,t,137
+116,horsea,116,,,1,t,139
+117,seadra,117,,,1,t,140
+118,goldeen,118,,,1,t,142
+119,seaking,119,,,1,t,143
+120,staryu,120,,,1,t,144
+121,starmie,121,,,1,t,145
+122,mr-mime,122,,,1,t,147
+123,scyther,123,,,1,t,148
+124,jynx,124,,,1,t,152
+125,electabuzz,125,,,1,t,154
+126,magmar,126,,,1,t,157
+127,pinsir,127,,,1,t,159
+128,tauros,128,,,1,t,161
+129,magikarp,129,,,1,t,162
+130,gyarados,130,,,1,t,163
+131,lapras,131,,,1,t,165
+132,ditto,132,,,1,t,166
+133,eevee,133,,,1,t,167
+134,vaporeon,134,,,1,t,168
+135,jolteon,135,,,1,t,169
+136,flareon,136,,,1,t,170
+137,porygon,137,,,1,t,176
+138,omanyte,138,,,1,t,179
+139,omastar,139,,,1,t,180
+140,kabuto,140,,,1,t,181
+141,kabutops,141,,,1,t,182
+142,aerodactyl,142,,,1,t,183
+143,snorlax,143,,,1,t,186
+144,articuno,144,,,1,t,187
+145,zapdos,145,,,1,t,188
+146,moltres,146,,,1,t,189
+147,dratini,147,,,1,t,190
+148,dragonair,148,,,1,t,191
+149,dragonite,149,,,1,t,192
+150,mewtwo,150,,,1,t,193
+151,mew,151,,,1,t,196
+152,chikorita,152,,,1,t,197
+153,bayleef,153,,,1,t,198
+154,meganium,154,,,1,t,199
+155,cyndaquil,155,,,1,t,200
+156,quilava,156,,,1,t,201
+157,typhlosion,157,,,1,t,202
+158,totodile,158,,,1,t,203
+159,croconaw,159,,,1,t,204
+160,feraligatr,160,,,1,t,205
+161,sentret,161,,,1,t,206
+162,furret,162,,,1,t,207
+163,hoothoot,163,,,1,t,208
+164,noctowl,164,,,1,t,209
+165,ledyba,165,,,1,t,210
+166,ledian,166,,,1,t,211
+167,spinarak,167,,,1,t,212
+168,ariados,168,,,1,t,213
+169,crobat,169,,,1,t,50
+170,chinchou,170,,,1,t,214
+171,lanturn,171,,,1,t,215
+172,pichu,172,,,1,t,29
+173,cleffa,173,,,1,t,40
+174,igglybuff,174,,,1,t,45
+175,togepi,175,,,1,t,216
+176,togetic,176,,,1,t,217
+177,natu,177,,,1,t,219
+178,xatu,178,,,1,t,220
+179,mareep,179,,,1,t,221
+180,flaaffy,180,,,1,t,222
+181,ampharos,181,,,1,t,223
+182,bellossom,182,,,1,t,54
+183,marill,183,,,1,t,226
+184,azumarill,184,,,1,t,227
+185,sudowoodo,185,,,1,t,229
+186,politoed,186,,,1,t,72
+187,hoppip,187,,,1,t,230
+188,skiploom,188,,,1,t,231
+189,jumpluff,189,,,1,t,232
+190,aipom,190,,,1,t,233
+191,sunkern,191,,,1,t,235
+192,sunflora,192,,,1,t,236
+193,yanma,193,,,1,t,237
+194,wooper,194,,,1,t,239
+195,quagsire,195,,,1,t,240
+196,espeon,196,,,1,t,171
+197,umbreon,197,,,1,t,172
+198,murkrow,198,,,1,t,241
+199,slowking,199,,,1,t,92
+200,misdreavus,200,,,1,t,243
+201,unown-a,201,A,Unown A,1,t,245
+202,wobbuffet,202,,,1,t,274
+203,girafarig,203,,,1,t,275
+204,pineco,204,,,1,t,276
+205,forretress,205,,,1,t,277
+206,dunsparce,206,,,1,t,278
+207,gligar,207,,,1,t,279
+208,steelix,208,,,1,t,110
+209,snubbull,209,,,1,t,281
+210,granbull,210,,,1,t,282
+211,qwilfish,211,,,1,t,283
+212,scizor,212,,,1,t,149
+213,shuckle,213,,,1,t,284
+214,heracross,214,,,1,t,285
+215,sneasel,215,,,1,t,287
+216,teddiursa,216,,,1,t,289
+217,ursaring,217,,,1,t,290
+218,slugma,218,,,1,t,291
+219,magcargo,219,,,1,t,292
+220,swinub,220,,,1,t,293
+221,piloswine,221,,,1,t,294
+222,corsola,222,,,1,t,296
+223,remoraid,223,,,1,t,297
+224,octillery,224,,,1,t,298
+225,delibird,225,,,1,t,299
+226,mantine,226,,,1,t,301
+227,skarmory,227,,,1,t,302
+228,houndour,228,,,1,t,303
+229,houndoom,229,,,1,t,304
+230,kingdra,230,,,1,t,141
+231,phanpy,231,,,1,t,306
+232,donphan,232,,,1,t,307
+233,porygon2,233,,,1,t,177
+234,stantler,234,,,1,t,308
+235,smeargle,235,,,1,t,309
+236,tyrogue,236,,,1,t,121
+237,hitmontop,237,,,1,t,124
+238,smoochum,238,,,1,t,151
+239,elekid,239,,,1,t,153
+240,magby,240,,,1,t,156
+241,miltank,241,,,1,t,310
+242,blissey,242,,,1,t,134
+243,raikou,243,,,1,t,311
+244,entei,244,,,1,t,312
+245,suicune,245,,,1,t,313
+246,larvitar,246,,,1,t,314
+247,pupitar,247,,,1,t,315
+248,tyranitar,248,,,1,t,316
+249,lugia,249,,,1,t,318
+250,ho-oh,250,,,1,t,319
+251,celebi,251,,,1,t,320
+252,treecko,252,,,1,t,321
+253,grovyle,253,,,1,t,322
+254,sceptile,254,,,1,t,323
+255,torchic,255,,,1,t,324
+256,combusken,256,,,1,t,325
+257,blaziken,257,,,1,t,326
+258,mudkip,258,,,1,t,328
+259,marshtomp,259,,,1,t,329
+260,swampert,260,,,1,t,330
+261,poochyena,261,,,1,t,331
+262,mightyena,262,,,1,t,332
+263,zigzagoon,263,,,1,t,333
+264,linoone,264,,,1,t,334
+265,wurmple,265,,,1,t,335
+266,silcoon,266,,,1,t,336
+267,beautifly,267,,,1,t,337
+268,cascoon,268,,,1,t,338
+269,dustox,269,,,1,t,339
+270,lotad,270,,,1,t,340
+271,lombre,271,,,1,t,341
+272,ludicolo,272,,,1,t,342
+273,seedot,273,,,1,t,343
+274,nuzleaf,274,,,1,t,344
+275,shiftry,275,,,1,t,345
+276,taillow,276,,,1,t,346
+277,swellow,277,,,1,t,347
+278,wingull,278,,,1,t,348
+279,pelipper,279,,,1,t,349
+280,ralts,280,,,1,t,350
+281,kirlia,281,,,1,t,351
+282,gardevoir,282,,,1,t,352
+283,surskit,283,,,1,t,355
+284,masquerain,284,,,1,t,356
+285,shroomish,285,,,1,t,357
+286,breloom,286,,,1,t,358
+287,slakoth,287,,,1,t,359
+288,vigoroth,288,,,1,t,360
+289,slaking,289,,,1,t,361
+290,nincada,290,,,1,t,362
+291,ninjask,291,,,1,t,363
+292,shedinja,292,,,1,t,364
+293,whismur,293,,,1,t,365
+294,loudred,294,,,1,t,366
+295,exploud,295,,,1,t,367
+296,makuhita,296,,,1,t,368
+297,hariyama,297,,,1,t,369
+298,azurill,298,,,1,t,225
+299,nosepass,299,,,1,t,370
+300,skitty,300,,,1,t,372
+301,delcatty,301,,,1,t,373
+302,sableye,302,,,1,t,374
+303,mawile,303,,,1,t,375
+304,aron,304,,,1,t,377
+305,lairon,305,,,1,t,378
+306,aggron,306,,,1,t,379
+307,meditite,307,,,1,t,381
+308,medicham,308,,,1,t,382
+309,electrike,309,,,1,t,384
+310,manectric,310,,,1,t,385
+311,plusle,311,,,1,t,387
+312,minun,312,,,1,t,388
+313,volbeat,313,,,1,t,389
+314,illumise,314,,,1,t,390
+315,roselia,315,,,1,t,392
+316,gulpin,316,,,1,t,394
+317,swalot,317,,,1,t,395
+318,carvanha,318,,,1,t,396
+319,sharpedo,319,,,1,t,397
+320,wailmer,320,,,1,t,398
+321,wailord,321,,,1,t,399
+322,numel,322,,,1,t,400
+323,camerupt,323,,,1,t,401
+324,torkoal,324,,,1,t,402
+325,spoink,325,,,1,t,403
+326,grumpig,326,,,1,t,404
+327,spinda,327,,,1,t,405
+328,trapinch,328,,,1,t,406
+329,vibrava,329,,,1,t,407
+330,flygon,330,,,1,t,408
+331,cacnea,331,,,1,t,409
+332,cacturne,332,,,1,t,410
+333,swablu,333,,,1,t,411
+334,altaria,334,,,1,t,412
+335,zangoose,335,,,1,t,413
+336,seviper,336,,,1,t,414
+337,lunatone,337,,,1,t,415
+338,solrock,338,,,1,t,416
+339,barboach,339,,,1,t,417
+340,whiscash,340,,,1,t,418
+341,corphish,341,,,1,t,419
+342,crawdaunt,342,,,1,t,420
+343,baltoy,343,,,1,t,421
+344,claydol,344,,,1,t,422
+345,lileep,345,,,1,t,423
+346,cradily,346,,,1,t,424
+347,anorith,347,,,1,t,425
+348,armaldo,348,,,1,t,426
+349,feebas,349,,,1,t,427
+350,milotic,350,,,1,t,428
+351,castform,351,,,1,t,429
+352,kecleon,352,,,1,t,433
+353,shuppet,353,,,1,t,434
+354,banette,354,,,1,t,435
+355,duskull,355,,,1,t,437
+356,dusclops,356,,,1,t,438
+357,tropius,357,,,1,t,440
+358,chimecho,358,,,1,t,442
+359,absol,359,,,1,t,443
+360,wynaut,360,,,1,t,273
+361,snorunt,361,,,1,t,445
+362,glalie,362,,,1,t,446
+363,spheal,363,,,1,t,448
+364,sealeo,364,,,1,t,449
+365,walrein,365,,,1,t,450
+366,clamperl,366,,,1,t,451
+367,huntail,367,,,1,t,452
+368,gorebyss,368,,,1,t,453
+369,relicanth,369,,,1,t,454
+370,luvdisc,370,,,1,t,455
+371,bagon,371,,,1,t,456
+372,shelgon,372,,,1,t,457
+373,salamence,373,,,1,t,458
+374,beldum,374,,,1,t,459
+375,metang,375,,,1,t,460
+376,metagross,376,,,1,t,461
+377,regirock,377,,,1,t,462
+378,regice,378,,,1,t,463
+379,registeel,379,,,1,t,464
+380,latias,380,,,1,t,465
+381,latios,381,,,1,t,466
+382,kyogre,382,,,1,t,467
+383,groudon,383,,,1,t,468
+384,rayquaza,384,,,1,t,469
+385,jirachi,385,,,1,t,470
+386,deoxys-normal,386,Normal Forme,Normal Deoxys,1,t,471
+387,turtwig,387,,,1,t,475
+388,grotle,388,,,1,t,476
+389,torterra,389,,,1,t,477
+390,chimchar,390,,,1,t,478
+391,monferno,391,,,1,t,479
+392,infernape,392,,,1,t,480
+393,piplup,393,,,1,t,481
+394,prinplup,394,,,1,t,482
+395,empoleon,395,,,1,t,483
+396,starly,396,,,1,t,484
+397,staravia,397,,,1,t,485
+398,staraptor,398,,,1,t,486
+399,bidoof,399,,,1,t,487
+400,bibarel,400,,,1,t,488
+401,kricketot,401,,,1,t,489
+402,kricketune,402,,,1,t,490
+403,shinx,403,,,1,t,491
+404,luxio,404,,,1,t,492
+405,luxray,405,,,1,t,493
+406,budew,406,,,1,t,391
+407,roserade,407,,,1,t,393
+408,cranidos,408,,,1,t,494
+409,rampardos,409,,,1,t,495
+410,shieldon,410,,,1,t,496
+411,bastiodon,411,,,1,t,497
+412,burmy-plant,412,Plant Cloak,Plant Burmy,1,t,498
+413,wormadam-plant,413,Plant Cloak,Plant Wormadam,1,t,501
+414,mothim,414,,,1,t,504
+415,combee,415,,,1,t,505
+416,vespiquen,416,,,1,t,506
+417,pachirisu,417,,,1,t,507
+418,buizel,418,,,1,t,508
+419,floatzel,419,,,1,t,509
+420,cherubi,420,,,1,t,510
+421,cherrim-overcast,421,Overcast Form,Overcast Cherrim,1,t,511
+422,shellos-west,422,West Sea,West Shellos,1,t,513
+423,gastrodon-west,423,West Sea,West Gastrodon,1,t,515
+424,ambipom,424,,,1,t,234
+425,drifloon,425,,,1,t,517
+426,drifblim,426,,,1,t,518
+427,buneary,427,,,1,t,519
+428,lopunny,428,,,1,t,520
+429,mismagius,429,,,1,t,244
+430,honchkrow,430,,,1,t,242
+431,glameow,431,,,1,t,521
+432,purugly,432,,,1,t,522
+433,chingling,433,,,1,t,441
+434,stunky,434,,,1,t,523
+435,skuntank,435,,,1,t,524
+436,bronzor,436,,,1,t,525
+437,bronzong,437,,,1,t,526
+438,bonsly,438,,,1,t,228
+439,mime-jr,439,,,1,t,146
+440,happiny,440,,,1,t,132
+441,chatot,441,,,1,t,527
+442,spiritomb,442,,,1,t,528
+443,gible,443,,,1,t,529
+444,gabite,444,,,1,t,530
+445,garchomp,445,,,1,t,531
+446,munchlax,446,,,1,t,185
+447,riolu,447,,,1,t,533
+448,lucario,448,,,1,t,534
+449,hippopotas,449,,,1,t,536
+450,hippowdon,450,,,1,t,537
+451,skorupi,451,,,1,t,538
+452,drapion,452,,,1,t,539
+453,croagunk,453,,,1,t,540
+454,toxicroak,454,,,1,t,541
+455,carnivine,455,,,1,t,542
+456,finneon,456,,,1,t,543
+457,lumineon,457,,,1,t,544
+458,mantyke,458,,,1,t,300
+459,snover,459,,,1,t,545
+460,abomasnow,460,,,1,t,546
+461,weavile,461,,,1,t,288
+462,magnezone,462,,,1,t,95
+463,lickilicky,463,,,1,t,126
+464,rhyperior,464,,,1,t,131
+465,tangrowth,465,,,1,t,136
+466,electivire,466,,,1,t,155
+467,magmortar,467,,,1,t,158
+468,togekiss,468,,,1,t,218
+469,yanmega,469,,,1,t,238
+470,leafeon,470,,,1,t,173
+471,glaceon,471,,,1,t,174
+472,gliscor,472,,,1,t,280
+473,mamoswine,473,,,1,t,295
+474,porygon-z,474,,,1,t,178
+475,gallade,475,,,1,t,354
+476,probopass,476,,,1,t,371
+477,dusknoir,477,,,1,t,439
+478,froslass,478,,,1,t,447
+479,rotom,479,,,1,t,548
+480,uxie,480,,,1,t,554
+481,mesprit,481,,,1,t,555
+482,azelf,482,,,1,t,556
+483,dialga,483,,,1,t,557
+484,palkia,484,,,1,t,558
+485,heatran,485,,,1,t,559
+486,regigigas,486,,,1,t,560
+487,giratina-altered,487,Altered Forme,Altered Giratina,1,t,561
+488,cresselia,488,,,1,t,563
+489,phione,489,,,1,t,564
+490,manaphy,490,,,1,t,565
+491,darkrai,491,,,1,t,566
+492,shaymin-land,492,Land Forme,Land Shaymin,1,t,567
+493,arceus-normal,493,Normal Type,Normal Arceus,1,t,569
+494,victini,494,,,1,t,587
+495,snivy,495,,,1,t,588
+496,servine,496,,,1,t,589
+497,serperior,497,,,1,t,590
+498,tepig,498,,,1,t,591
+499,pignite,499,,,1,t,592
+500,emboar,500,,,1,t,593
+501,oshawott,501,,,1,t,594
+502,dewott,502,,,1,t,595
+503,samurott,503,,,1,t,596
+504,patrat,504,,,1,t,597
+505,watchog,505,,,1,t,598
+506,lillipup,506,,,1,t,599
+507,herdier,507,,,1,t,600
+508,stoutland,508,,,1,t,601
+509,purrloin,509,,,1,t,602
+510,liepard,510,,,1,t,603
+511,pansage,511,,,1,t,604
+512,simisage,512,,,1,t,605
+513,pansear,513,,,1,t,606
+514,simisear,514,,,1,t,607
+515,panpour,515,,,1,t,608
+516,simipour,516,,,1,t,609
+517,munna,517,,,1,t,610
+518,musharna,518,,,1,t,611
+519,pidove,519,,,1,t,612
+520,tranquill,520,,,1,t,613
+521,unfezant,521,,,1,t,614
+522,blitzle,522,,,1,t,615
+523,zebstrika,523,,,1,t,616
+524,roggenrola,524,,,1,t,617
+525,boldore,525,,,1,t,618
+526,gigalith,526,,,1,t,619
+527,woobat,527,,,1,t,620
+528,swoobat,528,,,1,t,621
+529,drilbur,529,,,1,t,622
+530,excadrill,530,,,1,t,623
+531,audino,531,,,1,t,624
+532,timburr,532,,,1,t,625
+533,gurdurr,533,,,1,t,626
+534,conkeldurr,534,,,1,t,627
+535,tympole,535,,,1,t,628
+536,palpitoad,536,,,1,t,629
+537,seismitoad,537,,,1,t,630
+538,throh,538,,,1,t,631
+539,sawk,539,,,1,t,632
+540,sewaddle,540,,,1,t,633
+541,swadloon,541,,,1,t,634
+542,leavanny,542,,,1,t,635
+543,venipede,543,,,1,t,636
+544,whirlipede,544,,,1,t,637
+545,scolipede,545,,,1,t,638
+546,cottonee,546,,,1,t,639
+547,whimsicott,547,,,1,t,640
+548,petilil,548,,,1,t,641
+549,lilligant,549,,,1,t,642
+550,basculin-red-striped,550,Red-Striped Form,Red-Striped Basculin,1,t,643
+551,sandile,551,,,1,t,645
+552,krokorok,552,,,1,t,646
+553,krookodile,553,,,1,t,647
+554,darumaka,554,,,1,t,648
+555,darmanitan-standard,555,Standard Mode,Standard Darmanitan,1,t,649
+556,maractus,556,,,1,t,651
+557,dwebble,557,,,1,t,652
+558,crustle,558,,,1,t,653
+559,scraggy,559,,,1,t,654
+560,scrafty,560,,,1,t,655
+561,sigilyph,561,,,1,t,656
+562,yamask,562,,,1,t,657
+563,cofagrigus,563,,,1,t,658
+564,tirtouga,564,,,1,t,659
+565,carracosta,565,,,1,t,660
+566,archen,566,,,1,t,661
+567,archeops,567,,,1,t,662
+568,trubbish,568,,,1,t,663
+569,garbodor,569,,,1,t,664
+570,zorua,570,,,1,t,665
+571,zoroark,571,,,1,t,666
+572,minccino,572,,,1,t,667
+573,cinccino,573,,,1,t,668
+574,gothita,574,,,1,t,669
+575,gothorita,575,,,1,t,670
+576,gothitelle,576,,,1,t,671
+577,solosis,577,,,1,t,672
+578,duosion,578,,,1,t,673
+579,reuniclus,579,,,1,t,674
+580,ducklett,580,,,1,t,675
+581,swanna,581,,,1,t,676
+582,vanillite,582,,,1,t,677
+583,vanillish,583,,,1,t,678
+584,vanilluxe,584,,,1,t,679
+585,deerling-spring,585,Spring Form,Spring Deerling,1,t,680
+586,sawsbuck-spring,586,Spring Form,Spring Sawsbuck,1,t,684
+587,emolga,587,,,1,t,688
+588,karrablast,588,,,1,t,689
+589,escavalier,589,,,1,t,690
+590,foongus,590,,,1,t,691
+591,amoonguss,591,,,1,t,692
+592,frillish,592,,,1,t,693
+593,jellicent,593,,,1,t,694
+594,alomomola,594,,,1,t,695
+595,joltik,595,,,1,t,696
+596,galvantula,596,,,1,t,697
+597,ferroseed,597,,,1,t,698
+598,ferrothorn,598,,,1,t,699
+599,klink,599,,,1,t,700
+600,klang,600,,,1,t,701
+601,klinklang,601,,,1,t,702
+602,tynamo,602,,,1,t,703
+603,eelektrik,603,,,1,t,704
+604,eelektross,604,,,1,t,705
+605,elgyem,605,,,1,t,706
+606,beheeyem,606,,,1,t,707
+607,litwick,607,,,1,t,708
+608,lampent,608,,,1,t,709
+609,chandelure,609,,,1,t,710
+610,axew,610,,,1,t,711
+611,fraxure,611,,,1,t,712
+612,haxorus,612,,,1,t,713
+613,cubchoo,613,,,1,t,714
+614,beartic,614,,,1,t,715
+615,cryogonal,615,,,1,t,716
+616,shelmet,616,,,1,t,717
+617,accelgor,617,,,1,t,718
+618,stunfisk,618,,,1,t,719
+619,mienfoo,619,,,1,t,720
+620,mienshao,620,,,1,t,721
+621,druddigon,621,,,1,t,722
+622,golett,622,,,1,t,723
+623,golurk,623,,,1,t,724
+624,pawniard,624,,,1,t,725
+625,bisharp,625,,,1,t,726
+626,bouffalant,626,,,1,t,727
+627,rufflet,627,,,1,t,728
+628,braviary,628,,,1,t,729
+629,vullaby,629,,,1,t,730
+630,mandibuzz,630,,,1,t,731
+631,heatmor,631,,,1,t,732
+632,durant,632,,,1,t,733
+633,deino,633,,,1,t,734
+634,zweilous,634,,,1,t,735
+635,hydreigon,635,,,1,t,736
+636,larvesta,636,,,1,t,737
+637,volcarona,637,,,1,t,738
+638,cobalion,638,,,1,t,739
+639,terrakion,639,,,1,t,740
+640,virizion,640,,,1,t,741
+641,tornadus-incarnate,641,Incarnate Forme,Incarnate Tornadus,1,t,742
+642,thundurus-incarnate,642,Incarnate Forme,Incarnate Thundurus,1,t,744
+643,reshiram,643,,,1,t,746
+644,zekrom,644,,,1,t,747
+645,landorus-incarnate,645,Incarnate Forme,Incarnate Landorus,1,t,748
+646,kyurem,646,,,1,t,750
+647,keldeo-ordinary,647,Ordinary Form,Ordinary Keldeo,1,t,753
+648,meloetta-aria,648,Aria Forme,Aria Meloetta,1,t,755
+649,genesect,649,,,1,t,757
+650,chespin,650,,,1,t,762
+651,quilladin,651,,,1,t,763
+652,chesnaught,652,,,1,t,764
+653,fennekin,653,,,1,t,765
+654,braixen,654,,,1,t,766
+655,delphox,655,,,1,t,767
+656,froakie,656,,,1,t,768
+657,frogadier,657,,,1,t,769
+658,greninja,658,,,1,t,770
+659,bunnelby,659,,,1,t,771
+660,diggersby,660,,,1,t,772
+661,fletchling,661,,,1,t,773
+662,fletchinder,662,,,1,t,774
+663,talonflame,663,,,1,t,775
+664,scatterbug,664,,,1,t,776
+665,spewpa,665,,,1,t,777
+666,vivillon-meadow,666,Meadow Pattern,Meadow Vivillon,7,t,784
+667,litleo,667,,,1,t,796
+668,pyroar,668,,,1,t,797
+669,flabebe-red,669,Red Flower,Red Flabébé,1,t,798
+670,floette-red,670,Red Flower,Red Floette,1,t,803
+671,florges-red,671,Red Flower,Red Florges,1,t,808
+672,skiddo,672,,,1,t,813
+673,gogoat,673,,,1,t,814
+674,pancham,674,,,1,t,815
+675,pangoro,675,,,1,t,816
+676,furfrou,676,,,1,t,817
+677,espurr,677,,,1,t,827
+678,meowstic-female,678,Female,Female Meowstic,1,t,828
+679,honedge,679,,,1,t,830
+680,doublade,680,,,1,t,831
+681,aegislash-shield,681,Shield Forme,Shield Aegislash,1,t,832
+682,spritzee,682,,,1,t,834
+683,aromatisse,683,,,1,t,835
+684,swirlix,684,,,1,t,836
+685,slurpuff,685,,,1,t,837
+686,inkay,686,,,1,t,838
+687,malamar,687,,,1,t,839
+688,binacle,688,,,1,t,840
+689,barbaracle,689,,,1,t,841
+690,skrelp,690,,,1,t,842
+691,dragalge,691,,,1,t,843
+692,clauncher,692,,,1,t,844
+693,clawitzer,693,,,1,t,845
+694,helioptile,694,,,1,t,846
+695,heliolisk,695,,,1,t,847
+696,tyrunt,696,,,1,t,848
+697,tyrantrum,697,,,1,t,849
+698,amaura,698,,,1,t,850
+699,aurorus,699,,,1,t,851
+700,sylveon,700,,,1,t,175
+701,hawlucha,701,,,1,t,852
+702,dedenne,702,,,1,t,853
+703,carbink,703,,,1,t,854
+704,goomy,704,,,1,t,855
+705,sliggoo,705,,,1,t,856
+706,goodra,706,,,1,t,857
+707,klefki,707,,,1,t,858
+708,phantump,708,,,1,t,859
+709,trevenant,709,,,1,t,860
+710,pumpkaboo-average,710,Average Size,Average Pumpkaboo,2,t,862
+711,gourgeist-average,711,Average Size,Average Gourgeist,2,t,866
+712,bergmite,712,,,1,t,869
+713,avalugg,713,,,1,t,870
+714,noibat,714,,,1,t,871
+715,noivern,715,,,1,t,872
+716,xerneas-active,716,Active Mode,Active Xerneas,2,t,874
+717,yveltal,717,,,1,t,875
+718,zygarde,718,,,1,t,876
+10001,unown-b,201,B,Unown B,2,f,246
+10002,unown-c,201,C,Unown C,3,f,247
+10003,unown-d,201,D,Unown D,4,f,248
+10004,unown-e,201,E,Unown E,5,f,249
+10005,unown-f,201,F,Unown F,6,f,250
+10006,unown-g,201,G,Unown G,7,f,251
+10007,unown-h,201,H,Unown H,8,f,252
+10008,unown-i,201,I,Unown I,9,f,253
+10009,unown-j,201,J,Unown J,10,f,254
+10010,unown-k,201,K,Unown K,11,f,255
+10011,unown-l,201,L,Unown L,12,f,256
+10012,unown-m,201,M,Unown M,13,f,257
+10013,unown-n,201,N,Unown N,14,f,258
+10014,unown-o,201,O,Unown O,15,f,259
+10015,unown-p,201,P,Unown P,16,f,260
+10016,unown-q,201,Q,Unown Q,17,f,261
+10017,unown-r,201,R,Unown R,18,f,262
+10018,unown-s,201,S,Unown S,19,f,263
+10019,unown-t,201,T,Unown T,20,f,264
+10020,unown-u,201,U,Unown U,21,f,265
+10021,unown-v,201,V,Unown V,22,f,266
+10022,unown-w,201,W,Unown W,23,f,267
+10023,unown-x,201,X,Unown X,24,f,268
+10024,unown-y,201,Y,Unown Y,25,f,269
+10025,unown-z,201,Z,Unown Z,26,f,270
+10026,unown-exclamation,201,!,Unown !,27,f,271
+10027,unown-question,201,?,Unown ?,28,f,272
+10028,castform-sunny,351,Sunny Form,Sunny Castform,2,f,430
+10029,castform-rainy,351,Rainy Form,Rainy Castform,3,f,431
+10030,castform-snowy,351,Snowy Form,Snowy Castform,4,f,432
+10031,deoxys-attack,386,Attack Forme,Attack Deoxys,2,f,472
+10032,deoxys-defense,386,Defense Forme,Defense Deoxys,3,f,473
+10033,deoxys-speed,386,Speed Forme,Speed Deoxys,4,f,474
+10034,burmy-sandy,412,Sandy Cloak,Sandy Burmy,2,f,499
+10035,burmy-trash,412,Trash Cloak,Trash Burmy,3,f,500
+10036,wormadam-sandy,413,Sandy Cloak,Sandy Wormadam,2,f,502
+10037,wormadam-trash,413,Trash Cloak,Trash Wormadam,3,f,503
+10038,cherrim-sunshine,421,Sunshine Form,Sunshine Cherrim,2,f,512
+10039,shellos-east,422,East Sea,East Shellos,2,f,514
+10040,gastrodon-east,423,East Sea,East Gastrodon,2,f,516
+10041,rotom-heat,479,Heat Rotom,Heat Rotom,2,f,549
+10042,rotom-wash,479,Wash Rotom,Wash Rotom,3,f,550
+10043,rotom-frost,479,Frost Rotom,Frost Rotom,4,f,551
+10044,rotom-fan,479,Fan Rotom,Fan Rotom,5,f,552
+10045,rotom-mow,479,Mow Rotom,Mow Rotom,6,f,553
+10046,giratina-origin,487,Origin Forme,Origin Giratina,2,f,562
+10047,shaymin-sky,492,Sky Forme,Sky Shaymin,2,f,568
+10048,arceus-fire,493,Fire Type,Fire Arceus,2,f,570
+10049,arceus-water,493,Water Type,Water Arceus,3,f,571
+10050,arceus-grass,493,Grass Type,Grass Arceus,4,f,572
+10051,arceus-electric,493,Electric Type,Electric Arceus,5,f,573
+10052,arceus-ice,493,Ice Type,Ice Arceus,6,f,574
+10053,arceus-fighting,493,Fighting Type,Fighting Arceus,7,f,575
+10054,arceus-poison,493,Poison Type,Poison Arceus,8,f,576
+10055,arceus-ground,493,Ground Type,Ground Arceus,9,f,577
+10056,arceus-flying,493,Flying Type,Flying Arceus,10,f,578
+10057,arceus-psychic,493,Psychic Type,Psychic Arceus,11,f,579
+10058,arceus-bug,493,Bug Type,Bug Arceus,12,f,580
+10059,arceus-rock,493,Rock Type,Rock Arceus,13,f,581
+10060,arceus-ghost,493,Ghost Type,Ghost Arceus,14,f,582
+10061,arceus-dragon,493,Dragon Type,Dragon Arceus,15,f,583
+10062,arceus-dark,493,Dark Type,Dark Arceus,16,f,584
+10063,arceus-steel,493,Steel Type,Steel Arceus,17,f,585
+10064,arceus-fairy,493,Fairy Type,Fairy Arceus,18,f,586
+10065,basculin-blue-striped,550,Blue-Striped Form,Blue-Striped Basculin,2,f,644
+10066,darmanitan-zen,555,Zen Mode,Zen Darmanitan,2,f,650
+10067,deerling-summer,585,Summer Form,Summer Deerling,2,f,681
+10068,deerling-autumn,585,Autumn Form,Autumn Deerling,3,f,682
+10069,deerling-winter,585,Winter Form,Winter Deerling,4,f,683
+10070,sawsbuck-summer,586,Summer Form,Summer Sawsbuck,2,f,685
+10071,sawsbuck-autumn,586,Autumn Form,Autumn Sawsbuck,3,f,686
+10072,sawsbuck-winter,586,Winter Form,Winter Sawsbuck,4,f,687
+10073,tornadus-therian,641,Therian Forme,Therian Tornadus,2,f,743
+10074,thundurus-therian,642,Therian Forme,Therian Thundurus,2,f,745
+10075,landorus-therian,645,Therian Forme,Therian Landorus,2,f,749
+10076,kyurem-black,646,Black Kyurem,Black Kyurem,2,f,751
+10077,kyurem-white,646,White Kyurem,White Kyurem,3,f,752
+10078,keldeo-resolute,647,Resolute Form,Resolute Keldeo,2,f,754
+10079,meloetta-pirouette,648,Pirouette Forme,Pirouette Meloetta,2,f,756
+10080,genesect-burn,649,Burn Drive,Burn Genesect,2,f,758
+10081,genesect-douse,649,Douse Drive,Douse Genesect,3,f,759
+10082,genesect-shock,649,Shock Drive,Shock Genesect,4,f,760
+10083,genesect-chill,649,Chill Drive,Chill Genesect,5,f,761
+10084,vivillon-icy-snow,666,Icy Snow Pattern,Icy Snow Vivillon,1,f,778
+10085,vivillon-polar,666,Polar Pattern,Polar Vivillon,2,f,779
+10086,vivillon-tundra,666,Tundra Pattern,Tundra Vivillon,3,f,780
+10087,vivillon-continental,666,Continental Pattern,Continental Vivillon,4,f,781
+10088,vivillon-garden,666,Garden Pattern,Garden Vivillon,5,f,782
+10089,vivillon-elegant,666,Elegant Pattern,Elegant Vivillon,6,f,783
+10090,vivillon-modern,666,Modern Pattern,Modern Vivillon,8,f,785
+10091,vivillon-marine,666,Marine Pattern,Marine Vivillon,9,f,786
+10092,vivillon-archipelago,666,Archipelago Pattern,Archipelago Vivillon,10,f,787
+10093,vivillon-high-plains,666,High Plains Pattern,High Plains Vivillon,11,f,788
+10094,vivillon-sandstorm,666,Sandstorm Pattern,Sandstorm Vivillon,12,f,789
+10095,vivillon-river,666,River Pattern,River Vivillon,13,f,790
+10096,vivillon-monsoon,666,Monsoon Pattern,Monsoon Vivillon,14,f,791
+10097,vivillon-savanna,666,Savanna Pattern,Savanna Vivillon,15,f,792
+10098,vivillon-sun,666,Sun Pattern,Sun Vivillon,16,f,793
+10099,vivillon-ocean,666,Ocean Pattern,Ocean Vivillon,17,f,794
+10100,vivillon-jungle,666,Jungle Pattern,Jungle Vivillon,18,f,795
+10101,flabebe-yellow,669,Yellow Flower,Yellow Flabébé,2,f,799
+10102,flabebe-orange,669,Orange Flower,Orange Flabébé,3,f,800
+10103,flabebe-blue,669,Blue Flower,Blue Flabébé,4,f,801
+10104,flabebe-white,669,White Flower,White Flabébé,5,f,802
+10105,floette-yellow,670,Yellow Flower,Yellow Floette,2,f,804
+10106,floette-orange,670,Orange Flower,Orange Floette,3,f,805
+10107,floette-blue,670,Blue Flower,Blue Floette,4,f,806
+10108,floette-white,670,White Flower,White Floette,5,f,807
+10109,florges-yellow,671,Yellow Flower,Yellow Florges,2,f,809
+10110,florges-orange,671,Orange Flower,Orange Florges,3,f,810
+10111,florges-blue,671,Blue Flower,Blue Florges,4,f,811
+10112,florges-white,671,White Flower,White Florges,5,f,812
+10113,furfrou-heart,676,Heart Trim,Heart Furfrou,2,f,818
+10114,furfrou-star,676,Star Trim,Star Furfrou,3,f,819
+10115,furfrou-diamond,676,Diamond Trim,Diamond Furfrou,4,f,820
+10116,furfrou-la-reine,676,La Reine Trim,La Reine Furfrou,5,f,821
+10117,furfrou-kabuki,676,Kabuki Trim,Kabuki Furfrou,6,f,822
+10118,furfrou-pharaoh,676,Pharaoh Trim,Pharaoh Furfrou,7,f,823
+10119,furfrou-debutante,676,Debutante Trim,Debutante Furfrou,8,f,824
+10120,furfrou-matron,676,Matron Trim,Matron Furfrou,9,f,825
+10121,furfrou-dandy,676,Dandy Trim,Dandy Furfrou,10,f,826
+10122,meowstic-male,678,Male,Male Meowstic,2,f,829
+10123,aegislash-blade,681,Blade Forme,Blade Aegislash,2,f,833
+10124,pumpkaboo-small,710,Small Size,Small Pumpkaboo,1,f,861
+10125,pumpkaboo-large,710,Large Size,Large Pumpkaboo,3,f,863
+10126,pumpkaboo-super,710,Super Size,Super Pumpkaboo,4,f,864
+10127,gourgeist-small,711,Small Size,Small Gourgeist,1,f,865
+10128,gourgeist-large,711,Large Size,Large Gourgeist,3,f,867
+10129,gourgeist-super,711,Super Size,Super Gourgeist,4,f,868
+10130,xerneas-neutral,716,Neutral Mode,Neutral Xerneas,1,f,873
+10131,venusaur-mega,3,Mega Venusaur,Mega Venusaur,2,f,4
+10132,charizard-mega-x,6,Mega Charizard X,Mega Charizard X,2,f,8
+10133,charizard-mega-y,6,Mega Charizard Y,Mega Charizard Y,3,f,9
+10134,blastoise-mega,9,Mega Blastoise,Mega Blastoise,2,f,13
+10135,alakazam-mega,65,Mega Alakazam,Mega Alakazam,2,f,76
+10136,gengar-mega,94,Mega Gengar,Mega Gengar,2,f,108
+10137,kangaskhan-mega,115,Mega Kangaskhan,Mega Kangaskhan,2,f,138
+10138,pinsir-mega,127,Mega Pinsir,Mega Pinsir,2,f,160
+10139,gyarados-mega,130,Mega Gyarados,Mega Gyarados,2,f,164
+10140,aerodactyl-mega,142,Mega Aerodactyl,Mega Aerodactyl,2,f,184
+10141,mewtwo-mega-x,150,Mega Mewtwo X,Mega Mewtwo X,2,f,194
+10142,mewtwo-mega-y,150,Mega Mewtwo Y,Mega Mewtwo Y,3,f,195
+10143,ampharos-mega,181,Mega Ampharos,Mega Ampharos,2,f,224
+10144,scizor-mega,212,Mega Scizor,Mega Scizor,2,f,150
+10145,heracross-mega,214,Mega Heracross,Mega Heracross,2,f,286
+10146,houndoom-mega,229,Mega Houndoom,Mega Houndoom,2,f,305
+10147,tyranitar-mega,248,Mega Tyranitar,Mega Tyranitar,2,f,317
+10148,blaziken-mega,257,Mega Blaziken,Mega Blaziken,2,f,327
+10149,gardevoir-mega,282,Mega Gardevoir,Mega Gardevoir,2,f,353
+10150,mawile-mega,303,Mega Mawile,Mega Mawile,2,f,376
+10151,aggron-mega,306,Mega Aggron,Mega Aggron,2,f,380
+10152,medicham-mega,308,Mega Medicham,Mega Medicham,2,f,383
+10153,manectric-mega,310,Mega Manectric,Mega Manectric,2,f,386
+10154,banette-mega,354,Mega Banette,Mega Banette,2,f,436
+10155,absol-mega,359,Mega Absol,Mega Absol,2,f,444
+10156,garchomp-mega,445,Mega Garchomp,Mega Garchomp,2,f,532
+10157,lucario-mega,448,Mega Lucario,Mega Lucario,2,f,535
+10158,abomasnow-mega,460,Mega Abomasnow,Mega Abomasnow,2,f,547
+20001,enculli,10001,,,1,t,877
+20002,homuncull,10002,,,1,t,878
+20003,spraylet,10003,,,1,t,879
+20004,pandive,10004,,,1,t,880
+20005,osgrave,10005,,,1,t,881
+20006,myrid,10006,,,1,t,882
+20007,tsuki,10007,,,1,t,883
+20008,tsukiyurei,10008,,,1,t,884
+20009,tsukihayai,10009,,,1,t,885
+20010,tsukimaru,10010,,,1,t,886
+20011,sheebit,10011,,,1,t,887
+20012,terrabbit,10012,,,1,t,888
+20013,laissure,10013,,,1,t,889
+20014,rasqueon,10014,,,1,t,890
+20015,skelitten,10015,,,1,t,891
+20016,skeline,10016,,,1,t,892
+20017,cappun,10017,,,1,t,893
+20018,babydrake,10018,,,1,t,894
+20019,childora,10019,,,1,t,895
+20020,sabitten,10020,,,1,t,896
+20021,sabura,10021,,,1,t,897
+20022,saburea,10022,,,1,t,898
+20023,kitora,10023,,,1,t,899
+20024,zoritsune,10024,,,1,t,900
+20025,alrunnik,10025,,,1,t,901
+20026,skunkunne,10026,,,1,t,902
+20027,dragomelet,10027,,,1,t,903
+20028,wyrmarble,10028,,,1,t,904
+20029,obsidrake,10029,,,1,t,905
+20030,wyrmal,10030,,,1,t,906
+20031,ventorm,10031,,,1,t,907
+20032,hennic,10032,,,1,t,908
+20033,hennox,10033,,,1,t,909
+20034,frizard,10034,,,1,t,910
+20035,feurisdesche,10035,,,1,t,911

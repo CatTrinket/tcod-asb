@@ -196,6 +196,7 @@ class PokemonForm(Base):
     full_name = Column(Unicode, nullable=True)
     form_order = Column(Integer, nullable=False)
     is_default = Column(Boolean, nullable=False)
+    order = Column(Integer, unique=True, nullable=False)
 
     @property
     def name(self):
@@ -256,6 +257,7 @@ class PokemonSpecies(Base):
     rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
+    order = Column(Integer, unique=True, nullable=False)
 
     @property
     def number(self):
