@@ -233,9 +233,10 @@ def pokemon_index(context, request):
 
     pokemon = (
         models.DBSession.query(models.Pokemon)
-        .join(models.Pokemon.trainer)
         .filter_by(unclaimed_from_hack=False)
-        .order_by(models.Pokemon.pokemon_form_id, models.Pokemon.name)
+        .join(models.PokemonForm)
+        .join(models.PokemonSpecies)
+        .order_by(models.PokemonSpecies.order, models.Pokemon.name)
         .options(
             joinedload('gender'),
             joinedload('trainer'),
