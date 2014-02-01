@@ -1,7 +1,7 @@
-<%def name="link(db_resource, text=None)">\
+<%def name="link(db_resource, text=None, **kwargs)">\
 ## resource_url will add a trailing slash unless we do it this way
 <a href="${request.resource_url(db_resource.__parent__,
-    db_resource.__name__)}">${text or db_resource.name}</a>\
+    db_resource.__name__, **kwargs)}">${text or db_resource.name}</a>\
 </%def>
 
 <%def name="name_header()">
@@ -165,7 +165,7 @@
 </table>
 </%def>
 
-<%def name="pokemon_form_table(forms, species_name=False,
+<%def name="pokemon_form_table(forms, species_name=False, squashed_forms=False,
     extra_right_cols=[])">
 <table class="effect-table">
 <thead>
@@ -183,13 +183,17 @@
 <tbody>
 % for form in forms:
 <%
+    use_species = (species_name or (squashed_forms and
+        form.species.forms_are_squashable))
+    name_override = form.species.name if use_species else None
+
     abilities = [None, None, None]
     for ability in form.abilities:
         abilities[ability.slot - 1] = ability
 %>
 <tr>
     <td class="icon">${pokemon_form_icon(form)}</td>
-    <td class="focus-column">${link(form, text=form.species.name if species_name else None)}</td>
+    <td class="focus-column">${link(form, text=name_override)}</td>
 
     <td>\
 % for type in form.types:

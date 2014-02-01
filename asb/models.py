@@ -258,6 +258,7 @@ class PokemonSpecies(Base):
     rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
+    forms_are_squashable = Column(Boolean, nullable=False)
     is_fake = Column(Boolean, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
 

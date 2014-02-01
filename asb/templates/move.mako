@@ -10,4 +10,4 @@
 <p>${move.description}</p>
 
 <h1>Pokémon</h1>
-${helpers.pokemon_form_table(move.pokemon_forms)}
+${helpers.pokemon_form_table(pokemon, squashed_forms=True)}
