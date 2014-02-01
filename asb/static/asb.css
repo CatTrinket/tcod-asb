@@ -97,7 +97,6 @@ td.button { padding: 0 0.5em; }
     width: 70px; height: 20px; border: 2px solid; border-radius: 12px;
     text-align: center; vertical-align: middle; line-height: 20px;
     color: white; text-shadow: black 1px 1px;
-    margin-top: -4px; /* Compensate for top border + half of extra height */
 }
 
 .type-normal { background: #ADAD7B; border-color: #735A4A; }
@@ -118,6 +117,14 @@ td.button { padding: 0 0.5em; }
 .type-dark { background: #735A4A; border-color: #4A423A; }
 .type-steel { background: #BDBDD6; border-color: #847B73; }
 .type-fairy { background: #FFA5E6; border-color: #B56B84; }
+
+/* Type icons shouldn't stretch table rows */
+td.type-cell { padding-top: 0; padding-bottom: 0; }
+
+/* Type icons need to be re-aligned with the rest of the text in vertically-
+   aligned tables (XXX this is kind of a gross way of doing it) */
+table.effect-table td.type-cell { padding-top: 0.5em; }
+table.effect-table td.type-cell > .type { margin-top: -4px; }
 
 /* Gender symbols */
 .gender-symbol-female { color: #FF4273; }
