@@ -158,3 +158,6 @@ ul#what_do label { font-weight: normal; display: inline; }
 /* I'M SO ANNOYED that this doesn't really fit into any of the other "centered
    column" classes */
 td.give { text-align: center }
+
+/* Pokémon species list */
+td.population-zero { color: #AAAAAA; }

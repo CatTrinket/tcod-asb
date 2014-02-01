@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import select
@@ -432,9 +433,24 @@ def species_index(context, request):
     (Forms, actually.  Whatever.)
     """
 
-    pokemon = (
-        models.DBSession.query(models.PokemonForm)
+    # A subquery to count how many of each Pokémon form there are in the league
+    population_subquery = (
+        models.DBSession.query(models.Pokemon.pokemon_form_id,
+            func.count('*').label('population'))
+        .select_from(models.Pokemon)
+        .filter(models.Pokemon.unclaimed_from_hack == False)
+        .group_by(models.Pokemon.pokemon_form_id)
+        .subquery()
+    )
+
+    # Get all the Pokémon and population counts.  Making this an OrderedDict
+    # means we can just pass it to pokemon_form_table as is.
+    pokemon = OrderedDict(
+        models.DBSession.query(models.PokemonForm,
+            population_subquery.c.population)
+        .select_from(models.PokemonForm)
         .join(models.PokemonSpecies)
+        .outerjoin(population_subquery)
         .options(
              joinedload('species'),
              subqueryload('abilities'),
