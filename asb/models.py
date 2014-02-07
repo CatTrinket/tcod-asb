@@ -134,7 +134,7 @@ class Pokemon(Base):
 
     id = Column(Integer, pokemon_id_seq, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
-    name = Column(Unicode, nullable=False)
+    name = Column(Unicode(30), nullable=False)
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         nullable=False)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=False)
@@ -317,7 +317,7 @@ class Trainer(Base):
 
     id = Column(Integer, trainers_id_seq, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False, default='')
-    name = Column(Unicode, nullable=False)
+    name = Column(Unicode(30), nullable=False)
     password_hash = Column(Unicode, nullable=True, default='')
     money = Column(Integer, nullable=False, default=45)
     can_collect_allowance = Column(Boolean, nullable=False, default=False)
