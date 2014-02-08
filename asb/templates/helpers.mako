@@ -142,7 +142,7 @@ ${n | n, str}\
 <tr>
     <td class="focus-column"><a href="/moves/${move.identifier}">${move.name}</a></td>
 
-    <td><span class="type type-${move.type.identifier}">${move.type.name}</span></td>
+    <td class="type-cell"><span class="type type-${move.type.identifier}">${move.type.name}</span></td>
 
     % if move.damage is None:
     <td class="stat">—</td>
@@ -212,7 +212,7 @@ ${n | n, str}\
     <td class="icon">${pokemon_form_icon(form)}</td>
     <td class="focus-column">${link(form, text=name_override)}</td>
 
-    <td>\
+    <td class="type-cell">\
 % for type in form.types:
 <span class="type type-${type.identifier}">${type.name}</span>\
 % endfor
