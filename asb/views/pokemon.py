@@ -73,6 +73,7 @@ class PokemonSpeciesField(wtforms.StringField):
         try:
             species = (models.DBSession.query(models.PokemonSpecies)
                 .filter_by(identifier=identifier)
+                .options(joinedload('default_form'))
                 .one()
             )
 
@@ -86,7 +87,7 @@ class PokemonSpeciesField(wtforms.StringField):
         name, species = self.data
         if species is None:
             raise wtforms.validators.ValidationError('No such Pokémon found')
-        elif species.rarity is None:
+        elif species.rarity is None or species.is_fake:
             raise wtforms.validators.ValidationError(
                 "{0} isn't buyable".format(species.name))
 
@@ -103,7 +104,7 @@ class QuickBuyForm(CSRFTokenForm):
     """A form for typing in the name of a Pokémon to buy."""
 
     pokemon = PokemonSpeciesField('Quick buy')
-    submit = wtforms.SubmitField('Go!')
+    quickbuy = wtforms.SubmitField('Go!')
 
 def pokemon_deposit_form(trainer, request, use_post=True):
     """Return a PokemonMovingForm for depositing Pokémon."""
@@ -160,24 +161,20 @@ def pokemon_checkout_form(cart, request):
 
         pass
 
-    # We want to get all the species in one query, but we also want to keep
-    # cart order, so we use a copy of the cart (it's an OrderedDict, remember)
-    # and just change its values to include the species objects
-    pokemon = cart.copy()
-
-    specieses = (models.DBSession.query(models.PokemonSpecies)
-        .filter(models.PokemonSpecies.identifier.in_(pokemon))
-        .all())
-
     total = 0
 
-    for species in specieses:
-        quantity = pokemon[species.identifier]
-        pokemon[species.identifier] = (species, quantity)
+    # Keep track of how many of each species we've seen so far, in case they're
+    # buying more than one of something
+    species_seen = {}
 
     # Now for all the subforms.  We're going to need to set the name species in
     # a class in a moment, hence the underscore on this one.
-    for species_, quantity in pokemon.values():
+    for species_ in cart:
+        species_ = models.DBSession.merge(species_)
+        species_seen.setdefault(species_.identifier, 0)
+        species_seen[species_.identifier] += 1
+        n = species_seen[species_.identifier]
+
         # Figure out ability choices
         abilities = [(ability.slot, ability.ability.name)
             for ability in species_.default_form.abilities
@@ -215,11 +212,17 @@ def pokemon_checkout_form(cart, request):
                     default=species_.default_form.id)
 
             species = species_  # Hang on to this; we'll need it
+            number = n  # This too
 
-        for n in range(quantity):
-            subform_name = '{0}-{1}'.format(species.identifier, n + 1)
-            setattr(ContainerForm, subform_name, wtforms.FormField(Subform))
+        # Add this subform to the container form
+        if n > 1:
+            subform_name = '{0}-{1}'.format(species_.identifier, n)
+        else:
+            subform_name = species_.identifier
 
+        setattr(ContainerForm, subform_name, wtforms.FormField(Subform))
+
+    # Create the form!
     class Form(PokemonCheckoutForm):
         pokemon = wtforms.FormField(ContainerForm)
 
@@ -319,78 +322,147 @@ def manage_pokemon_commit(context, request):
 
     return httpexc.HTTPSeeOther('/pokemon/manage')
 
-@view_config(route_name='buy_pokemon', permission='manage-account',
+def get_rarities():
+    """Fetch all the rarities and all the info we'll need about their Pokémon
+    for the "buy Pokémon" page.
+    """
+
+    return (models.DBSession.query(models.Rarity)
+        .options(
+            subqueryload('pokemon_species'),
+            subqueryload('pokemon_species.default_form'),
+            subqueryload('pokemon_species.default_form.types'),
+            subqueryload('pokemon_species.default_form.abilities'),
+            subqueryload('pokemon_species.default_form.abilities.ability')
+        )
+        .order_by(models.Rarity.id)
+        .all())
+
+@view_config(route_name='pokemon.buy', permission='manage-account',
   request_method='GET', renderer='/buy/pokemon.mako')
 def buy_pokemon(context, request):
     """A page for buying Pokémon."""
 
     quick_buy = QuickBuyForm(csrf_context=request.session)
+    rarities = get_rarities()
+    cart = request.session.get('cart', [])
 
-    rarities = (models.DBSession.query(models.Rarity)
-        .options(subqueryload('pokemon_species'))
-        .order_by(models.Rarity.id)
-        .all())
+    return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
 
-    return {'rarities': rarities, 'quick_buy': quick_buy}
-
-@view_config(route_name='buy_pokemon', permission='manage-account',
+@view_config(route_name='pokemon.buy', permission='manage-account',
   request_method='POST', renderer='/buy/pokemon.mako')
 def buy_pokemon_process(context, request):
-    """Process a request to add a Pokémon to the cart or quick-buy a
-    Pokémon.
+    """Process a request to quick-buy a Pokémon, add one to the user's cart, or
+    remove one from the user's cart.
     """
 
-    quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
+    quick_buy = None
 
-    if quick_buy.validate():
-        species = quick_buy.pokemon.data[1]
-        request.session['cart'] = OrderedDict({species.identifier: 1})
-        return httpexc.HTTPSeeOther('/pokemon/buy/checkout')
+    if 'quickbuy' in request.POST:
+        # Quick buy (well, more like quick add-to-cart)
+        quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
 
-    rarities = (models.DBSession.query(models.Rarity)
-        .options(subqueryload('pokemon_species'))
-        .order_by(models.Rarity.id)
-        .all())
+        if quick_buy.validate():
+            species = quick_buy.pokemon.data[1]
+            request.session.setdefault('cart', []).append(species)
+            return httpexc.HTTPSeeOther('/pokemon/buy')
+    elif 'add' in request.POST:
+        # Add to cart
+        identifier = request.POST['add']
 
-    return {'rarities': rarities, 'quick_buy': quick_buy}
+        # Make sure it's a real, buyable Pokémon
+        try:
+            species = (models.DBSession.query(models.PokemonSpecies)
+                .filter_by(identifier=identifier)
+                .options(joinedload('rarity'), joinedload('default_form'))
+                .one()
+            )
+        except NoResultFound:
+            # The only way something can go wrong here is if someone's mucking
+            # around, so I don't really care about figuring out errors
+            pass
+        else:
+            if not (species.rarity_id is None or species.is_fake):
+                # Valid Pokémon; add it to the cart
+                request.session.setdefault('cart', []).append(species)
+                return httpexc.HTTPSeeOther('/pokemon/buy')
+    elif 'remove' in request.POST and 'cart' in request.session:
+        # Remove from cart
+        identifier = request.POST['remove']
 
-@view_config(route_name='pokemon_checkout', permission='manage-account',
+        # Go through and find the Pokémon they want to remove
+        for n, pokemon in enumerate(request.session['cart']):
+            if pokemon.identifier == identifier:
+                request.session['cart'].pop(n)
+                return httpexc.HTTPSeeOther('/pokemon/buy')
+
+        # Again, if they're trying to buy something that's not in their cart,
+        # who cares?  Let them quietly fall back to the buy page.
+
+    # If we haven't returned yet, something's gone wrong; back to the buy page
+
+    if quick_buy is None:
+        quick_buy = QuickBuyForm(csrf_context=request.session)
+
+    rarities = get_rarities()
+    cart = request.session.get('cart', [])
+
+    return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
+
+@view_config(route_name='pokemon.buy.checkout', permission='manage-account',
   request_method='GET', renderer='/buy/pokemon_checkout.mako')
 def pokemon_checkout(context, request):
     """A page for actually buying all the Pokémon in the trainer's cart."""
 
+    # Make sure they actually have something to check out
     if 'cart' not in request.session or not request.session['cart']:
         request.session.flash('Your cart is empty')
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
+    # Make sure they can afford everything
+    grand_total = sum(pkmn.rarity.price for pkmn in request.session['cart'])
+    if grand_total > request.user.money:
+        request.session.flash("You can't afford all that!")
+        return httpexc.HTTPSeeOther('/pokemon/buy')
+
+    # And go
     form = pokemon_checkout_form(request.session['cart'], request)
 
     return {'form': form}
 
-@view_config(route_name='pokemon_checkout', permission='manage-account',
+@view_config(route_name='pokemon.buy.checkout', permission='manage-account',
   request_method='POST', renderer='/buy/pokemon_checkout.mako')
 def pokemon_checkout_commit(context, request):
-    """"""
+    """Process a checkout form and actually give the user their new Pokémon."""
 
     trainer = request.user
 
+    # Make sure they actually, uh, have something to buy
     if 'cart' not in request.session or not request.session['cart']:
         request.session.flash('Your cart is empty')
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
+    # Make sure they actually have enough money
+    grand_total = sum(pkmn.rarity.price for pkmn in request.session['cart'])
+    if grand_total > trainer.money:
+        request.session.flash("You can't afford all that!")
+        return httpexc.HTTPSeeOther('/pokemon/buy')
+
+    # Double-check their checkout form
     form = pokemon_checkout_form(request.session['cart'], request)
 
     if not form.validate():
         return {'form': form}
 
+    # Okay this is it.  Time to actually create these Pokémon.
     squad_count = len(trainer.squad)
 
-    # Ok this is it.  Time to actually create these Pokémon.
     for subform in form.pokemon:
-        # Get the next ID
+        # Get the next available ID for this Pokémon
         nextval = models.Pokemon.pokemon_id_seq.next_value()
         id, = select([nextval]).execute().fetchone()
 
+        # Figure out form/gender/ability
         if hasattr(subform, 'form_'):
             form_id = subform.form_.data
         else:
@@ -406,9 +478,11 @@ def pokemon_checkout_commit(context, request):
         else:
             ability_slot = 1
 
+        # Plop it in the squad if there's still room
         to_squad = squad_count < 10
         squad_count += to_squad
 
+        # Aaaaand create it.
         pokemon = models.Pokemon(
             id=id,
             identifier='temp-{0}'.format(subform.name_.data),
@@ -423,7 +497,9 @@ def pokemon_checkout_commit(context, request):
         models.DBSession.add(pokemon)
         pokemon.update_identifier()
 
-        trainer.money -= subform.species.rarity.price
+    # Finish up and return to the "Your Pokémon" page
+    trainer.money -= grand_total
+    del request.session['cart']
 
     return httpexc.HTTPSeeOther('/pokemon/manage')
 

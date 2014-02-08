@@ -15,6 +15,9 @@ ${form.csrf_token | n, str}
 
 % for subform in form.pokemon:
 <h2>${subform.species.name}\
+% if subform.number > 1:
+ #${subform.number | n, str}\
+% endif
 </h2>
 <dl>
     <dt>${subform.name_.label() | n}</dt>

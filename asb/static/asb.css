@@ -67,11 +67,13 @@ table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
 td, th { padding: 0.5em; line-height: 1em; }
 
 thead { border-bottom: 2px solid #7799EE; }
+tfoot { border-top: 2px solid #7799EE; }
 
 tbody > tr:hover { background: #DEE6F5; }
 
 td.focus-column { font-weight: bold; }
 td.gender, td.stat { text-align: center; }
+td.price { text-align: right; }
 
 .effect-table tbody tr { vertical-align: top; }
 
@@ -168,3 +170,6 @@ td.give { text-align: center }
 
 /* Pokémon species list */
 td.population-zero { color: #AAAAAA; }
+
+/* Buying shit */
+tr.unaffordable-total { color: #CC0000; }

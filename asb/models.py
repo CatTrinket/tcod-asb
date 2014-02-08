@@ -407,7 +407,7 @@ PokemonSpecies.genders = relationship(Gender,
 PokemonSpecies.rarity = relationship(Rarity, back_populates='pokemon_species')
 
 Rarity.pokemon_species = relationship(PokemonSpecies,
-    order_by=PokemonSpecies.id, back_populates='rarity')
+    order_by=PokemonSpecies.order, back_populates='rarity')
 
 Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
     order_by=Pokemon.id)

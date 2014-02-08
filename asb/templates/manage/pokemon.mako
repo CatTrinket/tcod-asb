@@ -15,6 +15,8 @@
 <th></th>
 </%def>
 
+<a href="/pokemon/buy">Buy Pokémon →</a>
+
 <h1 id="squad">Active squad</h1>
 % if deposit.errors:
 <ul class="form-error">

@@ -4,6 +4,16 @@
     db_resource.__name__, **kwargs)}">${text or db_resource.name}</a>\
 </%def>
 
+<%def name="num(n, invisible_plus=True)">\
+% if n < 0:
+−${n * -1 | n, str}\
+% elif n == 0 or invisible_plus:
+${n | n, str}\
+% else:
++${n | n, str}\
+% endif
+</%def>
+
 <%def name="name_header()">
 <th colspan="2">Name</th>
 </%def>
@@ -166,10 +176,13 @@
 </%def>
 
 <%def name="pokemon_form_table(forms, species_name=False, squashed_forms=False,
-    extra_right_cols=[])">
-<table class="effect-table">
+    extra_left_cols=[], extra_right_cols=[])">
+<table>
 <thead>
 <tr>
+    % for header_func, cell_func in extra_left_cols:
+    ${header_func()}
+    % endfor
     <th colspan="2">Pokémon</th>
     <th>Type</th>
     <th>Ability 1</th>
@@ -192,6 +205,10 @@
         abilities[ability.slot - 1] = ability
 %>
 <tr>
+    % for header_func, cell_func in extra_left_cols:
+    ${cell_func(form)}
+    % endfor
+
     <td class="icon">${pokemon_form_icon(form)}</td>
     <td class="focus-column">${link(form, text=name_override)}</td>
 

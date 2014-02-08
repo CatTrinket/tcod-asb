@@ -36,8 +36,8 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
 
-    config.add_route('buy_pokemon', '/pokemon/buy')
-    config.add_route('pokemon_checkout', '/pokemon/buy/checkout')
+    config.add_route('pokemon.buy', '/pokemon/buy')
+    config.add_route('pokemon.buy.checkout', '/pokemon/buy/checkout')
 
     # A route to redirect away trailing slashes instead of just 404ing
     config.add_route('slash_redirect', '/{path:.+}/')
