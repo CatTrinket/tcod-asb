@@ -287,8 +287,16 @@ def manage_pokemon(context, request):
     """A page for depositing and withdrawing one's Pokémon."""
 
     trainer = request.user
-    deposit = pokemon_deposit_form(trainer, request)
-    withdraw = pokemon_withdraw_form(trainer, request)
+
+    if trainer.squad:
+        deposit = pokemon_deposit_form(trainer, request)
+    else:
+        deposit = None
+
+    if trainer.pc:
+        withdraw = pokemon_withdraw_form(trainer, request)
+    else:
+        withdraw = None
 
     return {'trainer': trainer, 'deposit': deposit, 'withdraw': withdraw}
 

@@ -2,7 +2,12 @@
 <%namespace name="helpers" file="/helpers.mako"/>\
 <%block name='title'>Manage Pokémon - Trainer Control Panel - The Cave of Dragonflies ASB</%block>\
 
-<% d = iter(deposit.pokemon); w = iter(withdraw.pokemon) %>
+<%
+  if deposit is not None:
+      d = iter(deposit.pokemon)
+  if withdraw is not None:
+      w = iter(withdraw.pokemon)
+%>
 <%def name="deposit_tickies(pokemon)">\
 <td class="ticky">${next(d) | n, str}</td>
 </%def>
@@ -17,6 +22,7 @@
 
 <a href="/pokemon/buy">Buy Pokémon →</a>
 
+% if deposit is not None:
 <h1 id="squad">Active squad</h1>
 % if deposit.errors:
 <ul class="form-error">
@@ -34,7 +40,9 @@ ${helpers.pokemon_table(trainer.squad, skip_cols=['trainer'],
     extra_left_cols=[(ticky_header, deposit_tickies)])}
 ${deposit.submit | n, str}
 </form>
+% endif
 
+% if withdraw is not None:
 <h1 id="pc">PC</h1>
 % if withdraw.errors:
 <ul class="form-error">
@@ -52,3 +60,4 @@ ${helpers.pokemon_table(trainer.pc, skip_cols=['trainer'],
     extra_left_cols=[(ticky_header, withdraw_tickies)])}
 ${withdraw.submit | n, str}
 </form>
+% endif
