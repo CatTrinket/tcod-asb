@@ -340,6 +340,18 @@ class Trainer(Base):
         self.identifier = identifier(self.name, id=self.id)
 
     @property
+    def has_pokemon(self):
+        """Determine whether or not this trainer has any Pokémon without having
+        to actually fetch them.
+        """
+
+        existence_subquery = (DBSession.query(Pokemon)
+            .filter(Pokemon.trainer_id == self.id)
+            .exists())
+        pokemon_exist, = DBSession.query(existence_subquery).one()
+        return pokemon_exist
+
+    @property
     def __name__(self):
         """Return this trainer's resource name for traversal."""
 

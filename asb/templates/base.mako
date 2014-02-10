@@ -12,14 +12,18 @@
 <body>
 <section id="header">
 <p style="text-align: center; margin: 0; padding: 2em; color: white;">
-  banner goes here once I make it
+  banner goes here once we have one
 </p>
 
 <div id="menu">
 <ul id="menu-user">
 % if request.user is not None:
   <li class="menu-focus-link"><a href="/trainers/${request.user.identifier}">${request.user.name}</a></li>
+% if request.user.has_pokemon:
   <li><a href="/pokemon/manage">Your Pokémon</a></li>
+% else:
+  <li><a href="/pokemon/buy">Buy Pokémon</a></li>
+% endif
   <li><a href="/items/manage">Your items</a></li>
   <li><a href="/logout?csrf_token=${request.session.get_csrf_token()}">Log out</a></li>
 % else:
