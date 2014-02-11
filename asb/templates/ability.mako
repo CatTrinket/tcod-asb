@@ -6,12 +6,5 @@
 <p>${ability.description}</p>
 
 <h1>Pokémon</h1>
-% if normal_pokemon:
-<h2>Regular ability</h2>
-${helpers.pokemon_form_table(normal_pokemon, squashed_forms=True)}
-% endif
-
-% if hidden_pokemon:
-<h2>Hidden ability</h2>
-${helpers.pokemon_form_table(hidden_pokemon, squashed_forms=True)}
-% endif
+${helpers.pokemon_form_table(normal_pokemon, hidden_pokemon,
+    subheaders=('Regular ability', 'Hidden ability'), squashed_forms=True)}

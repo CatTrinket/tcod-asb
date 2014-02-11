@@ -175,8 +175,20 @@ ${n | n, str}\
 </table>
 </%def>
 
-<%def name="pokemon_form_table(forms, species_name=False, squashed_forms=False,
-    extra_left_cols=[], extra_right_cols=[])">
+<%def name="pokemon_form_table(*form_lists, **kwargs)">
+<%
+  # Temporary fix until Mako can handle Python 3's AST
+  species_name = kwargs.pop('species_name', False)
+  squashed_forms = kwargs.pop('squashed_forms', False)
+  extra_left_cols = kwargs.pop('extra_left_cols', [])
+  extra_right_cols = kwargs.pop('extra_right_cols', [])
+  subheaders = kwargs.pop('subheaders', None)
+
+  if subheaders is not None:
+      sections = zip(subheaders, form_lists)
+  else:
+      sections = [(None, forms) for forms in form_lists]
+%>
 <table>
 <thead>
 <tr>
@@ -193,7 +205,15 @@ ${n | n, str}\
     % endfor
 </tr>
 </thead>
+% for subheader, forms in sections:
+% if forms:
 <tbody>
+% if subheader is not None:
+<!-- I know this is incorrect, but colspan="0" doesn't work in Chrome and I
+really don't want to calculate the colspan manually. I'm sorry. -->
+<tr class="subheader-row"><td colspan="1000">${subheader}</td></tr>
+% endif
+
 % for form in forms:
 <%
     use_species = (species_name or (squashed_forms and
@@ -234,6 +254,8 @@ ${n | n, str}\
 </tr>
 % endfor
 </tbody>
+% endif
+% endfor
 </table>
 </%def>
 
