@@ -27,6 +27,7 @@ def ability(ability, request):
         .join(models.PokemonSpecies)
         .filter(or_(models.PokemonSpecies.forms_are_squashable == False,
                     models.PokemonForm.is_default == True))
+        .filter(models.PokemonSpecies.is_fake == False)
         .order_by(models.PokemonForm.order)
     )
 
