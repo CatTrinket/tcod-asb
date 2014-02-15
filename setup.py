@@ -8,15 +8,20 @@ with open(os.path.join(here, 'README.txt')) as f:
 with open(os.path.join(here, 'CHANGES.txt')) as f:
     CHANGES = f.read()
 
+# I'm going to just give exact versions that I know will work
 requires = [
-    'pyramid',
-    'SQLAlchemy',
-    'transaction',
-    'pyramid_tm',
-    'pyramid_debugtoolbar',
-    'zope.sqlalchemy',
-    'waitress',
-    ]
+    'pyramid==1.5a2',
+    'SQLAlchemy==0.8.2',
+    'transaction==1.4.1',
+    'pyramid_tm==0.7',
+    'pyramid_debugtoolbar==1.0.8',
+    'zope.sqlalchemy==0.7.3',
+    'waitress==0.8.7',
+
+    'pbkdf2==1.3',
+    'pyramid_beaker==0.8',
+    'WTForms==1.0.5'
+]
 
 setup(name='asb',
       version='0.0',
