@@ -385,6 +385,7 @@ class Type(Base):
 # everything
 
 Move.type = relationship(Type)
+Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
     secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
 

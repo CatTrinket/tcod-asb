@@ -14,6 +14,10 @@ ${n | n, str}\
 % endif
 </%def>
 
+<%def name="type_icon(type)">\
+<span class="type type-${type.identifier}">${type.name}</span>\
+</%def>
+
 <%def name="name_header()">
 <th colspan="2">Name</th>
 </%def>
@@ -142,7 +146,7 @@ ${n | n, str}\
 <tr>
     <td class="focus-column"><a href="/moves/${move.identifier}">${move.name}</a></td>
 
-    <td class="type-cell"><span class="type type-${move.type.identifier}">${move.type.name}</span></td>
+    <td class="type-cell">${type_icon(move.type)}</td>
 
     % if move.damage is None:
     <td class="stat">—</td>
@@ -234,7 +238,7 @@ really don't want to calculate the colspan manually. I'm sorry. -->
 
     <td class="type-cell">\
 % for type in form.types:
-<span class="type type-${type.identifier}">${type.name}</span>\
+${type_icon(type)}\
 % endfor
 </td>
 
