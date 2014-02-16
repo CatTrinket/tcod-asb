@@ -391,7 +391,7 @@ Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
-Pokemon.form = relationship(PokemonForm)
+Pokemon.form = relationship(PokemonForm, back_populates='pokemon')
 Pokemon.gender = relationship(Gender)
 Pokemon.item = relationship(Item,
     secondary=TrainerItem.__table__, uselist=False)
@@ -401,6 +401,8 @@ Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
+PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
+    back_populates='form')
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
     order_by=Move.name, back_populates='pokemon_forms')
@@ -415,6 +417,14 @@ PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
     uselist=False)
+PokemonSpecies.evolutions = relationship(PokemonSpecies,
+    primaryjoin=PokemonSpecies.id == PokemonSpecies.evolves_from_species_id,
+    remote_side=[PokemonSpecies.evolves_from_species_id],
+    back_populates='pre_evolution')
+PokemonSpecies.pre_evolution = relationship(PokemonSpecies,
+    primaryjoin=PokemonSpecies.evolves_from_species_id == PokemonSpecies.id,
+    remote_side=[PokemonSpecies.id],
+    back_populates='evolutions')
 PokemonSpecies.genders = relationship(Gender,
     secondary=PokemonSpeciesGender.__table__, order_by=Gender.id)
 PokemonSpecies.rarity = relationship(Rarity, back_populates='pokemon_species')
