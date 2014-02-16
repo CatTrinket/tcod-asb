@@ -32,7 +32,7 @@ h1 {
 
 h2 {
     font-size: 1.3em;
-    border-bottom: 1px solid #C0CCE6;
+    border-bottom: 3px solid #7799EE;
 }
 
 #body > h1:first-child { margin-top: 0; }
@@ -66,7 +66,7 @@ img { vertical-align: middle; margin-top: -0.5em; margin-bottom: -0.5em; }
 /* WTForms error messages */
 .form-error { color: #CC0000; }
 
-/* Definition lists */
+/* Definition lists with dt and dd on the same line */
 dt {
     float: left; clear: left;
     font-weight: bold; width: 10em; text-align: right;
@@ -101,7 +101,7 @@ td.price { text-align: right; }
    they're attached to, so they need less padding */
 td.icon { padding: 0 0 0 0.5em; }
 td.icon img { vertical-align: middle; }
-td.icon + td { padding-left: 0.25em; }
+td.icon + td { padding-left: 0; }
 
 /* If you add this to tables with vertical centering, it pushes the row out by
    1 px for some reason */
@@ -111,7 +111,7 @@ td.icon + td { padding-left: 0.25em; }
 td.ticky { padding: 0 0 0 0.5em; }
 
 /* Buttons should only be cozy vertically*/
-td.button { padding: 0 0.5em; }
+td.button { padding: 0 0.5em; text-align: center; }
 
 /* Type icons */
 .type {
