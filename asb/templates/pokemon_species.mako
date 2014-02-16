@@ -6,7 +6,7 @@
 
 <dl>
     <dt>#${pokemon.species.number}</dt>
-    <dd><span class="text-with-icon">${pokemon.name}</span> ${helpers.pokemon_form_icon(pokemon)}</dd>
+    <dd>${pokemon.name} ${helpers.pokemon_form_icon(pokemon)}</dd>
 
     <dt>Type</dt>
     <dd>
@@ -41,11 +41,11 @@
 
 <dl>
     <dt>${helpers.link(regular_abilities[0])}</dt>
-    <dd class="long">${regular_abilities[0].summary}</dd>
+    <dd>${regular_abilities[0].summary}</dd>
 
     % if len(regular_abilities) == 2 and regular_abilities[1].name != regular_abilities[0].name:
         <dt>${helpers.link(regular_abilities[1])}</dt>
-        <dd class="long">${regular_abilities[1].summary}</dd>
+        <dd>${regular_abilities[1].summary}</dd>
     % endif
 
     % if hidden_abilities:

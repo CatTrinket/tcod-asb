@@ -35,14 +35,6 @@ h2 {
     border-bottom: 1px solid #C0CCE6;
 }
 
-h3 {
-    font-size: 1em;
-    line-height: 1.7em;
-    border-bottom: 1px dashed #C0CCE6;
-    font-weight: normal;
-    margin: 0.25rem 0;
-}
-
 #body > h1:first-child { margin-top: 0; }
 
 /* Menu */
@@ -67,6 +59,10 @@ h3 {
 
 /**** SHARED STUFF ****/
 
+/* Images */
+/* Align nicely with text; don't vertically stretch the line if small enough */
+img { vertical-align: middle; margin-top: -0.5em; margin-bottom: -0.5em; }
+
 /* WTForms error messages */
 .form-error { color: #CC0000; }
 
@@ -75,10 +71,9 @@ dt {
     float: left; clear: left;
     font-weight: bold; width: 10em; text-align: right;
 }
- dt:after { content: ':' }
-dd { margin-left: 10em /* factor in dt */;  padding-left: 0.5em; }
-dt, dd { height: 2em; line-height: 2em; }
-dd.long { height: auto; min-height: 2em;}
+dt:after { content: ':'; }
+dd { margin-left: 10.5em /* factor in dt + padding */; }
+dt, dd { padding: 0.5em; }
 
 /* Tables */
 table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
@@ -160,7 +155,6 @@ table.effect-table td.type-cell > .type { margin-top: -4px; }
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
-.text-with-icon { vertical-align: top; }
 
 
 /**** SPECIFIC PAGES ****/
