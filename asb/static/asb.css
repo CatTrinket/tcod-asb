@@ -77,7 +77,8 @@ dt {
 }
  dt:after { content: ':' }
 dd { margin-left: 10em /* factor in dt */;  padding-left: 0.5em; }
-dt, dd { min-height: 2em; line-height: 2em; }
+dt, dd { height: 2em; line-height: 2em; }
+dd.long { height: auto; min-height: 2em;}
 
 /* Tables */
 table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
@@ -159,6 +160,7 @@ table.effect-table td.type-cell > .type { margin-top: -4px; }
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
+.text-with-icon { vertical-align: top; }
 
 
 /**** SPECIFIC PAGES ****/
