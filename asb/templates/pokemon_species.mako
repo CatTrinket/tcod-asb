@@ -4,19 +4,37 @@
 
 <h1>${pokemon.name}</h1>
 
-<p>AW YEAH, POKÉMON #${pokemon.species.number} IS <strong>${pokemon.name.upper()}</strong></p>
+<dl>
+    <dt>#${pokemon.species.number}</dt>
+    <dd>${pokemon.name}</dd>
 
-<p>IT'S A FREAKING ${"/".join(type.name.upper() for type in pokemon.types)}
-TYPE.</p>
+    <dt>Type</dt>
+    <dd>
+        ${helpers.type_icon(pokemon.types[0])}
+        % if len(pokemon.types) == 2:
+            &nbsp;${helpers.type_icon(pokemon.types[1])}
+        % endif
+    </dd>
 
-<%
-    abilities = set(ability.ability.name.upper() for ability in
-        pokemon.abilities)
-%>
+    <%
+        regular_abilities = []
+        hidden_abilities = []
 
-<p>TAKE A GOOD LOOK AT <strong>
-${"THAT ABILITY" if len(abilities) == 1 else "THOSE ABILITIES"}</strong>:
-${" AND ".join(abilities)}</p>
+        for ability in pokemon.abilities:
+            if ability.is_hidden:
+                hidden_abilities.append(ability.ability)
+            else:
+                regular_abilities.append(ability.ability)
+    %>
+
+    <dt>${"Ability" if len(regular_abilities) == 1 else "Abilities"}</dt>
+    <dd>${", ".join(ability.name for ability in regular_abilities)}</dd>
+
+    % if len(pokemon.abilities) > 1:
+        <dt>Hidden Ability</dt>
+        <dd>${", ".join(ability.name for ability in hidden_abilities)}</dd>
+    % endif
+</dl>
 
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
