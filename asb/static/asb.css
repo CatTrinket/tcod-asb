@@ -115,9 +115,10 @@ td.ticky { padding: 0 0 0 0.5em; }
 td.button { padding: 0 0.5em; text-align: center; }
 
 /* Tables for evolution trees */
-table.evolution-tree { width: 50%; margin: auto; }
+table.evolution-tree { width: 75%; margin: auto; }
 table.evolution-tree td { border: 1px solid black; text-align: center; }
 table.evolution-tree td img { margin: 0; }
+table.evolution-tree td .evolution-method { font-size: 0.7rem; }
 
 /* Type icons */
 .type {
