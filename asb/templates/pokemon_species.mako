@@ -118,7 +118,7 @@
 
         return '<br /><span class="evolution-method">{}</span>'.format(methods)
 
-    def format_cell(colspan, pokemon, evolved=True):
+    def format_cell(colspan, pokemon):
         cell_template = \
             '''<td colspan="{}">''' \
             '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
@@ -144,7 +144,7 @@
 
 <table class="evolution-tree">
     <tr>
-        ${format_cell(max(num_basic, num_stage1, num_stage2), basic, False) | n}
+        ${format_cell(max(num_basic, num_stage1, num_stage2), basic) | n}
     </tr>
 
     % if num_stage1:
