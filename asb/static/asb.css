@@ -12,6 +12,7 @@ body {
 
 a { text-decoration: none; color: #144BB8; }
 a:hover { color: #759EF0; }
+h1 a, h1 a:hover { color:white; }
 
 abbr { border-bottom: 1px dotted black; }
 

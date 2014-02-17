@@ -417,6 +417,9 @@ PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
     uselist=False)
+PokemonSpecies.evolution_method = relationship(PokemonSpeciesEvolution,
+    primaryjoin=PokemonSpecies.id == PokemonSpeciesEvolution.evolved_species_id,
+    uselist=False)
 PokemonSpecies.evolutions = relationship(PokemonSpecies,
     primaryjoin=PokemonSpecies.id == PokemonSpecies.evolves_from_species_id,
     remote_side=[PokemonSpecies.evolves_from_species_id],

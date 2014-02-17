@@ -17,13 +17,25 @@
     </dd>
 
     <dt>Rarity</dt>
-    <dd>???</dd>
+    <dd>
+        % if pokemon.species.rarity_id is not None:
+            ${pokemon.species.rarity_id}
+        % else:
+            Too rare for you.
+        % endif
+    </dd>
 
     <dt>Price</dt>
-    <dd>???</dd>
+    <dd>
+        % if pokemon.species.rarity is not None:
+            $${pokemon.species.rarity.price}
+        % else:
+            Unbuyable
+        % endif
+    </dd>
 
     <dt>Population</dt>
-    <dd><a>???</a></dd>
+    <dd><a href="#population">${len(pokemon.pokemon)}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
@@ -43,18 +55,20 @@
     <dt>${helpers.link(regular_abilities[0])}</dt>
     <dd>${regular_abilities[0].summary}</dd>
 
-    % if len(regular_abilities) == 2 and regular_abilities[1].name != regular_abilities[0].name:
+    % if len(regular_abilities) == 2 and regular_abilities[1] != regular_abilities[0]:
         <dt>${helpers.link(regular_abilities[1])}</dt>
         <dd>${regular_abilities[1].summary}</dd>
     % endif
 
-    % if hidden_abilities:
+    % if hidden_abilities and hidden_abilities[0] != regular_abilities[0]:
         <dt class="hidden-ability">${helpers.link(hidden_abilities[0])}</dt>
-        <dd class="long">${hidden_abilities[0].summary}</dd>
+        <dd>${hidden_abilities[0].summary}</dd>
     % endif
 </dl>
 
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
 
-<h1>Population</h1>
+<h1><a name="population">Population</a></h1>
+
+${helpers.pokemon_table(pokemon.pokemon, skip_cols=['species'])}
