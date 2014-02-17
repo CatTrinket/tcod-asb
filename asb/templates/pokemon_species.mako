@@ -66,6 +66,68 @@
     % endif
 </dl>
 
+<h1>Evolutions</h1>
+
+<%
+    evolution_tree = {'basic': None, 'stage1': [], 'stage2': []}
+
+    if pokemon.species.pre_evolution is None:
+        evolution_tree['basic'] = pokemon.species
+
+    elif pokemon.species.pre_evolution.pre_evolution is None:
+        evolution_tree['basic'] = pokemon.species.pre_evolution
+
+    else:
+        evolution_tree['basic'] = pokemon.species.pre_evolution.pre_evolution
+
+    evolution_tree['stage1'] = evolution_tree['basic'].evolutions
+    evolution_tree['stage2'] = [evolution.evolutions
+        for evolution in evolution_tree['stage1']]
+
+    num_basic = 1
+    num_stage1 = len(evolution_tree['stage1'])
+    num_stage2 = sum(len(evolutions) for evolutions in evolution_tree['stage2'])
+
+    basic = evolution_tree['basic']
+    stage1_row = '<tr>'
+    stage2_row = '<tr>'
+
+    def format_cell(colspan, pokemon):
+        cell_template = \
+            '''<td colspan="{}">''' \
+            '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
+            '''{}''' \
+            '''</td>'''
+
+        return cell_template.format(
+            colspan,
+            pokemon.default_form.identifier,
+            pokemon.name)
+
+    for evolution in evolution_tree['stage1']:
+        stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
+    stage1_row += '</tr>'
+
+    for evolutions in evolution_tree['stage2']:
+        for evolution in evolutions:
+            stage2_row += format_cell(1, evolution)
+    stage2_row += '</tr>'
+%>
+
+<table class="evolution-tree">
+    <tr>
+        ${format_cell(max(num_basic, num_stage1, num_stage2), basic) | n}
+    </tr>
+
+    % if num_stage1:
+        ${stage1_row | n}
+    % endif
+
+    % if num_stage2:
+        ${stage2_row | n}
+    % endif
+</table>
+
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
 

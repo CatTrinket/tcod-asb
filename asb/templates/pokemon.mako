@@ -10,23 +10,14 @@
 
     <dt>Species</dt>
     <dd>
-        <span class="text-with-icon">${helpers.link(pokemon.form)}</span>${helpers.pokemon_form_icon(
-            pokemon.form)}
+        ${helpers.link(pokemon.form)}${helpers.pokemon_form_icon(pokemon.form)}
     </dd>
 
     <dt>Gender</dt>
     <dd>${pokemon.gender.name.capitalize()}</dd>
 
-    <dt>Ability</dt>
-    <dd>
-        % if pokemon.ability_slot == 3:
-            <span class="hidden-ability">
-        % endif
-        ${helpers.link(pokemon.ability)}
-        % if pokemon.ability_slot == 3:
-            </span>
-        % endif
-    </dd>
+    <dt>Trainer</dt>
+    <dd>${helpers.link(pokemon.trainer)}</dd>
 
     <dt>Item</dt>
     <dd>
@@ -36,9 +27,6 @@
             None
         %endif
     </dd>
-
-    <dt>Trainer</dt>
-    <dd>${helpers.link(pokemon.trainer)}</dd>
 </dl>
 
 <h2>Stats</h2>
@@ -57,6 +45,17 @@
 %>
 
 <dl>
+    <dt>Ability</dt>
+    <dd>
+        % if pokemon.ability_slot == 3:
+            <span class="hidden-ability">
+        % endif
+        ${helpers.link(pokemon.ability)}
+        % if pokemon.ability_slot == 3:
+            </span>
+        % endif
+    </dd>
+
     <dt>Experience</dt>
     <dd>
         ${pokemon.experience}
