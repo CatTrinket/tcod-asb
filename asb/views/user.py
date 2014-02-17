@@ -100,16 +100,15 @@ class LoginForm(CSRFTokenForm):
         if not user.check_password(field.data):
             raise wtforms.validators.ValidationError
 
-class RegistrationForm(wtforms.ext.csrf.SecureForm):
+class RegistrationForm(CSRFTokenForm):
     """A registration form."""
 
     what_do = wtforms.RadioField(
         'What would you like to do?',
 
         [wtforms.validators.InputRequired(
-            'How did you manage to select neither?')],
+            'Please select one of these options.')],
 
-        default='new',
         choices=[
            ('new', 'Create a new profile'),
            ('old', 'Recover an old profile from the vB hack')
