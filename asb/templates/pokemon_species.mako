@@ -17,13 +17,25 @@
     </dd>
 
     <dt>Rarity</dt>
-    <dd>???</dd>
+    <dd>
+        % if pokemon.species.rarity_id is not None:
+            ${pokemon.species.rarity_id}
+        % else:
+            Too rare for you.
+        % endif
+    </dd>
 
     <dt>Price</dt>
-    <dd>???</dd>
+    <dd>
+        % if pokemon.species.rarity is not None:
+            $${pokemon.species.rarity.price}
+        % else:
+            Unbuyable
+        % endif
+    </dd>
 
     <dt>Population</dt>
-    <dd><a>???</a></dd>
+    <dd><a href="#census">${len(pokemon.pokemon)}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
@@ -43,18 +55,113 @@
     <dt>${helpers.link(regular_abilities[0])}</dt>
     <dd>${regular_abilities[0].summary}</dd>
 
-    % if len(regular_abilities) == 2 and regular_abilities[1].name != regular_abilities[0].name:
+    % if len(regular_abilities) == 2 and regular_abilities[1] != regular_abilities[0]:
         <dt>${helpers.link(regular_abilities[1])}</dt>
         <dd>${regular_abilities[1].summary}</dd>
     % endif
 
-    % if hidden_abilities:
+    % if hidden_abilities and hidden_abilities[0] != regular_abilities[0]:
         <dt class="hidden-ability">${helpers.link(hidden_abilities[0])}</dt>
-        <dd class="long">${hidden_abilities[0].summary}</dd>
+        <dd>${hidden_abilities[0].summary}</dd>
     % endif
 </dl>
+
+<h1>Evolution</h1>
+
+<%
+    evolution_tree = {'basic': None, 'stage1': [], 'stage2': []}
+
+    if pokemon.species.pre_evolution is None:
+        evolution_tree['basic'] = pokemon.species
+
+    elif pokemon.species.pre_evolution.pre_evolution is None:
+        evolution_tree['basic'] = pokemon.species.pre_evolution
+
+    else:
+        evolution_tree['basic'] = pokemon.species.pre_evolution.pre_evolution
+
+    evolution_tree['stage1'] = evolution_tree['basic'].evolutions
+    evolution_tree['stage2'] = [evolution.evolutions
+        for evolution in evolution_tree['stage1']]
+
+    num_basic = 1
+    num_stage1 = len(evolution_tree['stage1'])
+    num_stage2 = sum(len(evolutions) for evolutions in evolution_tree['stage2'])
+
+    basic = evolution_tree['basic']
+    stage1_row = '<tr>'
+    stage2_row = '<tr>'
+
+    def format_evolution_method(pokemon):
+        evolution_method = pokemon.evolution_method
+        if evolution_method is None:
+            return ''
+
+        methods = []
+        if evolution_method.item_id is not None:
+            methods.append('battle holding {} {}'.format(
+                'an' if evolution_method.item.name[0].lower() in 'aeiou'
+                     else 'a',
+                evolution_method.item.name))
+        if evolution_method.experience is not None:
+            methods.append('{} EXP'.format(evolution_method.experience))
+        if evolution_method.happiness is not None:
+            methods.append('4 happiness');
+
+        methods = [", with ".join(methods)]
+        if evolution_method.buyable_price is not None:
+            methods.append('pay ${}'.format(evolution_method.buyable_price))
+        if evolution_method.can_trade_instead:
+            methods.append('trade');
+
+        methods = " <em>OR</em> ".join(methods)
+        if evolution_method.gender_id is not None:
+            methods += ' ({} only)'.format(evolution_method.gender.name)
+
+        return '<div class="evolution-method">{}</div>'.format(methods)
+
+    def format_cell(colspan, cell_pokemon):
+        cell_template = \
+            '''<td colspan="{}"{}>''' \
+            '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
+            '''{}''' \
+            '''{}''' \
+            '''</td>'''
+
+        return cell_template.format(
+            colspan,
+            ' class="focus"' if cell_pokemon.id == pokemon.species_id else '',
+            cell_pokemon.default_form.identifier,
+            cell_pokemon.name,
+            format_evolution_method(cell_pokemon))
+
+    for evolution in evolution_tree['stage1']:
+        stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
+    stage1_row += '</tr>'
+
+    for evolutions in evolution_tree['stage2']:
+        for evolution in evolutions:
+            stage2_row += format_cell(1, evolution)
+    stage2_row += '</tr>'
+%>
+
+<table class="evolution-tree">
+    <tr>
+        ${format_cell(max(num_basic, num_stage1, num_stage2), basic) | n}
+    </tr>
+
+    % if num_stage1:
+        ${stage1_row | n}
+    % endif
+
+    % if num_stage2:
+        ${stage2_row | n}
+    % endif
+</table>
 
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
 
-<h1>Population</h1>
+<h1><a name="census">Population</a></h1>
+
+${helpers.pokemon_table(pokemon.pokemon, skip_cols=['species'])}

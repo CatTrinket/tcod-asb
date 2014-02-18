@@ -399,6 +399,11 @@ Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 
+PokemonSpeciesEvolution.gender = relationship(Gender,
+    primaryjoin=PokemonSpeciesEvolution.gender_id == Gender.id, uselist=False)
+PokemonSpeciesEvolution.item = relationship(Item,
+    primaryjoin=PokemonSpeciesEvolution.item_id == Item.id, uselist=False)
+
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
@@ -416,6 +421,9 @@ PokemonSpecies.forms = relationship(PokemonForm, back_populates='species',
 PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
+    uselist=False)
+PokemonSpecies.evolution_method = relationship(PokemonSpeciesEvolution,
+    primaryjoin=PokemonSpecies.id == PokemonSpeciesEvolution.evolved_species_id,
     uselist=False)
 PokemonSpecies.evolutions = relationship(PokemonSpecies,
     primaryjoin=PokemonSpecies.id == PokemonSpecies.evolves_from_species_id,
