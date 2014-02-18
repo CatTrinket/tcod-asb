@@ -115,10 +115,27 @@ td.ticky { padding: 0 0 0 0.5em; }
 td.button { padding: 0 0.5em; text-align: center; }
 
 /* Tables for evolution trees */
-table.evolution-tree { width: 75%; margin: auto; }
-table.evolution-tree td { border: 1px solid black; text-align: center; }
-table.evolution-tree td img { margin: 0; }
-table.evolution-tree td .evolution-method { font-size: 0.7rem; }
+table.evolution-tree {
+    width: 100%;
+    margin: auto;
+    table-layout: fixed;
+    border-spacing: 0.5rem;
+    border-collapse: separate;
+}
+table.evolution-tree td {
+    background: #DEE6F5;
+    border: 1px solid #7799EE;
+    text-align: center;
+    vertical-align: text-top;
+}
+table.evolution-tree td:hover { background: #D1DDF7; }
+table.evolution-tree td.focus { background: #C0CCE6; }
+table.evolution-tree td img { margin: 0 -0.3em; }
+table.evolution-tree td .evolution-method {
+    font-size: 0.7rem;
+    padding-top: 0.5em;
+    line-height: 0.8rem;
+}
 
 /* Type icons */
 .type {

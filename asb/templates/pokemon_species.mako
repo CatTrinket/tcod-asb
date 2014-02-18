@@ -66,7 +66,7 @@
     % endif
 </dl>
 
-<h1>Evolutions</h1>
+<h1>Evolution</h1>
 
 <%
     evolution_tree = {'basic': None, 'stage1': [], 'stage2': []}
@@ -98,15 +98,17 @@
             return ''
 
         methods = []
+        if evolution_method.item_id is not None:
+            methods.append('battle holding {} {}'.format(
+                'an' if evolution_method.item.name[0].lower() in 'aeiou'
+                     else 'a',
+                evolution_method.item.name))
         if evolution_method.experience is not None:
             methods.append('{} EXP'.format(evolution_method.experience))
         if evolution_method.happiness is not None:
             methods.append('4 happiness');
-        if evolution_method.item_id is not None:
-            methods.append('enter battle while holding {}'.format(
-                evolution_method.item.name))
 
-        methods = [" + ".join(methods)]
+        methods = [", with ".join(methods)]
         if evolution_method.buyable_price is not None:
             methods.append('pay ${}'.format(evolution_method.buyable_price))
         if evolution_method.can_trade_instead:
@@ -116,11 +118,11 @@
         if evolution_method.gender_id is not None:
             methods += ' ({} only)'.format(evolution_method.gender.name)
 
-        return '<br /><span class="evolution-method">{}</span>'.format(methods)
+        return '<div class="evolution-method">{}</div>'.format(methods)
 
-    def format_cell(colspan, pokemon):
+    def format_cell(colspan, cell_pokemon):
         cell_template = \
-            '''<td colspan="{}">''' \
+            '''<td colspan="{}"{}>''' \
             '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
             '''{}''' \
             '''{}''' \
@@ -128,9 +130,10 @@
 
         return cell_template.format(
             colspan,
-            pokemon.default_form.identifier,
-            pokemon.name,
-            format_evolution_method(pokemon))
+            ' class="focus"' if cell_pokemon.id == pokemon.species_id else '',
+            cell_pokemon.default_form.identifier,
+            cell_pokemon.name,
+            format_evolution_method(cell_pokemon))
 
     for evolution in evolution_tree['stage1']:
         stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
