@@ -120,20 +120,23 @@
 
         return '<div class="evolution-method">{}</div>'.format(methods)
 
-    def format_cell(colspan, cell_pokemon):
+    def format_cell(colspan, evolution):
         cell_template = \
             '''<td colspan="{}"{}>''' \
             '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
-            '''{}''' \
+            '''<a href="{}">{}</a>''' \
             '''{}''' \
             '''</td>'''
 
+        form = evolution.default_form
+
         return cell_template.format(
             colspan,
-            ' class="focus"' if cell_pokemon.id == pokemon.species_id else '',
-            cell_pokemon.default_form.identifier,
-            cell_pokemon.name,
-            format_evolution_method(cell_pokemon))
+            ' class="focus"' if evolution.id == pokemon.species_id else '',
+            form.identifier,
+            form.identifier,
+            evolution.name,
+            format_evolution_method(evolution))
 
     for evolution in evolution_tree['stage1']:
         stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
