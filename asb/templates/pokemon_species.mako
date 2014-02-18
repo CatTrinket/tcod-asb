@@ -35,7 +35,7 @@
     </dd>
 
     <dt>Population</dt>
-    <dd><a href="#population">${len(pokemon.pokemon)}</a></dd>
+    <dd><a href="#census">${len(pokemon.pokemon)}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
@@ -162,6 +162,6 @@
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
 
-<h1><a name="population">Population</a></h1>
+<h1><a name="census">Population</a></h1>
 
 ${helpers.pokemon_table(pokemon.pokemon, skip_cols=['species'])}
