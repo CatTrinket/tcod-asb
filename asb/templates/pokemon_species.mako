@@ -19,7 +19,7 @@
     <dt>Rarity</dt>
     <dd>
         % if pokemon.species.rarity_id is not None:
-            ${pokemon.species.rarity_id}
+            ${pokemon.species.rarity_id | n, str}
         % else:
             Too rare for you.
         % endif
@@ -28,14 +28,14 @@
     <dt>Price</dt>
     <dd>
         % if pokemon.species.rarity is not None:
-            $${pokemon.species.rarity.price}
+            $${pokemon.species.rarity.price | n, str}
         % else:
             Unbuyable
         % endif
     </dd>
 
     <dt>Population</dt>
-    <dd><a href="#census">${len(pokemon.pokemon)}</a></dd>
+    <dd><a href="#census">${len(pokemon.pokemon) | n, str}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
