@@ -136,6 +136,7 @@ table.evolution-tree td a:hover { color: #759EF0; }
 table.evolution-tree td .evolution-method {
     font-size: 0.7rem;
     padding-top: 0.5em;
+    margin: 0;
     line-height: 0.8rem;
 }
 

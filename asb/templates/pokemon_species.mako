@@ -118,7 +118,7 @@
         if evolution_method.gender_id is not None:
             methods += ' ({} only)'.format(evolution_method.gender.name)
 
-        return '<div class="evolution-method">{}</div>'.format(methods)
+        return '<p class="evolution-method">{}</p>'.format(methods)
 
     def format_cell(colspan, evolution):
         cell_template = \
