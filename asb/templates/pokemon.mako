@@ -13,9 +13,6 @@
         ${helpers.link(pokemon.form)}${helpers.pokemon_form_icon(pokemon.form)}
     </dd>
 
-    <dt>Gender</dt>
-    <dd>${pokemon.gender.name.capitalize()}</dd>
-
     <dt>Trainer</dt>
     <dd>${helpers.link(pokemon.trainer)}</dd>
 
@@ -45,6 +42,9 @@
 %>
 
 <dl>
+    <dt>Gender</dt>
+    <dd>${pokemon.gender.name.capitalize()}</dd>
+
     <dt>Ability</dt>
     <dd>
         % if pokemon.ability_slot == 3:
