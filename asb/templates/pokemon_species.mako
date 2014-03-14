@@ -123,7 +123,7 @@
 
     def format_cell(colspan, evolution):
         cell_template = \
-            '''<td colspan="{}"{}{}>''' \
+            '''<td colspan="{}"{}>''' \
             '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
             '''<a href="{}">{}</a>''' \
             '''{}''' \
@@ -134,9 +134,6 @@
         return cell_template.format(
             colspan,
             ' class="focus"' if evolution.id == pokemon.species_id else '',
-            'onClick="window.location.href=\'#{}\'"'.format(
-                evolution.name.lower())
-                if evolution in pokemon.species.evolutions else '',
             form.identifier,
             form.identifier,
             evolution.name,
@@ -164,29 +161,6 @@
         ${stage2_row | n}
     % endif
 </table>
-
-% if pokemon.species.evolutions:
-    <h1>Evolution Details</h1>
-
-    % for evolution in pokemon.species.evolutions:
-        <h3><a name="${evolution.name.lower()}">${evolution.name}</a></h3>
-
-        <p>Speed: old &rarr; <span class="positive-stat-change">new</span></p>
-
-        <%
-            moves = [move for move in evolution.default_form.moves
-                if move not in pokemon.moves]
-        %>
-
-        % if moves:
-            <p>Moves Gained:</p>
-
-            ${helpers.move_table(moves)}
-        % else:
-            <p>No moves gained.</p>
-        % endif
-    % endfor
-% endif
 
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}

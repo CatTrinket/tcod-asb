@@ -13,7 +13,6 @@ body {
 a { text-decoration: none; color: #144BB8; }
 a:hover { color: #759EF0; }
 h1 a, h1 a:hover { color:white; }
-h3 a, h3 a:hover { color:black; }
 
 abbr { border-bottom: 1px dotted black; }
 
@@ -35,13 +34,6 @@ h1 {
 h2 {
     font-size: 1.3em;
     border-bottom: 3px solid #7799EE;
-}
-
-h3 {
-    font-size: 1em;
-    border-bottom: 1px dashed #7799EE;
-    font-weight: normal;
-    font-style:italic;
 }
 
 #body > h1:first-child { margin-top: 0; }
@@ -190,8 +182,6 @@ table.effect-table td.type-cell > .type { margin-top: -4px; }
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
-.negative-stat-change { color: #CC0000; }
-.positive-stat-change { color: #00CC00; }
 
 
 /**** SPECIFIC PAGES ****/
