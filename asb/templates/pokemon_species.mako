@@ -69,26 +69,27 @@
 <h1>Evolution</h1>
 
 <%
-    evolution_tree = {'basic': None, 'stage1': [], 'stage2': []}
+    basic = None
+    stage1 = []
+    stage2 = []
 
     if pokemon.species.pre_evolution is None:
-        evolution_tree['basic'] = pokemon.species
+        basic = pokemon.species
 
     elif pokemon.species.pre_evolution.pre_evolution is None:
-        evolution_tree['basic'] = pokemon.species.pre_evolution
+        basic = pokemon.species.pre_evolution
 
     else:
-        evolution_tree['basic'] = pokemon.species.pre_evolution.pre_evolution
+        basic = pokemon.species.pre_evolution.pre_evolution
 
-    evolution_tree['stage1'] = evolution_tree['basic'].evolutions
-    evolution_tree['stage2'] = [evolution.evolutions
-        for evolution in evolution_tree['stage1']]
+    stage1 = basic.evolutions
+    stage2 = [evolution for evolutions in stage1
+        for evolution in evolutions.evolutions]
 
     num_basic = 1
-    num_stage1 = len(evolution_tree['stage1'])
-    num_stage2 = sum(len(evolutions) for evolutions in evolution_tree['stage2'])
+    num_stage1 = len(stage1)
+    num_stage2 = len(stage2)
 
-    basic = evolution_tree['basic']
     stage1_row = '<tr>'
     stage2_row = '<tr>'
 
@@ -118,30 +119,32 @@
         if evolution_method.gender_id is not None:
             methods += ' ({} only)'.format(evolution_method.gender.name)
 
-        return '<div class="evolution-method">{}</div>'.format(methods)
+        return '<p class="evolution-method">{}</p>'.format(methods)
 
-    def format_cell(colspan, cell_pokemon):
+    def format_cell(colspan, evolution):
         cell_template = \
             '''<td colspan="{}"{}>''' \
             '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
-            '''{}''' \
+            '''<a href="{}">{}</a>''' \
             '''{}''' \
             '''</td>'''
 
+        form = evolution.default_form
+
         return cell_template.format(
             colspan,
-            ' class="focus"' if cell_pokemon.id == pokemon.species_id else '',
-            cell_pokemon.default_form.identifier,
-            cell_pokemon.name,
-            format_evolution_method(cell_pokemon))
+            ' class="focus"' if evolution.id == pokemon.species_id else '',
+            form.identifier,
+            form.identifier,
+            evolution.name,
+            format_evolution_method(evolution))
 
-    for evolution in evolution_tree['stage1']:
+    for evolution in stage1:
         stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
     stage1_row += '</tr>'
 
-    for evolutions in evolution_tree['stage2']:
-        for evolution in evolutions:
-            stage2_row += format_cell(1, evolution)
+    for evolution in stage2:
+        stage2_row += format_cell(1, evolution)
     stage2_row += '</tr>'
 %>
 

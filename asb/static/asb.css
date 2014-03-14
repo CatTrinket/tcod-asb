@@ -131,9 +131,12 @@ table.evolution-tree td {
 table.evolution-tree td:hover { background: #D1DDF7; }
 table.evolution-tree td.focus { background: #C0CCE6; }
 table.evolution-tree td img { margin: 0 -0.3em; }
+table.evolution-tree td a { color: black; }
+table.evolution-tree td a:hover { color: #759EF0; }
 table.evolution-tree td .evolution-method {
     font-size: 0.7rem;
     padding-top: 0.5em;
+    margin: 0;
     line-height: 0.8rem;
 }
 
