@@ -3,7 +3,7 @@ import unicodedata
 
 import pbkdf2
 import pyramid.security as sec
-from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, Sequence
+from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, UniqueConstraint, Sequence
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
@@ -180,6 +180,13 @@ class Pokemon(Base):
             (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
         ]
 
+class PokemonFamily(Base):
+    """An evolutionary family of Pokémon species."""
+
+    __tablename__ = 'pokemon_families'
+    __singlename__ = 'pokemon_family'
+
+    id = Column(Integer, primary_key=True)
 
 class PokemonForm(Base):
     """A particular form of a Pokémon species.
@@ -253,6 +260,8 @@ class PokemonSpecies(Base):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
+    pokemon_family_id = Column(Integer, ForeignKey('pokemon_families.id'),
+        nullable=False)
     evolves_from_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         nullable=True)
     rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
@@ -261,6 +270,17 @@ class PokemonSpecies(Base):
     forms_are_squashable = Column(Boolean, nullable=False)
     is_fake = Column(Boolean, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
+
+    # Set up a couple constraints to make sure that evolves_from_species_id
+    # points to a Pokémon in the same evolution family
+    __table_args__ = (
+        UniqueConstraint('id', 'pokemon_family_id'),
+
+        ForeignKeyConstraint(
+            ['evolves_from_species_id', 'pokemon_family_id'],
+            ['pokemon_species.id', 'pokemon_species.pokemon_family_id'],
+        ),
+    )
 
     @property
     def number(self):
