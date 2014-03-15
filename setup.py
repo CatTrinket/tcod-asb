@@ -11,7 +11,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 # I'm going to just give exact versions that I know will work
 requires = [
     'pyramid==1.5a2',
-    'SQLAlchemy==0.8.2',
+    'SQLAlchemy==0.8.3',
     'transaction==1.4.1',
     'pyramid_tm==0.7',
     'pyramid_debugtoolbar==1.0.8',
