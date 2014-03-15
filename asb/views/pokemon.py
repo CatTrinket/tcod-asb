@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import itertools
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
@@ -550,7 +551,7 @@ def species_index(context, request):
     return {'pokemon': pokemon}
 
 @view_config(context=models.PokemonForm, renderer='/pokemon_species.mako')
-def species(context, request):
+def species(pokemon, request):
     """The dex page of a Pokémon species.
 
     Under the hood, this is actually the dex page for a form.  But it's clearer
@@ -558,4 +559,25 @@ def species(context, request):
     just a detail.
     """
 
-    return {'pokemon': context}
+    # Build the evolution tree.  n.b. this algorithm assumes that all final
+    # evolutions within a family are at the same evo stage.  I'd be surprised
+    # if that ever stopped being true, though.
+
+    family = pokemon.species.family
+
+    # Start with all the final evolutions
+    prevos = set(species.pre_evolution for species in family.species)
+    finals = [pokemon for pokemon in family.species if pokemon not in prevos]
+    evo_tree = [finals]
+
+    # Build backwards, with each pre-evo appearing "above" its evo.  Pokémon
+    # with multiple evos (now or at a later stage) will appear multiple times.
+    while evo_tree[0][0].evolves_from_species_id is not None:
+        evo_tree.insert(0, [evo.pre_evolution for evo in evo_tree[0]])
+
+    # Collapse each layer; for example, [A, A, B] would become [(A, 2), (B, 1)]
+    for n, layer in enumerate(evo_tree):
+        evo_tree[n] = [(evo, sum(1 for _ in group))
+            for evo, group in itertools.groupby(layer)]
+
+    return {'pokemon': pokemon, 'evo_tree': evo_tree}

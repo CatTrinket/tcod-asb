@@ -69,30 +69,6 @@
 <h1>Evolution</h1>
 
 <%
-    basic = None
-    stage1 = []
-    stage2 = []
-
-    if pokemon.species.pre_evolution is None:
-        basic = pokemon.species
-
-    elif pokemon.species.pre_evolution.pre_evolution is None:
-        basic = pokemon.species.pre_evolution
-
-    else:
-        basic = pokemon.species.pre_evolution.pre_evolution
-
-    stage1 = basic.evolutions
-    stage2 = [evolution for evolutions in stage1
-        for evolution in evolutions.evolutions]
-
-    num_basic = 1
-    num_stage1 = len(stage1)
-    num_stage2 = len(stage2)
-
-    stage1_row = '<tr>'
-    stage2_row = '<tr>'
-
     def format_evolution_method(pokemon):
         evolution_method = pokemon.evolution_method
         if evolution_method is None:
@@ -119,47 +95,27 @@
         if evolution_method.gender_id is not None:
             methods += ' ({} only)'.format(evolution_method.gender.name)
 
-        return '<p class="evolution-method">{}</p>'.format(methods)
-
-    def format_cell(colspan, evolution):
-        cell_template = \
-            '''<td colspan="{}"{}>''' \
-            '''<img src="/static/images/pokemon-icons/{}.png" alt="">''' \
-            '''<a href="{}">{}</a>''' \
-            '''{}''' \
-            '''</td>'''
-
-        form = evolution.default_form
-
-        return cell_template.format(
-            colspan,
-            ' class="focus"' if evolution.id == pokemon.species_id else '',
-            form.identifier,
-            form.identifier,
-            evolution.name,
-            format_evolution_method(evolution))
-
-    for evolution in stage1:
-        stage1_row += format_cell(max(1, len(evolution.evolutions)), evolution)
-    stage1_row += '</tr>'
-
-    for evolution in stage2:
-        stage2_row += format_cell(1, evolution)
-    stage2_row += '</tr>'
+        return methods
 %>
 
 <table class="evolution-tree">
+    % for layer in evo_tree:
     <tr>
-        ${format_cell(max(num_basic, num_stage1, num_stage2), basic) | n}
+        % for evo, colspan in layer:
+        <% current = evo == pokemon.species %>
+        <td colspan="${colspan | n, str}" class="${'focus' if current else ''}">
+            % if current:
+            ${helpers.pokemon_form_icon(pokemon)}${evo.name}
+            % else:
+            ${helpers.pokemon_form_icon(evo.default_form)}${helpers.link(evo.default_form, text=evo.name)}
+            % endif
+            % if evo.evolution_method is not None:
+            <p class="evolution-method">${format_evolution_method(evo) | n}</p>
+            % endif
+        </td>
+        % endfor
     </tr>
-
-    % if num_stage1:
-        ${stage1_row | n}
-    % endif
-
-    % if num_stage2:
-        ${stage2_row | n}
-    % endif
+    % endfor
 </table>
 
 <h1>Moves</h1>

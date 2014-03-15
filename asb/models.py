@@ -424,6 +424,9 @@ PokemonSpeciesEvolution.gender = relationship(Gender,
 PokemonSpeciesEvolution.item = relationship(Item,
     primaryjoin=PokemonSpeciesEvolution.item_id == Item.id, uselist=False)
 
+PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
+    order_by=PokemonSpecies.order)
+
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
@@ -436,6 +439,7 @@ PokemonForm.types = relationship(Type, secondary=PokemonFormType.__table__,
 
 PokemonFormAbility.ability = relationship(Ability)
 
+PokemonSpecies.family = relationship(PokemonFamily, back_populates='species')
 PokemonSpecies.forms = relationship(PokemonForm, back_populates='species',
     order_by=PokemonForm.form_order)
 PokemonSpecies.default_form = relationship(PokemonForm,
