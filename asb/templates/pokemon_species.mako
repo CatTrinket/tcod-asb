@@ -83,7 +83,7 @@
         if evolution_method.experience is not None:
             methods.append('{} EXP'.format(evolution_method.experience))
         if evolution_method.happiness is not None:
-            methods.append('4 happiness');
+            methods.append('{} happiness'.format(evolution_method.happiness));
 
         methods = [", with ".join(methods)]
         if evolution_method.buyable_price is not None:
