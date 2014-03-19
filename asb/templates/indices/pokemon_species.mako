@@ -10,7 +10,7 @@
 % if pokemon[pkmn] is None:
 <td class="stat population-zero">0</td>\
 % else:
-<td class="stat">${helpers.link(pkmn, text=str(pokemon[pkmn]), anchor='census')}<td>\
+<td class="stat">${helpers.link(pkmn, text=str(pokemon[pkmn]), anchor='census')}</td>\
 % endif
 </%def>
 
