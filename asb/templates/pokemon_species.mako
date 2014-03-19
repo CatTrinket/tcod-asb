@@ -16,23 +16,13 @@
         % endif
     </dd>
 
+    % if pokemon.species.rarity is not None:
     <dt>Rarity</dt>
     <dd>
-        % if pokemon.species.rarity_id is not None:
-            ${pokemon.species.rarity_id | n, str}
-        % else:
-            Too rare for you.
-        % endif
+        ${pokemon.species.rarity_id | n, str}
+        ($${pokemon.species.rarity.price | n, str})
     </dd>
-
-    <dt>Price</dt>
-    <dd>
-        % if pokemon.species.rarity is not None:
-            $${pokemon.species.rarity.price | n, str}
-        % else:
-            Unbuyable
-        % endif
-    </dd>
+    % endif
 
     <dt>Population</dt>
     <dd><a href="#census">${len(pokemon.pokemon) | n, str}</a></dd>
@@ -121,6 +111,6 @@
 <h1>Moves</h1>
 ${helpers.move_table(pokemon.moves)}
 
-<h1><a name="census">Population</a></h1>
+<h1 id="census">${pokemon.name} in the league</h1>
 
 ${helpers.pokemon_table(pokemon.pokemon, skip_cols=['species'])}

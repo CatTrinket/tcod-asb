@@ -11,7 +11,7 @@
    % if move.damage is None:
    <dd>—</dd>
    % elif move.damage == -1:
-   <dd>*</dd>
+   <dd>Varies</dd>
    % else:
    <dd>${move.damage | n, str}%
    % endif
@@ -20,7 +20,7 @@
    % if move.energy is None:
    <dd>—</dd>
    % elif move.energy == -1:
-   <dd>*</dd>
+   <dd>Varies</dd>
    % else:
    <dd>${move.energy | n, str}%</dd>
    % endif
@@ -36,10 +36,10 @@
    <dd>${move.damage_class.name.capitalize()}</dd>
 
    <dt>Target</dt>
-   <dd>${move.target}</dd>
+   <dd>${move.target or '???'}</dd>
 
    <dt>Category</dt>
-   <dd>${move.category}</dd>
+   <dd>${move.category or '???'}</dd>
 </dl>
 
 <h2>Summary</h2>

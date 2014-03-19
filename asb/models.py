@@ -430,6 +430,8 @@ PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
+    primaryjoin=and_(Pokemon.pokemon_form_id == PokemonForm.id,
+                     Pokemon.unclaimed_from_hack == False),
     back_populates='form')
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
