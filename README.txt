@@ -21,6 +21,6 @@ Anyway:
 Updating
 ========
 
+- python setup.py egg_info
 - alembic upgrade head
 - Reload from CSVs if any of them have changed (sorry)
-- python setup.py egg_info
