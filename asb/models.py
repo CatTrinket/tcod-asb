@@ -230,6 +230,21 @@ class PokemonFormAbility(Base):
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=False)
     is_hidden = Column(Boolean, nullable=False)
 
+class PokemonFormCondition(Base):
+    """The conditions a Pokémon must meet in order to change into a particular
+    form.
+    """
+
+    __tablename__ = 'pokemon_form_conditions'
+    __singlename__ = 'pokemon_form_condition'
+
+    pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
+        primary_key=True)
+    is_optional = Column(Boolean, nullable=False)
+    item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
+    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
+    ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=True)
+
 class PokemonFormMove(Base):
     """A move that a Pokémon form can use."""
 
@@ -267,6 +282,7 @@ class PokemonSpecies(Base):
     rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
     is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
+    form_carries_into_battle = Column(Boolean, nullable=False)
     forms_are_squashable = Column(Boolean, nullable=False)
     is_fake = Column(Boolean, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
@@ -429,6 +445,7 @@ PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
 
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
+PokemonForm.condition = relationship(PokemonFormCondition, uselist=False)
 PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
     primaryjoin=and_(Pokemon.pokemon_form_id == PokemonForm.id,
                      Pokemon.unclaimed_from_hack == False),

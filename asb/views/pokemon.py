@@ -185,6 +185,11 @@ def pokemon_checkout_form(cart, request):
             # Fuck it, this is the only buyable Pokémon it matters for
             abilities[0] = (1, 'Reckless (Red)/Rock Head (Blue)')
 
+        # Figure out Pokémon form choices
+        # XXX At some point in the future we'll actually have to look at what
+        # the condition is
+        forms = [form for form in species_.forms if form.condition is None]
+
         class Subform(wtforms.Form):
             """A subform for setting an individual Pokémon's info at checkout.
 
@@ -206,10 +211,9 @@ def pokemon_checkout_form(cart, request):
                     choices=abilities, default=1)
 
             # Form field, if the Pokémon has different forms
-            if len(species_.forms) > 1:
+            if len(forms) > 1:
                 form_ = wtforms.SelectField('Form', coerce=int,
-                    choices=[(f.id, f.form_name or 'Default')
-                        for f in species_.forms],
+                    choices=[(f.id, f.form_name or 'Default') for f in forms],
                     default=species_.default_form.id)
 
             species = species_  # Hang on to this; we'll need it
