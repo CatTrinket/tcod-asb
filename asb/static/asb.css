@@ -140,8 +140,8 @@ table.evolution-tree td .evolution-method {
     line-height: 0.8rem;
 }
 
-/* Type icons */
-.type {
+/* Type and damage class icons */
+.type, .damage-class {
     display: inline-block;
     width: 70px; height: 20px; border: 2px solid; border-radius: 12px;
     text-align: center; vertical-align: middle; line-height: 20px;
@@ -167,13 +167,22 @@ table.evolution-tree td .evolution-method {
 .type-steel { background: #BDBDD6; border-color: #847B73; }
 .type-fairy { background: #FFA5E6; border-color: #B56B84; }
 
+.damage-class-physical { background: #CE2918; border-color: #5A3929; }
+.damage-class-special { background: #5A637B; border-color: #424A5A; }
+.damage-class-non-damaging { background: #CCCCCC; border-color: #AAAAAA; }
+
 /* Type icons shouldn't stretch table rows */
-td.type-cell { padding-top: 0; padding-bottom: 0; }
+td.type-cell, td.damage-class-cell { padding-top: 0; padding-bottom: 0; }
 
 /* Type icons need to be re-aligned with the rest of the text in vertically-
    aligned tables (XXX this is kind of a gross way of doing it) */
-table.effect-table td.type-cell { padding-top: 0.5em; }
-table.effect-table td.type-cell > .type { margin-top: -4px; }
+table.effect-table td.type-cell,
+table.effect-table td.damage-class-cell
+    { padding-top: 0.5em; }
+
+table.effect-table td.type-cell > .type,
+table.effect-table td.damage-class-cell > .damage-class
+    { margin-top: -4px; }
 
 /* Gender symbols */
 .gender-symbol-female { color: #FF4273; }

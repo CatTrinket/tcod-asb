@@ -18,6 +18,16 @@ ${n | n, str}\
 <span class="type type-${type.identifier}">${type.name}</span>\
 </%def>
 
+<%def name="damage_class_icon(damage_class)">\
+<span class="damage-class damage-class-${damage_class.identifier}">\
+% if damage_class.identifier == 'non-damaging':
+—\
+% else:
+${damage_class.name.capitalize()}\
+% endif
+</span>\
+</%def>
+
 <%def name="name_header()">
 <th colspan="2">Name</th>
 </%def>
@@ -134,6 +144,7 @@ ${n | n, str}\
 <tr>
     <th>Move</th>
     <th>Type</th>
+    <th>Stat</th>
     <th><abbr title="Base damage">Dmg</abbr></th>
     <th><abbr title="Base energy cost">En.</abbr></th>
     <th><abbr title="Accuracy">Acc.</abbr></th>
@@ -147,6 +158,8 @@ ${n | n, str}\
     <td class="focus-column"><a href="/moves/${move.identifier}">${move.name}</a></td>
 
     <td class="type-cell">${type_icon(move.type)}</td>
+
+    <td class="damage-class-cell">${damage_class_icon(move.damage_class)}</td>
 
     % if move.damage is None:
     <td class="stat">—</td>
