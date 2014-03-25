@@ -46,7 +46,6 @@ class Ability(Base):
     """An ability."""
 
     __tablename__ = 'abilities'
-    __singlename__ = 'ability'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -64,7 +63,6 @@ class DamageClass(Base):
     """A damage class (physical, special, or non-damaging)."""
 
     __tablename__ = 'damage_classes'
-    __singlename__ = 'damage_class'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -74,7 +72,6 @@ class Gender(Base):
     """An enigma."""
 
     __tablename__ = 'genders'
-    __singlename__ = 'gender'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -84,7 +81,6 @@ class Item(Base):
     """A type of item."""
 
     __tablename__ = 'items'
-    __singlename__ = 'item'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -102,7 +98,6 @@ class Move(Base):
     """A move (a.k.a. an attack)."""
 
     __tablename__ = 'moves'
-    __singlename__ = 'move'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -128,7 +123,6 @@ class Pokemon(Base):
     """An individual Pokémon owned by a trainer."""
 
     __tablename__ = 'pokemon'
-    __singlename__ = 'pokemon'
 
     pokemon_id_seq = Sequence('pokemon_id_seq')
 
@@ -184,7 +178,6 @@ class PokemonFamily(Base):
     """An evolutionary family of Pokémon species."""
 
     __tablename__ = 'pokemon_families'
-    __singlename__ = 'pokemon_family'
 
     id = Column(Integer, primary_key=True)
 
@@ -195,7 +188,6 @@ class PokemonForm(Base):
     """
 
     __tablename__ = 'pokemon_forms'
-    __singlename__ = 'pokemon_form'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -222,7 +214,6 @@ class PokemonFormAbility(Base):
     """One of a Pokémon form's abilities."""
 
     __tablename__ = 'pokemon_form_abilities'
-    __singlename__ = 'pokemon_form_ability'
 
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         primary_key=True)
@@ -236,7 +227,6 @@ class PokemonFormCondition(Base):
     """
 
     __tablename__ = 'pokemon_form_conditions'
-    __singlename__ = 'pokemon_form_condition'
 
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         primary_key=True)
@@ -249,7 +239,6 @@ class PokemonFormMove(Base):
     """A move that a Pokémon form can use."""
 
     __tablename__ = 'pokemon_form_moves'
-    __singlename__ = 'pokemon_form_move'
 
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         primary_key=True)
@@ -259,7 +248,6 @@ class PokemonFormType(Base):
     """One of a Pokémon form's types."""
 
     __tablename__ = 'pokemon_form_types'
-    __singlename__ = 'pokemon_form_type'
 
     pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
         primary_key=True)
@@ -270,7 +258,6 @@ class PokemonSpecies(Base):
     """A species of Pokémon."""
 
     __tablename__ = 'pokemon_species'
-    __singlename__ = 'pokemon_species'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
@@ -313,7 +300,6 @@ class PokemonSpeciesEvolution(Base):
     """The method by which a Pokémon species evolves."""
 
     __tablename__ = 'pokemon_species_evolution'
-    __singlename__ = 'pokemon_species_evolution'
 
     evolved_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         primary_key=True)
@@ -328,7 +314,6 @@ class PokemonSpeciesGender(Base):
     """A gender a Pokémon species can have."""
 
     __tablename__ = 'pokemon_species_genders'
-    __singlename__ = 'pokemon_species_gender'
 
     pokemon_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         primary_key=True)
@@ -338,7 +323,6 @@ class Rarity(Base):
     """A Pokémon rarity."""
 
     __tablename__ = 'rarities'
-    __singlename__ = 'rarity'
 
     id = Column(Integer, primary_key=True)
     price = Column(Integer, nullable=False)
@@ -347,7 +331,6 @@ class Trainer(Base):
     """A member of the ASB league and user of this app thing."""
 
     __tablename__ = 'trainers'
-    __singlename__ = 'trainer'
 
     trainers_id_seq = Sequence('trainers_id_seq')
 
@@ -397,7 +380,6 @@ class TrainerItem(Base):
     """An individual item owned by a trainer and possibly held by a Pokémon."""
 
     __tablename__ = 'trainer_items'
-    __singlename__ = 'trainer_item'
 
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
@@ -411,7 +393,6 @@ class Type(Base):
     """A type (Normal, Fire, etc.)"""
 
     __tablename__ = 'types'
-    __singlename__ = 'type'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
