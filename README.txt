@@ -11,10 +11,7 @@ development.ini and alembic.ini.
 Anyway:
 
 - python setup.py develop
-- initialize_asb_db development.ini
-- alembic -c development.ini stamp head
-- Load all the data from the CSVs in asb/data/.  There's no actual system for
-  this (yet) so you're kind of on your own here, eheheh.
+- asbdb development.ini init
 - pserve development.ini
 
 
@@ -22,5 +19,4 @@ Updating
 ========
 
 - python setup.py egg_info
-- alembic -c development.ini upgrade head
-- Reload from CSVs if any of them have changed (sorry)
+- asbdb development.ini update
