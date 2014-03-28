@@ -46,6 +46,6 @@ setup(name='asb',
       [paste.app_factory]
       main = asb:main
       [console_scripts]
-      initialize_asb_db = asb.scripts.initializedb:main
+      asbdb = asb.db.cli:main
       """,
       )

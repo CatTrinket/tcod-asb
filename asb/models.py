@@ -7,12 +7,10 @@ from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, UniqueConstrain
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
+import sqlalchemy.schema
 from sqlalchemy.sql import and_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
-
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
 
 def identifier(name, id=None):
     """Reduce a name to a URL-friendly yet human-readable identifier."""
@@ -41,8 +39,18 @@ def identifier(name, id=None):
 
     return identifier
 
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+Base = declarative_base()
 
-class Ability(Base):
+class PokedexTable(Base):
+    __abstract__ = True
+    metadata = sqlalchemy.schema.MetaData()
+
+class PlayerTable(Base):
+    __abstract__ = True
+    metadata = sqlalchemy.schema.MetaData()
+
+class Ability(PokedexTable):
     """An ability."""
 
     __tablename__ = 'abilities'
@@ -59,7 +67,7 @@ class Ability(Base):
 
         return self.identifier
 
-class DamageClass(Base):
+class DamageClass(PokedexTable):
     """A damage class (physical, special, or non-damaging)."""
 
     __tablename__ = 'damage_classes'
@@ -68,7 +76,7 @@ class DamageClass(Base):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
-class Gender(Base):
+class Gender(PokedexTable):
     """An enigma."""
 
     __tablename__ = 'genders'
@@ -77,7 +85,7 @@ class Gender(Base):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
-class Item(Base):
+class Item(PokedexTable):
     """A type of item."""
 
     __tablename__ = 'items'
@@ -94,7 +102,7 @@ class Item(Base):
 
         return self.identifier
 
-class Move(Base):
+class Move(PokedexTable):
     """A move (a.k.a. an attack)."""
 
     __tablename__ = 'moves'
@@ -119,69 +127,14 @@ class Move(Base):
 
         return self.identifier
 
-class Pokemon(Base):
-    """An individual Pokémon owned by a trainer."""
-
-    __tablename__ = 'pokemon'
-
-    pokemon_id_seq = Sequence('pokemon_id_seq')
-
-    id = Column(Integer, pokemon_id_seq, primary_key=True)
-    identifier = Column(Unicode, unique=True, nullable=False)
-    name = Column(Unicode(30), nullable=False)
-    pokemon_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
-        nullable=False)
-    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=False)
-    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
-        nullable=False)
-    ability_slot = Column(Integer, nullable=False)
-    experience = Column(Integer, nullable=False, default=0)
-    happiness = Column(Integer, nullable=False, default=0)
-    is_in_squad = Column(Boolean, nullable=False, default=False)
-    can_evolve = Column(Boolean, nullable=False, default=False)
-    form_uncertain = Column(Boolean, nullable=False, default=False)
-    unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
-
-    # Set up a composite foreign key for ability
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ['pokemon_form_id', 'ability_slot'],
-            ['pokemon_form_abilities.pokemon_form_id',
-             'pokemon_form_abilities.slot'],
-            name='pokemon_ability_fkey', use_alter=True
-        ),
-    )
-
-    def update_identifier(self):
-        """Update this Pokémon's identifier."""
-
-        self.identifier = identifier(self.name, id=self.id)
-
-    @property
-    def __name__(self):
-        """Return this Pokémon's resource name for traversal."""
-
-        return self.identifier
-
-    @property
-    def __acl__(self):
-        """Return an list of permissions for Pyramid's authorization."""
-
-        return [
-            (sec.Allow, 'user:{0}'.format(self.trainer_id), 'edit:basics'),
-            (sec.Allow, 'admin', 'edit:basics'),
-            (sec.Allow, 'admin', 'edit:everything'),
-            (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
-        ]
-
-class PokemonFamily(Base):
+class PokemonFamily(PokedexTable):
     """An evolutionary family of Pokémon species."""
 
     __tablename__ = 'pokemon_families'
 
     id = Column(Integer, primary_key=True)
 
-class PokemonForm(Base):
+class PokemonForm(PokedexTable):
     """A particular form of a Pokémon species.
 
     If a Pokémon only has one form, it still has a row in this table.
@@ -210,7 +163,7 @@ class PokemonForm(Base):
 
         return self.identifier
 
-class PokemonFormAbility(Base):
+class PokemonFormAbility(PokedexTable):
     """One of a Pokémon form's abilities."""
 
     __tablename__ = 'pokemon_form_abilities'
@@ -221,7 +174,7 @@ class PokemonFormAbility(Base):
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=False)
     is_hidden = Column(Boolean, nullable=False)
 
-class PokemonFormCondition(Base):
+class PokemonFormCondition(PokedexTable):
     """The conditions a Pokémon must meet in order to change into a particular
     form.
     """
@@ -235,7 +188,7 @@ class PokemonFormCondition(Base):
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=True)
 
-class PokemonFormMove(Base):
+class PokemonFormMove(PokedexTable):
     """A move that a Pokémon form can use."""
 
     __tablename__ = 'pokemon_form_moves'
@@ -244,7 +197,7 @@ class PokemonFormMove(Base):
         primary_key=True)
     move_id = Column(Integer, ForeignKey('moves.id'), primary_key=True)
 
-class PokemonFormType(Base):
+class PokemonFormType(PokedexTable):
     """One of a Pokémon form's types."""
 
     __tablename__ = 'pokemon_form_types'
@@ -254,7 +207,7 @@ class PokemonFormType(Base):
     slot = Column(Integer, primary_key=True)
     type_id = Column(Integer, ForeignKey('types.id'))
 
-class PokemonSpecies(Base):
+class PokemonSpecies(PokedexTable):
     """A species of Pokémon."""
 
     __tablename__ = 'pokemon_species'
@@ -296,7 +249,7 @@ class PokemonSpecies(Base):
         else:
             return 'A{0:02}'.format(self.id - 10000)
 
-class PokemonSpeciesEvolution(Base):
+class PokemonSpeciesEvolution(PokedexTable):
     """The method by which a Pokémon species evolves."""
 
     __tablename__ = 'pokemon_species_evolution'
@@ -310,7 +263,7 @@ class PokemonSpeciesEvolution(Base):
     buyable_price = Column(Integer, nullable=True)
     can_trade_instead = Column(Boolean, nullable=False)
 
-class PokemonSpeciesGender(Base):
+class PokemonSpeciesGender(PokedexTable):
     """A gender a Pokémon species can have."""
 
     __tablename__ = 'pokemon_species_genders'
@@ -319,7 +272,7 @@ class PokemonSpeciesGender(Base):
         primary_key=True)
     gender_id = Column(Integer, ForeignKey('genders.id'), primary_key=True)
 
-class Rarity(Base):
+class Rarity(PokedexTable):
     """A Pokémon rarity."""
 
     __tablename__ = 'rarities'
@@ -327,7 +280,72 @@ class Rarity(Base):
     id = Column(Integer, primary_key=True)
     price = Column(Integer, nullable=False)
 
-class Trainer(Base):
+class Type(PokedexTable):
+    """A type (Normal, Fire, etc.)"""
+
+    __tablename__ = 'types'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+
+#################
+
+class Pokemon(PlayerTable):
+    """An individual Pokémon owned by a trainer."""
+
+    __tablename__ = 'pokemon'
+
+    pokemon_id_seq = Sequence('pokemon_id_seq')
+
+    id = Column(Integer, pokemon_id_seq, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode(30), nullable=False)
+    pokemon_form_id = Column(Integer, ForeignKey(PokemonForm.id, name='a'),
+        nullable=False)
+    gender_id = Column(Integer, ForeignKey(Gender.id, name='b'), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade', name='c'),
+        nullable=False)
+    ability_slot = Column(Integer, nullable=False)
+    experience = Column(Integer, nullable=False, default=0)
+    happiness = Column(Integer, nullable=False, default=0)
+    is_in_squad = Column(Boolean, nullable=False, default=False)
+    can_evolve = Column(Boolean, nullable=False, default=False)
+    form_uncertain = Column(Boolean, nullable=False, default=False)
+    unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
+
+    # Set up a composite foreign key for ability
+    __table_args__ = (
+        ForeignKeyConstraint(
+            [pokemon_form_id, ability_slot],
+            [PokemonFormAbility.pokemon_form_id, PokemonFormAbility.slot],
+            name='pokemon_ability_fkey', use_alter=True
+        ),
+    )
+
+    def update_identifier(self):
+        """Update this Pokémon's identifier."""
+
+        self.identifier = identifier(self.name, id=self.id)
+
+    @property
+    def __name__(self):
+        """Return this Pokémon's resource name for traversal."""
+
+        return self.identifier
+
+    @property
+    def __acl__(self):
+        """Return an list of permissions for Pyramid's authorization."""
+
+        return [
+            (sec.Allow, 'user:{0}'.format(self.trainer_id), 'edit:basics'),
+            (sec.Allow, 'admin', 'edit:basics'),
+            (sec.Allow, 'admin', 'edit:everything'),
+            (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
+        ]
+
+class Trainer(PlayerTable):
     """A member of the ASB league and user of this app thing."""
 
     __tablename__ = 'trainers'
@@ -376,7 +394,7 @@ class Trainer(Base):
 
         return self.identifier
 
-class TrainerItem(Base):
+class TrainerItem(PlayerTable):
     """An individual item owned by a trainer and possibly held by a Pokémon."""
 
     __tablename__ = 'trainer_items'
@@ -384,19 +402,10 @@ class TrainerItem(Base):
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
-    item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
+    item_id = Column(Integer, ForeignKey(Item.id, name='d'), nullable=False)
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
-
-class Type(Base):
-    """A type (Normal, Fire, etc.)"""
-
-    __tablename__ = 'types'
-
-    id = Column(Integer, primary_key=True)
-    identifier = Column(Unicode, unique=True, nullable=False)
-    name = Column(Unicode, nullable=False)
 
 # Relationships go down here so that we don't have to use strings for
 # everything
