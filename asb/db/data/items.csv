@@ -168,5 +168,5 @@ id,identifier,name,summary,description
 168,prism-scale,Prism Scale,Grants the holder Marvel Scale in addition to all other abilities.  Helps Feebas evolve.,This dazzling scale has a beautiful irridescent sheen and mysterious powers. A Pokémon holding this item is considered to have the marvel scale ability in addition to all others.
 169,dark-gem,Dark Gem,Multiplies a Dark-type move's base damage by 1.5 and halves its energy cost.  One use per battle.,A deep obsidian gem that seems to sap light from the air around it. A Pokémon may consume this item in conjunction with using a dark-type attack to reduce the energy cost of that attack by 50% and increase the damage dealt by 50%.
 170,dragon-gem,Dragon Gem,Multiplies a Dragon-type move's base damage by 1.5 and halves its energy cost.  One use per battle.,A turquoise gem from ancient times. A Pokémon may consume this item in conjunction with using a dragon-type attack to reduce the energy cost of that attack by 50% and increase the damage dealt by 50%.
-171,sachet,Sachet,"",""
-172,whipped-dream,Whipped Dream,"",""
+171,sachet,Sachet,,
+172,whipped-dream,Whipped Dream,,
