@@ -13,8 +13,14 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from asb.models import Base
-target_metadata = Base.metadata
+from asb.models import PlayerTable, PokedexTable
+from sqlalchemy.schema import MetaData
+
+target_metadata = MetaData()
+for table in PlayerTable.metadata.tables.values():
+    table.tometadata(target_metadata)
+for table in PokedexTable.metadata.tables.values():
+    table.tometadata(target_metadata)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
