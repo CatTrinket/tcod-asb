@@ -179,7 +179,7 @@ def register_commit(context, request):
         # Update the old user
         # XXX user.id = nextval should work but doesn't; not my fault
         nextval = db.Trainer.trainers_id_seq.next_value()
-        id, = select([nextval]).execute().fetchone()
+        id, = db.DBSession.execute(select([nextval])).fetchone()
 
         user.id = id
         user.unclaimed_from_hack = False
@@ -189,7 +189,7 @@ def register_commit(context, request):
             nextval = select([db.Pokemon.pokemon_id_seq.next_value()])
 
             for pokemon in user.pokemon:
-                id, = nextval.execute().fetchone()
+                id, = db.DBSession.execute(nextval).fetchone()
                 pokemon.id = id
                 pokemon.unclaimed_from_hack = False
 

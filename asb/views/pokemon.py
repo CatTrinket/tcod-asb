@@ -473,7 +473,7 @@ def pokemon_checkout_commit(context, request):
     for subform in form.pokemon:
         # Get the next available ID for this Pokémon
         nextval = db.Pokemon.pokemon_id_seq.next_value()
-        id, = select([nextval]).execute().fetchone()
+        id, = db.DBSession.execute(select([nextval])).fetchone()
 
         # Figure out form/gender/ability
         if hasattr(subform, 'form_'):
