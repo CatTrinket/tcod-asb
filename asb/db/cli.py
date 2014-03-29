@@ -17,8 +17,12 @@ import sqlalchemy as sqla
 
 from asb import models
 
-def command_dump(config_path, connection):
-    """Update the CSVs from the contents of the database."""
+def command_dump(connection, alembic_config):
+    """Update the CSVs from the contents of the database.
+
+    alembic_config is unused; it's only there so that all the command methods
+    take the same arguments.
+    """
 
     csv_dir = pkg_resources.resource_filename('asb', 'db/data')
 
@@ -40,7 +44,7 @@ def command_dump(config_path, connection):
             writer.writerow(headers)
             writer.writerows(rows)
 
-def command_init(config_path, connection):
+def command_init(connection, alembic_config):
     """Create the database from scratch and load Pokédex tables."""
 
     # Create all the tables
@@ -50,8 +54,7 @@ def command_init(config_path, connection):
 
     # Stamp it with alembic
     print('Stamping database with alembic...')
-    config = alembic.config.Config(config_path)
-    alembic.command.stamp(config, 'head')
+    alembic.command.stamp(alembic_config, 'head')
 
     # Load all the Pokédex tables
     print('Loading Pokédex tables...')
@@ -60,15 +63,14 @@ def command_init(config_path, connection):
         print('  - {0}...'.format(table.name))
         load_table(table, connection)
 
-def command_update(config_path, connection):
+def command_update(connection, alembic_config):
     """Update the database by running alembic migrations and then reloading all
     the Pokédex tables from the CSVs.
     """
 
     # Run alembic migrations
     print('Running schema migrations...')
-    config = alembic.config.Config(config_path)
-    alembic.command.upgrade(config, 'head')
+    alembic.command.upgrade(alembic_config, 'head')
 
     # Get the contents of the player tables so we can put them back after
     print('Stashing player tables...')
@@ -106,6 +108,16 @@ def command_update(config_path, connection):
         # to only insert if there's anything to insert
         if player_table_contents[table.name]:
             connection.execute(table.insert(), player_table_contents[table.name])
+
+def get_alembic_config(config_path, echo):
+    """Create and return an alembic config."""
+
+    config = alembic.config.Config(config_path)
+
+    # Set logging based on the --sql flag
+    config.set_main_option('asb_do_logging', str(echo))
+
+    return config
 
 def get_engine(config_path, echo):
     """Create and return an SQLA engine."""
@@ -186,6 +198,7 @@ def main(argv=None):
     parser = get_parser()
     args = parser.parse_args(argv)
     engine = get_engine(args.config, args.sql)
+    alembic_config = get_alembic_config(args.config, args.sql)
 
     with engine.begin() as connection:
-        args.func(args.config, connection)
+        args.func(connection, alembic_config)
