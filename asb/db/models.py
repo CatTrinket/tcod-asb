@@ -12,43 +12,33 @@ from sqlalchemy.sql import and_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
-def identifier(name, id=None):
-    """Reduce a name to a URL-friendly yet human-readable identifier."""
+from .helpers import identifier
 
-    # Step one: strip out diacritics
-    # XXX This won't simplify e.g. œ to oe
-    identifier = ''.join(char for char in unicodedata.normalize('NFKD', name)
-        if not unicodedata.combining(char))
-
-    # Step two: convert to a bunch of alphanumeric words separated by hyphens
-    identifier = identifier.lower()
-    identifier = identifier.replace("'", '')
-    identifier = identifier.replace('♀', '-f')
-    identifier = identifier.replace('♂', '-m')
-    identifier = re.sub('[^a-z0-9]+', '-', identifier)
-    identifier = identifier.strip('-')
-
-    # Step three: tack on the ID if provided
-    if identifier and id is not None:
-        identifier = '{0}-{1}'.format(id, identifier)
-    elif id is not None:
-        identifier = str(id)
-    elif not identifier:
-        # Hopefully-avoidable step four: oh god help we still have nothing
-        raise ValueError('Name {0!r} reduces to empty identifier'.format(name))
-
-    return identifier
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 class PokedexTable(Base):
+    """A class for tables holding general data for the dex pages, like Pokémon
+    species, moves etc.
+
+    Data for these tables is stored in CSVs in db/data/.
+    """
+
     __abstract__ = True
     metadata = sqlalchemy.schema.MetaData()
 
 class PlayerTable(Base):
+    """A class for tables holding data specific to this instance of the game,
+    like trainers and their Pokémon.
+    """
+
     __abstract__ = True
     metadata = sqlalchemy.schema.MetaData()
+
+### POKÉDEX TABLES
+# These go first because player tables need to be able to specify foreign keys
+# to them without using strings
 
 class Ability(PokedexTable):
     """An ability."""
@@ -289,7 +279,8 @@ class Type(PokedexTable):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
-#################
+
+### PLAYER TABLES
 
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
