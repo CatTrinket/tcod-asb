@@ -18,6 +18,7 @@ requires = [
     'zope.sqlalchemy==0.7.3',
     'waitress==0.8.7',
 
+    'alembic==0.6.3',
     'pbkdf2==1.3',
     'pyramid_beaker==0.8',
     'WTForms==1.0.5'
