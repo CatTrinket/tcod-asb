@@ -1,6 +1,3 @@
-import re
-import unicodedata
-
 import pbkdf2
 import pyramid.security as sec
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, UniqueConstraint, Sequence
