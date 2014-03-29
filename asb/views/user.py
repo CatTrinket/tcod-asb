@@ -7,7 +7,7 @@ from sqlalchemy.sql import select
 import transaction
 import wtforms
 
-import asb.models as models
+from asb import db
 from asb.forms import CSRFTokenForm
 
 def get_user(request):
@@ -19,7 +19,7 @@ def get_user(request):
         return None
 
     try:
-        user = (models.DBSession.query(models.Trainer)
+        user = (db.DBSession.query(db.Trainer)
             .filter_by(id=id)
             .one()
         )
@@ -32,7 +32,7 @@ def get_user_roles(userid, request):
     # XXX get DB ones
 
     try:
-        user = (models.DBSession.query(models.Trainer)
+        user = (db.DBSession.query(db.Trainer)
             .filter_by(id=userid)
             .one()
         )
@@ -58,7 +58,7 @@ class UsernameField(wtforms.StringField):
         username, = valuelist
 
         try:
-            trainer = (models.DBSession.query(models.Trainer)
+            trainer = (db.DBSession.query(db.Trainer)
                 .filter_by(name=username)
                 .one()
             )
@@ -166,7 +166,7 @@ def register_commit(context, request):
     are any errors; create their account otherwise.
     """
 
-    session = models.DBSession()
+    session = db.DBSession()
 
     form = RegistrationForm(request.POST, csrf_context=request.session)
 
@@ -178,7 +178,7 @@ def register_commit(context, request):
     if user is not None:
         # Update the old user
         # XXX user.id = nextval should work but doesn't; not my fault
-        nextval = models.Trainer.trainers_id_seq.next_value()
+        nextval = db.Trainer.trainers_id_seq.next_value()
         id, = select([nextval]).execute().fetchone()
 
         user.id = id
@@ -186,7 +186,7 @@ def register_commit(context, request):
 
         # Same with all their Pokémon
         if form.what_do.data == 'old':
-            nextval = select([models.Pokemon.pokemon_id_seq.next_value()])
+            nextval = select([db.Pokemon.pokemon_id_seq.next_value()])
 
             for pokemon in user.pokemon:
                 id, = nextval.execute().fetchone()
@@ -198,7 +198,7 @@ def register_commit(context, request):
     else:
         # Create a new user
         identifier = 'temp-{0}'.format(username)
-        user = models.Trainer(name=username, identifier=identifier)
+        user = db.Trainer(name=username, identifier=identifier)
         session.add(user)
 
     session.flush()

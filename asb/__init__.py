@@ -3,7 +3,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
-from .models import (
+from .db import (
     DBSession,
     Base,
     )

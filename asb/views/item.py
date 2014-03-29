@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm.exc import NoResultFound
 import wtforms
 
-import asb.models as models
+from asb import db
 from asb.resources import ItemIndex
 from asb.forms import CSRFTokenForm, MultiCheckboxField
 
@@ -20,8 +20,8 @@ def item_index(context, request):
     """The index of all the different items."""
 
     items = (
-        models.DBSession.query(models.Item)
-        .order_by(models.Item.name)
+        db.DBSession.query(db.Item)
+        .order_by(db.Item.name)
         .all()
     )
 
@@ -37,30 +37,30 @@ def _manage_items_queries(trainer):
 
     # A subquery to count how many of each item a trainer has in their bag
     quantity = (
-        models.DBSession.query(models.TrainerItem.item_id,
+        db.DBSession.query(db.TrainerItem.item_id,
             func.count('*').label('quantity'))
-        .filter(models.TrainerItem.trainer_id == trainer.id,
-            models.TrainerItem.pokemon_id == None)
-        .group_by(models.TrainerItem.item_id)
+        .filter(db.TrainerItem.trainer_id == trainer.id,
+            db.TrainerItem.pokemon_id == None)
+        .group_by(db.TrainerItem.item_id)
         .subquery()
     )
 
     # Get the trainer's bag, including the quantity of each item w/ subquery
     holdable = (
-        models.DBSession.query(models.Item, quantity.c.quantity)
-        .join(quantity, models.Item.id == quantity.c.item_id)
-        .order_by(models.Item.name)
+        db.DBSession.query(db.Item, quantity.c.quantity)
+        .join(quantity, db.Item.id == quantity.c.item_id)
+        .order_by(db.Item.name)
         .all()
     )
 
     # Get a list of the trainer's Pokémon who are holding items
     holders = (
-        models.DBSession.query(models.Pokemon)
-        .filter(models.Pokemon.trainer_id == trainer.id)
-        .join(models.TrainerItem)
-        .join(models.Item)
-        .order_by(models.Pokemon.is_in_squad.desc(), models.Item.name,
-            models.TrainerItem.id)
+        db.DBSession.query(db.Pokemon)
+        .filter(db.Pokemon.trainer_id == trainer.id)
+        .join(db.TrainerItem)
+        .join(db.Item)
+        .order_by(db.Pokemon.is_in_squad.desc(), db.Item.name,
+            db.TrainerItem.id)
         .all()
     )
 
@@ -101,8 +101,8 @@ def manage_items_commit(context, request):
             'take_form': take_form}
 
     # Find the items held by the specified Pokémon
-    to_take = (models.DBSession.query(models.TrainerItem)
-        .filter(models.TrainerItem.pokemon_id.in_(
+    to_take = (db.DBSession.query(db.TrainerItem)
+        .filter(db.TrainerItem.pokemon_id.in_(
             take_form.holders.data))
         .all()
     )
@@ -113,24 +113,24 @@ def manage_items_commit(context, request):
 
     return httpexc.HTTPSeeOther('/items/manage')
 
-@view_config(context=models.Item, renderer='/item.mako')
+@view_config(context=db.Item, renderer='/item.mako')
 def item(context, request):
     """An item's dex page."""
 
     return {'item': context}
 
-@view_config(name='give', context=models.Item, permission='manage-account',
+@view_config(name='give', context=db.Item, permission='manage-account',
   request_method='GET', renderer='/manage/give_item.mako')
 def give_item(item, request):
     """A page for choosing a Pokémon to give an item to."""
 
     # Make sure this trainer actually has this item in their bag
-    has_item = (models.DBSession.query(models.TrainerItem)
+    has_item = (db.DBSession.query(db.TrainerItem)
         .filter_by(trainer_id=request.user.id, item_id=item.id,
             pokemon_id=None)
     )
 
-    has_item, = models.DBSession.query(has_item.exists()).one()
+    has_item, = db.DBSession.query(has_item.exists()).one()
 
     if not has_item:
         raise httpexc.HTTPForbidden("You don't have this item in your bag!")
@@ -142,7 +142,7 @@ def give_item(item, request):
 
     return {'item': item, 'csrf_failure': False}
 
-@view_config(name='give', context=models.Item, permission='manage-account',
+@view_config(name='give', context=db.Item, permission='manage-account',
   request_method='POST', renderer='/manage/give_item.mako')
 def give_item_commit(item, request):
     """Process a request to give an item to a Pokémon."""
@@ -152,7 +152,7 @@ def give_item_commit(item, request):
     trainer = request.user
 
     # First, find the actual item
-    trainer_item = (models.DBSession.query(models.TrainerItem)
+    trainer_item = (db.DBSession.query(db.TrainerItem)
         .filter_by(trainer_id=trainer.id, item_id=item.id, pokemon_id=None)
         .first()
     )
@@ -170,7 +170,7 @@ def give_item_commit(item, request):
         return {'item': item, 'csrf_failure': True}
 
     # Find the Pokémon we're giving the item to
-    pokemon = (models.DBSession.query(models.Pokemon)
+    pokemon = (db.DBSession.query(db.Pokemon)
         .filter_by(id=request.POST['pokemon'])
         .first()
     )

@@ -3,7 +3,7 @@ import transaction
 
 from pyramid import testing
 
-from .models import DBSession
+from .db import DBSession
 
 
 class TestMyViewSuccessCondition(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestMyViewSuccessCondition(unittest.TestCase):
         self.config = testing.setUp()
         from sqlalchemy import create_engine
         engine = create_engine('sqlite://')
-        from .models import (
+        from .db import (
             Base,
             MyModel,
             )
@@ -38,7 +38,7 @@ class TestMyViewFailureCondition(unittest.TestCase):
         self.config = testing.setUp()
         from sqlalchemy import create_engine
         engine = create_engine('sqlite://')
-        from .models import (
+        from .db import (
             Base,
             MyModel,
             )

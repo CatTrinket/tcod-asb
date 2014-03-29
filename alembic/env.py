@@ -14,7 +14,7 @@ if config.get_main_option('asb_do_logging', default='True') == 'True':
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from asb.models import PlayerTable, PokedexTable
+from asb.db import PlayerTable, PokedexTable
 from sqlalchemy.schema import MetaData
 
 target_metadata = MetaData()

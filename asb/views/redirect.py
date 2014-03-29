@@ -2,8 +2,6 @@ import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 from sqlalchemy.orm.exc import NoResultFound
 
-import asb.models as models
-
 @view_config(context=httpexc.HTTPMovedPermanently)
 def redirect(context, request):
     """Catch a redirect and add a flash message based on the redirect

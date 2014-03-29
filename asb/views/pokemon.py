@@ -10,7 +10,7 @@ from sqlalchemy.sql import select
 import transaction
 import wtforms
 
-import asb.models as models
+from asb import db
 from asb.resources import PokemonIndex, SpeciesIndex
 from asb.forms import CSRFTokenForm, MultiCheckboxField
 
@@ -58,7 +58,7 @@ class PokemonSpeciesField(wtforms.StringField):
         name, = valuelist
 
         try:
-            identifier = models.identifier(name)
+            identifier = db.identifier(name)
         except ValueError:
             # Reduces to empty identifier; obviously not going to be a species
             self.data = (name, None)
@@ -72,7 +72,7 @@ class PokemonSpeciesField(wtforms.StringField):
 
         # Try to fetch the species
         try:
-            species = (models.DBSession.query(models.PokemonSpecies)
+            species = (db.DBSession.query(db.PokemonSpecies)
                 .filter_by(identifier=identifier)
                 .options(joinedload('default_form'))
                 .one()
@@ -171,7 +171,7 @@ def pokemon_checkout_form(cart, request):
     # Now for all the subforms.  We're going to need to set the name species in
     # a class in a moment, hence the underscore on this one.
     for species_ in cart:
-        species_ = models.DBSession.merge(species_)
+        species_ = db.DBSession.merge(species_)
         species_seen.setdefault(species_.identifier, 0)
         species_seen[species_.identifier] += 1
         n = species_seen[species_.identifier]
@@ -240,11 +240,11 @@ def pokemon_index(context, request):
     """The index page for everyone's Pokémon."""
 
     pokemon = (
-        models.DBSession.query(models.Pokemon)
+        db.DBSession.query(db.Pokemon)
         .filter_by(unclaimed_from_hack=False)
-        .join(models.PokemonForm)
-        .join(models.PokemonSpecies)
-        .order_by(models.PokemonSpecies.order, models.Pokemon.name)
+        .join(db.PokemonForm)
+        .join(db.PokemonSpecies)
+        .order_by(db.PokemonSpecies.order, db.Pokemon.name)
         .options(
             joinedload('gender'),
             joinedload('trainer'),
@@ -258,13 +258,13 @@ def pokemon_index(context, request):
 
     return {'pokemon': pokemon}
 
-@view_config(context=models.Pokemon, renderer='/pokemon.mako')
+@view_config(context=db.Pokemon, renderer='/pokemon.mako')
 def pokemon(context, request):
     """An individual Pokémon's info page."""
 
     return {'pokemon': context}
 
-@view_config(name='edit', context=models.Pokemon, permission='edit:basics',
+@view_config(name='edit', context=db.Pokemon, permission='edit:basics',
   request_method='GET', renderer='edit_pokemon.mako')
 def edit_pokemon(pokemon, request):
     form = EditPokemonForm(csrf_context=request.session)
@@ -272,7 +272,7 @@ def edit_pokemon(pokemon, request):
 
     return {'pokemon': pokemon, 'form': form}
 
-@view_config(name='edit', context=models.Pokemon, permission='edit:basics',
+@view_config(name='edit', context=db.Pokemon, permission='edit:basics',
   request_method='POST', renderer='edit_pokemon.mako')
 def edit_pokemon_commit(pokemon, request):
     form = EditPokemonForm(request.POST, csrf_context=request.session)
@@ -282,7 +282,7 @@ def edit_pokemon_commit(pokemon, request):
 
     pokemon.name = form.name.data
     pokemon.update_identifier()
-    models.DBSession.flush()
+    db.DBSession.flush()
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
 
@@ -326,8 +326,8 @@ def manage_pokemon_commit(context, request):
     if not form.validate():
         return {'trainer': trainer, 'deposit': deposit, 'withdraw': withdraw}
 
-    to_toggle = (models.DBSession.query(models.Pokemon)
-        .filter(models.Pokemon.id.in_(form.pokemon.data))
+    to_toggle = (db.DBSession.query(db.Pokemon)
+        .filter(db.Pokemon.id.in_(form.pokemon.data))
         .all())
 
     for pokemon in to_toggle:
@@ -340,7 +340,7 @@ def get_rarities():
     for the "buy Pokémon" page.
     """
 
-    return (models.DBSession.query(models.Rarity)
+    return (db.DBSession.query(db.Rarity)
         .options(
             subqueryload('pokemon_species'),
             subqueryload('pokemon_species.default_form'),
@@ -348,7 +348,7 @@ def get_rarities():
             subqueryload('pokemon_species.default_form.abilities'),
             subqueryload('pokemon_species.default_form.abilities.ability')
         )
-        .order_by(models.Rarity.id)
+        .order_by(db.Rarity.id)
         .all())
 
 @view_config(route_name='pokemon.buy', permission='manage-account',
@@ -385,7 +385,7 @@ def buy_pokemon_process(context, request):
 
         # Make sure it's a real, buyable Pokémon
         try:
-            species = (models.DBSession.query(models.PokemonSpecies)
+            species = (db.DBSession.query(db.PokemonSpecies)
                 .filter_by(identifier=identifier)
                 .options(joinedload('rarity'), joinedload('default_form'))
                 .one()
@@ -472,7 +472,7 @@ def pokemon_checkout_commit(context, request):
 
     for subform in form.pokemon:
         # Get the next available ID for this Pokémon
-        nextval = models.Pokemon.pokemon_id_seq.next_value()
+        nextval = db.Pokemon.pokemon_id_seq.next_value()
         id, = select([nextval]).execute().fetchone()
 
         # Figure out form/gender/ability
@@ -496,7 +496,7 @@ def pokemon_checkout_commit(context, request):
         squad_count += to_squad
 
         # Aaaaand create it.
-        pokemon = models.Pokemon(
+        pokemon = db.Pokemon(
             id=id,
             identifier='temp-{0}'.format(subform.name_.data),
             name=subform.name_.data,
@@ -507,7 +507,7 @@ def pokemon_checkout_commit(context, request):
             ability_slot=ability_slot
         )
 
-        models.DBSession.add(pokemon)
+        db.DBSession.add(pokemon)
         pokemon.update_identifier()
 
     # Finish up and return to the "Your Pokémon" page
@@ -525,21 +525,21 @@ def species_index(context, request):
 
     # A subquery to count how many of each Pokémon form there are in the league
     population_subquery = (
-        models.DBSession.query(models.Pokemon.pokemon_form_id,
+        db.DBSession.query(db.Pokemon.pokemon_form_id,
             func.count('*').label('population'))
-        .select_from(models.Pokemon)
-        .filter(models.Pokemon.unclaimed_from_hack == False)
-        .group_by(models.Pokemon.pokemon_form_id)
+        .select_from(db.Pokemon)
+        .filter(db.Pokemon.unclaimed_from_hack == False)
+        .group_by(db.Pokemon.pokemon_form_id)
         .subquery()
     )
 
     # Get all the Pokémon and population counts.  Making this an OrderedDict
     # means we can just pass it to pokemon_form_table as is.
     pokemon = OrderedDict(
-        models.DBSession.query(models.PokemonForm,
+        db.DBSession.query(db.PokemonForm,
             population_subquery.c.population)
-        .select_from(models.PokemonForm)
-        .join(models.PokemonSpecies)
+        .select_from(db.PokemonForm)
+        .join(db.PokemonSpecies)
         .outerjoin(population_subquery)
         .options(
              joinedload('species'),
@@ -547,14 +547,14 @@ def species_index(context, request):
              subqueryload('abilities.ability'),
              subqueryload('types')
         )
-        .filter(models.PokemonSpecies.is_fake == False)
-        .order_by(models.PokemonForm.order)
+        .filter(db.PokemonSpecies.is_fake == False)
+        .order_by(db.PokemonForm.order)
         .all()
     )
 
     return {'pokemon': pokemon}
 
-@view_config(context=models.PokemonForm, renderer='/pokemon_species.mako')
+@view_config(context=db.PokemonForm, renderer='/pokemon_species.mako')
 def species(pokemon, request):
     """The dex page of a Pokémon species.
 

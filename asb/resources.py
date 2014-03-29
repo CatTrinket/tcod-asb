@@ -5,7 +5,7 @@ import pyramid.httpexceptions as httpexc
 import pyramid.security as sec
 from sqlalchemy.orm.exc import NoResultFound
 
-import asb.models as models
+from asb import db
 
 class Root(dict):
     """A root resource."""
@@ -29,7 +29,7 @@ class DexIndex:
         """Get the requested resource from the database."""
 
         try:
-            item = (models.DBSession.query(self.table)
+            item = (db.DBSession.query(self.table)
                 .filter_by(identifier=identifier)
                 .one())
         except NoResultFound:
@@ -76,7 +76,7 @@ class IDRedirectResource(DexIndex):
 
         # Retrieve the thing with this ID, if there is one
         try:
-            item = (models.DBSession.query(self.table)
+            item = (db.DBSession.query(self.table)
                 .filter_by(id=id)
                 .one())
         except NoResultFound:
@@ -86,17 +86,17 @@ class IDRedirectResource(DexIndex):
 
 class TrainerIndex(IDRedirectResource):
     __name__ = 'trainers'
-    table = models.Trainer
+    table = db.Trainer
 
 class PokemonIndex(IDRedirectResource):
     __name__ = 'pokemon'
-    table = models.Pokemon
+    table = db.Pokemon
 
 class SpeciesIndex(DexIndex):
     """Actually a form index."""
 
     __name__ = 'species'
-    table = models.PokemonForm
+    table = db.PokemonForm
 
     def _redirect(self, identifier):
         """Redirect to the default form if the identifier matches a species but
@@ -104,7 +104,7 @@ class SpeciesIndex(DexIndex):
         """
 
         try:
-            species = (models.DBSession.query(models.PokemonSpecies)
+            species = (db.DBSession.query(db.PokemonSpecies)
                 .filter_by(identifier=identifier)
                 .one())
         except NoResultFound:
@@ -114,15 +114,15 @@ class SpeciesIndex(DexIndex):
 
 class MoveIndex(DexIndex):
     __name__ = 'moves'
-    table = models.Move
+    table = db.Move
 
 class AbilityIndex(DexIndex):
     __name__ = 'abilities'
-    table = models.Ability
+    table = db.Ability
 
 class ItemIndex(DexIndex):
     __name__ = 'items'
-    table = models.Item
+    table = db.Item
 
 def get_root(request):
     """Get a root object."""

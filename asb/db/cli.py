@@ -14,7 +14,7 @@ import pkg_resources
 import pyramid.paster
 import sqlalchemy as sqla
 
-from asb import models
+import asb.db
 
 def command_dump(connection, alembic_config):
     """Update the CSVs from the contents of the database.
@@ -27,12 +27,12 @@ def command_dump(connection, alembic_config):
 
     # Dump all the tables, with each table sorted by its primary key
     print('Dumping tables...')
-    for table in models.PokedexTable.metadata.tables.values():
+    for table in asb.db.PokedexTable.metadata.tables.values():
         print('  - {0}...'.format(table.name))
 
         headers = [column.name for column in table.columns]
         primary_key = table.primary_key.columns
-        rows = models.DBSession.query(table).order_by(*primary_key).all()
+        rows = asb.db.DBSession.query(table).order_by(*primary_key).all()
 
         # You're not supposed to use os.path with resource paths, but this
         # command only makes sense if you're dumping into an actual directory
@@ -48,8 +48,8 @@ def command_init(connection, alembic_config):
 
     # Create all the tables
     print('Creating tables...')
-    models.PokedexTable.metadata.create_all(connection)
-    models.PlayerTable.metadata.create_all(connection)
+    asb.db.PokedexTable.metadata.create_all(connection)
+    asb.db.PlayerTable.metadata.create_all(connection)
 
     # Stamp it with alembic
     print('Stamping database with alembic...')
@@ -58,7 +58,7 @@ def command_init(connection, alembic_config):
     # Load all the Pokédex tables
     print('Loading Pokédex tables...')
 
-    for table in models.PokedexTable.metadata.sorted_tables:
+    for table in asb.db.PokedexTable.metadata.sorted_tables:
         print('  - {0}...'.format(table.name))
         load_table(table, connection)
 
@@ -75,32 +75,32 @@ def command_update(connection, alembic_config):
     print('Stashing player tables...')
     player_table_contents = {}
 
-    for table in models.PlayerTable.metadata.tables.values():
+    for table in asb.db.PlayerTable.metadata.tables.values():
         columns = [column.name for column in table.columns]
         player_table_contents[table.name] = [dict(zip(columns, row)) for row in
-            models.DBSession.query(table).all()]
+            asb.db.DBSession.query(table).all()]
 
     # Close the connection so we can drop tables
-    models.DBSession.close()
+    asb.db.DBSession.close()
 
     # Tear down and rebuild the entire schema
     print('Dropping player tables...')
-    models.PlayerTable.metadata.drop_all(connection)
+    asb.db.PlayerTable.metadata.drop_all(connection)
     print('Dropping Pokédex tables...')
-    models.PokedexTable.metadata.drop_all(connection)
+    asb.db.PokedexTable.metadata.drop_all(connection)
     print('Recreating Pokédex tables...')
-    models.PokedexTable.metadata.create_all(connection)
+    asb.db.PokedexTable.metadata.create_all(connection)
     print('Recreating player tables...')
-    models.PlayerTable.metadata.create_all(connection)
+    asb.db.PlayerTable.metadata.create_all(connection)
 
     # Reload all the tables
     print('Reloading Pokédex tables...')
-    for table in models.PokedexTable.metadata.sorted_tables:
+    for table in asb.db.PokedexTable.metadata.sorted_tables:
         print('  - {0}...'.format(table.name))
         load_table(table, connection)
 
     print('Reloading player tables...')
-    for table in models.PlayerTable.metadata.sorted_tables:
+    for table in asb.db.PlayerTable.metadata.sorted_tables:
         print('  - {0}...'.format(table.name))
 
         # An empty list is assumed to be a single row with no values so we need
@@ -124,7 +124,7 @@ def get_engine(config_path, echo):
 
     settings = pyramid.paster.get_appsettings(config_path)
     engine = sqla.engine_from_config(settings, 'sqlalchemy.', echo=echo)
-    models.DBSession.configure(bind=engine)
+    asb.db.DBSession.configure(bind=engine)
     return engine
 
 def get_parser():
