@@ -105,8 +105,9 @@ def command_update(connection, alembic_config):
 
         # An empty list is assumed to be a single row with no values so we need
         # to only insert if there's anything to insert
-        if player_table_contents[table.name]:
-            connection.execute(table.insert(), player_table_contents[table.name])
+        contents = player_table_contents[table.name]
+        if contents:
+            connection.execute(table.insert(), contents)
 
 def get_alembic_config(config_path, echo):
     """Create and return an alembic config."""
