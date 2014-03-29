@@ -7,7 +7,6 @@ entry point in setup.py and should be installed as asbdb.
 import argparse
 import csv
 import os
-import sys
 
 import alembic.command
 import alembic.config
