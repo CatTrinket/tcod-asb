@@ -14,6 +14,7 @@ from asb.resources import get_root
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    settings.update(global_config)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
