@@ -289,10 +289,10 @@ class Pokemon(PlayerTable):
     id = Column(Integer, pokemon_id_seq, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode(30), nullable=False)
-    pokemon_form_id = Column(Integer, ForeignKey(PokemonForm.id, name='a'),
+    pokemon_form_id = Column(Integer, ForeignKey(PokemonForm.id),
         nullable=False)
-    gender_id = Column(Integer, ForeignKey(Gender.id, name='b'), nullable=False)
-    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade', name='c'),
+    gender_id = Column(Integer, ForeignKey(Gender.id), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
     ability_slot = Column(Integer, nullable=False)
     experience = Column(Integer, nullable=False, default=0)
@@ -390,7 +390,7 @@ class TrainerItem(PlayerTable):
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
-    item_id = Column(Integer, ForeignKey(Item.id, name='d'), nullable=False)
+    item_id = Column(Integer, ForeignKey(Item.id), nullable=False)
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
