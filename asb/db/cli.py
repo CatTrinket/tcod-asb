@@ -74,11 +74,19 @@ def command_update(connection, alembic_config):
     # Get the contents of the player tables so we can put them back after
     print('Stashing player tables...')
     player_table_contents = {}
+    player_table_sequences = {}
 
     for table in asb.db.PlayerTable.metadata.tables.values():
         columns = [column.name for column in table.columns]
         player_table_contents[table.name] = [dict(zip(columns, row)) for row in
             asb.db.DBSession.query(table).all()]
+
+        # Stash sequences, too, if we're using Postgres
+        if connection.dialect.name == 'postgresql':
+            for column in table.columns:
+                if column.default is not None and column.default.is_sequence:
+                    player_table_sequences[column.default.name] = (
+                        connection.execute(column.default))
 
     # Close the connection so we can drop tables
     asb.db.DBSession.close()
@@ -108,6 +116,11 @@ def command_update(connection, alembic_config):
         contents = player_table_contents[table.name]
         if contents:
             connection.execute(table.insert(), contents)
+
+    # Reset sequences (the dict will be empty if we're not on Postgres)
+    for sequence_name, value in player_table_sequences.items():
+        # - 1 because setval adds one, and we don't want that
+        connection.execute(sqla.func.setval(sequence_name, value - 1))
 
 def get_alembic_config(config_path, echo):
     """Create and return an alembic config."""
