@@ -14,6 +14,9 @@ from asb import db
 from asb.resources import PokemonIndex, SpeciesIndex
 from asb.forms import CSRFTokenForm, MultiCheckboxField
 
+
+### WTFORMS CLASSES
+
 class EditPokemonForm(CSRFTokenForm):
     """A form for editing a Pokémon.
 
@@ -23,6 +26,15 @@ class EditPokemonForm(CSRFTokenForm):
     name = wtforms.TextField('Name')
     save = wtforms.SubmitField('Save')
 
+class PokemonEvolutionForm(CSRFTokenForm):
+    """A form for evolving a Pokémon.
+
+    The choices for the evolution field must be added dynamically.
+    """
+
+    evolution = wtforms.RadioField(coerce=int)
+    submit = wtforms.SubmitField('Confirm')
+    
 class PokemonMovingForm(CSRFTokenForm):
     """A form for selecting Pokémon to deposit or withdraw.
 
@@ -106,6 +118,9 @@ class QuickBuyForm(CSRFTokenForm):
 
     pokemon = PokemonSpeciesField('Quick buy')
     quickbuy = wtforms.SubmitField('Go!')
+
+
+### FORM-CREATING METHODS
 
 def pokemon_deposit_form(trainer, request, use_post=True):
     """Return a PokemonMovingForm for depositing Pokémon."""
@@ -235,6 +250,9 @@ def pokemon_checkout_form(cart, request):
 
     return form
 
+
+### POKÉMON PAGES
+
 @view_config(context=PokemonIndex, renderer='/indices/pokemon.mako')
 def pokemon_index(context, request):
     """The index page for everyone's Pokémon."""
@@ -263,6 +281,9 @@ def pokemon(context, request):
     """An individual Pokémon's info page."""
 
     return {'pokemon': context}
+
+
+### MANAGING POKÉMON
 
 @view_config(name='edit', context=db.Pokemon, permission='edit:basics',
   request_method='GET', renderer='edit_pokemon.mako')
@@ -334,6 +355,9 @@ def manage_pokemon_commit(context, request):
         pokemon.is_in_squad = is_in_squad
 
     return httpexc.HTTPSeeOther('/pokemon/manage')
+
+
+### BUYING POKÉMON
 
 def get_rarities():
     """Fetch all the rarities and all the info we'll need about their Pokémon
@@ -409,8 +433,8 @@ def buy_pokemon_process(context, request):
                 request.session['cart'].pop(n)
                 return httpexc.HTTPSeeOther('/pokemon/buy')
 
-        # Again, if they're trying to buy something that's not in their cart,
-        # who cares?  Let them quietly fall back to the buy page.
+        # Again, if they're trying to remove something that's not in their
+        # cart, who cares?  Let them quietly fall back to the buy page.
 
     # If we haven't returned yet, something's gone wrong; back to the buy page
 
@@ -515,6 +539,154 @@ def pokemon_checkout_commit(context, request):
     del request.session['cart']
 
     return httpexc.HTTPSeeOther('/pokemon/manage')
+
+
+### EVOLVING POKÉMON
+
+def can_evolve_form(pokemon, form):
+    """ASSUMING that this Pokémon can evolve into this form's species, return
+    whether or not it can evolve into this particular form.
+    """
+
+    c = form.condition
+
+    if c is None:
+        # No condition!  Woo!
+        return True
+
+    if c.gender_id is c.item_id is c.ability_id is None:
+        # There is a condition, but its parameters are all blank at the moment,
+        # meaning it requires an item that hasn't been added yet
+        return False
+
+    if c.gender_id is not None and pokemon.gender_id != c.gender_id:
+        # Wrong gender
+        return False
+
+    if c.item_id is not None and pokemon.trainer_item.item_id != c.item_id:
+        # Wrong held item
+        return False
+
+    if c.ability_id is not None:
+        # Check the ability that this Pokémon would have if it were this
+        # species in its default form
+        pfa = db.DBSession.query(db.PokemonFormAbility).get(
+            (form.species.default_form.id, pokemon.ability_slot))
+
+        if pfa.ability_id != c.ability_id:
+            # Wrong ability
+            return False
+
+    # If we haven't bailed yet, we're good to go
+    return True
+
+def can_evolve_species(pokemon, species):
+    """Return whether or not this Pokémon can evolve into this species, and
+    if so, whether or not the trainer will need to pay.
+    """
+
+    # Make sure this species is an option in the first place
+    if species.evolves_from_species_id != pokemon.form.species_id:
+        return (False, False)
+
+    for n in range(100):
+        print(species, pokemon.unlocked_evolutions)
+    if species in pokemon.unlocked_evolutions:
+        return (True, False)
+
+    evo = species.evolution_method
+
+    if evo.gender_id is not None and pokemon.gender_id != evo.gender_id:
+        return (False, False)
+
+    if evo.experience is not None and pokemon.experience >= evo.experience:
+        return (True, False)
+
+    if evo.happiness is not None and pokemon.happiness >= evo.happiness:
+        return (True, False)
+
+    if (evo.buyable_price is not None and
+      pokemon.trainer.money >= evo.buyable_price):
+        return (True, True)
+
+    # No dice
+    return (False, False)
+
+def get_evolutions(pokemon):
+    """Return all the Pokémon forms that this Pokémon can evolve into."""
+
+    evo_forms = []  # (form, needs_buying)
+
+    for species in pokemon.species.evolutions:
+        can_evolve, needs_buying = can_evolve_species(pokemon, species)
+
+        if can_evolve:
+            # Hoo boy
+            can_pick_forms = (len(pokemon.species.forms) == 1 or
+                pokemon.species.can_switch_forms)
+
+            for form in species.forms:
+                if can_pick_forms:
+                    can_evolve = can_evolve_form(pokemon, form)
+                else:
+                    can_evolve = form.form_order == pokemon.form.form_order
+
+                if can_evolve:
+                    evo_forms.append((form, needs_buying))
+
+    return evo_forms
+
+@view_config(name='evolve', context=db.Pokemon, permission='edit:basics',
+  request_method='GET', renderer='evolve_pokemon.mako')
+def evolve_pokemon(pokemon, request):
+    """A page for evolving a Pokémon."""
+
+    evolutions = get_evolutions(pokemon)
+
+    if not evolutions:
+        raise httpexc.HTTPForbidden(
+            "This Pokémon can't evolve (or at least not yet)!")
+
+    form = PokemonEvolutionForm(csrf_context=request.session)
+    form.evolution.choices = [(evo.id, evo.name) for evo, buy in
+        evolutions]
+
+    return {'pokemon': pokemon, 'evolutions': evolutions, 'form': form}
+
+@view_config(name='evolve', context=db.Pokemon, permission='edit:basics',
+  request_method='POST', renderer='evolve_pokemon.mako')
+def evolve_pokemon_commit(pokemon, request):
+    """Evolve a Pokémon."""
+
+    # Make sure this evolution is actually valid, and either return 403 or send
+    # them back to the evolution form if not
+    evolutions = get_evolutions(pokemon)
+
+    if not evolutions:
+        raise httpexc.HTTPForbidden(
+            "This Pokémon can't evolve (or at least not yet)!")
+
+    form = PokemonEvolutionForm(request.POST, csrf_context=request.session)
+    form.evolution.choices = [(evo.id, evo.name) for evo, pay in
+        evolutions]
+
+    if not form.validate():
+        return {'pokemon': pokemon, 'evolutions': evolutions, 'form': form}
+
+    # Actually perform the evolution
+    (evo, pay), = [(evo, pay) for evo, pay in evolutions
+        if evo.id == form.evolution.data]
+    if pay:
+        pokemon.trainer.money -= evo.species.evolution_method.buyable_price
+    not_nicknamed = pokemon.name == pokemon.species.name
+    pokemon.pokemon_form_id = form.evolution.data
+    if not_nicknamed:
+        pokemon.name = pokemon.species.name
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon))
+
+
+### SPECIES PAGES
 
 @view_config(context=SpeciesIndex, renderer='/indices/pokemon_species.mako')
 def species_index(context, request):

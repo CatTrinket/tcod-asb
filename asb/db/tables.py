@@ -298,7 +298,6 @@ class Pokemon(PlayerTable):
     experience = Column(Integer, nullable=False, default=0)
     happiness = Column(Integer, nullable=False, default=0)
     is_in_squad = Column(Boolean, nullable=False, default=False)
-    can_evolve = Column(Boolean, nullable=False, default=False)
     form_uncertain = Column(Boolean, nullable=False, default=False)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
 
@@ -332,6 +331,24 @@ class Pokemon(PlayerTable):
             (sec.Allow, 'admin', 'edit:everything'),
             (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
         ]
+
+class PokemonUnlockedEvolution(PlayerTable):
+    """A species which a Pokémon has fulfilled the requirements to evolve
+    into.
+
+    Evolutions whose requirements can be otherwise verified — i.e. anything
+    other than item or trade evolutions — should not be stored here.
+    """
+
+    __tablename__ = 'pokemon_unlocked_evolutions'
+
+    # XXX It would be nice if we could constrain evolved_species_id to
+    # something the Pokémon can actually evolve into.  It would be even *nicer*
+    # if we could do without this table altogether...
+
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), primary_key=True)
+    evolved_species_id = Column(Integer, ForeignKey(PokemonSpecies.id),
+        primary_key=True)
 
 class Trainer(PlayerTable):
     """A member of the ASB league and user of this app thing."""
@@ -412,6 +429,8 @@ Pokemon.item = relationship(Item,
 Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
+Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
+    secondary=PokemonUnlockedEvolution.__table__)
 
 PokemonSpeciesEvolution.gender = relationship(Gender,
     primaryjoin=PokemonSpeciesEvolution.gender_id == Gender.id, uselist=False)
