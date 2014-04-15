@@ -1,0 +1,8 @@
+id,identifier,name,order
+1,miscellaneous,Miscellaneous,2
+2,type-trinkets,Type trinkets,4
+3,plates,Plates,5
+4,gems,Gems,6
+5,non-battle,Non-battle,1
+6,berries,Berries,7
+7,evolution,Evolution,3

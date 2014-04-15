@@ -73,13 +73,19 @@ class Gender(PokedexTable):
     name = Column(Unicode, nullable=False)
 
 class Item(PokedexTable):
-    """A type of item."""
+    """A type of item.
+
+    The order column applies within the item category.
+    """
 
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
+    item_category_id = Column(Integer, ForeignKey('item_categories.id'),
+        nullable=False)
+    order = Column(Integer, nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
 
@@ -88,6 +94,16 @@ class Item(PokedexTable):
         """Return this item's resource name for traversal."""
 
         return self.identifier
+
+class ItemCategory(PokedexTable):
+    """A category for grouping similar items."""
+
+    __tablename__ = 'item_categories'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+    order = Column(Unicode, nullable=False)
 
 class Move(PokedexTable):
     """A move (a.k.a. an attack)."""
@@ -414,6 +430,10 @@ class TrainerItem(PlayerTable):
 
 # Relationships go down here so that we don't have to use strings for
 # everything
+Item.category = relationship(ItemCategory, back_populates='items')
+
+ItemCategory.items = relationship(Item, back_populates='category',
+    order_by=(Item.order, Item.name))
 
 Move.type = relationship(Type)
 Move.damage_class = relationship(DamageClass)

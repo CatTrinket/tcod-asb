@@ -1,6 +1,7 @@
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 from sqlalchemy.sql import func
+from sqlalchemy.orm import subqueryload
 from sqlalchemy.orm.exc import NoResultFound
 import wtforms
 
@@ -19,13 +20,14 @@ class TakeItemsForm(CSRFTokenForm):
 def item_index(context, request):
     """The index of all the different items."""
 
-    items = (
-        db.DBSession.query(db.Item)
-        .order_by(db.Item.name)
+    item_categories = (
+        db.DBSession.query(db.ItemCategory)
+        .options(subqueryload(db.ItemCategory.items))
+        .order_by(db.ItemCategory.order)
         .all()
     )
 
-    return {'items': items}
+    return {'item_categories': item_categories}
 
 def _manage_items_queries(trainer):
     """Perform the queries needed for the "manage items" page and return the
