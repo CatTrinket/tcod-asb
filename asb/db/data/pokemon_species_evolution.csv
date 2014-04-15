@@ -183,6 +183,7 @@ evolved_species_id,experience,happiness,item_id,gender_id,buyable_price,can_trad
 362,5,,,,,False
 364,4,,,,,False
 365,9,,,,,False
+367,,,122,,,False
 368,,,121,,,False
 372,4,,,,,False
 373,9,,,,,False
