@@ -359,6 +359,23 @@ def manage_pokemon_commit(context, request):
 
 ### BUYING POKÉMON
 
+def fetch_cart(cart):
+    """Turn a cart, i.e. a list of PokemonSpecies identifiers, into a list of
+    PokemonSpecies.
+    """
+
+    # Fetch all the Pokémon in the cart
+    new_cart = (db.DBSession.query(db.PokemonSpecies)
+        .filter(db.PokemonSpecies.identifier.in_(cart))
+        .options(joinedload('rarity'), joinedload('default_form'))
+        .all())
+
+    # Fix duplicates
+    new_cart = {species.identifier: species for species in new_cart}
+    new_cart = [new_cart[identifier] for identifier in cart]
+
+    return new_cart
+
 def get_rarities():
     """Fetch all the rarities and all the info we'll need about their Pokémon
     for the "buy Pokémon" page.
@@ -382,7 +399,7 @@ def buy_pokemon(context, request):
 
     quick_buy = QuickBuyForm(csrf_context=request.session)
     rarities = get_rarities()
-    cart = request.session.get('cart', [])
+    cart = fetch_cart(request.session.get('cart', []))
 
     return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
 
@@ -401,7 +418,7 @@ def buy_pokemon_process(context, request):
 
         if quick_buy.validate():
             species = quick_buy.pokemon.data[1]
-            request.session.setdefault('cart', []).append(species)
+            request.session.setdefault('cart', []).append(species.identifier)
             return httpexc.HTTPSeeOther('/pokemon/buy')
     elif 'add' in request.POST:
         # Add to cart
@@ -421,20 +438,20 @@ def buy_pokemon_process(context, request):
         else:
             if not (species.rarity_id is None or species.is_fake):
                 # Valid Pokémon; add it to the cart
-                request.session.setdefault('cart', []).append(species)
+                request.session.setdefault('cart', []).append(species.identifier)
                 return httpexc.HTTPSeeOther('/pokemon/buy')
     elif 'remove' in request.POST and 'cart' in request.session:
         # Remove from cart
         identifier = request.POST['remove']
 
-        # Go through and find the Pokémon they want to remove
-        for n, pokemon in enumerate(request.session['cart']):
-            if pokemon.identifier == identifier:
-                request.session['cart'].pop(n)
-                return httpexc.HTTPSeeOther('/pokemon/buy')
+        try:
+            request.session['cart'].remove(identifier)
+        except ValueError:
+            # Again, if they're trying to remove something that's not in their
+            # cart, who cares?  Let them quietly fall back to the buy page.
+            pass
 
-        # Again, if they're trying to remove something that's not in their
-        # cart, who cares?  Let them quietly fall back to the buy page.
+        return httpexc.HTTPSeeOther('/pokemon/buy')
 
     # If we haven't returned yet, something's gone wrong; back to the buy page
 
@@ -442,7 +459,7 @@ def buy_pokemon_process(context, request):
         quick_buy = QuickBuyForm(csrf_context=request.session)
 
     rarities = get_rarities()
-    cart = request.session.get('cart', [])
+    cart = fetch_cart(request.session.get('cart', []))
 
     return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
 
@@ -456,14 +473,16 @@ def pokemon_checkout(context, request):
         request.session.flash('Your cart is empty')
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
+    cart = fetch_cart(request.session['cart'])
+
     # Make sure they can afford everything
-    grand_total = sum(pkmn.rarity.price for pkmn in request.session['cart'])
+    grand_total = sum(species.rarity.price for species in cart)
     if grand_total > request.user.money:
         request.session.flash("You can't afford all that!")
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
     # And go
-    form = pokemon_checkout_form(request.session['cart'], request)
+    form = pokemon_checkout_form(cart, request)
 
     return {'form': form}
 
@@ -479,14 +498,16 @@ def pokemon_checkout_commit(context, request):
         request.session.flash('Your cart is empty')
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
+    cart = fetch_cart(request.session['cart'])
+
     # Make sure they actually have enough money
-    grand_total = sum(pkmn.rarity.price for pkmn in request.session['cart'])
+    grand_total = sum(species.rarity.price for species in cart)
     if grand_total > trainer.money:
         request.session.flash("You can't afford all that!")
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
     # Double-check their checkout form
-    form = pokemon_checkout_form(request.session['cart'], request)
+    form = pokemon_checkout_form(cart, request)
 
     if not form.validate():
         return {'form': form}
