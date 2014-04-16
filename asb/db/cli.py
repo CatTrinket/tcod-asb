@@ -38,7 +38,7 @@ def command_dump(connection, alembic_config):
         # command only makes sense if you're dumping into an actual directory
         csv_path = os.path.join(csv_dir, '{0}.csv'.format(table.name))
 
-        with open(csv_path, 'w', newline='') as table_csv:
+        with open(csv_path, 'w', encoding='UTF-8', newline='') as table_csv:
             writer = csv.writer(table_csv, lineterminator='\n')
             writer.writerow(headers)
             writer.writerows(rows)
@@ -56,7 +56,7 @@ def command_init(connection, alembic_config):
     alembic.command.stamp(alembic_config, 'head')
 
     # Load all the Pokédex tables
-    print('Loading Pokédex tables...')
+    print('Loading Pokedex tables...')
 
     for table in asb.db.PokedexTable.metadata.sorted_tables:
         print('  - {0}...'.format(table.name))
@@ -94,15 +94,15 @@ def command_update(connection, alembic_config):
     # Tear down and rebuild the entire schema
     print('Dropping player tables...')
     asb.db.PlayerTable.metadata.drop_all(connection)
-    print('Dropping Pokédex tables...')
+    print('Dropping Pokedex tables...')
     asb.db.PokedexTable.metadata.drop_all(connection)
-    print('Recreating Pokédex tables...')
+    print('Recreating Pokedex tables...')
     asb.db.PokedexTable.metadata.create_all(connection)
     print('Recreating player tables...')
     asb.db.PlayerTable.metadata.create_all(connection)
 
     # Reload all the tables
-    print('Reloading Pokédex tables...')
+    print('Reloading Pokedex tables...')
     for table in asb.db.PokedexTable.metadata.sorted_tables:
         print('  - {0}...'.format(table.name))
         load_table(table, connection)
@@ -176,7 +176,7 @@ def load_table(table, connection):
 
     # Read the table's CSV into a list of dicts, because that's what it needs
     # to be for an SQLA Core bulk insert
-    with open(filename, newline='') as table_csv:
+    with open(filename, encoding='UTF-8', newline='') as table_csv:
         reader = csv.DictReader(table_csv)
         rows = []
 
