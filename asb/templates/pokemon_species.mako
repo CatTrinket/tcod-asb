@@ -43,16 +43,16 @@
 
 <dl>
     <dt>${helpers.link(regular_abilities[0])}</dt>
-    <dd>${regular_abilities[0].summary}</dd>
+    <dd>${regular_abilities[0].description}</dd>
 
     % if len(regular_abilities) == 2 and regular_abilities[1] != regular_abilities[0]:
         <dt>${helpers.link(regular_abilities[1])}</dt>
-        <dd>${regular_abilities[1].summary}</dd>
+        <dd>${regular_abilities[1].description}</dd>
     % endif
 
     % if hidden_abilities and hidden_abilities[0] != regular_abilities[0]:
         <dt class="hidden-ability">${helpers.link(hidden_abilities[0])}</dt>
-        <dd>${hidden_abilities[0].summary}</dd>
+        <dd>${hidden_abilities[0].description}</dd>
     % endif
 </dl>
 
