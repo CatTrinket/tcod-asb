@@ -218,5 +218,18 @@ td.give { text-align: center }
 /* Pokémon species list */
 td.population-zero { color: #AAAAAA; }
 
-/* Buying shit */
+/* Buying stuff */
 tr.unaffordable-total { color: #CC0000; }
+
+/* Evolving Pokémon */
+form#evolution-form { text-align: center; }
+form#evolution-form > ul { list-style: none; }
+form#evolution-form > ul > li { display: inline-block; margin: 0 1em; }
+
+form#evolution-form > ul > li > option,
+form#evolution-form > ul > li > label
+    { display: block; }
+
+form#evolution-form > ul > li > label { font-size: 150%; }
+
+p.evolution-note { margin: 0; font-size: 75%; }

@@ -1,0 +1,6 @@
+# I don't want to put sprites on GitHub, but I do want to commit the directory
+# structure, so each sprite directory gets a .gitignore that ignores everything
+# in the directory except itself.
+
+*
+!.gitignore

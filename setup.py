@@ -8,7 +8,7 @@ with open(os.path.join(here, 'README.txt')) as f:
 
 # I'm going to just give exact versions that I know will work
 requires = [
-    'pyramid==1.5a2',
+    'pyramid==1.5',
     'SQLAlchemy==0.8.3',
     'transaction==1.4.1',
     'pyramid_tm==0.7',

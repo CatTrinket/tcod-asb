@@ -341,8 +341,11 @@ class Pokemon(PlayerTable):
     def __acl__(self):
         """Return an list of permissions for Pyramid's authorization."""
 
+        trainer = 'user:{}'.format(self.trainer_id)
+
         return [
-            (sec.Allow, 'user:{0}'.format(self.trainer_id), 'edit:basics'),
+            (sec.Allow, trainer, 'edit:basics'),
+            (sec.Allow, trainer, 'edit:evolve'),
             (sec.Allow, 'admin', 'edit:basics'),
             (sec.Allow, 'admin', 'edit:everything'),
             (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)

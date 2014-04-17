@@ -276,8 +276,31 @@ ${type_icon(type)}\
 </table>
 </%def>
 
-<%def name="pokemon_form_icon(form)">\
-<img src="/static/images/pokemon-icons/${form.identifier}.png" alt="">\
+<%def name="pokemon_form_icon(form, gender=None)">\
+<%
+    if gender is not None and form.identifier in ['unfezant', 'frillish',
+      'jellicent', 'pyroar']:
+        # Meowstic's genders are forms, so that's already in the identifier
+        filename = '{}-{}.png'.format(form.identifier, gender)
+    else:
+        filename = '{}.png'.format(form.identifier)
+%>\
+<img src="/static/images/pokemon-icons/${filename}" alt="">\
+</%def>
+
+<%def name="pokemon_form_sprite(form, gender=None)">\
+<%
+   filename = '/static/images/pokemon/{}.png'.format(form.identifier)
+   if gender is not None:
+       from pkg_resources import resource_exists
+
+       alt_filename = '/static/images/pokemon/{}-{}.png'.format(
+           form.identifier, gender)
+
+       if resource_exists('asb', alt_filename):
+           filename = alt_filename
+%>\
+<img src="${filename}" alt="">\
 </%def>
 
 <%def name="gender_symbol(gender)">\
