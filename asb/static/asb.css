@@ -223,7 +223,7 @@ tr.unaffordable-total { color: #CC0000; }
 
 /* Evolving Pokémon */
 form#evolution-form { text-align: center; }
-form#evolution-form > ul { list-style: none; }
+form#evolution-form > ul { list-style: none; padding: 0; }
 form#evolution-form > ul > li { display: inline-block; margin: 0 1em; }
 
 form#evolution-form > ul > li > option,
