@@ -9,11 +9,11 @@
       w = iter(withdraw.pokemon)
 %>
 <%def name="deposit_tickies(pokemon)">\
-<td class="ticky">${next(d) | n, str}</td>
+<td class="input ticky">${next(d) | n, str}</td>
 </%def>
 
 <%def name="withdraw_tickies(pokemon)">\
-<td class="ticky">${next(w) | n, str}</td>
+<td class="input ticky">${next(w) | n, str}</td>
 </%def>
 
 <%def name="ticky_header()">

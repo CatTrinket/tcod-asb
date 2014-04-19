@@ -108,11 +108,12 @@ td.icon + td { padding-left: 0; }
    1 px for some reason */
 .effect-table td.icon { line-height: 2em; }
 
-/* Checkboxes should be similarly cozy */
-td.ticky { padding: 0 0 0 0.5em; }
+/* Form inputs tend to be bulky, and look weird if not centered in a td */
+td.input { padding: 0 0.5em; height: 2rem; text-align: center; }
 
-/* Buttons should only be cozy vertically*/
-td.button { padding: 0 0.5em; text-align: center; }
+/* Checkboxes are generally related to the next cell, like icons */
+td.ticky { padding-right: 0; }
+td.ticky + td { padding-left: 0; }
 
 /* Tables for evolution trees */
 table.evolution-tree {

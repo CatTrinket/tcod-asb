@@ -381,7 +381,7 @@ class Trainer(PlayerTable):
     name = Column(Unicode(30), nullable=False)
     password_hash = Column(Unicode, nullable=True, default='')
     money = Column(Integer, nullable=False, default=45)
-    can_collect_allowance = Column(Boolean, nullable=False, default=False)
+    last_collected_allowance = Column(Date, nullable=True)
     is_newbie = Column(Boolean, nullable=False, default=True)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
 

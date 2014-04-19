@@ -19,7 +19,7 @@
 </%def>
 
 <%def name="add_to_cart_column(pokemon)">
-<td class="button"><button name="add" value="${pokemon.species.identifier}">+</button></td>
+<td class="input"><button name="add" value="${pokemon.species.identifier}">+</button></td>
 </%def>
 
 <form action="/pokemon/buy" method="POST">
@@ -54,7 +54,7 @@ ${quick_buy.csrf_token() | n}
 <tbody>
   % for pokemon in cart:
   <tr>
-    <td class="button"><button name="remove" value="${pokemon.identifier}">X</button></td>
+    <td class="input"><button name="remove" value="${pokemon.identifier}">X</button></td>
     <td class="icon">${h.pokemon_form_icon(pokemon.default_form)}</td>
     <td class="focus-column">${h.link(pokemon.default_form, text=pokemon.name)}</td>
     <td class="price">$${pokemon.rarity.price | n, str}</td>

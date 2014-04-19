@@ -7,7 +7,7 @@
 </%def>
 
 <%def name="give(pokemon)">
-<td class="button"><button name="pokemon" value="${pokemon.id | n, str}"
+<td class="input"><button name="pokemon" value="${pokemon.id | n, str}"
     type="submit">Give</button></td>
 </%def>
 

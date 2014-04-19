@@ -4,7 +4,7 @@
 
 <% tickies = iter(take_form.holders) %>
 <%def name="take_item_ticky(pokemon)">
-<td class="ticky">${next(tickies) | n, str}</td>
+<td class="input ticky">${next(tickies) | n, str}</td>
 </%def>
 
 <%def name="ticky_header()">
