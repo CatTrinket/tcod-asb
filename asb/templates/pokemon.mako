@@ -17,7 +17,8 @@
 
     <dt>Species</dt>
     <dd>
-        ${helpers.link(pokemon.form)}${helpers.pokemon_form_icon(pokemon.form)}
+        ${helpers.link(pokemon.form)}${helpers.pokemon_form_icon(pokemon.form,
+                                       gender=pokemon.gender.identifier)}
     </dd>
 
     <dt>Trainer</dt>

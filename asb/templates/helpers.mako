@@ -33,7 +33,8 @@ ${damage_class.name.capitalize()}\
 </%def>
 
 <%def name="name_cell(pokemon)">
-<td class="icon">${pokemon_form_icon(pokemon.form)}</td>
+<td class="icon">${pokemon_form_icon(pokemon.form,
+    gender=pokemon.gender.identifier)}</td>
 <td class="focus-column">${link(pokemon)}</td>
 </%def>
 
