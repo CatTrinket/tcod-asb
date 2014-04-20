@@ -83,6 +83,7 @@ class Item(PokedexTable):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
+    price = Column(Integer, nullable=True)
     item_category_id = Column(Integer, ForeignKey('item_categories.id'),
         nullable=False)
     order = Column(Integer, nullable=True)

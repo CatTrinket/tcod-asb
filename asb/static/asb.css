@@ -93,8 +93,7 @@ tr.subheader-row {
 }
 
 td.focus-column { font-weight: bold; }
-td.gender, td.stat { text-align: center; }
-td.price { text-align: right; }
+td.gender, td.stat, td.price { text-align: center; }
 
 .effect-table tbody tr { vertical-align: top; }
 

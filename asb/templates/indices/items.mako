@@ -5,6 +5,7 @@
 <thead>
 <tr>
     <th colspan="2">Item</th>
+    <th>Price</th>
     <th>Summary</th>
 </tr>
 </thead>
@@ -12,13 +13,18 @@
 % for category in item_categories:
 <tbody>
     <tr class="subheader-row">
-        <td colspan="3">${category.name}</td>
+        <td colspan="4">${category.name}</td>
     </tr>
 
     % for item in category.items:
     <tr>
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
+        % if item.price is not None:
+        <td class="price">$${item.price | n, str}</td>
+        % else:
+        <td class="price">—</td>
+        % endif
         <td>${item.summary}</td>
     </tr>
     % endfor
