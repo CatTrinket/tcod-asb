@@ -261,18 +261,11 @@ def can_collect_allowance(trainer):
     if trainer.last_collected_allowance is None:
         return True
 
-    # Otherwise, determine the last allowance rollover: "last Friday", i.e.
-    # literally the most recent Friday, which could be today.
+    # Find the most recent Friday, possibly today.  Subtracting the weekday
+    # brings us back to Monday; three days further is Friday; modulo one week.
     today = datetime.date.today()
-    this_friday = (today - datetime.timedelta(days=today.weekday()) +
-        datetime.timedelta(days=4))  # Monday plus four days is Friday
+    last_friday = today - datetime.timedelta(days=(today.weekday() + 3) % 7)
 
-    if today >= this_friday:
-        last_friday = this_friday
-    else:
-        last_friday = this_friday - datetime.timedelta(weeks=1)
-
-    # Return whether they last collected allowance before that date
     return trainer.last_collected_allowance < last_friday
 
 @view_config(route_name='bank', request_method='GET', renderer='/bank.mako',
