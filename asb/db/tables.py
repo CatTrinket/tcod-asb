@@ -228,7 +228,6 @@ class PokemonSpecies(PokedexTable):
     can_switch_forms = Column(Boolean, nullable=False)
     form_carries_into_battle = Column(Boolean, nullable=False)
     forms_are_squashable = Column(Boolean, nullable=False)
-    is_fake = Column(Boolean, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
 
     # Set up a couple constraints to make sure that evolves_from_species_id

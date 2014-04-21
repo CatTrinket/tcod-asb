@@ -86,7 +86,7 @@ ${quick_buy.csrf_token() | n}
 % for rarity in rarities:
 <h1>${rarity_labels[rarity.id]} ($${rarity.price | n, str})</h1>
 ${h.pokemon_form_table(
-    (p.default_form for p in rarity.pokemon_species if not p.is_fake),
+    (p.default_form for p in rarity.pokemon_species),
     species_name=True,
     extra_left_cols=[(add_to_cart_header, add_to_cart_column)]
 )}

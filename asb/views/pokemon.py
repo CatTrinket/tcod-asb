@@ -139,7 +139,7 @@ class PokemonSpeciesField(wtforms.StringField):
         name, species = self.data
         if species is None:
             raise wtforms.validators.ValidationError('No such Pokémon found')
-        elif species.rarity is None or species.is_fake:
+        elif species.rarity is None:
             raise wtforms.validators.ValidationError(
                 "{0} isn't buyable".format(species.name))
 
@@ -477,7 +477,7 @@ def buy_pokemon_process(context, request):
             # around, so I don't really care about figuring out errors
             pass
         else:
-            if not (species.rarity_id is None or species.is_fake):
+            if species.rarity_id is not None:
                 # Valid Pokémon; add it to the cart
                 request.session.setdefault('cart', []).append(species.identifier)
                 return httpexc.HTTPSeeOther('/pokemon/buy')
@@ -778,7 +778,6 @@ def species_index(context, request):
              subqueryload('abilities.ability'),
              subqueryload('types')
         )
-        .filter(db.PokemonSpecies.is_fake == False)
         .order_by(db.PokemonForm.order)
         .all()
     )
