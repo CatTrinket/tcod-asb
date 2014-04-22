@@ -22,7 +22,8 @@ def main(global_config, **settings):
     config.include('pyramid_mako')
 
     authn_policy = AuthTktAuthenticationPolicy(settings['secret'],
-        callback=user.get_user_roles, hashalg='sha512')
+        callback=user.get_user_roles, hashalg='sha512', reissue_time=1728000,
+        timeout=2592000, max_age=2592000)  # Reissue at 20 days, expire at 30
     authz_policy = ACLAuthorizationPolicy()
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
