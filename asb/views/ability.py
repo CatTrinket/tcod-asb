@@ -1,6 +1,7 @@
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 from sqlalchemy import and_, or_
+from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound
 
 from asb import db
@@ -27,6 +28,12 @@ def ability(ability, request):
         .join(db.PokemonSpecies)
         .filter(or_(db.PokemonSpecies.forms_are_squashable == False,
                     db.PokemonForm.is_default == True))
+        .options(
+            joinedload('species'),
+            subqueryload('types'),
+            subqueryload('abilities'),
+            joinedload('abilities.ability')
+        )
         .order_by(db.PokemonForm.order)
     )
 

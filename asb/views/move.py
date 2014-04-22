@@ -1,6 +1,7 @@
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound
 
 from asb import db
@@ -13,6 +14,7 @@ def move_index(context, request):
     moves = (
         db.DBSession.query(db.Move)
         .order_by(db.Move.name)
+        .options(joinedload('type'), joinedload('damage_class'))
         .all()
     )
 
@@ -28,6 +30,12 @@ def move(move, request):
         .filter(db.PokemonForm.moves.any(db.Move.id == move.id))
         .filter(or_(db.PokemonSpecies.forms_are_squashable == False,
                     db.PokemonForm.is_default == True))
+        .options(
+            joinedload('species'),
+            subqueryload('types'),
+            subqueryload('abilities'),
+            joinedload('abilities.ability')
+        )
         .order_by(db.PokemonForm.order)
     )
 
