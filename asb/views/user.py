@@ -72,7 +72,7 @@ class UsernameField(wtforms.StringField):
 class LoginForm(CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
 
-    username = UsernameField('Username')
+    username = UsernameField('Username', [wtforms.validators.length(max=30)])
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
 
@@ -118,7 +118,8 @@ class RegistrationForm(CSRFTokenForm):
     )
 
     username = UsernameField('TCoD forum username',
-        [wtforms.validators.InputRequired('Please enter your username')])
+        [wtforms.validators.InputRequired('Please enter your username'),
+         wtforms.validators.length(max=30)])
     password = wtforms.PasswordField('Choose a password',
         [wtforms.validators.InputRequired("Your password can't be empty")])
     password_confirm = wtforms.PasswordField('Confirm')

@@ -7,6 +7,13 @@
     ${form.csrf_token() | n}
     <p>
         ${form.name.label() | n} ${form.name() | n}
+        % if form.name.errors:
+        <ul>
+            % for error in form.name.errors:
+            <li class="form-error">${error}</li>
+            % endfor
+        </ul>
+        % endif
         ${form.save() | n}
     </p>
 </form>

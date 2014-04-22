@@ -62,7 +62,7 @@ class EditPokemonForm(CSRFTokenForm):
     This will mean more than just its nickname, eventually.
     """
 
-    name = wtforms.TextField('Name')
+    name = wtforms.TextField('Name', [wtforms.validators.Length(max=30)])
     save = wtforms.SubmitField('Save')
 
 class PokemonEvolutionForm(CSRFTokenForm):
@@ -252,7 +252,8 @@ def pokemon_checkout_form(cart, request):
             omitted if they'd only have one option.
             """
 
-            name_ = wtforms.TextField('Name', default=species_.name)
+            name_ = wtforms.TextField('Name',
+                [wtforms.validators.Length(max=30)], default=species_.name)
 
             # Gender field, if the Pokémon can be more than one gender
             if len(species_.genders) > 1:
