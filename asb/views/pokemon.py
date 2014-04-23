@@ -343,7 +343,7 @@ def edit_pokemon_commit(pokemon, request):
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
 
-    pokemon.name = form.name.data
+    pokemon.name = form.name.data or pokemon.species.name
     pokemon.update_identifier()
     db.DBSession.flush()
 
@@ -586,7 +586,7 @@ def pokemon_checkout_commit(context, request):
         pokemon = db.Pokemon(
             id=id,
             identifier='temp-{0}'.format(subform.name_.data),
-            name=subform.name_.data,
+            name=subform.name_.data or subform.species.name,
             pokemon_form_id=form_id,
             gender_id=gender_id,
             trainer_id=trainer.id,
