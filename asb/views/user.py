@@ -10,7 +10,7 @@ import transaction
 import wtforms
 
 from asb import db
-from asb.forms import CSRFTokenForm
+import asb.forms
 
 def get_user(request):
     """Get the logged-in user or a request."""
@@ -69,10 +69,10 @@ class UsernameField(wtforms.StringField):
         except NoResultFound:
             self.data = (username, None)
 
-class LoginForm(CSRFTokenForm):
+class LoginForm(asb.forms.CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
 
-    username = UsernameField('Username', [wtforms.validators.length(max=30)])
+    username = UsernameField('Username', [asb.forms.name_validator])
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
 
@@ -102,7 +102,7 @@ class LoginForm(CSRFTokenForm):
         if not user.check_password(field.data):
             raise wtforms.validators.ValidationError
 
-class RegistrationForm(CSRFTokenForm):
+class RegistrationForm(asb.forms.CSRFTokenForm):
     """A registration form."""
 
     what_do = wtforms.RadioField(
@@ -250,7 +250,7 @@ def logout(context, request):
 
 ### BANK STUFF
 
-class AllowanceForm(CSRFTokenForm):
+class AllowanceForm(asb.forms.CSRFTokenForm):
     """A simple form for collecting allowance."""
 
     collect = wtforms.SubmitField('Collect allowance')

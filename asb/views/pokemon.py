@@ -12,7 +12,7 @@ import wtforms
 
 from asb import db
 from asb.resources import PokemonIndex, SpeciesIndex
-from asb.forms import CSRFTokenForm, MultiCheckboxField
+import asb.forms
 
 
 ### GENERALLY-USEFUL METHODS
@@ -56,16 +56,16 @@ def can_evolve_species(pokemon, species):
 
 ### WTFORMS CLASSES
 
-class EditPokemonForm(CSRFTokenForm):
+class EditPokemonForm(asb.forms.CSRFTokenForm):
     """A form for editing a Pokémon.
 
     This will mean more than just its nickname, eventually.
     """
 
-    name = wtforms.TextField('Name', [wtforms.validators.Length(max=30)])
+    name = wtforms.TextField('Name', [asb.forms.name_validator])
     save = wtforms.SubmitField('Save')
 
-class PokemonEvolutionForm(CSRFTokenForm):
+class PokemonEvolutionForm(asb.forms.CSRFTokenForm):
     """A form for evolving a Pokémon.
 
     The choices for the evolution field must be added dynamically.
@@ -74,14 +74,14 @@ class PokemonEvolutionForm(CSRFTokenForm):
     evolution = wtforms.RadioField(coerce=int)
     submit = wtforms.SubmitField('Confirm')
     
-class PokemonMovingForm(CSRFTokenForm):
+class PokemonMovingForm(asb.forms.CSRFTokenForm):
     """A form for selecting Pokémon to deposit or withdraw.
 
     Several parts of this form must be created dynamically, using
     pokemon_deposit_form or pokemon_withdraw_form (below).
     """
 
-    pokemon = MultiCheckboxField(coerce=int)
+    pokemon = asb.forms.MultiCheckboxField(coerce=int)
     submit = wtforms.SubmitField()
 
 class PokemonSpeciesField(wtforms.StringField):
@@ -143,7 +143,7 @@ class PokemonSpeciesField(wtforms.StringField):
             raise wtforms.validators.ValidationError(
                 "{0} isn't buyable".format(species.name))
 
-class PokemonCheckoutForm(CSRFTokenForm):
+class PokemonCheckoutForm(asb.forms.CSRFTokenForm):
     """A form for actually buying all the Pokémon in the trainer's cart.
 
     The Pokémon subforms must be created dynamically, using the method
@@ -152,7 +152,7 @@ class PokemonCheckoutForm(CSRFTokenForm):
 
     submit = wtforms.SubmitField('Done')
 
-class QuickBuyForm(CSRFTokenForm):
+class QuickBuyForm(asb.forms.CSRFTokenForm):
     """A form for typing in the name of a Pokémon to buy."""
 
     pokemon = PokemonSpeciesField('Quick buy')
@@ -252,8 +252,8 @@ def pokemon_checkout_form(cart, request):
             omitted if they'd only have one option.
             """
 
-            name_ = wtforms.TextField('Name',
-                [wtforms.validators.Length(max=30)], default=species_.name)
+            name_ = wtforms.TextField('Name', [asb.forms.name_validator],
+                default=species_.name)
 
             # Gender field, if the Pokémon can be more than one gender
             if len(species_.genders) > 1:
