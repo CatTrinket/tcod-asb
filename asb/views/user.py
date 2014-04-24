@@ -50,24 +50,17 @@ class UsernameField(wtforms.StringField):
     the database.
     """
 
-    def _value(self):
-        if self.data:
-            return self.data[0]
-        else:
-            return ''
-
     def process_formdata(self, valuelist):
-        username, = valuelist
+        self.data, = valuelist
 
         try:
             trainer = (db.DBSession.query(db.Trainer)
-                .filter_by(name=username)
-                .one()
-            )
+                .filter_by(name=self.data)
+                .one())
 
-            self.data = (username, trainer)
+            self.trainer = trainer
         except NoResultFound:
-            self.data = (username, None)
+            self.trainer = None
 
 class LoginForm(asb.forms.CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
@@ -82,9 +75,7 @@ class LoginForm(asb.forms.CSRFTokenForm):
     def validate_username(form, field):
         """Make sure we actually found a current user for this username."""
 
-        username, user = field.data
-
-        if user is None or user.unclaimed_from_hack:
+        if field.trainer is None or field.trainer.unclaimed_from_hack:
             raise wtforms.validators.ValidationError
 
     def validate_password(form, field):
@@ -92,14 +83,14 @@ class LoginForm(asb.forms.CSRFTokenForm):
         we got.
         """
 
-        username, user = form.username.data
+        trainer = form.username.trainer
 
-        if user is None or user.unclaimed_from_hack:
+        if trainer is None or trainer.unclaimed_from_hack:
             # The username field will raise an error; there's no sensible
             # second error to be raised here
             return None
 
-        if not user.check_password(field.data):
+        if not trainer.check_password(field.data):
             raise wtforms.validators.ValidationError
 
 class RegistrationForm(asb.forms.CSRFTokenForm):
@@ -138,22 +129,20 @@ class RegistrationForm(asb.forms.CSRFTokenForm):
         preexisting trainer as appropriate.
         """
 
-        username, user = field.data
-
-        # Make sure they're not trying to register as an already-registered user
-        if user is not None and not user.unclaimed_from_hack:
+        # Make sure they're not trying to register as an already-existing user
+        if field.trainer is not None and not field.trainer.unclaimed_from_hack:
             raise wtforms.validators.ValidationError(
                 'The username {0} has already been registered.  If someone '
                 'else is using your username, contact an ASB mod.'
-                .format(username))
+                .format(field.data))
 
         # If they're trying to reclaim an old profile, make sure we actually
         # found that profile
-        if form.what_do.data == 'old' and user is None:
+        if form.what_do.data == 'old' and field.trainer is None:
             raise wtforms.validators.ValidationError(
                 "No profile found for the username {0}.  If double-checking "
                 "the spelling and trying previous usernames doesn't work, "
-                "contact Zhorken.".format(username))
+                "contact Zhorken.".format(field.data))
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='GET')
@@ -176,7 +165,8 @@ def register_commit(context, request):
     if not form.validate():
         return {'form': form}
 
-    username, user = form.username.data
+    username = form.username.data
+    user = form.username.trainer
 
     if user is not None:
         # Update the old user
@@ -230,8 +220,7 @@ def login(context, request):
     if not form.validate():
         return {'form': form}
 
-    username, user = form.username.data
-    headers = pyramid.security.remember(request, user.id)
+    headers = pyramid.security.remember(request, form.username.trainer.id)
 
     return httpexc.HTTPSeeOther('/', headers=headers)
 
