@@ -12,13 +12,13 @@ requires = [
     'SQLAlchemy==0.8.3',
     'transaction==1.4.1',
     'pyramid_tm==0.7',
-    'pyramid_debugtoolbar==1.0.8',
     'zope.sqlalchemy==0.7.3',
     'waitress==0.8.7',
 
     'alembic==0.6.3',
     'pbkdf2==1.3',
     'pyramid_beaker==0.8',
+    'pyramid_exclog==0.7',
     'WTForms==1.0.5'
 ]
 
