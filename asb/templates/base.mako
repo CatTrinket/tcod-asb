@@ -24,7 +24,11 @@
 % else:
   <li><a href="/pokemon/buy">Buy Pokémon</a></li>
 % endif
+% if request.user.has_items:
   <li><a href="/items/manage">Your items</a></li>
+% else:
+  <li><a href="/items/buy">Buy items</a></li>
+% endif
   <li><a href="/bank">Bank</a></li>
   <li><a href="/logout?csrf_token=${request.session.get_csrf_token()}">Log out</a></li>
 % else:

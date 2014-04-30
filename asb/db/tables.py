@@ -401,6 +401,18 @@ class Trainer(PlayerTable):
         self.identifier = identifier(self.name, id=self.id)
 
     @property
+    def has_items(self):
+        """Determine whether or not this trainer has any items without having
+        to actually fetch them.
+        """
+
+        existence_subquery = (DBSession.query(TrainerItem)
+            .filter(TrainerItem.trainer_id == self.id)
+            .exists())
+        items_exist, = DBSession.query(existence_subquery).one()
+        return items_exist
+
+    @property
     def has_pokemon(self):
         """Determine whether or not this trainer has any Pokémon without having
         to actually fetch them.

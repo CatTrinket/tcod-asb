@@ -108,7 +108,7 @@ td.icon + td { padding-left: 0; }
 .effect-table td.icon { line-height: 2em; }
 
 /* Form inputs tend to be bulky, and look weird if not centered in a td */
-td.input { padding: 0 0.5em; height: 2rem; text-align: center; }
+td.input { padding: 0 0.5em; height: 2rem; line-height: 2rem; text-align: center; }
 
 /* Checkboxes are generally related to the next cell, like icons */
 td.ticky { padding-right: 0; }

@@ -11,6 +11,8 @@
 <th></th>
 </%def>
 
+<a href="/items/buy">Buy items →</a>
+
 <h1>Bag</h1>
 <table>
 <thead>
