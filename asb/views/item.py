@@ -272,6 +272,7 @@ def get_item_buying_stuff(request):
 
     # Two: the quick buy form
     quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
+    quick_buy.csrf_token.id = 'csrf_token_quick_buy'
 
     # Three: the cart
     cart = request.session.get('item_cart')
@@ -302,6 +303,7 @@ def get_item_buying_stuff(request):
         items = wtforms.FormField(ItemCartSubform)
 
     form = ItemCartForm(request.POST, csrf_context=request.session)
+    form.id = 'csrf_token_item_cart'
 
     return (item_query, quick_buy, items, form)
 

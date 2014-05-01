@@ -4,11 +4,9 @@
 
 <form action="/items/buy" method="POST">
 ${quick_buy.csrf_token() | n}
-<p>
-   ${quick_buy.item.label() | n}:
-   ${quick_buy.item() | n}
-   ${quick_buy.quick_buy() | n}
-</p>
+${quick_buy.item.label() | n}:
+${quick_buy.item(placeholder='Enter an item') | n}
+${quick_buy.quick_buy() | n}
 
 % if quick_buy.errors:
 <ul class="form-error">

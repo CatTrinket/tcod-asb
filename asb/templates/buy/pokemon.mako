@@ -24,10 +24,8 @@
 
 <form action="/pokemon/buy" method="POST">
 ${quick_buy.csrf_token() | n}
-<p>
-    Quick buy: ${quick_buy.pokemon(placeholder='Enter a Pokémon') | n}
-    ${quick_buy.quickbuy() | n}
-</p>
+Quick buy: ${quick_buy.pokemon(placeholder='Enter a Pokémon') | n}
+${quick_buy.quickbuy() | n}
 % if quick_buy.errors:
 <ul class="form-error">
     % for errors in quick_buy.errors.values():
