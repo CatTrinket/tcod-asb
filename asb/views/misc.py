@@ -1,15 +1,10 @@
-import logging
-
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
-
-log = logging.getLogger()
 
 @view_config(context=Exception, renderer='/error.mako')
 def error(error, request):
     """Return a generic error page for an arbitrary uncaught exception."""
 
-    log.exception(error)
     request.response.status_int = 500
 
     return {'status': '500 Internal Server Error', 'message': None}
