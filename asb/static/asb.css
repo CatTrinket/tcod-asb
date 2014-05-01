@@ -10,6 +10,8 @@ body {
     background: #F0F0F0;
 }
 
+#body > :first-child { margin-top: 0; }
+
 a { text-decoration: none; color: #144BB8; }
 a:hover { color: #759EF0; }
 h1 a, h1 a:hover { color:white; }
@@ -35,8 +37,6 @@ h2 {
     font-size: 1.3em;
     border-bottom: 3px solid #7799EE;
 }
-
-#body > h1:first-child { margin-top: 0; }
 
 /* Menu */
 #menu { margin: 0; background: #335599; color: #C0CCE6; }
