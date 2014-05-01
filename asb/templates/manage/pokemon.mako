@@ -20,7 +20,7 @@
 <th></th>
 </%def>
 
-<a href="/pokemon/buy">Buy Pokémon →</a>
+<p><a href="/pokemon/buy">Buy Pokémon →</a></p>
 
 % if deposit is not None:
 <h1 id="squad">Active squad</h1>
