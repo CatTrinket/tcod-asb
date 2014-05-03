@@ -1,5 +1,6 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>Manage items - The Cave of Dragonflies ASB</%block>\
 
 <% tickies = iter(take_form.holders) %>
@@ -7,14 +8,15 @@
 <td class="input ticky">${next(tickies) | n, str}</td>
 </%def>
 
-<%def name="ticky_header()">
-<th></th>
-</%def>
-
 <p><a href="/items/buy">Buy items →</a></p>
 
 <h1>Bag</h1>
 <table>
+<col class="item-icon">
+<col class="item">
+<col class="stat">
+<col class="give">
+
 <thead>
     <tr>
         <th colspan="2">Item</th>
@@ -29,7 +31,7 @@
         <td class="icon">
             <img src="/static/images/items/${item.identifier}.png" alt="">
         </td>
-        <td>${helpers.link(item)}</td>
+        <td>${h.link(item)}</td>
         <td class="stat">${quantity | n, str}</td>
         <td class="give"><a href="${request.resource_url(item, 'give')}">Give</a></td>
     </tr>
@@ -53,10 +55,10 @@
 <form action="/items/manage" method="POST">
 ${take_form.csrf_token() | n, str}
 
-${helpers.pokemon_table(holders, skip_cols=['item', 'trainer'],
+${t.pokemon_table(holders, skip_cols=['item', 'trainer'],
     extra_left_cols=[
-        (ticky_header, take_item_ticky),
-        (helpers.item_header, helpers.item_cell),
+        {'col': t.ticky_col, 'th': t.empty_header, 'td': take_item_ticky},
+        {'col': t.item_col, 'th': t.item_header, 'td': t.item_cell},
     ]
 )}
 

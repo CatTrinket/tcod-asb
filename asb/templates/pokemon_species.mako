@@ -1,18 +1,19 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon species - The Cave of Dragonflies ASB</%block>\
 
 <h1>${pokemon.name}</h1>
 
 <dl>
     <dt>#${pokemon.species.number}</dt>
-    <dd>${pokemon.name} ${helpers.pokemon_form_icon(pokemon)}</dd>
+    <dd>${pokemon.name} ${h.pokemon_form_icon(pokemon)}</dd>
 
     <dt>Type</dt>
     <dd>
-        ${helpers.type_icon(pokemon.types[0])}
+        ${h.type_icon(pokemon.types[0])}
         % if len(pokemon.types) == 2:
-            ${helpers.type_icon(pokemon.types[1])}
+            ${h.type_icon(pokemon.types[1])}
         % endif
     </dd>
 
@@ -42,16 +43,16 @@
     %>
 
 <dl>
-    <dt>${helpers.link(regular_abilities[0])}</dt>
+    <dt>${h.link(regular_abilities[0])}</dt>
     <dd>${regular_abilities[0].description}</dd>
 
     % if len(regular_abilities) == 2 and regular_abilities[1] != regular_abilities[0]:
-        <dt>${helpers.link(regular_abilities[1])}</dt>
+        <dt>${h.link(regular_abilities[1])}</dt>
         <dd>${regular_abilities[1].description}</dd>
     % endif
 
     % if hidden_abilities and hidden_abilities[0] != regular_abilities[0]:
-        <dt class="hidden-ability">${helpers.link(hidden_abilities[0])}</dt>
+        <dt class="hidden-ability">${h.link(hidden_abilities[0])}</dt>
         <dd>${hidden_abilities[0].description}</dd>
     % endif
 </dl>
@@ -95,9 +96,9 @@
         <% current = evo == pokemon.species %>
         <td colspan="${colspan | n, str}" class="${'focus' if current else ''}">
             % if current:
-            ${helpers.pokemon_form_icon(pokemon)}${evo.name}
+            ${h.pokemon_form_icon(pokemon)}${evo.name}
             % else:
-            ${helpers.pokemon_form_icon(evo.default_form)}${helpers.link(evo.default_form, text=evo.name)}
+            ${h.pokemon_form_icon(evo.default_form)}${h.link(evo.default_form, text=evo.name)}
             % endif
             % if evo.evolution_method is not None:
             <p class="evolution-method">${format_evolution_method(evo) | n}</p>
@@ -109,8 +110,7 @@
 </table>
 
 <h1>Moves</h1>
-${helpers.move_table(pokemon.moves)}
+${t.move_table(pokemon.moves)}
 
 <h1 id="census">${pokemon.name} in the league</h1>
-
-${helpers.pokemon_table(pokemon.pokemon, skip_cols=['species'])}
+${t.pokemon_table(pokemon.pokemon, skip_cols=['species'])}

@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="h" file="/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name='title'>Buy items - The Cave of Dragonflies ASB</%block>\
 
 <form action="/items/buy" method="POST">
@@ -30,6 +30,12 @@ ${quick_buy.quick_buy() | n}
 <form action="/items/buy" method="POST">
 ${cart_form.csrf_token() | n}
 <table>
+<col class="item-icon">
+<col class="item">
+<col class="price">
+<col class="input-small">
+<col class="price">
+
 <thead>
 <tr>
     <th colspan="2">Item</th>
@@ -86,9 +92,15 @@ ${cart_form.buy() | n}
 <p>Your bank balance: $${request.user.money | n, str}</p>
 % endif
 
-<h1>Items</h1>
+<h1>Browse</h1>
 <form action="/items/buy" method="POST">
 <table class="effect-table">
+<col class="input-small">
+<col class="item-icon">
+<col class="item">
+<col class="price">
+<col class="summary">
+
 <thead>
     <tr>
         <th></th>

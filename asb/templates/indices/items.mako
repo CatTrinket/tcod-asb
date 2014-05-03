@@ -2,6 +2,9 @@
 <%block name='title'>Items - The Cave of Dragonflies ASB</%block>\
 
 <table class="effect-table">
+<col class="item-icon">
+<col class="item">
+<col class="price">
 <thead>
 <tr>
     <th colspan="2">Item</th>

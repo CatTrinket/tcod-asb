@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>Manage Pokémon - Trainer Control Panel - The Cave of Dragonflies ASB</%block>\
 
 <%
@@ -14,6 +14,10 @@
 
 <%def name="withdraw_tickies(pokemon)">\
 <td class="input ticky">${next(w) | n, str}</td>
+</%def>
+
+<%def name="ticky_col()">
+<col class="ticky">
 </%def>
 
 <%def name="ticky_header()">
@@ -36,8 +40,8 @@
 
 <form action="/pokemon/manage#squad" method="POST">
 ${deposit.csrf_token | n, str}
-${helpers.pokemon_table(trainer.squad, skip_cols=['trainer'],
-    extra_left_cols=[(ticky_header, deposit_tickies)])}
+${t.pokemon_table(trainer.squad, skip_cols=['trainer'],
+    extra_left_cols=[{'col': ticky_col, 'th': ticky_header, 'td': deposit_tickies}])}
 ${deposit.submit | n, str}
 </form>
 % endif
@@ -56,8 +60,8 @@ ${deposit.submit | n, str}
 
 <form action="/pokemon/manage#pc" method="POST">
 ${withdraw.csrf_token | n, str}
-${helpers.pokemon_table(trainer.pc, skip_cols=['trainer'],
-    extra_left_cols=[(ticky_header, withdraw_tickies)])}
+${t.pokemon_table(trainer.pc, skip_cols=['trainer'],
+    extra_left_cols=[{'col': ticky_col, 'th': ticky_header, 'td': withdraw_tickies}])}
 ${withdraw.submit | n, str}
 </form>
 % endif

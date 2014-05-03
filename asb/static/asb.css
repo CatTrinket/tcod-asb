@@ -77,7 +77,16 @@ dd { margin-left: 10.5em /* factor in dt + padding */; }
 dt, dd { padding: 0.5em; }
 
 /* Tables */
-table { border-width: 0; border-collapse: collapse; margin-bottom: 1rem; }
+table {
+    border-width: 0;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    table-layout: fixed;
+    width: 0;  /* let the columns determine the width */
+}
+
+table.effect-table { width: 100%; }
+
 td, th { padding: 0.5rem; line-height: 1rem; }
 
 thead { border-bottom: 2px solid #7799EE; }
@@ -97,28 +106,45 @@ td.gender, td.stat, td.price { text-align: center; }
 
 .effect-table tbody tr { vertical-align: top; }
 
-/* Icons are big and icon columns always come right before the name column
-   they're attached to, so they need less padding */
-td.icon { padding: 0 0 0 0.5em; }
+td.icon {
+    padding: 0 0 0 8px;  /* px so we can specify column width in px */
+    text-align: center;
+}
 td.icon img { vertical-align: middle; }
 td.icon + td { padding-left: 0; }
-
-/* If you add this to tables with vertical centering, it pushes the row out by
-   1 px for some reason */
 .effect-table td.icon { line-height: 2em; }
 
-/* Form inputs tend to be bulky, and look weird if not centered in a td */
 td.input { padding: 0 0.5em; height: 2rem; line-height: 2rem; text-align: center; }
 
-/* Checkboxes are generally related to the next cell, like icons */
 td.ticky { padding-right: 0; }
 td.ticky + td { padding-left: 0; }
+
+col.ability { width: 10rem; }
+col.damage-class-col { width: 90px; }
+col.gender { width: 2rem; }
+col.give { width: 4rem; }
+col.input-small { width: 2.5rem; }
+col.item { width: 10rem; }
+col.item-icon { width: 32px; }
+col.move { width: 13rem; }
+col.percentage { width: 4rem; }
+col.pokemon { width: 13rem; }
+col.pokemon-form { width: 13rem; }
+col.pokemon-icon { width: 48px; }
+col.pokemon-species { width: 8rem; }
+col.population { width: 3.5rem; }
+col.price { width: 4rem; }
+col.summary { width: 100%; }
+col.stat { width: 3rem; }
+col.ticky { width: 2rem; }
+col.trainer { width: 13rem; }
+col.type-col { width: 90px; }
+col.two-types { width: 164px; }
 
 /* Tables for evolution trees */
 table.evolution-tree {
     width: 100%;
     margin: auto;
-    table-layout: fixed;
     border-spacing: 0.5rem;
     border-collapse: separate;
 }
@@ -172,7 +198,7 @@ table.evolution-tree td .evolution-method {
 .damage-class-non-damaging { background: #CCCCCC; border-color: #AAAAAA; }
 
 /* Type icons shouldn't stretch table rows */
-td.type-cell, td.damage-class-cell { padding-top: 0; padding-bottom: 0; }
+td.type-cell, td.damage-class-cell { padding: 0 8px; }
 
 /* Type icons need to be re-aligned with the rest of the text in vertically-
    aligned tables (XXX this is kind of a gross way of doing it) */
@@ -191,6 +217,8 @@ table.effect-table td.damage-class-cell > .damage-class
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
+.redundant-ability a { color: #AAAAAA; }
+.redundant-ability a:hover { color: #CCCCCC; }
 
 
 /**** SPECIFIC PAGES ****/
@@ -233,3 +261,6 @@ form#evolution-form > ul > li > label
 form#evolution-form > ul > li > label { font-size: 150%; }
 
 p.evolution-note { margin: 0; font-size: 75%; }
+
+/* Bank */
+table#deposit-withdraw { table-layout: auto; }

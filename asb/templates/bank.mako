@@ -17,11 +17,11 @@ week.</p>
 <p>You have already collected this week's allowance.</p>
 % endif
 
-<h1>Deposit</h1>
+<h1>Deposit/Withdraw</h1>
 <p>(this part doesn't actually work yet)</p>
 
 <form>
-<table>
+<table id="deposit-withdraw">
 <thead>
     <tr>
         <th>Amount</th>

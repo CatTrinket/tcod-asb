@@ -1,24 +1,25 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="h" file="/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>Buy Pokémon - The Cave of Dragonflies ASB</%block>\
 <%
-    rarity_labels = {
-        1: 'Rarity One',
-        2: 'Rarity Two',
-        3: 'Rarity Three',
-        4: 'Rarity Four',
-        5: 'Rarity Five',
-        6: 'Rarity Six',
-        7: 'Rarity Seven',
-        8: 'Rarity Eight'
-    }
+    rarity_labels = [
+        'Rarity One',
+        'Rarity Two',
+        'Rarity Three',
+        'Rarity Four',
+        'Rarity Five',
+        'Rarity Six',
+        'Rarity Seven',
+        'Rarity Eight'
+    ]
 %>
 
-<%def name="add_to_cart_header()">
-<th></th>
+<%def name="add_to_cart_col()">
+<col class="input-small">
 </%def>
 
-<%def name="add_to_cart_column(pokemon)">
+<%def name="add_to_cart_cell(pokemon)">
 <td class="input"><button name="add" value="${pokemon.species.identifier}">+</button></td>
 </%def>
 
@@ -42,6 +43,10 @@ ${quick_buy.quickbuy() | n}
 <h1>Cart</h1>
 <form action="/pokemon/buy" method="POST">
 <table>
+<col class="input-small">
+<col class="pokemon-icon">
+<col class="pokemon-species">
+<col class="price">
 <thead>
   <tr>
     <th></th>
@@ -80,13 +85,12 @@ ${quick_buy.quickbuy() | n}
 <p>Your bank balance: $${request.user.money | n, str}</p>
 % endif
 
+<h1>Browse</h1>
 <form action="/pokemon/buy" method="POST">
-% for rarity in rarities:
-<h1>${rarity_labels[rarity.id]} ($${rarity.price | n, str})</h1>
-${h.pokemon_form_table(
-    (p.default_form for p in rarity.pokemon_species),
+${t.pokemon_form_table(
+    *((p.default_form for p in rarity.pokemon_species) for rarity in rarities),
+    subheaders=['{} (${})'.format(label, rarity.price) for label, rarity in zip(rarity_labels, rarities)],
     species_name=True,
-    extra_left_cols=[(add_to_cart_header, add_to_cart_column)]
+    extra_left_cols=[{'col': add_to_cart_col, 'th': t.empty_header, 'td': add_to_cart_cell}]
 )}
-% endfor
 </form>

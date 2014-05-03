@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name='h' file='/helpers.mako'/>\
+<%namespace name='h' file='/helpers/helpers.mako'/>\
 <%block name='title'>Evolve ${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 <h1>What?  ${pokemon.name} is evolving!</h1>

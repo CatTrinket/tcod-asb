@@ -1,11 +1,12 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${move.name} - Moves - The Cave of Dragonflies ASB</%block>\
 
 <h1>${move.name}</h1>
 <dl>
    <dt>Type</dt>
-   <dd>${helpers.type_icon(move.type) | n}</dd>
+   <dd>${h.type_icon(move.type) | n}</dd>
 
    <dt>Base damage</dt>
    % if move.damage is None:
@@ -49,4 +50,4 @@
 <p>${move.description}</p>
 
 <h1>Pokémon</h1>
-${helpers.pokemon_form_table(pokemon, squashed_forms=True)}
+${t.pokemon_form_table(pokemon, squashed_forms=True)}

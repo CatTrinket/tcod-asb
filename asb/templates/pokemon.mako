@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="helpers" file="/helpers/helpers.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 % if request.has_permission('edit:basics', pokemon):

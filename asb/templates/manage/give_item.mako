@@ -1,6 +1,10 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>Manage items - The Cave of Dragonflies ASB</%block>\
+
+<%def name="give_col()">
+<col class="give">
+</%def>
 
 <%def name="give_header()">
 <th>Give</th>
@@ -18,11 +22,10 @@
 </ul>
 % endif
 <input name="csrf_token" type="hidden" value="${request.session.get_csrf_token()}">
-<h2>Active squad</h2>
-${helpers.pokemon_table(request.user.squad,
-    extra_left_cols=[(give_header, give)])}
-
-<h2>PC</h2>
-${helpers.pokemon_table(request.user.pc,
-    extra_left_cols=[(give_header, give)])}
+${t.pokemon_table(
+    request.user.squad, request.user.pc,
+    subheaders=['Active squad', 'PC'],
+    skip_cols=['trainer'],
+    extra_left_cols=[{'col': give_col, 'th': give_header, 'td': give}]
+)}
 </form>
