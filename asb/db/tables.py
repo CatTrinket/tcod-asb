@@ -283,6 +283,15 @@ class Rarity(PokedexTable):
     id = Column(Integer, primary_key=True)
     price = Column(Integer, nullable=False)
 
+class Role(PokedexTable):
+    """A role (admin, mod, ref, etc) that a trainer can have."""
+
+    __tablename__ = 'roles'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+
 class Type(PokedexTable):
     """A type (Normal, Fire, etc.)"""
 
@@ -348,6 +357,7 @@ class Pokemon(PlayerTable):
             (sec.Allow, trainer, 'edit:evolve'),
             (sec.Allow, 'admin', 'edit:basics'),
             (sec.Allow, 'admin', 'edit:everything'),
+            (sec.Allow, 'mod', 'edit:basics'),
             (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
         ]
 
@@ -443,6 +453,15 @@ class TrainerItem(PlayerTable):
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
 
+class TrainerRole(PlayerTable):
+    """A role that a trainer has."""
+
+    __tablename__ = 'trainer_roles'
+
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
+        primary_key=True)
+    role_id = Column(Integer, ForeignKey(Role.id), primary_key=True)
+
 # Relationships go down here so that we don't have to use strings for
 # everything
 Item.category = relationship(ItemCategory, back_populates='items')
@@ -528,6 +547,8 @@ Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
     primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,
                      TrainerItem.pokemon_id == None))
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
+
+Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
 
 Type.pokemon_forms = relationship(PokemonForm,
     secondary=PokemonFormType.__table__, order_by=PokemonFormType.slot,

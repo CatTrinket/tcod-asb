@@ -4,7 +4,8 @@ import pbkdf2
 import pyramid.httpexceptions as httpexc
 import pyramid.security
 from pyramid.view import view_config
-from sqlalchemy.orm.exc import NoResultFound
+import sqlalchemy as sqla
+import sqlalchemy.orm
 from sqlalchemy.sql import select
 import transaction
 import wtforms
@@ -13,7 +14,7 @@ from asb import db
 import asb.forms
 
 def get_user(request):
-    """Get the logged-in user or a request."""
+    """Get the logged-in user for a request."""
 
     id = pyramid.security.unauthenticated_userid(request)
 
@@ -25,23 +26,25 @@ def get_user(request):
             .filter_by(id=id)
             .one()
         )
-    except NoResultFound:
+    except sqla.orm.exc.NoResultFound:
         return None
 
     return user
 
 def get_user_roles(userid, request):
-    # XXX get DB ones
+    """Get a user's roles for Pyramid authorization."""
 
     try:
         user = (db.DBSession.query(db.Trainer)
             .filter_by(id=userid)
+            .options(sqla.orm.subqueryload('roles'))
             .one()
         )
-    except NoResultFound:
+    except sqla.orm.exc.NoResultFound:
         return None
 
-    roles = ['user:{0}'.format(userid)]
+    roles = [role.identifier for role in user.roles]
+    roles.append('user:{}'.format(userid))
 
     return roles
 
@@ -59,7 +62,7 @@ class UsernameField(wtforms.StringField):
                 .one())
 
             self.trainer = trainer
-        except NoResultFound:
+        except sqla.orm.exc.NoResultFound:
             self.trainer = None
 
 class LoginForm(asb.forms.CSRFTokenForm):
