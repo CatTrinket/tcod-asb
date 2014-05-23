@@ -220,6 +220,9 @@ table.effect-table td.damage-class-cell > .damage-class
 .redundant-ability a { color: #AAAAAA; }
 .redundant-ability a:hover { color: #CCCCCC; }
 
+.positive-priority { color: #008000; }
+.negative-priority { color: #FF0000; }
+
 
 /**** SPECIFIC PAGES ****/
 

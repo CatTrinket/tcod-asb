@@ -127,6 +127,7 @@ ${column['col']()}
 <col class="percentage">
 <col class="percentage">
 <col class="percentage">
+<col class="stat">
 <col class="summary">
 <thead>
 <tr>
@@ -136,6 +137,7 @@ ${column['col']()}
     <th><abbr title="Base damage">Dmg</abbr></th>
     <th><abbr title="Base energy cost">En.</abbr></th>
     <th><abbr title="Accuracy">Acc.</abbr></th>
+    <th><abbr title="Priority">Pri.</abbr></th>
     <th>Summary</th>
 </tr>
 </thead>
@@ -169,6 +171,14 @@ ${column['col']()}
     <td class="stat">—</td>
     % else:
     <td class="stat">${move.accuracy | n, str}%</td>
+    % endif
+
+    % if move.priority == 0:
+    <td></td>
+    % else:
+    <td class="stat \
+${'positive' if move.priority > 0 else 'negative'}-priority\
+">${h.num(move.priority, invisible_plus=False)}</td>
     % endif
 
     <td>${move.summary}</td>

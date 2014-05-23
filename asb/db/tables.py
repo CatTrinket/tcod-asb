@@ -120,6 +120,7 @@ class Move(PokedexTable):
     damage = Column(Integer, nullable=True)
     energy = Column(Integer, nullable=True)
     accuracy = Column(Integer, nullable=True)
+    priority = Column(Integer, nullable=False)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
     target = Column(Unicode, nullable=False)  # XXX do something better later
