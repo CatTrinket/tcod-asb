@@ -7,11 +7,36 @@ import wtforms
 
 from asb import db
 import asb.forms
+import asb.tcodf
 
 class AllowanceForm(asb.forms.CSRFTokenForm):
     """A simple form for collecting allowance."""
 
-    collect = wtforms.SubmitField('Collect allowance')
+    collect_allowance = wtforms.SubmitField('Collect allowance')
+
+class TransactionForm(wtforms.Form):
+    """A single bank transaction."""
+
+    amount = wtforms.IntegerField()
+    link = asb.forms.PostLinkField()
+
+    def validate(self):
+        """Validate, unless all fields are empty."""
+
+        if any(any(data.strip() for data in field.raw_data) for field in self):
+            return super(wtforms.Form, self).validate()
+
+        return True
+
+class DepositForm(asb.forms.CSRFTokenForm):
+    """A form for depositing (or withdrawing) money."""
+
+    transactions = wtforms.FieldList(
+        wtforms.FormField(TransactionForm, [wtforms.validators.optional()]),
+        min_entries=5
+    )
+    add_rows = wtforms.SubmitField('+')
+    deposit = wtforms.SubmitField('Submit')
 
 def can_collect_allowance(trainer):
     """Return whether or not this trainer can collect allowance."""
@@ -37,7 +62,9 @@ def bank(context, request):
     else:
         allowance_form = None
 
-    return {'allowance_form': allowance_form}
+    deposit_form = DepositForm(csrf_context=request.session)
+
+    return {'allowance_form': allowance_form, 'deposit_form': deposit_form}
 
 @view_config(route_name='bank', request_method='POST', renderer='/bank.mako',
   permission='manage-account')
@@ -48,16 +75,52 @@ def bank_process(context, request):
 
     trainer = request.user
 
-    if not can_collect_allowance(trainer):
-        raise httpexc.HTTPForbidden(
-            "You've already collected this week's allowance!")
+    if can_collect_allowance(request.user):
+        allowance_form = AllowanceForm(csrf_context=request.session)
+    else:
+        allowance_form = None
 
-    form = AllowanceForm(request.POST, csrf_context=request.session)
+    deposit_form = DepositForm(request.POST, csrf_context=request.session)
 
-    if not form.validate():
-        return {'allowance_form': form}
+    forms = {'allowance_form': allowance_form, 'deposit_form': deposit_form}
 
-    trainer.money += 3
-    trainer.last_collected_allowance = datetime.date.today()
+    if allowance_form is not None and allowance_form.collect_allowance.data:
+        # Make sure everything's in order
+        if not can_collect_allowance(trainer):
+            raise httpexc.HTTPForbidden(
+                "You've already collected this week's allowance!")
 
-    return httpexc.HTTPSeeOther('/bank')
+        if not allowance_form.validate():
+            return forms
+
+        # Give the trainer their allowance
+        trainer.money += 3
+        trainer.last_collected_allowance = datetime.date.today()
+
+        return httpexc.HTTPSeeOther('/bank')
+    elif deposit_form.add_rows.data:
+        # Add five rows to the deposit form
+        for n in range(5):
+            deposit_form.transactions.append_entry()
+
+        return forms
+    elif deposit_form.deposit.data:
+        # Add the transactions
+        if not deposit_form.validate():
+            return forms
+
+        for transaction in deposit_form.transactions:
+            if transaction.amount.data:
+                asb.db.DBSession.add(asb.db.BankTransaction(
+                    trainer_id=trainer.id,
+                    amount=transaction.amount.data,
+                    tcod_post_id=transaction.link.post_id
+                ))
+
+        request.session.flash("Success!  You'll receive your money as soon as "
+            "an ASB mod verifies and approves your transaction.")
+
+        return httpexc.HTTPSeeOther('/bank')
+
+    # Fallback
+    return forms

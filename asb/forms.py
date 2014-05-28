@@ -5,6 +5,8 @@ import unicodedata
 import wtforms
 import wtforms.ext.csrf
 
+import asb.tcodf
+
 class CSRFTokenForm(wtforms.ext.csrf.SecureForm):
     """A SecureForm that requires a Pyramid session for its CSRF context."""
 
@@ -29,6 +31,19 @@ class MultiCheckboxField(wtforms.SelectMultipleField):
 
     widget = wtforms.widgets.ListWidget(prefix_label=False)
     option_widget = wtforms.widgets.CheckboxInput()
+
+class PostLinkField(wtforms.TextField):
+    """A text field for a link to a post on the forums that parses and stores
+    the post ID as part of validation.
+    """
+
+    post_id = None
+
+    def pre_validate(self, form):
+        try:
+            self.post_id = asb.tcodf.post_id(self.data)
+        except ValueError as error:
+            self.errors.append('Invalid link ({0})'.format(error))
 
 def name_validator(form, field):
     """Validate a Pokémon or trainer name."""

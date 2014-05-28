@@ -305,6 +305,17 @@ class Type(PokedexTable):
 
 ### PLAYER TABLES
 
+class BankTransaction(PlayerTable):
+    """A bank transaction."""
+
+    __tablename__ = 'bank_transactions'
+
+    id = Column(Integer, primary_key=True)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
+    amount = Column(Integer, nullable=False)
+    tcod_post_id = Column(Integer, nullable=False, unique=False)
+    is_pending = Column(Boolean, nullable=False, default=True)
+
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
 
