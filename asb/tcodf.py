@@ -5,19 +5,18 @@ import urllib.parse
 def parse_tcodf_url(link):
     """Parse a TCoDf URL, and make sure it's actually a TCoDf URL."""
 
-    original_link = link
-    link = urllib.parse.urlparse(link)
+    parsed_link = urllib.parse.urlparse(link)
 
-    if not link.scheme:
+    if not parsed_link.scheme:
         # Be lenient about missing schemes
-        original_link = 'http://{}'.format(original_link)
-        link = urllib.parse.urlparse(original_link)
+        link = 'http://{}'.format(link)
+        parsed_link = urllib.parse.urlparse(link)
 
-    if link.netloc not in ['forums.dragonflycave.com',
+    if parsed_link.netloc not in ['forums.dragonflycave.com',
       'tcodforums.eeveeshq.com']:
         raise ValueError('Not a TCoDf link')
 
-    return link
+    return parsed_link
 
 def post_id(link):
     """Parse a post link and return the post ID."""
