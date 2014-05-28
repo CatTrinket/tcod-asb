@@ -20,5 +20,5 @@ def upgrade():
 
 def downgrade():
     op.add_column('pokemon_species', sa.Column('is_fake', sa.BOOLEAN(),
-        nullable=False, server_default=False))
+        nullable=False, server_default='False'))
     op.alter_column('pokemon_species', 'is_fake', server_default=None)
