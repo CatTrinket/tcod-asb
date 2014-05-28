@@ -76,7 +76,8 @@ def bank_process(context, request):
     trainer = request.user
 
     if can_collect_allowance(request.user):
-        allowance_form = AllowanceForm(csrf_context=request.session)
+        allowance_form = AllowanceForm(request.POST,
+            csrf_context=request.session)
     else:
         allowance_form = None
 
