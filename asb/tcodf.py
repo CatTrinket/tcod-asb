@@ -28,9 +28,13 @@ def post_id(link):
         if 'p' not in query:
             raise ValueError('Missing post ID')
         elif len(query['p']) > 1:
-            raise ValueEerror('Multiple post IDs????')
+            raise ValueError('Multiple post IDs????')
 
         [post_id] = query['p']
+
+        if not post_id.isdigit():
+            raise ValueError('Invalid post ID')
+
         return int(post_id)
     else:
         raise ValueError('Not a post link')
