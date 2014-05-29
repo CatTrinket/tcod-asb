@@ -11,7 +11,7 @@
 <p><a href="/items/buy">Buy items →</a></p>
 
 <h1>Bag</h1>
-<table>
+<table class="standard-table">
 <col class="item-icon">
 <col class="item">
 <col class="stat">

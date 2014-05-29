@@ -29,7 +29,7 @@ ${quick_buy.quick_buy() | n}
 <h1>Cart</h1>
 <form action="/items/buy" method="POST">
 ${cart_form.csrf_token() | n}
-<table>
+<table class="standard-table">
 <col class="item-icon">
 <col class="item">
 <col class="price">
@@ -94,7 +94,7 @@ ${cart_form.buy() | n}
 
 <h1>Browse</h1>
 <form action="/items/buy" method="POST">
-<table class="effect-table">
+<table class="standard-table effect-table">
 <col class="input-small">
 <col class="item-icon">
 <col class="item">

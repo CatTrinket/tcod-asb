@@ -81,6 +81,9 @@ table {
     border-width: 0;
     border-collapse: collapse;
     margin-bottom: 1rem;
+}
+
+table.standard-table {
     table-layout: fixed;
     width: 0;  /* let the columns determine the width */
 }
@@ -264,6 +267,3 @@ form#evolution-form > ul > li > label
 form#evolution-form > ul > li > label { font-size: 150%; }
 
 p.evolution-note { margin: 0; font-size: 75%; }
-
-/* Bank */
-table#deposit-withdraw { table-layout: auto; }

@@ -33,7 +33,7 @@ ${deposit_form.csrf_token() | n}
 duplicate to control which button gets "clicked" when the user hits enter -->
 ${deposit_form.deposit(style="display: none;") | n}
 
-<table id="deposit-withdraw">
+<table>
 <thead>
     <tr>
         <th>Amount</th>

@@ -82,7 +82,7 @@
   ] if name not in skip_cols)
   columns.extend(kwargs.pop('extra_right_cols', []))
 %>
-<table>
+<table class="standard-table">
 % for column in columns:
 ${column['col']()}
 % endfor
@@ -120,7 +120,7 @@ ${column['col']()}
 ### MOVE TABLES
 # Always the same columns
 <%def name="move_table(moves)">
-<table class="effect-table">
+<table class="standard-table effect-table">
 <col class="move">
 <col class="type-col">
 <col class="damage-class-col">
@@ -203,7 +203,7 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
   extra_right_cols = kwargs.pop('extra_right_cols', [])
   subheaders = kwargs.pop('subheaders', [None] * len(form_lists))
 %>
-<table>
+<table class="standard-table">
 % for column in extra_left_cols:
 ${column.get('col', _col)()}
 % endfor

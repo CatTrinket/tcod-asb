@@ -42,7 +42,7 @@ ${quick_buy.quickbuy() | n}
 <% total = 0 %>
 <h1>Cart</h1>
 <form action="/pokemon/buy" method="POST">
-<table>
+<table class="standard-table">
 <col class="input-small">
 <col class="pokemon-icon">
 <col class="pokemon-species">

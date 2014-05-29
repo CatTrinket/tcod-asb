@@ -1,7 +1,7 @@
 <%inherit file='/base.mako'/>\
 <%block name='title'>Items - The Cave of Dragonflies ASB</%block>\
 
-<table class="effect-table">
+<table class="standard-table effect-table">
 <col class="item-icon">
 <col class="item">
 <col class="price">
