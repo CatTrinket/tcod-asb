@@ -327,7 +327,7 @@ def pokemon(context, request):
 
 ### MANAGING POKÉMON
 
-@view_config(name='edit', context=db.Pokemon, permission='edit:basics',
+@view_config(name='edit', context=db.Pokemon, permission='edit.basics',
   request_method='GET', renderer='edit_pokemon.mako')
 def edit_pokemon(pokemon, request):
     form = EditPokemonForm(csrf_context=request.session)
@@ -335,7 +335,7 @@ def edit_pokemon(pokemon, request):
 
     return {'pokemon': pokemon, 'form': form}
 
-@view_config(name='edit', context=db.Pokemon, permission='edit:basics',
+@view_config(name='edit', context=db.Pokemon, permission='edit.basics',
   request_method='POST', renderer='edit_pokemon.mako')
 def edit_pokemon_commit(pokemon, request):
     form = EditPokemonForm(request.POST, csrf_context=request.session)
@@ -349,7 +349,7 @@ def edit_pokemon_commit(pokemon, request):
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
 
-@view_config(name='manage', context=PokemonIndex, permission='manage-account',
+@view_config(name='manage', context=PokemonIndex, permission='account.manage',
   request_method='GET', renderer='/manage/pokemon.mako')
 def manage_pokemon(context, request):
     """A page for depositing and withdrawing one's Pokémon."""
@@ -368,7 +368,7 @@ def manage_pokemon(context, request):
 
     return {'trainer': trainer, 'deposit': deposit, 'withdraw': withdraw}
 
-@view_config(name='manage', context=PokemonIndex, permission='manage-account',
+@view_config(name='manage', context=PokemonIndex, permission='account.manage',
   request_method='POST', renderer='/manage/pokemon.mako')
 def manage_pokemon_commit(context, request):
     """Process a request to deposit or withdraw Pokémon."""
@@ -434,7 +434,7 @@ def get_rarities():
         .order_by(db.Rarity.id)
         .all())
 
-@view_config(route_name='pokemon.buy', permission='manage-account',
+@view_config(route_name='pokemon.buy', permission='account.manage',
   request_method='GET', renderer='/buy/pokemon.mako')
 def buy_pokemon(context, request):
     """A page for buying Pokémon."""
@@ -445,7 +445,7 @@ def buy_pokemon(context, request):
 
     return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
 
-@view_config(route_name='pokemon.buy', permission='manage-account',
+@view_config(route_name='pokemon.buy', permission='account.manage',
   request_method='POST', renderer='/buy/pokemon.mako')
 def buy_pokemon_process(context, request):
     """Process a request to quick-buy a Pokémon, add one to the user's cart, or
@@ -505,7 +505,7 @@ def buy_pokemon_process(context, request):
 
     return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
 
-@view_config(route_name='pokemon.buy.checkout', permission='manage-account',
+@view_config(route_name='pokemon.buy.checkout', permission='account.manage',
   request_method='GET', renderer='/buy/pokemon_checkout.mako')
 def pokemon_checkout(context, request):
     """A page for actually buying all the Pokémon in the trainer's cart."""
@@ -528,7 +528,7 @@ def pokemon_checkout(context, request):
 
     return {'form': form}
 
-@view_config(route_name='pokemon.buy.checkout', permission='manage-account',
+@view_config(route_name='pokemon.buy.checkout', permission='account.manage',
   request_method='POST', renderer='/buy/pokemon_checkout.mako')
 def pokemon_checkout_commit(context, request):
     """Process a checkout form and actually give the user their new Pokémon."""
@@ -674,7 +674,7 @@ def get_evolutions(pokemon):
 
     return evo_forms
 
-@view_config(name='evolve', context=db.Pokemon, permission='edit:evolve',
+@view_config(name='evolve', context=db.Pokemon, permission='edit.evolve',
   request_method='GET', renderer='evolve_pokemon.mako')
 def evolve_pokemon(pokemon, request):
     """A page for evolving a Pokémon."""
@@ -691,7 +691,7 @@ def evolve_pokemon(pokemon, request):
 
     return {'pokemon': pokemon, 'evolutions': evolutions, 'form': form}
 
-@view_config(name='evolve', context=db.Pokemon, permission='edit:evolve',
+@view_config(name='evolve', context=db.Pokemon, permission='edit.evolve',
   request_method='POST', renderer='evolve_pokemon.mako')
 def evolve_pokemon_commit(pokemon, request):
     """Evolve a Pokémon."""

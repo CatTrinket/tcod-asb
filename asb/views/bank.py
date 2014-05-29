@@ -104,7 +104,7 @@ def can_collect_allowance(trainer):
     return trainer.last_collected_allowance < last_friday
 
 @view_config(route_name='bank', request_method='GET', renderer='/bank.mako',
-  permission='manage-account')
+  permission='account.manage')
 def bank(context, request):
     """The bank page."""
 
@@ -118,7 +118,7 @@ def bank(context, request):
     return {'allowance_form': allowance_form, 'deposit_form': deposit_form}
 
 @view_config(route_name='bank', request_method='POST', renderer='/bank.mako',
-  permission='manage-account')
+  permission='account.manage')
 def bank_process(context, request):
     """Give the trainer their allowance, if they haven't already collected it
     this week.

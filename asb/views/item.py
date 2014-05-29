@@ -70,7 +70,7 @@ def _manage_items_queries(trainer):
 
     return (holdable, holders)
 
-@view_config(name='manage', context=ItemIndex, permission='manage-account',
+@view_config(name='manage', context=ItemIndex, permission='account.manage',
   request_method='GET', renderer='/manage/items.mako')
 def manage_items(context, request):
     """A page for managing one's items."""
@@ -84,7 +84,7 @@ def manage_items(context, request):
 
     return {'holdable': holdable, 'holders': holders, 'take_form': take_form}
 
-@view_config(name='manage', context=ItemIndex, permission='manage-account',
+@view_config(name='manage', context=ItemIndex, permission='account.manage',
   request_method='POST', renderer='/manage/items.mako')
 def manage_items_commit(context, request):
     """Process a request to take items.
@@ -123,7 +123,7 @@ def item(context, request):
 
     return {'item': context}
 
-@view_config(name='give', context=db.Item, permission='manage-account',
+@view_config(name='give', context=db.Item, permission='account.manage',
   request_method='GET', renderer='/manage/give_item.mako')
 def give_item(item, request):
     """A page for choosing a Pokémon to give an item to."""
@@ -146,7 +146,7 @@ def give_item(item, request):
 
     return {'item': item, 'csrf_failure': False}
 
-@view_config(name='give', context=db.Item, permission='manage-account',
+@view_config(name='give', context=db.Item, permission='account.manage',
   request_method='POST', renderer='/manage/give_item.mako')
 def give_item_commit(item, request):
     """Process a request to give an item to a Pokémon."""
@@ -307,7 +307,7 @@ def get_item_buying_stuff(request):
 
     return (item_query, quick_buy, items, form)
 
-@view_config(route_name='items.buy', permission='manage-account',
+@view_config(route_name='items.buy', permission='account.manage',
   request_method='GET', renderer='/buy/items.mako')
 def buy_items(context, request):
     """A page for buying items."""
@@ -318,7 +318,7 @@ def buy_items(context, request):
     return {'items': items, 'quick_buy': quick_buy, 'cart': cart,
         'cart_form': cart_form}
 
-@view_config(route_name='items.buy', permission='manage-account',
+@view_config(route_name='items.buy', permission='account.manage',
   request_method='POST', renderer='/buy/items.mako')
 def buy_items_process(context, request):
     """Process a request from any of the several forms on the item-buying

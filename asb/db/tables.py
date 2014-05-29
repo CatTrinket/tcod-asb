@@ -375,11 +375,11 @@ class Pokemon(PlayerTable):
         trainer = 'user:{}'.format(self.trainer_id)
 
         return [
-            (sec.Allow, trainer, 'edit:basics'),
-            (sec.Allow, trainer, 'edit:evolve'),
-            (sec.Allow, 'admin', 'edit:basics'),
-            (sec.Allow, 'admin', 'edit:everything'),
-            (sec.Allow, 'mod', 'edit:basics'),
+            (sec.Allow, trainer, 'edit.basics'),
+            (sec.Allow, trainer, 'edit.evolve'),
+            (sec.Allow, 'admin', 'edit.basics'),
+            (sec.Allow, 'admin', 'edit.everything'),
+            (sec.Allow, 'mod', 'edit.basics'),
             (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
         ]
 

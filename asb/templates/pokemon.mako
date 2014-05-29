@@ -2,10 +2,10 @@
 <%namespace name="helpers" file="/helpers/helpers.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
-% if request.has_permission('edit:basics', pokemon):
+% if request.has_permission('edit.basics', pokemon):
 <p><a href="${request.resource_url(pokemon, 'edit')}">Edit ${pokemon.name} →</a></p>
 % endif
-% if can_evolve and request.has_permission('edit:evolve', pokemon):
+% if can_evolve and request.has_permission('edit.evolve', pokemon):
 <p><a href="${request.resource_url(pokemon, 'evolve')}">Evolve ${pokemon.name} →</a></p>
 % endif
 

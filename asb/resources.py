@@ -13,8 +13,8 @@ class Root(dict):
     __parent__ = None
 
     __acl__ = [
-        (sec.Allow, sec.Authenticated, 'manage-account'),
-        (sec.Deny, sec.Everyone, 'manage-account'),
+        (sec.Allow, sec.Authenticated, 'account.manage'),
+        (sec.Deny, sec.Everyone, 'account.manage'),
 
         (sec.Allow, 'admin', 'bank.approve'),
         (sec.Allow, 'mod', 'bank.approve'),
