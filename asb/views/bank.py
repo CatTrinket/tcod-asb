@@ -38,6 +38,57 @@ class DepositForm(asb.forms.CSRFTokenForm):
     add_rows = wtforms.SubmitField('+')
     deposit = wtforms.SubmitField('Submit')
 
+class ApprovalForm(asb.forms.CSRFTokenForm):
+    """A form for approving and denying bank transactions.
+
+    Transactions must be added manually using the approval_form method below.
+    """
+
+    submit = wtforms.SubmitField('Submit')
+
+class ApprovalTransactionForm(wtforms.Form):
+    """A single transaction in an ApprovalForm."""
+
+    what_do = wtforms.RadioField(choices=[
+        ('ignore', None),
+        ('approve', None),
+        ('deny', None)
+    ], default='ignore')
+
+    reason = wtforms.TextField()
+
+def approval_form(user, *args, **kwargs):
+    """Create and return an approval form."""
+
+    # Get all pending transactions, except for the approver's own
+    transactions = (
+        db.DBSession.query(db.BankTransaction)
+        .filter_by(state='pending')
+        .filter(db.BankTransaction.trainer_id != user.id)
+        .order_by(db.BankTransaction.id)
+        .all()
+    )
+
+    # Make form
+    class Subform(wtforms.Form):
+        """A subform to hold all the transaction sub-subforms."""
+
+        pass
+
+    for transaction_ in transactions:
+        class Subsubform(ApprovalTransactionForm):
+            """An ApprovalTransactionForm that also holds the transaction."""
+
+            transaction = transaction_
+
+        setattr(Subform, 'transaction-{0}'.format(transaction_.id),
+            wtforms.FormField(Subsubform))
+
+    class Form(ApprovalForm):
+        transactions = wtforms.FormField(Subform)
+
+    return Form(*args, **kwargs)
+
 def can_collect_allowance(trainer):
     """Return whether or not this trainer can collect allowance."""
 
@@ -125,3 +176,39 @@ def bank_process(context, request):
 
     # Fallback
     return forms
+
+@view_config(route_name='bank.approve', request_method='GET',
+  renderer='/bank_approve.mako', permission='bank.approve')
+def bank_approve(context, request):
+    """The bank approving page."""
+
+    return {'form': approval_form(request.user, csrf_context=request.session)}
+
+@view_config(route_name='bank.approve', request_method='POST',
+  renderer='/bank_approve.mako', permission='bank.approve')
+def bank_approve_process(context, request):
+    """Process the bank approval form."""
+
+    approver = request.user
+
+    form = approval_form(request.user, request.POST,
+        csrf_context=request.session)
+
+    if not form.validate():
+        return {'form': form}
+
+    for field in form.transactions:
+        transaction = field.transaction
+
+        if field.what_do.data == 'approve':
+            transaction.trainer.money += transaction.amount
+            transaction.state = 'approved'
+            transaction.approver_id = approver.id
+        elif field.what_do.data == 'deny':
+            transaction.state = 'denied'
+            transaction.approver_id = approver.id
+
+            if field.reason.data:
+                transaction.reason = field.reason.data
+
+    return httpexc.HTTPSeeOther('/bank/approve')

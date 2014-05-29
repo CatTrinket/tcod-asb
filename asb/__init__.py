@@ -44,6 +44,7 @@ def main(global_config, **settings):
     config.add_route('items.buy', '/items/buy')
 
     config.add_route('bank', '/bank')
+    config.add_route('bank.approve', '/bank/approve')
 
     # A route to redirect away trailing slashes instead of just 404ing
     config.add_route('slash_redirect', '/{path:.+}/')

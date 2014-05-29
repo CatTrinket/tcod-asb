@@ -267,3 +267,7 @@ form#evolution-form > ul > li > label
 form#evolution-form > ul > li > label { font-size: 150%; }
 
 p.evolution-note { margin: 0; font-size: 75%; }
+
+/* Bank approval */
+dl#bank-approval-instructions > dt { width: 2em; }
+dl#bank-approval-instructions > dd { margin-left: 2em; }

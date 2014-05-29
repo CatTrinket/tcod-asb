@@ -9,6 +9,7 @@ from sqlalchemy.sql import and_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
+import asb.tcodf
 from .helpers import identifier
 
 
@@ -310,11 +311,20 @@ class BankTransaction(PlayerTable):
 
     __tablename__ = 'bank_transactions'
 
+    state_enum = Enum('pending', 'approved', 'denied',
+        name='bank_transaction_state', metadata=PlayerTable.metadata)
+
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
     amount = Column(Integer, nullable=False)
-    tcod_post_id = Column(Integer, nullable=False, unique=False)
-    is_pending = Column(Boolean, nullable=False, default=True)
+    tcod_post_id = Column(Integer, nullable=False)
+    state = Column(state_enum, nullable=False, default='pending')
+    approver_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
+    reason = Column(UnicodeText, nullable=True)
+
+    @property
+    def link(self):
+        return asb.tcodf.post_link(self.tcod_post_id)
 
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
@@ -476,6 +486,11 @@ class TrainerRole(PlayerTable):
 
 # Relationships go down here so that we don't have to use strings for
 # everything
+BankTransaction.approver = relationship(Trainer,
+    primaryjoin=BankTransaction.approver_id == Trainer.id)
+BankTransaction.trainer = relationship(Trainer,
+    primaryjoin=BankTransaction.trainer_id == Trainer.id)
+
 Item.category = relationship(ItemCategory, back_populates='items')
 
 ItemCategory.items = relationship(Item, back_populates='category',
