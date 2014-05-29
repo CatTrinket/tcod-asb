@@ -76,11 +76,3 @@ ${damage_class.name.capitalize()}\
 </ul>
 % endif
 </%def>
-
-<%def name="form_error_rows(errors)">
-% for error in errors:
-<tr>
-    <td class="form-error">${error}</td>
-</tr>
-% endfor
-</%def>
