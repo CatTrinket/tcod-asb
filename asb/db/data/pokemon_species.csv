@@ -717,3 +717,4 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,is_starte
 716,xerneas,Xerneas,361,,,False,True,False,True,716
 717,yveltal,Yveltal,362,,,False,False,False,False,717
 718,zygarde,Zygarde,363,,,False,False,False,False,718
+719,diancie,Diancie,364,,,False,False,False,False,719

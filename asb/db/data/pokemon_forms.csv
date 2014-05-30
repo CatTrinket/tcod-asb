@@ -665,58 +665,59 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,order
 664,scatterbug,664,,,1,True,776
 665,spewpa,665,,,1,True,777
 666,vivillon-meadow,666,Meadow Pattern,Meadow Vivillon,7,True,784
-667,litleo,667,,,1,True,796
-668,pyroar,668,,,1,True,797
-669,flabebe-red,669,Red Flower,Red Flabébé,1,True,798
-670,floette-red,670,Red Flower,Red Floette,1,True,803
-671,florges-red,671,Red Flower,Red Florges,1,True,808
-672,skiddo,672,,,1,True,813
-673,gogoat,673,,,1,True,814
-674,pancham,674,,,1,True,815
-675,pangoro,675,,,1,True,816
-676,furfrou,676,,,1,True,817
-677,espurr,677,,,1,True,827
-678,meowstic-female,678,Female,Female Meowstic,1,True,828
-679,honedge,679,,,1,True,830
-680,doublade,680,,,1,True,831
-681,aegislash-shield,681,Shield Forme,Shield Aegislash,1,True,832
-682,spritzee,682,,,1,True,834
-683,aromatisse,683,,,1,True,835
-684,swirlix,684,,,1,True,836
-685,slurpuff,685,,,1,True,837
-686,inkay,686,,,1,True,838
-687,malamar,687,,,1,True,839
-688,binacle,688,,,1,True,840
-689,barbaracle,689,,,1,True,841
-690,skrelp,690,,,1,True,842
-691,dragalge,691,,,1,True,843
-692,clauncher,692,,,1,True,844
-693,clawitzer,693,,,1,True,845
-694,helioptile,694,,,1,True,846
-695,heliolisk,695,,,1,True,847
-696,tyrunt,696,,,1,True,848
-697,tyrantrum,697,,,1,True,849
-698,amaura,698,,,1,True,850
-699,aurorus,699,,,1,True,851
+667,litleo,667,,,1,True,798
+668,pyroar,668,,,1,True,799
+669,flabebe-red,669,Red Flower,Red Flabébé,1,True,800
+670,floette-red,670,Red Flower,Red Floette,1,True,805
+671,florges-red,671,Red Flower,Red Florges,1,True,810
+672,skiddo,672,,,1,True,815
+673,gogoat,673,,,1,True,816
+674,pancham,674,,,1,True,817
+675,pangoro,675,,,1,True,818
+676,furfrou,676,,,1,True,819
+677,espurr,677,,,1,True,829
+678,meowstic-female,678,Female,Female Meowstic,1,True,830
+679,honedge,679,,,1,True,832
+680,doublade,680,,,1,True,833
+681,aegislash-shield,681,Shield Forme,Shield Aegislash,1,True,834
+682,spritzee,682,,,1,True,836
+683,aromatisse,683,,,1,True,837
+684,swirlix,684,,,1,True,838
+685,slurpuff,685,,,1,True,839
+686,inkay,686,,,1,True,840
+687,malamar,687,,,1,True,841
+688,binacle,688,,,1,True,842
+689,barbaracle,689,,,1,True,843
+690,skrelp,690,,,1,True,844
+691,dragalge,691,,,1,True,845
+692,clauncher,692,,,1,True,846
+693,clawitzer,693,,,1,True,847
+694,helioptile,694,,,1,True,848
+695,heliolisk,695,,,1,True,849
+696,tyrunt,696,,,1,True,850
+697,tyrantrum,697,,,1,True,851
+698,amaura,698,,,1,True,852
+699,aurorus,699,,,1,True,853
 700,sylveon,700,,,1,True,175
-701,hawlucha,701,,,1,True,852
-702,dedenne,702,,,1,True,853
-703,carbink,703,,,1,True,854
-704,goomy,704,,,1,True,855
-705,sliggoo,705,,,1,True,856
-706,goodra,706,,,1,True,857
-707,klefki,707,,,1,True,858
-708,phantump,708,,,1,True,859
-709,trevenant,709,,,1,True,860
-710,pumpkaboo-average,710,Average Size,Average Pumpkaboo,2,True,862
-711,gourgeist-average,711,Average Size,Average Gourgeist,2,True,866
-712,bergmite,712,,,1,True,869
-713,avalugg,713,,,1,True,870
-714,noibat,714,,,1,True,871
-715,noivern,715,,,1,True,872
-716,xerneas-active,716,Active Mode,Active Xerneas,2,True,874
-717,yveltal,717,,,1,True,875
-718,zygarde,718,,,1,True,876
+701,hawlucha,701,,,1,True,854
+702,dedenne,702,,,1,True,855
+703,carbink,703,,,1,True,856
+704,goomy,704,,,1,True,857
+705,sliggoo,705,,,1,True,858
+706,goodra,706,,,1,True,859
+707,klefki,707,,,1,True,860
+708,phantump,708,,,1,True,861
+709,trevenant,709,,,1,True,862
+710,pumpkaboo-average,710,Average Size,Average Pumpkaboo,2,True,864
+711,gourgeist-average,711,Average Size,Average Gourgeist,2,True,868
+712,bergmite,712,,,1,True,871
+713,avalugg,713,,,1,True,872
+714,noibat,714,,,1,True,873
+715,noivern,715,,,1,True,874
+716,xerneas-active,716,Active Mode,Active Xerneas,2,True,876
+717,yveltal,717,,,1,True,877
+718,zygarde,718,,,1,True,878
+719,diancie,719,,,1,True,879
 10001,unown-b,201,B,Unown B,2,False,246
 10002,unown-c,201,C,Unown C,3,False,247
 10003,unown-d,201,D,Unown D,4,False,248
@@ -817,36 +818,36 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,order
 10098,vivillon-sun,666,Sun Pattern,Sun Vivillon,16,False,793
 10099,vivillon-ocean,666,Ocean Pattern,Ocean Vivillon,17,False,794
 10100,vivillon-jungle,666,Jungle Pattern,Jungle Vivillon,18,False,795
-10101,flabebe-yellow,669,Yellow Flower,Yellow Flabébé,2,False,799
-10102,flabebe-orange,669,Orange Flower,Orange Flabébé,3,False,800
-10103,flabebe-blue,669,Blue Flower,Blue Flabébé,4,False,801
-10104,flabebe-white,669,White Flower,White Flabébé,5,False,802
-10105,floette-yellow,670,Yellow Flower,Yellow Floette,2,False,804
-10106,floette-orange,670,Orange Flower,Orange Floette,3,False,805
-10107,floette-blue,670,Blue Flower,Blue Floette,4,False,806
-10108,floette-white,670,White Flower,White Floette,5,False,807
-10109,florges-yellow,671,Yellow Flower,Yellow Florges,2,False,809
-10110,florges-orange,671,Orange Flower,Orange Florges,3,False,810
-10111,florges-blue,671,Blue Flower,Blue Florges,4,False,811
-10112,florges-white,671,White Flower,White Florges,5,False,812
-10113,furfrou-heart,676,Heart Trim,Heart Furfrou,2,False,818
-10114,furfrou-star,676,Star Trim,Star Furfrou,3,False,819
-10115,furfrou-diamond,676,Diamond Trim,Diamond Furfrou,4,False,820
-10116,furfrou-la-reine,676,La Reine Trim,La Reine Furfrou,5,False,821
-10117,furfrou-kabuki,676,Kabuki Trim,Kabuki Furfrou,6,False,822
-10118,furfrou-pharaoh,676,Pharaoh Trim,Pharaoh Furfrou,7,False,823
-10119,furfrou-debutante,676,Debutante Trim,Debutante Furfrou,8,False,824
-10120,furfrou-matron,676,Matron Trim,Matron Furfrou,9,False,825
-10121,furfrou-dandy,676,Dandy Trim,Dandy Furfrou,10,False,826
-10122,meowstic-male,678,Male,Male Meowstic,2,False,829
-10123,aegislash-blade,681,Blade Forme,Blade Aegislash,2,False,833
-10124,pumpkaboo-small,710,Small Size,Small Pumpkaboo,1,False,861
-10125,pumpkaboo-large,710,Large Size,Large Pumpkaboo,3,False,863
-10126,pumpkaboo-super,710,Super Size,Super Pumpkaboo,4,False,864
-10127,gourgeist-small,711,Small Size,Small Gourgeist,1,False,865
-10128,gourgeist-large,711,Large Size,Large Gourgeist,3,False,867
-10129,gourgeist-super,711,Super Size,Super Gourgeist,4,False,868
-10130,xerneas-neutral,716,Neutral Mode,Neutral Xerneas,1,False,873
+10101,flabebe-yellow,669,Yellow Flower,Yellow Flabébé,2,False,801
+10102,flabebe-orange,669,Orange Flower,Orange Flabébé,3,False,802
+10103,flabebe-blue,669,Blue Flower,Blue Flabébé,4,False,803
+10104,flabebe-white,669,White Flower,White Flabébé,5,False,804
+10105,floette-yellow,670,Yellow Flower,Yellow Floette,2,False,806
+10106,floette-orange,670,Orange Flower,Orange Floette,3,False,807
+10107,floette-blue,670,Blue Flower,Blue Floette,4,False,808
+10108,floette-white,670,White Flower,White Floette,5,False,809
+10109,florges-yellow,671,Yellow Flower,Yellow Florges,2,False,811
+10110,florges-orange,671,Orange Flower,Orange Florges,3,False,812
+10111,florges-blue,671,Blue Flower,Blue Florges,4,False,813
+10112,florges-white,671,White Flower,White Florges,5,False,814
+10113,furfrou-heart,676,Heart Trim,Heart Furfrou,2,False,820
+10114,furfrou-star,676,Star Trim,Star Furfrou,3,False,821
+10115,furfrou-diamond,676,Diamond Trim,Diamond Furfrou,4,False,822
+10116,furfrou-la-reine,676,La Reine Trim,La Reine Furfrou,5,False,823
+10117,furfrou-kabuki,676,Kabuki Trim,Kabuki Furfrou,6,False,824
+10118,furfrou-pharaoh,676,Pharaoh Trim,Pharaoh Furfrou,7,False,825
+10119,furfrou-debutante,676,Debutante Trim,Debutante Furfrou,8,False,826
+10120,furfrou-matron,676,Matron Trim,Matron Furfrou,9,False,827
+10121,furfrou-dandy,676,Dandy Trim,Dandy Furfrou,10,False,828
+10122,meowstic-male,678,Male,Male Meowstic,2,False,831
+10123,aegislash-blade,681,Blade Forme,Blade Aegislash,2,False,835
+10124,pumpkaboo-small,710,Small Size,Small Pumpkaboo,1,False,863
+10125,pumpkaboo-large,710,Large Size,Large Pumpkaboo,3,False,865
+10126,pumpkaboo-super,710,Super Size,Super Pumpkaboo,4,False,866
+10127,gourgeist-small,711,Small Size,Small Gourgeist,1,False,867
+10128,gourgeist-large,711,Large Size,Large Gourgeist,3,False,869
+10129,gourgeist-super,711,Super Size,Super Gourgeist,4,False,870
+10130,xerneas-neutral,716,Neutral Mode,Neutral Xerneas,1,False,875
 10131,venusaur-mega,3,Mega Venusaur,Mega Venusaur,2,False,4
 10132,charizard-mega-x,6,Mega Charizard X,Mega Charizard X,2,False,8
 10133,charizard-mega-y,6,Mega Charizard Y,Mega Charizard Y,3,False,9
@@ -875,3 +876,5 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,order
 10156,garchomp-mega,445,Mega Garchomp,Mega Garchomp,2,False,532
 10157,lucario-mega,448,Mega Lucario,Mega Lucario,2,False,535
 10158,abomasnow-mega,460,Mega Abomasnow,Mega Abomasnow,2,False,547
+10159,vivillon-fancy,666,Fancy Pattern,Fancy Vivillon,19,False,796
+10160,vivillon-poke-ball,666,Poké Ball Pattern,Poké Ball Vivillon,20,False,797

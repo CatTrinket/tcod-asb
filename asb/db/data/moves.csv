@@ -589,6 +589,7 @@ id,identifier,name,type_id,damage_class_id,damage,energy,accuracy,priority,summa
 588,kings-shield,King's Shield,17,3,,2,,4,Blocks damaging moves this action and lowers attacking Pokémon's Attack by two stages on contact.,boop,boop,
 589,play-nice,Play Nice,1,3,,1,,0,Lowers the target's Attack by one stage.,boop,boop,
 590,confide,Confide,1,3,,1,,0,Lowers the target's Special Attack by one stage.,boop,boop,
+591,diamond-storm,Diamond Storm,13,1,10,6,95,0,Has a 50% chance to raise the user's Defense by one stage.,,,
 594,water-shuriken,Water Shuriken,3,1,-1,-1,100,1,Hits 2-5 times in one turn.  Base damage is 1.5 times the number of hits.,boop,boop,
 595,mystical-fire,Mystical Fire,2,2,6,4,100,0,Has a 100% chance to lower the target's Special Attack by one stage.,boop,boop,
 596,spiky-shield,Spiky Shield,4,3,,-1,,4,Protects the user against damaging moves this action and damages attackers who make contact with the user.,boop,boop,
