@@ -60,3 +60,5 @@ ${h.form_error_list(form.csrf_token.errors)}
 
 ${form.submit() | n}
 </form>
+
+<p>(Note: your own transactions will not appear here.)</p>
