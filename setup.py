@@ -9,11 +9,11 @@ with open(os.path.join(here, 'README.md')) as f:
 # I'm going to just give exact versions that I know will work
 requires = [
     'alembic==0.6.3',
-    'Mako==0.9.1',
     'pbkdf2==1.3',
     'pyramid==1.5',
     'pyramid_beaker==0.8',
     'pyramid_exclog==0.7',
+    'pyramid_mako==1.0.2',
     'pyramid_tm==0.7',
     'SQLAlchemy==0.8.3',
     'transaction==1.4.1',
