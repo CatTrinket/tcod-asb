@@ -18,7 +18,7 @@ requires = [
     'SQLAlchemy==0.8.3',
     'transaction==1.4.1',
     'waitress==0.8.7',
-    'WTForms==1.0.5'
+    'WTForms==1.0.5',
     'zope.sqlalchemy==0.7.3',
 ]
 
