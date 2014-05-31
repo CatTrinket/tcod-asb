@@ -26,7 +26,7 @@ ${h.form_error_list(form.csrf_token.errors)}
     <th>Trainer</th>
     <th>Amount</th>
     <th>Link</th>
-    <th>Reason (if applicable)</th>
+    <th>Reason (if denying)</th>
 </tr>
 </thead>
 

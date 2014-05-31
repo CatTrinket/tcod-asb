@@ -57,6 +57,13 @@ class ApprovalTransactionForm(wtforms.Form):
 
     reason = wtforms.TextField()
 
+    def validate_reason(form, field):
+        """Require a reason when denying a transaction."""
+
+        if form.what_do.data == 'deny' and not field.data.strip():
+            raise wtforms.validators.ValidationError('Please give a reason '
+                'for denying this transaction.')
+
 def approval_form(user, *args, **kwargs):
     """Create and return an approval form."""
 
