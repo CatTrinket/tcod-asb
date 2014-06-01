@@ -113,7 +113,8 @@ td.icon {
     padding: 0 0 0 8px;  /* px so we can specify column width in px */
     text-align: center;
 }
-td.icon img { vertical-align: middle; }
+
+td.icon img { vertical-align: middle; margin: 0; }
 td.icon + td { padding-left: 0; }
 .effect-table td.icon { line-height: 2em; }
 

@@ -51,7 +51,7 @@
 <%def name="happiness_cell(pokemon)"><td class="stat">${pokemon.happiness | n, str}</td></%def>
 
 # Held item
-<%def name="item_col()"><col class="item-icon"><col class="item"></%def>
+<%def name="item_col()"><col class="icon item-icon"><col class="item"></%def>
 <%def name="item_header()"><th colspan="2">Item</th></%def>
 <%def name="item_cell(pokemon)">
 % if pokemon.item is not None:
@@ -257,7 +257,7 @@ really don't want to calculate the colspan manually. I'm sorry. -->
     ${column['td'](form)}
     % endfor
 
-    <td class="pokemon-icon">${h.pokemon_form_icon(form)}</td>
+    <td class="icon pokemon-icon">${h.pokemon_form_icon(form)}</td>
     <td class="focus-column">${h.link(form, text=name_override)}</td>
 
     <td class="type-cell">\
