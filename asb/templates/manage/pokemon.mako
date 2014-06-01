@@ -9,11 +9,11 @@
       w = iter(withdraw.pokemon)
 %>
 <%def name="deposit_tickies(pokemon)">\
-<td class="input ticky">${next(d) | n, str}</td>
+<td class="input ticky">${next(d)() | n}</td>
 </%def>
 
 <%def name="withdraw_tickies(pokemon)">\
-<td class="input ticky">${next(w) | n, str}</td>
+<td class="input ticky">${next(w)() | n}</td>
 </%def>
 
 <%def name="ticky_col()">
@@ -32,17 +32,17 @@
 <ul class="form-error">
     % for errors in deposit.errors.values():
     % for error in errors:
-    <li>${error | n, str}</li>
+    <li>${error}</li>
     % endfor
     % endfor
 </ul>
 % endif
 
 <form action="/pokemon/manage#squad" method="POST">
-${deposit.csrf_token | n, str}
+${deposit.csrf_token() | n}
 ${t.pokemon_table(trainer.squad, skip_cols=['trainer'],
     extra_left_cols=[{'col': ticky_col, 'th': ticky_header, 'td': deposit_tickies}])}
-${deposit.submit | n, str}
+${deposit.submit() | n}
 </form>
 % endif
 
@@ -52,16 +52,16 @@ ${deposit.submit | n, str}
 <ul class="form-error">
     % for errors in withdraw.errors.values():
     % for error in errors:
-    <li>${error | n, str}</li>
+    <li>${error}</li>
     % endfor
     % endfor
 </ul>
 % endif
 
 <form action="/pokemon/manage#pc" method="POST">
-${withdraw.csrf_token | n, str}
+${withdraw.csrf_token() | n}
 ${t.pokemon_table(trainer.pc, skip_cols=['trainer'],
     extra_left_cols=[{'col': ticky_col, 'th': ticky_header, 'td': withdraw_tickies}])}
-${withdraw.submit | n, str}
+${withdraw.submit() | n}
 </form>
 % endif

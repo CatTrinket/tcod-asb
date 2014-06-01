@@ -38,10 +38,10 @@ ${h.form_error_list(form.csrf_token.errors)}
     % endfor
 
     <td>${h.link(transaction.transaction.trainer)}</td>
-    <td class="price">$${transaction.transaction.amount | n, str}</td>
+    <td class="price">$${transaction.transaction.amount}</td>
     <td>
         <a href="${transaction.transaction.link}">
-            Post #${transaction.transaction.tcod_post_id | n, str}
+            Post #${transaction.transaction.tcod_post_id}
         </a>
     </td>
     <td class="input">${transaction.reason(size=60) | n}</td>

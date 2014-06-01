@@ -60,7 +60,7 @@ ${quick_buy.quickbuy() | n}
     <td class="input"><button name="remove" value="${pokemon.identifier}">X</button></td>
     <td class="icon">${h.pokemon_form_icon(pokemon.default_form)}</td>
     <td class="focus-column">${h.link(pokemon.default_form, text=pokemon.name)}</td>
-    <td class="price">$${pokemon.rarity.price | n, str}</td>
+    <td class="price">$${pokemon.rarity.price}</td>
   </tr>
   <% total += pokemon.rarity.price %>
   % endfor
@@ -68,7 +68,7 @@ ${quick_buy.quickbuy() | n}
 <tfoot>
   <tr>
     <td colspan="3" class="focus-column">Total</td>
-    <td class="price">$${total | n, str}</td>
+    <td class="price">$${total}</td>
   </tr>
   <% remaining_money = request.user.money - total %>
   <tr class="${'unaffordable-total' if remaining_money < 0 else ''}">
@@ -82,7 +82,7 @@ ${quick_buy.quickbuy() | n}
 <p><strong><a href="/pokemon/buy/checkout">Proceed to checkout →</a></strong></p>
 % endif
 % else:
-<p>Your bank balance: $${request.user.money | n, str}</p>
+<p>Your bank balance: $${request.user.money}</p>
 % endif
 
 <h1>Browse</h1>

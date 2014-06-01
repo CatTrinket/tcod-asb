@@ -55,9 +55,9 @@ ${cart_form.csrf_token() | n}
     <tr>
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column">${h.link(item)}</td>
-        <td class="price">$${item.price | n, str}</td>
+        <td class="price">$${item.price}</td>
         <td class="input">${field(size=2) | n}</td>
-        <td class="price">$${price | n, str}</td>
+        <td class="price">$${price}</td>
     </tr>
     % endfor
 </tbody>
@@ -65,7 +65,7 @@ ${cart_form.csrf_token() | n}
 <tfoot>
     <tr>
         <td class="focus-column" colspan="4">Total</td>
-        <td class="price">$${total | n, str}</td>
+        <td class="price">$${total}</td>
     </tr>
     <% remaining_money = request.user.money - total %>
     <tr class="${'unaffordable-total' if remaining_money < 0 else ''}">
@@ -89,7 +89,7 @@ ${cart_form.buy() | n}
 % endif
 </form>
 % else:
-<p>Your bank balance: $${request.user.money | n, str}</p>
+<p>Your bank balance: $${request.user.money}</p>
 % endif
 
 <h1>Browse</h1>
@@ -122,7 +122,7 @@ ${cart_form.buy() | n}
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
         % if item.price is not None:
-        <td class="price">$${item.price | n, str}</td>
+        <td class="price">$${item.price}</td>
         % else:
         <td class="price">—</td>
         % endif

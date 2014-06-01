@@ -1,7 +1,7 @@
 <%inherit file='/base.mako'/>\
 <%block name='title'>Bank - The Cave of Dragonflies ASB</%block>\
 
-<p><b>Your balance:</b> $${request.user.money | n, str}</p>
+<p><b>Your balance:</b> $${request.user.money}</p>
 
 <h1>Fifth United Bank of the Cave of Dragonflies</h1>
 

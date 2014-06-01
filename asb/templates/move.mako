@@ -14,7 +14,7 @@
    % elif move.damage == -1:
    <dd>Varies</dd>
    % else:
-   <dd>${move.damage | n, str}%
+   <dd>${move.damage}%
    % endif
 
    <dt>Base energy</dt>
@@ -23,14 +23,14 @@
    % elif move.energy == -1:
    <dd>Varies</dd>
    % else:
-   <dd>${move.energy | n, str}%</dd>
+   <dd>${move.energy}%</dd>
    % endif
 
    <dt>Accuracy</dt>
    % if move.accuracy is None:
    <dd>—</dd>
    % else:
-   <dd>${move.accuracy | n, str}%</dd>
+   <dd>${move.accuracy}%</dd>
    % endif
 
    <dt>Damage class</dt>

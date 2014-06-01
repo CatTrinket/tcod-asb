@@ -5,7 +5,7 @@
 
 <% tickies = iter(take_form.holders) %>
 <%def name="take_item_ticky(pokemon)">
-<td class="input ticky">${next(tickies) | n, str}</td>
+<td class="input ticky">${next(tickies)() | n}</td>
 </%def>
 
 <p><a href="/items/buy">Buy items →</a></p>
@@ -32,7 +32,7 @@
             <img src="/static/images/items/${item.identifier}.png" alt="">
         </td>
         <td>${h.link(item)}</td>
-        <td class="stat">${quantity | n, str}</td>
+        <td class="stat">${quantity}</td>
         <td class="give"><a href="${request.resource_url(item, 'give')}">Give</a></td>
     </tr>
     % endfor
@@ -53,7 +53,7 @@
 % endif
 
 <form action="/items/manage" method="POST">
-${take_form.csrf_token() | n, str}
+${take_form.csrf_token() | n}
 
 ${t.pokemon_table(holders, skip_cols=['item', 'trainer'],
     extra_left_cols=[
@@ -62,6 +62,6 @@ ${t.pokemon_table(holders, skip_cols=['item', 'trainer'],
     ]
 )}
 
-${take_form.take | n, str}
+${take_form.take() | n}
 </form>
 % endif

@@ -24,7 +24,7 @@
             ${option.label() | n}
             <p class="evolution-note">
                 % if buy:
-                (Costs $${evo.species.evolution_method.buyable_price | n, str})
+                (Costs $${evo.species.evolution_method.buyable_price})
                 % elif item:
                 (Uses up a held ${evo.species.evolution_method.item.name})
                 % else:

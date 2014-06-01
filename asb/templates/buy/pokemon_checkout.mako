@@ -11,12 +11,12 @@
     % endfor
 </ul>
 % endif
-${form.csrf_token | n, str}
+${form.csrf_token() | n}
 
 % for subform in form.pokemon:
 <h2>${subform.species.name}\
 % if subform.number > 1:
- #${subform.number | n, str}\
+ #${subform.number}\
 % endif
 </h2>
 <dl>
@@ -56,5 +56,5 @@ ${form.csrf_token | n, str}
 % endif
 % endfor
 
-${form.submit | n, str}
+${form.submit() | n}
 </form>

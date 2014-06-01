@@ -43,12 +43,12 @@
 # Experience
 <%def name="experience_col()"><col class="stat"></%def>
 <%def name="experience_header()"><th><abbr title="Experience">XP</abbr></th></%def>
-<%def name="experience_cell(pokemon)"><td class="stat">${pokemon.experience | n, str}</td></%def>
+<%def name="experience_cell(pokemon)"><td class="stat">${pokemon.experience}</td></%def>
 
 # Happiness
 <%def name="happiness_col()"><col class="stat"></%def>
 <%def name="happiness_header()"><th><abbr title="Happiness">:3</abbr></th></%def>
-<%def name="happiness_cell(pokemon)"><td class="stat">${pokemon.happiness | n, str}</td></%def>
+<%def name="happiness_cell(pokemon)"><td class="stat">${pokemon.happiness}</td></%def>
 
 # Held item
 <%def name="item_col()"><col class="icon item-icon"><col class="item"></%def>
@@ -156,7 +156,7 @@ ${column['col']()}
     % elif move.damage == -1:
     <td class="stat">*</td>
     % else:
-    <td class="stat">${move.damage | n, str}%</td>
+    <td class="stat">${move.damage}%</td>
     % endif
 
     % if move.energy is None:
@@ -164,13 +164,13 @@ ${column['col']()}
     % elif move.energy == -1:
     <td class="stat">*</td>
     % else:
-    <td class="stat">${move.energy | n, str}%</td>
+    <td class="stat">${move.energy}%</td>
     % endif
 
     % if move.accuracy is None:
     <td class="stat">—</td>
     % else:
-    <td class="stat">${move.accuracy | n, str}%</td>
+    <td class="stat">${move.accuracy}%</td>
     % endif
 
     % if move.priority == 0:

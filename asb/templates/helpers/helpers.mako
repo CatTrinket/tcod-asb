@@ -6,11 +6,11 @@
 
 <%def name="num(n, invisible_plus=True)">\
 % if n < 0:
-−${n * -1 | n, str}\
+−${n * -1}\
 % elif n == 0 or invisible_plus:
-${n | n, str}\
+${n}\
 % else:
-+${n | n, str}\
++${n}\
 % endif
 </%def>
 

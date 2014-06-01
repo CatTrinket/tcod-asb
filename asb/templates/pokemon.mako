@@ -66,17 +66,17 @@
 
     <dt>Experience</dt>
     <dd>
-        ${pokemon.experience | n, str}
+        ${pokemon.experience}
         % if needed_experience is not None:
-            / ${needed_experience | n, str}
+            / ${needed_experience}
         % endif
     </dd>
 
     <dt>Happiness</dt>
     <dd>
-        ${pokemon.happiness | n, str}
+        ${pokemon.happiness}
         % if needed_happiness is not None:
-            / ${needed_happiness | n, str}
+            / ${needed_happiness}
         % endif
     </dd>
 </dl>

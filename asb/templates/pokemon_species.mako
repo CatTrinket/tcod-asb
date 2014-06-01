@@ -20,13 +20,13 @@
     % if pokemon.species.rarity is not None:
     <dt>Rarity</dt>
     <dd>
-        ${pokemon.species.rarity_id | n, str}
-        ($${pokemon.species.rarity.price | n, str})
+        ${pokemon.species.rarity_id}
+        ($${pokemon.species.rarity.price})
     </dd>
     % endif
 
     <dt>Population</dt>
-    <dd><a href="#census">${len(pokemon.pokemon) | n, str}</a></dd>
+    <dd><a href="#census">${len(pokemon.pokemon)}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
@@ -94,7 +94,7 @@
     <tr>
         % for evo, colspan in layer:
         <% current = evo == pokemon.species %>
-        <td colspan="${colspan | n, str}" class="${'focus' if current else ''}">
+        <td colspan="${colspan}" class="${'focus' if current else ''}">
             % if current:
             ${h.pokemon_form_icon(pokemon)}${evo.name}
             % else:
