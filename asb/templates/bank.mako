@@ -3,6 +3,14 @@
 
 <p><b>Your balance:</b> $${request.user.money | n, str}</p>
 
+<h1>Fifth United Bank of the Cave of Dragonflies</h1>
+
+<p>Welcome to your ASB bank account!  Long past the days of having to make
+multiple posts every single time you plan on making money or throwing it on
+other people, you simply have a terminal before you that will handle your
+transactions and hook them up with an approver — quick, easy, and
+automatic.</p>
+
 <h1>Allowance</h1>
 <p>Every Friday, each member of the ASB league is offered $3 in allowance.
 You have all week to claim your allowance, but if you miss a week, you miss a
