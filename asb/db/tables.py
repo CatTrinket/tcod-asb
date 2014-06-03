@@ -355,7 +355,6 @@ class Pokemon(PlayerTable):
     happiness = Column(Integer, nullable=False, default=0)
     is_in_squad = Column(Boolean, nullable=False, default=False)
     form_uncertain = Column(Boolean, nullable=False, default=False)
-    unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
 
     # Set up a composite foreign key for ability
     __table_args__ = (
@@ -512,7 +511,7 @@ Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
-Pokemon.form = relationship(PokemonForm, back_populates='pokemon')
+Pokemon.form = relationship(PokemonForm)
 Pokemon.gender = relationship(Gender)
 Pokemon.item = relationship(Item,
     secondary=TrainerItem.__table__, uselist=False)
@@ -533,10 +532,6 @@ PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.condition = relationship(PokemonFormCondition, uselist=False)
-PokemonForm.pokemon = relationship(Pokemon, order_by=Pokemon.name,
-    primaryjoin=and_(Pokemon.pokemon_form_id == PokemonForm.id,
-                     Pokemon.unclaimed_from_hack == False),
-    back_populates='form')
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
     order_by=Move.name, back_populates='pokemon_forms')

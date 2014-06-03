@@ -299,7 +299,8 @@ def pokemon_index(context, request):
 
     pokemon = (
         db.DBSession.query(db.Pokemon)
-        .filter_by(unclaimed_from_hack=False)
+        .join(db.Trainer)
+        .filter_by(db.Trainer.unclaimed_from_hack == False)
         .join(db.PokemonForm)
         .join(db.PokemonSpecies)
         .order_by(db.PokemonSpecies.order, db.Pokemon.name)
@@ -760,7 +761,8 @@ def species_index(context, request):
         db.DBSession.query(db.Pokemon.pokemon_form_id,
             func.count('*').label('population'))
         .select_from(db.Pokemon)
-        .filter(db.Pokemon.unclaimed_from_hack == False)
+        .join(db.Trainer)
+        .filter(db.Trainer.unclaimed_from_hack == False)
         .group_by(db.Pokemon.pokemon_form_id)
         .subquery()
     )
@@ -815,4 +817,20 @@ def species(pokemon, request):
         evo_tree[n] = [(evo, sum(1 for _ in group))
             for evo, group in itertools.groupby(layer)]
 
-    return {'pokemon': pokemon, 'evo_tree': evo_tree}
+
+    # Find all the Pokémon of this species/form in the league
+    census = (
+        db.DBSession.query(db.Pokemon)
+        .join(db.Trainer)
+        .filter(db.Pokemon.pokemon_form_id == pokemon.id)
+        .filter(db.Trainer.unclaimed_from_hack == False)
+        .options(
+             joinedload('ability'),
+             joinedload('trainer'),
+             joinedload('gender')
+        )
+        .order_by(db.Pokemon.name)
+        .all()
+    )
+
+    return {'pokemon': pokemon, 'evo_tree': evo_tree, 'census': census}

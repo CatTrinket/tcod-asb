@@ -185,7 +185,6 @@ def register_commit(context, request):
             for pokemon in user.pokemon:
                 id, = db.DBSession.execute(nextval).fetchone()
                 pokemon.id = id
-                pokemon.unclaimed_from_hack = False
 
                 session.flush()
                 pokemon.update_identifier()

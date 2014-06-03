@@ -26,7 +26,7 @@
     % endif
 
     <dt>Population</dt>
-    <dd><a href="#census">${len(pokemon.pokemon)}</a></dd>
+    <dd><a href="#census">${len(census)}</a></dd>
 </dl>
 
 <h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
@@ -113,4 +113,4 @@
 ${t.move_table(pokemon.moves)}
 
 <h1 id="census">${pokemon.name} in the league</h1>
-${t.pokemon_table(pokemon.pokemon, skip_cols=['species'])}
+${t.pokemon_table(census, skip_cols=['species'])}
