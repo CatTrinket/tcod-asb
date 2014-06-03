@@ -151,12 +151,12 @@ ${column['col']()}
 
     <td class="damage-class-cell">${h.damage_class_icon(move.damage_class)}</td>
 
-    % if move.damage is None:
-    <td class="stat">—</td>
-    % elif move.damage == -1:
-    <td class="stat">*</td>
-    % else:
+    % if move.damage is not None:
     <td class="stat">${move.damage}%</td>
+    % elif move.damage_class.identifier == 'non-damaging':
+    <td class="stat">—</td>
+    % else:
+    <td class="stat">*</td>
     % endif
 
     % if move.energy is None:

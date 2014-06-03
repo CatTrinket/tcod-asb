@@ -118,7 +118,7 @@ class Move(PokedexTable):
     type_id = Column(Integer, ForeignKey('types.id'), nullable=False)
     damage_class_id = Column(Integer, ForeignKey('damage_classes.id'),
         nullable=False)
-    damage = Column(Integer, nullable=True)
+    power = Column(Integer, nullable=True)
     energy = Column(Integer, nullable=True)
     accuracy = Column(Integer, nullable=True)
     priority = Column(Integer, nullable=False)
@@ -126,6 +126,15 @@ class Move(PokedexTable):
     description = Column(Unicode, nullable=False)
     target = Column(Unicode, nullable=False)  # XXX do something better later
     category = Column(Unicode, nullable=True)  # XXX do something better later
+
+    @property
+    def damage(self):
+        """Return this move's base damage."""
+
+        if self.power is None:
+            return None
+        else:
+            return self.power // 10
 
     @property
     def __name__(self):
