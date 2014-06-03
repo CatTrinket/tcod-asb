@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="/static/asb.css">
 </head>
 <body>
-<section id="header">
+<header>
 <p style="text-align: center; margin: 0; padding: 2em; color: white;">
   banner goes here once we have one
 </p>
 
-<div id="menu">
+<nav>>
 <ul id="menu-user">
 % if request.user is not None:
   <li class="menu-focus-link"><a href="/trainers/${request.user.identifier}">${request.user.name}</a></li>
@@ -52,7 +52,7 @@
   <li><a href="/abilities">Abilities</a></li>
   <li><a href="/items">Items</a></li>
 </ul>
-</div>
+</nav>
 
 <% flash = request.session.pop_flash() %>
 % if flash:
@@ -64,10 +64,10 @@
 </ul>
 </div>
 % endif
-</section>
+</header>
 
-<section id="body">
+<main>
 ${next.body()}\
-</section>
+</main>
 </body>
 </html>
