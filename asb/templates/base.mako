@@ -15,7 +15,7 @@
   banner goes here once we have one
 </p>
 
-<nav>>
+<nav>
 <ul id="menu-user">
 % if request.user is not None:
   <li class="menu-focus-link"><a href="/trainers/${request.user.identifier}">${request.user.name}</a></li>
