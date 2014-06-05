@@ -62,7 +62,9 @@ def check_form_condition(pokemon, form):
     the conditions for Zen Darmanitan, and that works.
 
     It also does not check whether this Pokémon can actually switch to this
-    form.
+    form.  For example, a Shellos will show up as fulfilling the conditions for
+    both its forms.  This is also intentional, because a pre-db Shellos /can/
+    switch, exactly once.
     """
 
     c = form.condition
