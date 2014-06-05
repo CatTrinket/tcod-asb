@@ -20,7 +20,7 @@
 
 
     ${form.username.label() | n}
-    ${form.username() | n}
+    ${form.username(maxlength=30) | n}
 
     % if form.username.errors:
     <ul>

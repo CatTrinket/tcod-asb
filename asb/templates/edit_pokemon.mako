@@ -11,7 +11,7 @@ ${h.form_error_list(form.csrf_token.errors)}
 <!-- XXX This shouldn't really be a dl -->
 <dl>
     <dt>${form.name.label() | n}</dt>
-    <dd>${form.name() | n}</dd>
+    <dd>${form.name(maxlength=30) | n}</dd>
     % for error in form.name.errors:
     <dd class="form-error">${error}</dd>
     % endfor

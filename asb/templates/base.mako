@@ -36,7 +36,7 @@
   <li>
     <form action="/login" method="POST" id="login">
       ${login_form.csrf_token(id='login-csrf') | n}
-      ${login_form.username.label() | n} ${login_form.username() | n}
+      ${login_form.username.label() | n} ${login_form.username(maxlength=30) | n}
       ${login_form.password.label() | n} ${login_form.password() | n}
       ${login_form.log_in() | n}
     </form>

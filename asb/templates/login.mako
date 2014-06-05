@@ -13,7 +13,7 @@
     <!-- No ids on these fields because they don't need them for anything and
          they'd conflict with the login form in the menu -->
     ${form.csrf_token(id='') | n}
-    <p>${form.username.label() | n} ${form.username(id='') | n}</p>
+    <p>${form.username.label() | n} ${form.username(id='', maxlength=30) | n}</p>
     <p>${form.password.label() | n} ${form.password(id='') | n}</p>
     <p>${form.log_in(id='') | n}</p>
 </form>

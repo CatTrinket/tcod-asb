@@ -21,7 +21,7 @@ ${form.csrf_token() | n}
 </h2>
 <dl>
     <dt>${subform.name_.label() | n}</dt>
-    <dd>${subform.name_() | n}</dd>
+    <dd>${subform.name_(maxlength=30) | n}</dd>
 
     % if hasattr(subform.form, 'gender'):
     <dt>${subform.gender.label() | n}</dt>
