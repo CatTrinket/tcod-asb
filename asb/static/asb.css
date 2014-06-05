@@ -64,8 +64,8 @@ nav > ul > li + li::before { content: ' • '; }
 /* Align nicely with text; don't vertically stretch the line if small enough */
 img { vertical-align: middle; margin-top: -0.5em; margin-bottom: -0.5em; }
 
-/* WTForms error messages */
-.form-error { color: #CC0000; }
+/* Error/warning messages */
+.form-error, .warning{ color: #CC0000; }
 
 /* Definition lists with dt and dd on the same line */
 dt {

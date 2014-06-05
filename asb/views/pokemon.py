@@ -53,16 +53,61 @@ def can_evolve_species(pokemon, species):
         # No dice
         return (False, False, False)
 
+def check_form_condition(pokemon, form):
+    """Check the specified Pokémon form's conditions, and return whether the
+    Pokémon meets them.
+
+    This method does not check whether the Pokémon is the same species.  For
+    example, when evolving a Darumaka, you'll want to check whether it fulfils
+    the conditions for Zen Darmanitan, and that works.
+
+    It also does not check whether this Pokémon can actually switch to this
+    form.
+    """
+
+    c = form.condition
+
+    if c is None:
+        # No condition!  Woo!
+        return True
+
+    if c.gender_id is c.item_id is c.ability_id is None:
+        # There is a condition, but its parameters are all blank at the moment,
+        # meaning it requires an item that hasn't been added yet
+        return False
+
+    if c.gender_id is not None and pokemon.gender_id != c.gender_id:
+        # Wrong gender
+        return False
+
+    if c.item_id is not None and pokemon.trainer_item.item_id != c.item_id:
+        # Wrong held item
+        return False
+
+    if c.ability_id is not None:
+        # Check the ability that this Pokémon would have if it were this  form
+        try:
+            pfa = DBSession.query(db.PokemonFormAbility).get(
+               (form.id, pokemon.ability_slot))
+        except sqla.orm.exc.NoResultFound:
+            # Welp
+            return False
+
+        if pfa.ability_id != c.ability_id:
+            # Wrong ability
+            return False
+
+    # If we haven't bailed yet, we're good to go
+    return True
+
 
 ### WTFORMS CLASSES
 
 class EditPokemonForm(asb.forms.CSRFTokenForm):
-    """A form for editing a Pokémon.
-
-    This will mean more than just its nickname, eventually.
-    """
+    """A form for editing a Pokémon."""
 
     name = wtforms.TextField('Name', [asb.forms.name_validator])
+    form = wtforms.SelectField(coerce=int)
     save = wtforms.SubmitField('Save')
 
 class PokemonEvolutionForm(asb.forms.CSRFTokenForm):
@@ -73,7 +118,7 @@ class PokemonEvolutionForm(asb.forms.CSRFTokenForm):
 
     evolution = wtforms.RadioField(coerce=int)
     submit = wtforms.SubmitField('Confirm')
-    
+
 class PokemonMovingForm(asb.forms.CSRFTokenForm):
     """A form for selecting Pokémon to deposit or withdraw.
 
@@ -331,22 +376,53 @@ def pokemon(context, request):
 @view_config(name='edit', context=db.Pokemon, permission='edit.basics',
   request_method='GET', renderer='edit_pokemon.mako')
 def edit_pokemon(pokemon, request):
+    """A page for editing a Pokémon."""
+
     form = EditPokemonForm(csrf_context=request.session)
     form.name.data = pokemon.name
+
+    # Figure out what forms this Pokémon can switch between
+    if pokemon.species.can_switch_forms or pokemon.form_uncertain:
+        form.form.choices = [
+            (form.id, form.form_name)
+            for form in pokemon.species.forms
+            if check_form_condition(pokemon, form)
+        ]
+
+        form.form.data = pokemon.pokemon_form_id
+
+    if form.form.choices is None or len(form.form.choices) <= 1:
+        del form.form
 
     return {'pokemon': pokemon, 'form': form}
 
 @view_config(name='edit', context=db.Pokemon, permission='edit.basics',
   request_method='POST', renderer='edit_pokemon.mako')
 def edit_pokemon_commit(pokemon, request):
+    """Process a request to edit a Pokémon."""
+
     form = EditPokemonForm(request.POST, csrf_context=request.session)
+
+    # Figure out what forms this Pokémon can switch between
+    if pokemon.species.can_switch_forms or pokemon.form_uncertain:
+        form.form.choices = [
+            (form.id, form.form_name)
+            for form in pokemon.species.forms
+            if check_form_condition(pokemon, form)
+        ]
+
+    if form.form.choices is None or len(form.form.choices) <= 1:
+        del form.form
 
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
 
     pokemon.name = form.name.data or pokemon.species.name
     pokemon.update_identifier()
-    db.DBSession.flush()
+
+    if form.form is not None:
+        pokemon.pokemon_form_id = form.form.data
+        pokemon.form_uncertain = False
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
 
@@ -607,43 +683,6 @@ def pokemon_checkout_commit(context, request):
 
 ### EVOLVING POKÉMON
 
-def can_evolve_form(pokemon, form):
-    """ASSUMING that this Pokémon can evolve into this form's species, return
-    whether or not it can evolve into this particular form.
-    """
-
-    c = form.condition
-
-    if c is None:
-        # No condition!  Woo!
-        return True
-
-    if c.gender_id is c.item_id is c.ability_id is None:
-        # There is a condition, but its parameters are all blank at the moment,
-        # meaning it requires an item that hasn't been added yet
-        return False
-
-    if c.gender_id is not None and pokemon.gender_id != c.gender_id:
-        # Wrong gender
-        return False
-
-    if c.item_id is not None and pokemon.trainer_item.item_id != c.item_id:
-        # Wrong held item
-        return False
-
-    if c.ability_id is not None:
-        # Check the ability that this Pokémon would have if it were this
-        # species in its default form
-        pfa = db.DBSession.query(db.PokemonFormAbility).get(
-            (form.species.default_form.id, pokemon.ability_slot))
-
-        if pfa.ability_id != c.ability_id:
-            # Wrong ability
-            return False
-
-    # If we haven't bailed yet, we're good to go
-    return True
-
 def get_evolutions(pokemon):
     """Return all the Pokémon forms that this Pokémon can evolve into."""
 
@@ -663,7 +702,7 @@ def get_evolutions(pokemon):
                     # If this Pokémon can switch forms, or doesn't have forms
                     # (yet), it gets to choose its post-evolution form
                     # e.g. Burmy, Spewpa, technically Pikachu
-                    can_evolve = can_evolve_form(pokemon, form)
+                    can_evolve = check_form_condition(pokemon, form)
                 else:
                     # But if it's already constrained to a particular form, it
                     # needs to evolve into the corresponding one
