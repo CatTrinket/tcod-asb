@@ -122,9 +122,9 @@ class Move(PokedexTable):
     energy = Column(Integer, nullable=True)
     accuracy = Column(Integer, nullable=True)
     priority = Column(Integer, nullable=False)
+    target_id = Column(Integer, ForeignKey('move_targets.id'), nullable=False)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
-    target = Column(Unicode, nullable=False)  # XXX do something better later
     category = Column(Unicode, nullable=True)  # XXX do something better later
 
     @property
@@ -141,6 +141,15 @@ class Move(PokedexTable):
         """Return this move's resource name for traversal."""
 
         return self.identifier
+
+class MoveTarget(PokedexTable):
+    """A set of Pokémon that a move can target."""
+
+    __tablename__ = 'move_targets'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
 
 class PokemonFamily(PokedexTable):
     """An evolutionary family of Pokémon species."""
@@ -504,6 +513,7 @@ Item.category = relationship(ItemCategory, back_populates='items')
 ItemCategory.items = relationship(Item, back_populates='category',
     order_by=(Item.order, Item.name))
 
+Move.target = relationship(MoveTarget)
 Move.type = relationship(Type)
 Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',

@@ -37,7 +37,7 @@
    <dd>${move.damage_class.name.capitalize()}</dd>
 
    <dt>Target</dt>
-   <dd>${move.target or '???'}</dd>
+   <dd>${move.target.name}</dd>
 
    <dt>Category</dt>
    <dd>${move.category or '???'}</dd>

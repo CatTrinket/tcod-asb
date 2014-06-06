@@ -1,0 +1,10 @@
+id,identifier,name
+1,single,Single
+2,multiple,Multiple
+3,all,All
+4,random,Random
+5,self,Self
+6,ally,Ally
+7,self-or-ally,Self or ally
+8,self-and-allies,Self and allies
+9,field,Field
