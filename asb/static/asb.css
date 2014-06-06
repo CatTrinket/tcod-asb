@@ -19,7 +19,7 @@ h1 a, h1 a:hover { color:white; }
 abbr { border-bottom: 1px dotted black; }
 
 header, main { margin: 0; }
-header { background: #5577BB; }
+header { background: #5577BB; text-align: center; }
 main { padding: 2em; }
 
 /* Headers */
@@ -63,6 +63,9 @@ nav > ul > li + li::before { content: ' • '; }
 /* Images */
 /* Align nicely with text; don't vertically stretch the line if small enough */
 img { vertical-align: middle; margin-top: -0.5em; margin-bottom: -0.5em; }
+
+/* Certain images need regular margins though */
+header img, table img { margin: 0; }
 
 /* Error/warning messages */
 .form-error, .warning{ color: #CC0000; }
@@ -114,7 +117,6 @@ td.icon {
     text-align: center;
 }
 
-td.icon img { vertical-align: middle; margin: 0; }
 td.icon + td { padding-left: 0; }
 .effect-table td.icon { line-height: 2em; }
 

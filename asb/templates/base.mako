@@ -11,9 +11,7 @@
 </head>
 <body>
 <header>
-<p style="text-align: center; margin: 0; padding: 2em; color: white;">
-  banner goes here once we have one
-</p>
+<img src="/static/banner.png">
 
 <nav>
 <ul id="menu-user">
