@@ -120,6 +120,8 @@ td.icon {
 td.icon + td { padding-left: 0; }
 .effect-table td.icon { line-height: 2em; }
 
+td.squad { padding-top: 0; padding-bottom: 0; }
+
 td.input { padding: 0 0.5em; height: 2rem; line-height: 2rem; text-align: center; }
 
 td.ticky { padding-right: 0; }
