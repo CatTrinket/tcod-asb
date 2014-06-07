@@ -40,8 +40,12 @@
     needed_experience = None
     needed_happiness = None
 
-    evolution_methods = [evolution.evolution_method for evolution
-        in pokemon.species.evolutions]
+    evolution_methods = [
+        evolution.evolution_method
+        for evolution in pokemon.species.evolutions
+        if evolution.evolution_method is not None
+    ]
+
     for method in evolution_methods:
         if method.experience is not None:
             needed_experience =  method.experience
