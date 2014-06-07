@@ -36,6 +36,9 @@
    <dt>Damage class</dt>
    <dd>${move.damage_class.name.capitalize()}</dd>
 
+   <dt>Priority</dt>
+   <dd>${h.num(move.priority, invisible_plus=False)}</dd>
+
    <dt>Target</dt>
    <dd>${move.target.name}</dd>
 
