@@ -35,6 +35,10 @@ def can_evolve_species(pokemon, species):
 
     evo = species.evolution_method
 
+    # Shedinja has no evolution method
+    if evo is None:
+        return (False, False, False)
+
     # Gender requirements apply to all other methods
     if evo.gender_id is not None and pokemon.gender_id != evo.gender_id:
         return (False, False, False)
