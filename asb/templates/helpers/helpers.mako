@@ -52,7 +52,7 @@ ${damage_class.name.capitalize()}\
        if resource_exists('asb', alt_filename):
            filename = alt_filename
 %>\
-<img src="${filename}" alt="">\
+<div class="portrait" style="background-image: url(${filename})"></div>
 </%def>
 
 <%def name="gender_symbol(gender)">\

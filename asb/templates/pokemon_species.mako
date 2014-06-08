@@ -6,9 +6,7 @@
 <h1>${pokemon.name}</h1>
 
 <div class="portrait-block">
-<div class="portrait" style="background-image:
-    url(/static/images/pokemon/${pokemon.identifier}.png)">
-</div>
+${h.pokemon_form_sprite(pokemon)}
 
 % for type in pokemon.types:
 ${h.type_icon(type)}\
@@ -52,7 +50,7 @@ ${h.type_icon(type)}\
     % endfor
 </dl>
 
-<h1>Evolution</h1>
+<h1 id="evolution">Evolution</h1>
 
 <%def name="evo_method(method)">\
 % if method is not None:

@@ -270,6 +270,9 @@ table.evolution-tree td.focus { background: #C0CCE6; }
 
 p.evolution-method { font-size: 0.7rem; margin: 0; }
 
+/* Pokémon pages */
+.evolution-progress { font-size: 14px; }
+
 /* Buying stuff */
 tr.unaffordable-total { color: #CC0000; }
 

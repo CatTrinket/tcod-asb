@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers/helpers.mako"/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 % if request.has_permission('edit.basics', pokemon):
@@ -10,79 +10,63 @@
 % endif
 
 <h1>${pokemon.name}</h1>
+<div class="portrait-block">
+${h.pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier)}
 
+${h.link(pokemon.form, text=pokemon.species.name)}
+% if (pokemon.gender.identifier != 'genderless' and \
+    pokemon.species.identifier not in ['nidoran-f', 'nidoran-m']):
+${h.gender_symbol(pokemon.gender)}
+% endif
+</div>
+
+<div class="beside-portrait">
 <dl>
-    <dt>Name</dt>
-    <dd>${pokemon.name}</dd>
-
-    <dt>Species</dt>
-    <dd>
-        ${helpers.link(pokemon.form)}${helpers.pokemon_form_icon(pokemon.form,
-                                       gender=pokemon.gender.identifier)}
-    </dd>
-
     <dt>Trainer</dt>
-    <dd>${helpers.link(pokemon.trainer)}</dd>
-
-    <dt>Item</dt>
-    <dd>
-        % if pokemon.item is not None:
-            ${helpers.link(pokemon.item)}
-        % else:
-            None
-        %endif
-    </dd>
-</dl>
-
-<h2>Stats</h2>
-
-<%
-    needed_experience = None
-    needed_happiness = None
-
-    evolution_methods = [
-        evolution.evolution_method
-        for evolution in pokemon.species.evolutions
-        if evolution.evolution_method is not None
-    ]
-
-    for method in evolution_methods:
-        if method.experience is not None:
-            needed_experience =  method.experience
-        if method.happiness is not None:
-            needed_happiness = 4
-%>
-
-<dl>
-    <dt>Gender</dt>
-    <dd>${pokemon.gender.name.capitalize()}</dd>
+    <dd>${h.link(pokemon.trainer)}</dd>
 
     <dt>Ability</dt>
     <dd>
         % if pokemon.ability_slot == 3:
             <span class="hidden-ability">
         % endif
-        ${helpers.link(pokemon.ability)}
+        ${h.link(pokemon.ability)}
         % if pokemon.ability_slot == 3:
             </span>
         % endif
     </dd>
 
+    <dt>Item</dt>
+    <dd>
+        % if pokemon.item is not None:
+            ${h.link(pokemon.item)}
+        % else:
+            None
+        %endif
+    </dd>
+
     <dt>Experience</dt>
     <dd>
         ${pokemon.experience}
-        % if needed_experience is not None:
-            / ${needed_experience}
+        % if 'experience' in evo_info:
+        <span class="evolution-progress">${h.link(
+            pokemon.form,
+            text='/ {0}'.format(evo_info['experience']),
+            anchor='evolution'
+        )}</span>
         % endif
     </dd>
 
     <dt>Happiness</dt>
     <dd>
         ${pokemon.happiness}
-        % if needed_happiness is not None:
-            / ${needed_happiness}
+        % if 'happiness' in evo_info:
+        <span class="evolution-progress">${h.link(
+            pokemon.form,
+            text='/ {0}'.format(evo_info['happiness']),
+            anchor='evolution'
+        )}</span>
         % endif
     </dd>
 </dl>
-
-<h1>Signature Attributes</h1>
+</div>

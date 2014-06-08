@@ -369,12 +369,23 @@ def pokemon_index(context, request):
     return {'pokemon': pokemon}
 
 @view_config(context=db.Pokemon, renderer='/pokemon.mako')
-def pokemon(context, request):
+def pokemon(pokemon, request):
     """An individual Pokémon's info page."""
 
-    evolve = can_evolve(context)
+    evo_info = {}
 
-    return {'pokemon': context, 'can_evolve': evolve}
+    for evo in pokemon.species.evolutions:
+        if evo.evolution_method is None:
+            continue
+
+        if evo.evolution_method.happiness:
+            evo_info['happiness'] = evo.evolution_method.happiness
+
+        if evo.evolution_method.experience:
+            evo_info['experience'] = evo.evolution_method.experience
+
+    return {'pokemon': pokemon, 'can_evolve': can_evolve(pokemon),
+        'evo_info': evo_info}
 
 
 ### MANAGING POKÉMON
