@@ -75,6 +75,10 @@ ${next(or_) | n}${method.happiness} happiness\
 ${next(or_) | n}pay $${method.buyable_price}\
 % endif
 \
+% if method.can_trade_instead:
+${next(or_) | n}trade
+% endif
+\
 % if method.gender_id is not None:
  (${method.gender.name} only)
 % endif
