@@ -6,15 +6,23 @@
 <h1>${move.name}</h1>
 <dl>
    <dt>Type</dt>
-   <dd>${h.type_icon(move.type) | n}</dd>
+   <dd>${h.type_icon(move.type)}</dd>
+
+   <dt>Stat</dt>
+   <dd>${h.damage_class_icon(move.damage_class)}</dd>
 
    <dt>Base damage</dt>
-   % if move.damage is None:
-   <dd>—</dd>
-   % elif move.damage == -1:
-   <dd>Varies</dd>
+   % if move.power is not None:
+   <dd>${move.damage}% (${move.power} power)</dd>
+   % elif move.damage_class.identifier == 'non-damaging':
+   <dd>n/a</dd>
+   ## XXX It'd be nice not to special-case these two
+   % elif move.identifier == 'dragon-rage':
+   <dd>4% (fixed)</dd>
+   % elif move.identifier == 'sonic-boom':
+   <dd>2% (fixed)</dd>
    % else:
-   <dd>${move.damage}%
+   <dd>Varies</dd>
    % endif
 
    <dt>Base energy</dt>
@@ -33,9 +41,6 @@
    <dd>${move.accuracy}%</dd>
    % endif
 
-   <dt>Damage class</dt>
-   <dd>${move.damage_class.name.capitalize()}</dd>
-
    <dt>Priority</dt>
    <dd>${h.num(move.priority, invisible_plus=False)}</dd>
 
@@ -49,7 +54,7 @@
 <h2>Summary</h2>
 <p>${move.summary}</p>
 
-<h1>Effect</h1>
+<h1>Description</h1>
 <p>${move.description}</p>
 
 <h1>Pokémon</h1>
