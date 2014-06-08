@@ -793,6 +793,16 @@ def evolve_pokemon_commit(pokemon, request):
 
 
 ### SPECIES PAGES
+def or_iter():
+    """A simple iterator to join evolution criteria with "OR", without having
+    to make a list.  (Making a list would make appending an item link really
+    ugly.)
+    """
+
+    yield ''
+
+    while True:
+        yield ' <em>OR</em> '
 
 @view_config(context=SpeciesIndex, renderer='/indices/pokemon_species.mako')
 def species_index(context, request):
@@ -841,6 +851,13 @@ def species(pokemon, request):
     just a detail.
     """
 
+    # Get this Pokémon's abilities but strip out the duplicates
+    abilities = []
+    for ability in pokemon.abilities:
+        if ability.ability_id not in (a.ability_id for a in abilities):
+            abilities.append(ability)
+
+
     # Build the evolution tree.  n.b. this algorithm assumes that all final
     # evolutions within a family are at the same evo stage.  I'd be surprised
     # if that ever stopped being true, though.
@@ -878,4 +895,5 @@ def species(pokemon, request):
         .all()
     )
 
-    return {'pokemon': pokemon, 'evo_tree': evo_tree, 'census': census}
+    return {'pokemon': pokemon, 'abilities': abilities, 'evo_tree': evo_tree,
+        'or_iter': or_iter, 'census': census}

@@ -5,18 +5,18 @@
 
 <h1>${pokemon.name}</h1>
 
+<div class="portrait-block">
+<div class="portrait" style="background-image:
+    url(/static/images/pokemon/${pokemon.identifier}.png)">
+</div>
+
+% for type in pokemon.types:
+${h.type_icon(type)}\
+% endfor
+</div>
+
+<div class="beside-portrait">
 <dl>
-    <dt>#${pokemon.species.number}</dt>
-    <dd>${pokemon.name} ${h.pokemon_form_icon(pokemon)}</dd>
-
-    <dt>Type</dt>
-    <dd>
-        ${h.type_icon(pokemon.types[0])}
-        % if len(pokemon.types) == 2:
-            ${h.type_icon(pokemon.types[1])}
-        % endif
-    </dd>
-
     % if pokemon.species.rarity is not None:
     <dt>Rarity</dt>
     <dd>
@@ -25,71 +25,66 @@
     </dd>
     % endif
 
+    <dt>Gender</dt>
+    <dd>
+        ${(
+            ' or '.join(gender.name for gender in pokemon.species.genders)
+            .capitalize()
+        )}
+    </dd>
+
     <dt>Population</dt>
     <dd><a href="#census">${len(census)}</a></dd>
 </dl>
+</div>
 
-<h2>${"Ability" if len(pokemon.abilities) == 1 else "Abilities"}</h2>
+<h1>Abilities</h1>
 
-    <%
-        regular_abilities = []
-        hidden_abilities = []
-
-        for ability in pokemon.abilities:
-            if ability.is_hidden:
-                hidden_abilities.append(ability.ability)
-            else:
-                regular_abilities.append(ability.ability)
-    %>
-
-<dl>
-    <dt>${h.link(regular_abilities[0])}</dt>
-    <dd>${regular_abilities[0].description}</dd>
-
-    % if len(regular_abilities) == 2 and regular_abilities[1] != regular_abilities[0]:
-        <dt>${h.link(regular_abilities[1])}</dt>
-        <dd>${regular_abilities[1].description}</dd>
+<dl class="ability-list">
+    % for ability in abilities:
+    % if ability.is_hidden:
+    <dt class="hidden-ability">${h.link(ability.ability)}</dt>
+    <dd><i>(Hidden ability.)</i>  ${ability.ability.description}</dd>
+    % else:
+    <dt>${h.link(ability.ability)}</dt>
+    <dd>${ability.ability.description}</dd>
     % endif
-
-    % if hidden_abilities and hidden_abilities[0] != regular_abilities[0]:
-        <dt class="hidden-ability">${h.link(hidden_abilities[0])}</dt>
-        <dd>${hidden_abilities[0].description}</dd>
-    % endif
+    % endfor
 </dl>
 
 <h1>Evolution</h1>
 
-<%
-    def format_evolution_method(pokemon):
-        evolution_method = pokemon.evolution_method
-        if evolution_method is None:
-            return ''
-
-        methods = []
-        if evolution_method.item_id is not None:
-            methods.append('battle holding {} {}'.format(
-                'an' if evolution_method.item.name[0].lower() in 'aeiou'
-                     else 'a',
-                evolution_method.item.name))
-        if evolution_method.experience is not None:
-            methods.append('{} EXP'.format(evolution_method.experience))
-        if evolution_method.happiness is not None:
-            methods.append('{} happiness'.format(evolution_method.happiness));
-
-        methods = [", with ".join(methods)]
-        if evolution_method.buyable_price is not None:
-            methods.append('pay ${}'.format(evolution_method.buyable_price))
-        if evolution_method.can_trade_instead:
-            methods.append('trade');
-
-        methods = " <em>OR</em> ".join(methods)
-        if evolution_method.gender_id is not None:
-            methods += ' ({} only)'.format(evolution_method.gender.name)
-
-        return methods
-%>
+<%def name="evo_method(method)">\
+% if method is not None:
+<% or_ = or_iter() %>
+% if method.item_id is not None:
+% if method.item.name.lower().startswith(('a', 'e', 'i', 'o', 'u')):
+${next(or_) | n}battle holding an ${h.link(method.item)}\
+% else:
+${next(or_) | n}battle holding a ${h.link(method.item)}\
+% endif
+% endif
+\
+% if method.experience is not None:
+${next(or_) | n}${method.experience} EXP\
+% endif
+\
+% if method.happiness is not None:
+${next(or_) | n}${method.happiness} happiness\
+% endif
+\
+% if method.buyable_price is not None:
+${next(or_) | n}pay $${method.buyable_price}\
+% endif
+\
+% if method.gender_id is not None:
+ (${method.gender.name} only)
+% endif
+% endif
+</%def>
 
 <table class="evolution-tree">
+<thead>
     % for layer in evo_tree:
     <tr>
         % for evo, colspan in layer:
@@ -98,10 +93,11 @@
             % if current:
             ${h.pokemon_form_icon(pokemon)}${evo.name}
             % else:
-            ${h.pokemon_form_icon(evo.default_form)}${h.link(evo.default_form, text=evo.name)}
+            ${h.pokemon_form_icon(evo)}${h.link(evo.default_form, text=evo.name)}
             % endif
+
             % if evo.evolution_method is not None:
-            <p class="evolution-method">${format_evolution_method(evo) | n}</p>
+            <p class="evolution-method">${evo_method(evo.evolution_method)}</p>
             % endif
         </td>
         % endfor

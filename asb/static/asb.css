@@ -60,21 +60,23 @@ nav > ul > li + li::before { content: ' • '; }
 
 /**** SHARED STUFF ****/
 
-/* Images */
-/* Align nicely with text; don't vertically stretch the line if small enough */
-img { vertical-align: middle; margin-top: -0.5em; margin-bottom: -0.5em; }
-
-/* Certain images need regular margins though */
-header img, table img { margin: 0; }
+/* Images — align nicely with text */
+img { vertical-align: middle; }
 
 /* Error/warning messages */
 .form-error, .warning{ color: #CC0000; }
 
 /* Definition lists with dt and dd on the same line */
+dl { overflow: hidden /* New float context */; }
+
 dt {
-    float: left; clear: left;
-    font-weight: bold; width: 10em; text-align: right;
+    float: left;
+    clear: left;
+    font-weight: bold;
+    width: 10em;
+    text-align: right;
 }
+
 dt:after { content: ':'; }
 dd { margin-left: 10.5em /* factor in dt + padding */; }
 dt, dd { padding: 0.5em; }
@@ -149,30 +151,20 @@ col.trainer { width: 13rem; }
 col.type-col { width: 90px; }
 col.two-types { width: 164px; }
 
-/* Tables for evolution trees */
-table.evolution-tree {
-    width: 100%;
-    margin: auto;
-    border-spacing: 0.5rem;
-    border-collapse: separate;
+/* Big Pokémon sprite, cropped to the center 120×120 pixels */
+/* The actual background image has to be specified in the page itself */
+.portrait-block { float: left; text-align: center; width: 175px; }
+
+.portrait {
+    width: 125px;
+    height: 125px;
+    border: 5px ridge #0044FF;
+    margin: 5px auto;
+    background-position: center;
+    background-repeat: no-repeat;
 }
-table.evolution-tree td {
-    background: #DEE6F5;
-    border: 1px solid #7799EE;
-    text-align: center;
-    vertical-align: text-top;
-}
-table.evolution-tree td:hover { background: #D1DDF7; }
-table.evolution-tree td.focus { background: #C0CCE6; }
-table.evolution-tree td img { margin: 0 -0.3em; }
-table.evolution-tree td a { color: black; }
-table.evolution-tree td a:hover { color: #759EF0; }
-table.evolution-tree td .evolution-method {
-    font-size: 0.7rem;
-    padding-top: 0.5em;
-    margin: 0;
-    line-height: 0.8rem;
-}
+
+.beside-portrait:after { clear: both; display: block; content: ""; }
 
 /* Type and damage class icons */
 .type, .damage-class {
@@ -256,6 +248,27 @@ td.give { text-align: center }
 
 /* Pokémon species list */
 td.population-zero { color: #AAAAAA; }
+
+/* Pokémon species pages — tables for evolution trees */
+table.evolution-tree {
+    margin: auto;
+    border-spacing: 0.5rem;
+    border-collapse: separate;
+}
+
+table.evolution-tree td {
+    width: 11em;
+    height: 3em;
+    background: #DEE6F5;
+    border: 1px solid #7799EE;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.evolution-tree td:hover { background: #D1DDF7; }
+table.evolution-tree td.focus { background: #C0CCE6; }
+
+p.evolution-method { font-size: 0.7rem; margin: 0; }
 
 /* Buying stuff */
 tr.unaffordable-total { color: #CC0000; }
