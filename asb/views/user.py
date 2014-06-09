@@ -4,8 +4,6 @@ import pyramid.security
 from pyramid.view import view_config
 import sqlalchemy as sqla
 import sqlalchemy.orm
-from sqlalchemy.sql import select
-import transaction
 import wtforms
 
 from asb import db
@@ -159,8 +157,6 @@ def register_commit(context, request):
     are any errors; create their account otherwise.
     """
 
-    session = db.DBSession()
-
     form = RegistrationForm(request.POST, csrf_context=request.session)
 
     if not form.validate():
@@ -171,33 +167,23 @@ def register_commit(context, request):
 
     if user is not None:
         # Update the old user
-        # XXX user.id = nextval should work but doesn't; not my fault
-        nextval = db.Trainer.trainers_id_seq.next_value()
-        id, = db.DBSession.execute(select([nextval])).fetchone()
-
-        user.id = id
+        user.id = db.DBSession.execute(db.Trainer.trainers_id_seq)
         user.unclaimed_from_hack = False
 
         # Same with all their Pokémon
         if form.what_do.data == 'old':
-            nextval = select([db.Pokemon.pokemon_id_seq.next_value()])
-
             for pokemon in user.pokemon:
-                id, = db.DBSession.execute(nextval).fetchone()
-                pokemon.id = id
-
-                session.flush()
+                pokemon.id = db.DBSession.execute(db.Pokemon.pokemon_id_seq)
                 pokemon.update_identifier()
     else:
         # Create a new user
         identifier = 'temp-{0}'.format(username)
         user = db.Trainer(name=username, identifier=identifier)
-        session.add(user)
+        db.DBSession.add(user)
+        db.DBSession.flush()  # Set their ID
 
-    session.flush()
     user.set_password(form.password.data)
     user.update_identifier()
-    transaction.commit()
 
     return httpexc.HTTPSeeOther('/')
 
