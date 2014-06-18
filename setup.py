@@ -15,7 +15,7 @@ requires = [
     'pyramid_exclog==0.7',
     'pyramid_mako==1.0.2',
     'pyramid_tm==0.7',
-    'SQLAlchemy==0.8.3',
+    'SQLAlchemy==0.9.4',
     'transaction==1.4.1',
     'waitress==0.8.7',
     'WTForms==1.0.5',
