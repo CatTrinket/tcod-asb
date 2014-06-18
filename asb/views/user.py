@@ -160,8 +160,6 @@ class UserLinkField(wtforms.StringField):
         over.
         """
 
-        return
-
         if (self.preexisting_trainer is not None and not
           self.preexisting_trainer.unclaimed_from_hack):
             raise wtforms.validators.ValidationError('That forum account is '
