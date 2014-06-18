@@ -426,13 +426,19 @@ class Trainer(PlayerTable):
     trainers_id_seq = Sequence('trainers_id_seq')
 
     id = Column(Integer, trainers_id_seq, primary_key=True)
-    identifier = Column(Unicode, unique=True, nullable=False, default='')
+    identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode(30), nullable=False)
-    password_hash = Column(Unicode, nullable=True, default='')
+    tcodf_user_id = Column(Integer, unique=True, nullable=True)
+    password_hash = Column(Unicode, nullable=True)
     money = Column(Integer, nullable=False, default=45)
     last_collected_allowance = Column(Date, nullable=True)
     is_newbie = Column(Boolean, nullable=False, default=True)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
+    is_validated = Column(Boolean, nullable=False, default=False)
+
+    # Prevent two trainers from having the same name, unless one is an actual
+    # user and the other is just an old hack profile
+    __table_args__ = (UniqueConstraint('name', 'unclaimed_from_hack'),)
 
     def set_password(self, password):
         """Hash and store the given password."""

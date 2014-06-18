@@ -1,39 +1,14 @@
 <%inherit file='/base.mako'/>\
+<%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name="title">Register - The Cave of Dragonflies ASB</%block>
 <form action="/register" method="POST" id="registration-form">
     ${form.csrf_token() | n}
-
-    % if form.csrf_token.errors:
-    <ul>
-        <li class="form-error">
-            Invalid CSRF token; the form probably expired.  Try again.
-        </li>
-    </ul>
-    % endif
-
-
-    ${form.what_do.label() | n}
-    ${form.what_do() | n}
-
-
-    <hr>
+    ${h.form_error_list(form.csrf_token.errors)}
 
 
     ${form.username.label() | n}
     ${form.username(maxlength=30) | n}
-
-    % if form.username.errors:
-    <ul>
-        % for error in form.username.errors:
-        <li class="form-error">${error}</li>
-        % endfor
-    </ul>
-    % endif
-
-    <p>If you're recovering an old profile, you'll have to enter your username
-    as it was on October 4, 2013.  If you can't remember, find one of your
-    posts on the forums and hover over your username to get a list of previous
-    usernames.</p>
+    ${h.form_error_list(form.username.errors)}
 
 
     <hr>
@@ -45,14 +20,7 @@
     ${form.password_confirm.label() | n}
     ${form.password_confirm() | n}
 
-    <% pw_errors = form.password.errors + form.password_confirm.errors %>
-    % if pw_errors:
-    <ul>
-        % for error in pw_errors:
-        <li class="form-error">${error}</li>
-        % endfor
-    </ul>
-    % endif
+    ${h.form_error_list(form.password.errors + form.password_confirm.errors)}
 
     <p>This is separate from your forum password, but you can make it the same
     if you want.  Nobody can see it either way.</p>

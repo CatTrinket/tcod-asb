@@ -13,11 +13,16 @@ class Root(dict):
     __parent__ = None
 
     __acl__ = [
-        (sec.Allow, sec.Authenticated, 'account.manage'),
+        (sec.Allow, 'validated', 'account.manage'),
         (sec.Deny, sec.Everyone, 'account.manage'),
+
+        (sec.Deny, 'validated', 'account.validate'),
+        (sec.Allow, sec.Authenticated, 'account.validate'),
+        (sec.Deny, sec.Everyone, 'account.validate'),
 
         (sec.Allow, 'admin', 'bank.approve'),
         (sec.Allow, 'mod', 'bank.approve'),
+        (sec.Deny, sec.Everyone, 'bank.approve'),
     ]
 
 class DexIndex:

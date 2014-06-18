@@ -2,6 +2,7 @@ import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 
 from asb import db
+import asb.forms
 
 @view_config(context=Exception, renderer='/error.mako')
 def error(error, request):
@@ -26,8 +27,9 @@ def error_specific(error, request):
 def home(context, request):
     """The home page."""
 
-    mod_stuff = None
+    stuff = {}
 
+    # Find stuff to display on the Mod Bulletin, if applicable
     if any(role in ['mod', 'admin'] for role in request.effective_principals):
         # For now, we'll just assume that the only way the user has any mod
         # permissions is if they're a mod, so we don't need to check individual
@@ -52,4 +54,6 @@ def home(context, request):
 
             mod_stuff.append((message, '/bank/approve'))
 
-    return {'mod_stuff': mod_stuff}
+        stuff['mod_stuff'] = mod_stuff
+
+    return stuff

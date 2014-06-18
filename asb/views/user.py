@@ -8,6 +8,7 @@ import wtforms
 
 from asb import db
 import asb.forms
+import asb.tcodf
 
 def get_user(request):
     """Get the logged-in user for a request."""
@@ -31,7 +32,8 @@ def get_user_roles(userid, request):
     """Get a user's roles for Pyramid authorization."""
 
     try:
-        user = (db.DBSession.query(db.Trainer)
+        user = (
+            db.DBSession.query(db.Trainer)
             .filter_by(id=userid)
             .options(sqla.orm.subqueryload('roles'))
             .one()
@@ -42,11 +44,14 @@ def get_user_roles(userid, request):
     roles = [role.identifier for role in user.roles]
     roles.append('user:{}'.format(userid))
 
+    if user.is_validated:
+        roles.append('validated')
+
     return roles
 
 class UsernameField(wtforms.StringField):
-    """A username field that also fetches the corresponding user, if any, from
-    the database.
+    """A username field that also fetches the corresponding registered user, if
+    any, from the database.
     """
 
     def process_formdata(self, valuelist):
@@ -54,7 +59,8 @@ class UsernameField(wtforms.StringField):
 
         try:
             trainer = (db.DBSession.query(db.Trainer)
-                .filter_by(name=self.data)
+                .filter(sqla.func.lower(db.Trainer.name) == self.data.lower())
+                .filter_by(unclaimed_from_hack=False)
                 .one())
 
             self.trainer = trainer
@@ -74,7 +80,7 @@ class LoginForm(asb.forms.CSRFTokenForm):
     def validate_username(form, field):
         """Make sure we actually found a current user for this username."""
 
-        if field.trainer is None or field.trainer.unclaimed_from_hack:
+        if field.trainer is None:
             raise wtforms.validators.ValidationError
 
     def validate_password(form, field):
@@ -95,21 +101,8 @@ class LoginForm(asb.forms.CSRFTokenForm):
 class RegistrationForm(asb.forms.CSRFTokenForm):
     """A registration form."""
 
-    what_do = wtforms.RadioField(
-        'What would you like to do?',
-
-        [wtforms.validators.InputRequired(
-            'Please select one of these options.')],
-
-        choices=[
-           ('new', 'Create a new profile'),
-           ('old', 'Recover an old profile from the vB hack')
-        ],
-    )
-
     username = UsernameField('TCoD forum username',
-        [wtforms.validators.InputRequired('Please enter your username'),
-         wtforms.validators.length(max=30)])
+        [wtforms.validators.InputRequired(), asb.forms.name_validator])
     password = wtforms.PasswordField('Choose a password',
         [wtforms.validators.InputRequired("Your password can't be empty")])
     password_confirm = wtforms.PasswordField('Confirm')
@@ -123,25 +116,62 @@ class RegistrationForm(asb.forms.CSRFTokenForm):
             raise wtforms.validators.ValidationError("Passwords don't match")
 
     def validate_username(form, field):
-        """Depending on whether the person registering is trying to create a
-        new profile or reclaim an old one, make sure we did or didn't find a
-        preexisting trainer as appropriate.
+        """Make sure they're not trying to register as an already-registered
+        trainer.
         """
 
-        # Make sure they're not trying to register as an already-existing user
-        if field.trainer is not None and not field.trainer.unclaimed_from_hack:
+        if field.trainer is not None:
             raise wtforms.validators.ValidationError(
                 'The username {0} has already been registered.  If someone '
                 'else is using your username, contact an ASB mod.'
-                .format(field.data))
+                .format(field.data)
+            )
 
-        # If they're trying to reclaim an old profile, make sure we actually
-        # found that profile
-        if form.what_do.data == 'old' and field.trainer is None:
-            raise wtforms.validators.ValidationError(
-                "No profile found for the username {0}.  If double-checking "
-                "the spelling and trying previous usernames doesn't work, "
-                "contact Zhorken.".format(field.data))
+class UserLinkField(wtforms.StringField):
+    """A field for a forum profile link that also retrieves profile info."""
+
+    tcodf_user_id = None
+    preexisting_trainer = None
+    tcodf_user_info = None
+
+    def process_formdata(self, valuelist):
+        """Process form data, and also retreive profile info."""
+
+        [self.data] = valuelist
+        self.tcodf_user_id = asb.tcodf.user_id(self.data)
+        self.tcodf_user_info = asb.tcodf.user_info(self.tcodf_user_id)
+
+        # See if there's already a trainer with this TCoDf ID
+        try:
+            self.preexisting_trainer = (
+                db.DBSession.query(db.Trainer)
+                .filter_by(tcodf_user_id=self.tcodf_user_id)
+                .one()
+            )
+        except sqla.orm.exc.NoResultFound:
+            pass
+
+    def pre_validate(self, form):
+        """Make sure nobody else has already validated using this forum
+        account.
+
+        Yes, we also have to check that the right profile link is in the right
+        place, but we do that elsewhere to avoid having to pass the user id all
+        over.
+        """
+
+        return
+
+        if (self.preexisting_trainer is not None and not
+          self.preexisting_trainer.unclaimed_from_hack):
+            raise wtforms.validators.ValidationError('That forum account is '
+                'already associated with an ASB profile')
+
+class ValidationForm(asb.forms.CSRFTokenForm):
+    """An account validation form."""
+
+    profile_link = UserLinkField(validators=[wtforms.validators.Required()])
+    submit = wtforms.SubmitField('Validate')
 
 @view_config(route_name='register', renderer='/register.mako',
   request_method='GET')
@@ -162,28 +192,88 @@ def register_commit(context, request):
     if not form.validate():
         return {'form': form}
 
+    # Create a new user
     username = form.username.data
-    user = form.username.trainer
+    identifier = 'temp-{0}'.format(username)
+    user = db.Trainer(name=username, identifier=identifier)
 
-    if user is not None:
-        # Update the old user
-        user.id = db.DBSession.execute(db.Trainer.trainers_id_seq)
-        user.unclaimed_from_hack = False
-
-        # Same with all their Pokémon
-        if form.what_do.data == 'old':
-            for pokemon in user.pokemon:
-                pokemon.id = db.DBSession.execute(db.Pokemon.pokemon_id_seq)
-                pokemon.update_identifier()
-    else:
-        # Create a new user
-        identifier = 'temp-{0}'.format(username)
-        user = db.Trainer(name=username, identifier=identifier)
-        db.DBSession.add(user)
-        db.DBSession.flush()  # Set their ID
+    db.DBSession.add(user)
+    db.DBSession.flush()  # Set their ID
 
     user.set_password(form.password.data)
     user.update_identifier()
+
+    # Log them in
+    headers = pyramid.security.remember(request, user.id)
+
+    return httpexc.HTTPSeeOther('/validate', headers=headers)
+
+@view_config(route_name='validate', renderer='/validate.mako',
+  permission='account.validate', request_method='GET')
+def validate_page(context, request):
+    """The validation page."""
+
+    return {'form': ValidationForm(csrf_context=request.session)}
+
+@view_config(route_name='validate', renderer='/validate.mako',
+  permission='account.validate', request_method='POST')
+def validate(context, request):
+    """Validate a user, and give them back their old profile if applicable."""
+
+    form = ValidationForm(request.POST, csrf_context=request.session)
+    return_dict = {'form': form}
+
+    if not form.validate():
+        return return_dict
+
+    trainer = request.user
+    old_trainer = form.profile_link.preexisting_trainer
+    info = form.profile_link.tcodf_user_info
+
+    # Check the profile link, but be lenient about the slug
+    link = info['profile_link']
+
+    if link is None:
+        form.profile_link.errors.append("Couldn't find an ASB profile link on "
+            "that forum profile")
+        return return_dict
+    else:
+        path, sep, slug = info['profile_link'].path.partition('-')
+
+        if path != '/trainers/{}'.format(trainer.id):
+            form.profile_link.errors.append('Found an ASB link on that forum '
+                "profile, but it's the wrong link")
+            return return_dict
+
+    if old_trainer:
+        # We found an old profile from the vB hack — replace this user with it
+        id = trainer.id
+        identifier = trainer.identifier
+        old_trainer.password_hash = trainer.password_hash
+        old_trainer.name = trainer.name
+
+        db.DBSession.delete(trainer)
+        db.DBSession.flush()
+
+        trainer = old_trainer
+        trainer.id = id
+        trainer.identifier = identifier
+
+        # Update all their Pokémon's IDs
+        for pokemon in trainer.pokemon:
+            pokemon.id = db.DBSession.execute(asb.db.Pokemon.pokemon_id_seq)
+            pokemon.update_identifier()
+
+    username = info['username']
+
+    if trainer.name != username:
+        request.session.flash('Your username has been updated to match your '
+            'forum profile.')
+        trainer.name = username
+        trainer.update_identifier()
+
+    trainer.tcodf_user_id = form.profile_link.tcodf_user_id
+    trainer.is_validated = True
 
     return httpexc.HTTPSeeOther('/')
 
@@ -216,7 +306,6 @@ def logout(context, request):
         headers = pyramid.security.forget(request)
         return httpexc.HTTPSeeOther('/', headers=headers)
     else:
-        # what do I do
         request.session.flash('Invalid CSRF token; the logout link probably '
             'expired.  Try again.')
 
