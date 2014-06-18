@@ -9,6 +9,7 @@ with open(os.path.join(here, 'README.md')) as f:
 # I'm going to just give exact versions that I know will work
 requires = [
     'alembic==0.6.3',
+    'beautifulsoup4==4.3.2',
     'pbkdf2==1.3',
     'pyramid==1.5',
     'pyramid_beaker==0.8',
