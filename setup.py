@@ -1,10 +1,6 @@
 import os
 
-from setuptools import setup, find_packages
-
-here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README.md')) as f:
-    README = f.read()
+import setuptools
 
 # I'm going to just give exact versions that I know will work
 requires = [
@@ -23,29 +19,17 @@ requires = [
     'zope.sqlalchemy==0.7.3',
 ]
 
-setup(name='asb',
-      version='0.0',
-      description='asb',
-      long_description=README,
-      classifiers=[
-        "Programming Language :: Python",
-        "Framework :: Pyramid",
-        "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
-        ],
-      author='',
-      author_email='',
-      url='',
-      keywords='web wsgi bfg pylons pyramid',
-      packages=find_packages(),
-      include_package_data=True,
-      zip_safe=False,
-      test_suite='asb',
-      install_requires=requires,
-      entry_points="""\
-      [paste.app_factory]
-      main = asb:main
-      [console_scripts]
-      asbdb = asb.db.cli:main
-      """,
-      )
+entry_points = {
+    'paste.app_factory': 'main = asb:main',
+    'console_scripts': 'asbdb = asb.db.cli:main'
+}
+
+setuptools.setup(
+    name='asb',
+    packages=setuptools.find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    test_suite='asb',
+    install_requires=requires,
+    entry_points=entry_points
+)
