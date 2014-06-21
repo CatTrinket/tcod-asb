@@ -674,7 +674,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,order
 673,gogoat,673,,,1,True,816
 674,pancham,674,,,1,True,817
 675,pangoro,675,,,1,True,818
-676,furfrou,676,,,1,True,819
+676,furfrou-natural,676,Au naturel,Natural Furfrou,1,True,819
 677,espurr,677,,,1,True,829
 678,meowstic-female,678,Female,Female Meowstic,1,True,830
 679,honedge,679,,,1,True,832
