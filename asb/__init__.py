@@ -38,6 +38,7 @@ def main(global_config, **settings):
     config.add_route('validate', '/validate')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
+    config.add_route('settings', '/settings')
 
     config.add_route('pokemon.buy', '/pokemon/buy')
     config.add_route('pokemon.buy.checkout', '/pokemon/buy/checkout')

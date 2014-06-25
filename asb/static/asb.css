@@ -229,17 +229,15 @@ table.effect-table td.damage-class-cell > .damage-class
 /* Registration form */
 #registration-form label { display: block; font-weight: bold; }
 #registration-form input { display: block; margin-left: 1.5em; }
-
-ul#what_do { list-style-type: none; padding: 0; }
-ul#what_do input { display: inline; }
-ul#what_do label { font-weight: normal; display: inline; }
-
 #registration-form p { font-style: italic; font-size: 0.9em; }
-
 #registration-form #submit { margin-left: 0; }
 
 /* Login page */
 #login-page-form p { text-align: center; }
+
+/* Settings form — a lot like the registration form */
+#settings-form label { display: block; font-weight: bold; }
+#settings-form input[type="password"] { display: block; margin-left: 1.5em; }
 
 /* Manage items page */
 /* I'M SO ANNOYED that this doesn't really fit into any of the other "centered

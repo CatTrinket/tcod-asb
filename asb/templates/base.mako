@@ -32,6 +32,7 @@
     % endif
 
     <li><a href="/bank">Bank</a></li>
+    <li><a href="/settings">Settings</a></li>
   % else:
     <li><a href="/validate">Validate account</a></li>
   % endif

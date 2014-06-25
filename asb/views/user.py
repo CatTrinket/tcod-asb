@@ -127,6 +127,26 @@ class RegistrationForm(asb.forms.CSRFTokenForm):
                 .format(field.data)
             )
 
+class SettingsForm(asb.forms.CSRFTokenForm):
+    """A settings form."""
+
+    # These three fields *together* are optional — they must be all filled out,
+    # or all blank.  This is super annoying to write as a validator, so we just
+    # check that manually later.
+    password = wtforms.PasswordField('Current password')
+    new_password = wtforms.PasswordField('New password')
+    new_password_confirm = wtforms.PasswordField('Confirm new password',
+        [wtforms.validators.EqualTo('new_password', "Passwords don't match")])
+
+    save = wtforms.SubmitField('Save')
+
+class UpdateUsernameForm(asb.forms.CSRFTokenForm):
+    """A single button to tell the app to check the user's TCoDf profile and
+    update their username to match it.
+    """
+
+    update_username = wtforms.SubmitField('Poink!')
+
 class UserLinkField(wtforms.StringField):
     """A field for a forum profile link that also retrieves profile info."""
 
@@ -308,3 +328,59 @@ def logout(context, request):
             'expired.  Try again.')
 
         return httpexc.HTTPSeeOther('/')
+
+@view_config(route_name='settings', renderer='/settings.mako',
+  permission='account.manage', request_method='GET')
+def settings(context, request):
+    """The settings page."""
+
+    return {
+        'update_username': UpdateUsernameForm(csrf_context=request.session),
+        'settings': SettingsForm(csrf_context=request.session)
+    }
+
+@view_config(route_name='settings', renderer='/settings.mako',
+  permission='account.manage', request_method='POST')
+def settings_process(context, request):
+    """Process a settings form or update username form."""
+
+    update_username = UpdateUsernameForm(request.POST,
+        csrf_context=request.session)
+    settings = SettingsForm(request.POST, csrf_context=request.session)
+
+    trainer = request.user
+    return_dict = {'update_username': update_username, 'settings': settings}
+
+    if update_username.update_username.data:
+        if not update_username.validate():
+            return return_dict
+
+        # Try to update their username
+        try:
+            info = asb.tcodf.user_info(trainer.tcodf_user_id)
+        except ValueError:
+            update_username.update_username.errors.append('Something went '
+                'wrong checking your forum profile; try again later')
+            return return_dict
+
+        trainer.name = info['username']
+        trainer.update_identifier()
+    elif settings.save.data:
+        if not settings.validate():
+            return return_dict
+
+        if settings.new_password.data:
+            # Check their current password
+            if not trainer.check_password(settings.password.data):
+                settings.password.errors.append('Current password incorrect')
+                return return_dict
+
+            # new_password_confirm was checked with an actual validator, so
+            # we're good
+            trainer.set_password(settings.new_password.data)
+        elif settings.password.data:
+            # They didn't enter a new password, but they entered their old one
+            settings.new_password.errors.append("Your password can't be blank")
+            return return_dict
+
+    return httpexc.HTTPSeeOther('/')
