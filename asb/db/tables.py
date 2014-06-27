@@ -414,7 +414,8 @@ class PokemonUnlockedEvolution(PlayerTable):
     # something the Pokémon can actually evolve into.  It would be even *nicer*
     # if we could do without this table altogether...
 
-    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), primary_key=True)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id', ondelete='cascade'),
+        primary_key=True)
     evolved_species_id = Column(Integer, ForeignKey(PokemonSpecies.id),
         primary_key=True)
 

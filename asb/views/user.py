@@ -127,6 +127,25 @@ class RegistrationForm(asb.forms.CSRFTokenForm):
                 .format(field.data)
             )
 
+class ResetAccountForm(asb.forms.CSRFTokenForm):
+    """A form for resetting or deleting one's account, and making sure the user
+    is doing so on purpose.
+    """
+
+    confirmation = 'I understand and wish to reset or delete my account.'
+
+    i_understand = wtforms.TextField('Sentence', validators=[
+        wtforms.validators.AnyOf([confirmation],
+            'Please enter the sentence exactly as shown.')
+    ])
+
+    # Weird name so as not to clash with the password field on SettingsForm.
+    # Validated later to avoid having to pass the user object around.
+    reset_pass = wtforms.PasswordField('Password')
+
+    reset = wtforms.SubmitField('Reset account')
+    delete = wtforms.SubmitField('Delete account')
+
 class SettingsForm(asb.forms.CSRFTokenForm):
     """A settings form."""
 
@@ -336,7 +355,8 @@ def settings(context, request):
 
     return {
         'update_username': UpdateUsernameForm(csrf_context=request.session),
-        'settings': SettingsForm(csrf_context=request.session)
+        'settings': SettingsForm(csrf_context=request.session),
+        'reset_delete': ResetAccountForm(csrf_context=request.session)
     }
 
 @view_config(route_name='settings', renderer='/settings.mako',
@@ -347,9 +367,14 @@ def settings_process(context, request):
     update_username = UpdateUsernameForm(request.POST,
         csrf_context=request.session)
     settings = SettingsForm(request.POST, csrf_context=request.session)
+    reset_delete = ResetAccountForm(request.POST, csrf_context=request.session)
 
     trainer = request.user
-    return_dict = {'update_username': update_username, 'settings': settings}
+    return_dict = {
+        'update_username': update_username,
+        'settings': settings,
+        'reset_delete': reset_delete
+    }
 
     if update_username.update_username.data:
         if not update_username.validate():
@@ -382,5 +407,35 @@ def settings_process(context, request):
             # They didn't enter a new password, but they entered their old one
             settings.new_password.errors.append("Your password can't be blank")
             return return_dict
+    elif reset_delete.reset.data or reset_delete.delete.data:
+        # Validate form and also check their password
+        correct_password = trainer.check_password(reset_delete.reset_pass.data)
+
+        if not (reset_delete.validate() and correct_password):
+            if not correct_password:
+                reset_delete.password.errors.append('Wrong password')
+
+            return return_dict
+
+        # Delete their stuff from other tables
+        for table in [db.TrainerItem, db.Pokemon, db.BankTransaction]:
+            db.DBSession.execute(sqla.sql.delete(table,
+                table.trainer_id == trainer.id))
+
+        if reset_delete.delete.data:
+            # DELETE THEM
+            # Roles carry over on reset, so we only delete them here
+            db.DBSession.execute(sqla.sql.delete(db.TrainerRole,
+                db.TrainerRole.trainer_id == trainer.id))
+
+            db.DBSession.delete(trainer)
+
+            return httpexc.HTTPSeeOther('/',
+                headers=pyramid.security.forget(request))
+        else:
+            # Reset them
+            trainer.money = 45
+            trainer.is_newbie = True
+            trainer.last_collected_allowance = None
 
     return httpexc.HTTPSeeOther('/')
