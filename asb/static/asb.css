@@ -273,6 +273,7 @@ p.evolution-method { font-size: 0.7rem; margin: 0; }
 .evolution-progress { font-size: 14px; }
 
 /* Buying stuff */
+.promotion-price { color: #008000; font-weight: bold; }
 tr.unaffordable-total { color: #CC0000; }
 
 /* Evolving Pokémon */

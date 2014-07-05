@@ -287,18 +287,26 @@ def pokemon_checkout_form(cart, request):
     # buying more than one of something
     species_seen = {}
 
-    # Now for all the subforms.  We're going to need to set the name species in
-    # a class in a moment, hence the underscore on this one.
-    for species_ in cart:
+    # Now for all the subforms.  We're going to need to set these names in a
+    # class definition in a moment, hence the underscore on these ones.
+    for (species_, promotion_) in cart:
         species_ = db.DBSession.merge(species_)
         species_seen.setdefault(species_.identifier, 0)
         species_seen[species_.identifier] += 1
         n = species_seen[species_.identifier]
 
         # Figure out ability choices
-        abilities = [(ability.slot, ability.ability.name)
-            for ability in species_.default_form.abilities
-            if not ability.is_hidden]
+        allow_hidden_ability = (promotion_ is not None and
+            promotion_.hidden_ability)
+
+        abilities = []
+
+        for ability in species_.default_form.abilities:
+            if not ability.is_hidden:
+                abilities.append((ability.slot, ability.ability.name))
+            elif allow_hidden_ability:
+                abilities.append((ability.slot,
+                    '{} (hidden)'.format(ability.ability.name)))
 
         if species_.identifier == 'basculin':
             # Fuck it, this is the only buyable Pokémon it matters for
@@ -328,7 +336,7 @@ def pokemon_checkout_form(cart, request):
             # Ability field, if the Pokémon can have more than one ability
             if len(abilities) > 1:
                 ability = wtforms.SelectField('Ability', coerce=int,
-                    choices=abilities, default=1)
+                    choices=abilities, default=3 if allow_hidden_ability else 1)
 
             # Form field, if the Pokémon has different forms
             if len(forms) > 1:
@@ -336,8 +344,10 @@ def pokemon_checkout_form(cart, request):
                     choices=[(f.id, f.form_name or 'Default') for f in forms],
                     default=species_.default_form.id)
 
-            species = species_  # Hang on to this; we'll need it
-            number = n  # This too
+            # Hang onto these; we'll need them
+            species = species_
+            promotion = promotion_
+            number = n
 
         # Add this subform to the container form
         if n > 1:
@@ -514,15 +524,30 @@ def fetch_cart(cart):
     PokemonSpecies.
     """
 
+    species = (species for (species, promotion) in cart)
+    promotions = (promotion for (species, promotion) in cart)
+
     # Fetch all the Pokémon in the cart
-    new_cart = (db.DBSession.query(db.PokemonSpecies)
-        .filter(db.PokemonSpecies.identifier.in_(cart))
+    species = (
+        db.DBSession.query(db.PokemonSpecies)
+        .filter(db.PokemonSpecies.identifier.in_(species))
         .options(joinedload('rarity'), joinedload('default_form'))
-        .all())
+        .all()
+    )
+    species = {species.identifier: species for species in species}
+
+    promotions = (
+        db.DBSession.query(db.Promotion)
+        .filter(db.Promotion.identifier.in_(promotions))
+        .all()
+    )
+    promotions = {promotion.identifier: promotion for promotion in promotions}
 
     # Fix duplicates
-    new_cart = {species.identifier: species for species in new_cart}
-    new_cart = [new_cart[identifier] for identifier in cart]
+    new_cart = [
+        (species[a_species], promotion and promotions[promotion])
+        for (a_species, promotion) in cart
+    ]
 
     return new_cart
 
@@ -542,18 +567,19 @@ def get_rarities():
         .order_by(db.Rarity.id)
         .all())
 
-@view_config(route_name='pokemon.buy', permission='account.manage',
-  request_method='GET', renderer='/buy/pokemon.mako')
-def buy_pokemon(context, request):
-    """A page for buying Pokémon."""
-
-    cart = request.session.get('cart', [])
+def get_pokemon_buying_stuff(request):
+    cart = request.session.setdefault('cart', [])
 
     stuff = {
-        'quick_buy': QuickBuyForm(csrf_context=request.session),
-        'browse': PokemonBrowseForm(csrf_context=request.session),
-        'cart_form': PokemonCartForm(csrf_context=request.session),
-        'cart': fetch_cart(cart),
+        'quick_buy': QuickBuyForm(request.POST,
+            csrf_context=request.session),
+        'browse': PokemonBrowseForm(request.POST,
+            csrf_context=request.session),
+        'cart_form': PokemonCartForm(request.POST,
+            csrf_context=request.session),
+        'promotions': [],
+        'cart': cart,
+        'cart_species': fetch_cart(cart),
         'rarities': get_rarities()
     }
 
@@ -563,9 +589,39 @@ def buy_pokemon(context, request):
         for species in rarity.pokemon_species
     ]
 
-    stuff['cart_form'].remove.choices = [(species, 'X') for species in cart]
+    stuff['cart_form'].remove.choices = [
+        ('{}:{}'.format(species, promotion)
+            if promotion is not None else species, 'X')
+        for (species, promotion) in cart
+    ]
+
+    # Promotions
+    used_promotions = {promotion for (species, promotion) in cart}
+
+    for promotion in request.user.promotions:
+        if (promotion.identifier not in used_promotions and
+          promotion.pokemon_species):
+            form = PokemonBrowseForm(
+                request.POST,
+                csrf_context=request.session,
+                prefix=promotion.identifier
+            )
+
+            form.add.choices=[
+                (species.identifier, '+')
+                for species in promotion.pokemon_species
+            ]
+
+            stuff['promotions'].append((promotion, form))
 
     return stuff
+
+@view_config(route_name='pokemon.buy', permission='account.manage',
+  request_method='GET', renderer='/buy/pokemon.mako')
+def buy_pokemon(context, request):
+    """A page for buying Pokémon."""
+
+    return get_pokemon_buying_stuff(request)
 
 @view_config(route_name='pokemon.buy', permission='account.manage',
   request_method='POST', renderer='/buy/pokemon.mako')
@@ -574,63 +630,56 @@ def buy_pokemon_process(context, request):
     remove one from the user's cart.
     """
 
-    trainer = request.user
-    rarities = get_rarities()
-    cart = request.session.setdefault('cart', [])
-    fetched_cart = fetch_cart(cart)
+    stuff = get_pokemon_buying_stuff(request)
 
-    quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
-    browse = PokemonBrowseForm(request.POST, csrf_context=request.session)
-    cart_form = PokemonCartForm(request.POST, csrf_context=request.session)
+    if stuff['quick_buy'].quickbuy.data:
+        if not stuff['quick_buy'].validate():
+            return stuff
 
-    browse.add.choices = [
-        (species.identifier, '+')
-        for rarity in rarities
-        for species in rarity.pokemon_species
-    ]
+        species = stuff['quick_buy'].pokemon.data[1]
+        stuff['cart'].append((species.identifier, None))
+    elif stuff['browse'].add.data:
+        if not stuff['browse'].validate():
+            return stuff
 
-    cart_form.remove.choices = [(identifier, 'X') for identifier in cart]
+        stuff['cart'].append((stuff['browse'].add.data, None))
+    elif stuff['cart_form'].remove.data:
+        if not stuff['cart_form'].validate():
+            return stuff
 
-    return_dict = {'rarities': rarities, 'quick_buy': quick_buy,
-        'cart': fetched_cart, 'browse': browse, 'cart_form': cart_form}
+        pokemon, sep, promotion = stuff['cart_form'].remove.data.partition(':')
+        stuff['cart'].remove((pokemon, promotion or None))
+    else:
+        for (promotion, form) in stuff['promotions']:
+            if form.add.data:
+                if not form.validate():
+                    return stuff
 
-    if quick_buy.quickbuy.data:
-        if not quick_buy.validate():
-            return return_dict
+                stuff['cart'].append((form.add.data, promotion.identifier))
+                break
 
-        species = quick_buy.pokemon.data[1]
-        cart.append(species.identifier)
-
-        return httpexc.HTTPSeeOther('/pokemon/buy')
-    elif browse.add.data:
-        if not browse.validate():
-            return return_dict
-
-        cart.append(browse.add.data)
-
-        return httpexc.HTTPSeeOther('/pokemon/buy')
-    elif cart_form.remove.data:
-        if not cart_form.validate():
-            return return_dict
-
-        cart.remove(cart_form.remove.data)
-
-        return httpexc.HTTPSeeOther('/pokemon/buy')
+    return httpexc.HTTPSeeOther('/pokemon/buy')
 
 @view_config(route_name='pokemon.buy.checkout', permission='account.manage',
   request_method='GET', renderer='/buy/pokemon_checkout.mako')
 def pokemon_checkout(context, request):
     """A page for actually buying all the Pokémon in the trainer's cart."""
 
+    cart = request.session.get('cart')
+
     # Make sure they actually have something to check out
-    if 'cart' not in request.session or not request.session['cart']:
+    if not cart:
         request.session.flash('Your cart is empty')
         return httpexc.HTTPSeeOther('/pokemon/buy')
 
-    cart = fetch_cart(request.session['cart'])
+    cart = fetch_cart(cart)
 
     # Make sure they can afford everything
-    grand_total = sum(species.rarity.price for species in cart)
+    grand_total = sum(
+        (promotion or species.rarity).price
+        for (species, promotion) in cart
+    )
+
     if grand_total > request.user.money:
         request.session.flash("You can't afford all that!")
         return httpexc.HTTPSeeOther('/pokemon/buy')
@@ -655,7 +704,11 @@ def pokemon_checkout_commit(context, request):
     cart = fetch_cart(request.session['cart'])
 
     # Make sure they actually have enough money
-    grand_total = sum(species.rarity.price for species in cart)
+    grand_total = sum(
+        (promotion or species.rarity).price
+        for (species, promotion) in cart
+    )
+
     if grand_total > trainer.money:
         request.session.flash("You can't afford all that!")
         return httpexc.HTTPSeeOther('/pokemon/buy')
@@ -708,6 +761,16 @@ def pokemon_checkout_commit(context, request):
 
         db.DBSession.add(pokemon)
         pokemon.update_identifier()
+
+        # Mark the promotion as recieved, if applicable
+        if subform.promotion is not None:
+            promotion_recipient = db.PromotionRecipient(
+                promotion_id=subform.promotion.id,
+                trainer_id=trainer.id,
+                received=True
+            )
+
+            db.DBSession.merge(promotion_recipient)
 
     # Finish up and return to the "Your Pokémon" page
     trainer.money -= grand_total

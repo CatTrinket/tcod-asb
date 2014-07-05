@@ -33,7 +33,7 @@ ${quick_buy.quickbuy() | n}
 ${h.form_error_list(quick_buy.csrf_token.errors + quick_buy.pokemon.errors)}
 </form>
 
-% if cart:
+% if cart_species:
 <% total = 0 %>
 <h1>Cart</h1>
 <form action="/pokemon/buy" method="POST">
@@ -53,14 +53,19 @@ ${h.form_error_list(cart_form.csrf_token.errors)}
   </tr>
 </thead>
 <tbody>
-  % for pokemon, remove in zip(cart, cart_form.remove):
+  % for (pokemon, promotion), remove in zip(cart_species, cart_form.remove):
   <tr>
     <td class="input">${remove()}</td>
     <td class="icon">${h.pokemon_form_icon(pokemon.default_form)}</td>
     <td class="focus-column">${h.link(pokemon.default_form, text=pokemon.name)}</td>
+    % if promotion is None:
     <td class="price">$${pokemon.rarity.price}</td>
+    <% total += pokemon.rarity.price %>
+    % else:
+    <td class="price promotion-price">$${promotion.price}</td>
+    <% total += promotion.price %>
+    % endif
   </tr>
-  <% total += pokemon.rarity.price %>
   % endfor
 </tbody>
 <tfoot>
@@ -83,6 +88,29 @@ ${h.form_error_list(cart_form.csrf_token.errors)}
 <p>Your bank balance: $${request.user.money}</p>
 % endif
 
+% for (promotion, form) in promotions:
+<% promotion_buttons = iter(form.add) %>
+<%def name="promotion_add_to_cart_cell(pokemon)">
+<td class="input">${next(promotion_buttons)}</td>
+</%def>
+
+<h1>${promotion.name}</h1>
+<form action="/pokemon/buy" method="POST">
+${form.csrf_token()}
+${h.form_error_list(form.csrf_token.errors)}
+
+${t.pokemon_form_table(
+    (p.default_form for p in promotion.pokemon_species),
+    species_name=True,
+    extra_left_cols=[{
+        'col': add_to_cart_col,
+        'th': t.empty_header,
+        'td': promotion_add_to_cart_cell
+    }]
+)}
+</form>
+% endfor
+
 <h1>Browse</h1>
 <form action="/pokemon/buy" method="POST">
 ${browse.csrf_token()}
@@ -90,8 +118,15 @@ ${h.form_error_list(browse.csrf_token.errors)}
 
 ${t.pokemon_form_table(
     *((p.default_form for p in rarity.pokemon_species) for rarity in rarities),
-    subheaders=['{} (${})'.format(label, rarity.price) for label, rarity in zip(rarity_labels, rarities)],
     species_name=True,
-    extra_left_cols=[{'col': add_to_cart_col, 'th': t.empty_header, 'td': add_to_cart_cell}]
+    subheaders=[
+        '{} (${})'.format(label, rarity.price)
+        for label, rarity in zip(rarity_labels, rarities)
+    ],
+    extra_left_cols=[{
+        'col': add_to_cart_col,
+        'th': t.empty_header,
+        'td': add_to_cart_cell
+    }]
 )}
 </form>

@@ -5,7 +5,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 import sqlalchemy.schema
-from sqlalchemy.sql import and_
+from sqlalchemy.sql import and_, or_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -244,7 +244,6 @@ class PokemonSpecies(PokedexTable):
     evolves_from_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
         nullable=True)
     rarity_id = Column(Integer, ForeignKey('rarities.id'), nullable=True)
-    is_starter = Column(Boolean, nullable=False)
     can_switch_forms = Column(Boolean, nullable=False)
     form_carries_into_battle = Column(Boolean, nullable=False)
     forms_are_squashable = Column(Boolean, nullable=False)
@@ -419,6 +418,57 @@ class PokemonUnlockedEvolution(PlayerTable):
     evolved_species_id = Column(Integer, ForeignKey(PokemonSpecies.id),
         primary_key=True)
 
+class Promotion(PlayerTable):
+    """An opportunity to receive a special Pokémon or item, e.g. a giveaway or
+    a tournament prize.
+    """
+
+    __tablename__ = 'promotions'
+
+    promotions_id_seq = Sequence('promotions_id_seq')
+
+    id = Column(Integer, promotions_id_seq, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode(30), unique=True, nullable=False)
+    is_public = Column(Boolean, nullable=False)
+    price = Column(Integer, nullable=False)
+    hidden_ability = Column(Boolean, nullable=False)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+
+class PromotionItem(PlayerTable):
+    """An item available through a promotion."""
+
+    __tablename__ = 'promotion_items'
+
+    promotion_id = Column(Integer, ForeignKey('promotions.id'),
+        primary_key=True)
+    item_id = Column(Integer, ForeignKey(Item.id), primary_key=True)
+
+class PromotionPokemonSpecies(PlayerTable):
+    """A Pokémon species available through a promotion."""
+
+    __tablename__ = 'promotion_pokemon_species'
+
+    promotion_id = Column(Integer, ForeignKey('promotions.id'),
+        primary_key=True)
+    pokemon_species_id = Column(Integer, ForeignKey(PokemonSpecies.id),
+        primary_key=True)
+
+class PromotionRecipient(PlayerTable):
+    """A trainer who has received or is eligible to receive a promotion.
+
+    If the promotion is public, all trainers are eligible recipients, and only
+    trainers who have actually received their thing need to be listed here.
+    """
+
+    __tablename__ = 'promotion_recipients'
+
+    promotion_id = Column(Integer, ForeignKey('promotions.id'),
+        primary_key=True)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    received = Column(Boolean, nullable=False)
+
 class Trainer(PlayerTable):
     """A member of the ASB league and user of this app thing."""
 
@@ -433,7 +483,6 @@ class Trainer(PlayerTable):
     password_hash = Column(Unicode, nullable=True)
     money = Column(Integer, nullable=False, default=45)
     last_collected_allowance = Column(Date, nullable=True)
-    is_newbie = Column(Boolean, nullable=False, default=True)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
     is_validated = Column(Boolean, nullable=False, default=False)
 
@@ -479,6 +528,29 @@ class Trainer(PlayerTable):
             .exists())
         pokemon_exist, = DBSession.query(existence_subquery).one()
         return pokemon_exist
+
+    @property
+    def promotions(self):
+        """Return any promotions this trainer is eligible to receive."""
+
+        my_promotions = (
+            DBSession.query(PromotionRecipient)
+            .filter_by(trainer_id=self.id)
+            .subquery()
+        )
+
+        return (
+            DBSession.query(Promotion)
+            .outerjoin(my_promotions)
+            .filter(or_(
+                my_promotions.c.received == False,
+                and_(
+                    Promotion.is_public == True,
+                    my_promotions.c.received.is_(None)
+                )
+            ))
+            .all()
+        )
 
     @property
     def __name__(self):
@@ -578,6 +650,11 @@ PokemonSpecies.pre_evolution = relationship(PokemonSpecies,
 PokemonSpecies.genders = relationship(Gender,
     secondary=PokemonSpeciesGender.__table__, order_by=Gender.id)
 PokemonSpecies.rarity = relationship(Rarity, back_populates='pokemon_species')
+
+Promotion.items = relationship(Item, secondary=PromotionItem.__table__,
+    order_by=Item.name)
+Promotion.pokemon_species = relationship(PokemonSpecies,
+    secondary=PromotionPokemonSpecies.__table__, order_by=PokemonSpecies.order)
 
 Rarity.pokemon_species = relationship(PokemonSpecies,
     order_by=PokemonSpecies.order, back_populates='rarity')
