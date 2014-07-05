@@ -34,6 +34,29 @@ class MultiCheckboxField(wtforms.SelectMultipleField):
     widget = wtforms.widgets.ListWidget(prefix_label=False)
     option_widget = wtforms.widgets.CheckboxInput()
 
+class ButtonSubmitInput(wtforms.widgets.Input):
+    """A <button type="submit">."""
+
+    def __call__(self, field, **kwargs):
+        return wtforms.widgets.HTMLString(
+            '<button {params}>{label}</button>'.format(
+                params=wtforms.widgets.html_params(
+                    type='submit',
+                    name=field.name,
+                    value=field.data,
+                    **kwargs
+                ),
+
+                label=field.label.text
+            )
+        )
+
+class MultiSubmitField(wtforms.SelectField):
+    """A SelectField that presents its options as submit buttons."""
+
+    widget = wtforms.widgets.ListWidget(prefix_label=False)
+    option_widget = ButtonSubmitInput()
+
 class PostLinkField(wtforms.TextField):
     """A text field for a link to a post on the forums that parses and stores
     the post ID as part of validation.
