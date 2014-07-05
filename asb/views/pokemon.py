@@ -116,6 +116,17 @@ class EditPokemonForm(asb.forms.CSRFTokenForm):
     form = wtforms.SelectField(coerce=int)
     save = wtforms.SubmitField('Save')
 
+class PokemonBrowseForm(asb.forms.CSRFTokenForm):
+    """A form for browsing through Pokémon, and adding one to the cart."""
+
+    # XXX This coerce is necessary so that it doesn't turn None into 'None'
+    add = asb.forms.MultiSubmitField(coerce=lambda value: value)
+
+class PokemonCartForm(asb.forms.CSRFTokenForm):
+    """"""
+
+    remove = asb.forms.MultiSubmitField(coerce=lambda value: value)
+
 class PokemonEvolutionForm(asb.forms.CSRFTokenForm):
     """A form for evolving a Pokémon.
 
@@ -533,11 +544,25 @@ def get_rarities():
 def buy_pokemon(context, request):
     """A page for buying Pokémon."""
 
-    quick_buy = QuickBuyForm(csrf_context=request.session)
-    rarities = get_rarities()
-    cart = fetch_cart(request.session.get('cart', []))
+    cart = request.session.get('cart', [])
 
-    return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
+    stuff = {
+        'quick_buy': QuickBuyForm(csrf_context=request.session),
+        'browse': PokemonBrowseForm(csrf_context=request.session),
+        'cart_form': PokemonCartForm(csrf_context=request.session),
+        'cart': fetch_cart(cart),
+        'rarities': get_rarities()
+    }
+
+    stuff['browse'].add.choices = [
+        (species.identifier, '+')
+        for rarity in stuff['rarities']
+        for species in rarity.pokemon_species
+    ]
+
+    stuff['cart_form'].remove.choices = [(species, 'X') for species in cart]
+
+    return stuff
 
 @view_config(route_name='pokemon.buy', permission='account.manage',
   request_method='POST', renderer='/buy/pokemon.mako')
@@ -546,58 +571,48 @@ def buy_pokemon_process(context, request):
     remove one from the user's cart.
     """
 
-    quick_buy = None
+    trainer = request.user
+    rarities = get_rarities()
+    cart = request.session.setdefault('cart', [])
+    fetched_cart = fetch_cart(cart)
 
-    if 'quickbuy' in request.POST:
-        # Quick buy (well, more like quick add-to-cart)
-        quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
+    quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
+    browse = PokemonBrowseForm(request.POST, csrf_context=request.session)
+    cart_form = PokemonCartForm(request.POST, csrf_context=request.session)
 
-        if quick_buy.validate():
-            species = quick_buy.pokemon.data[1]
-            request.session.setdefault('cart', []).append(species.identifier)
-            return httpexc.HTTPSeeOther('/pokemon/buy')
-    elif 'add' in request.POST:
-        # Add to cart
-        identifier = request.POST['add']
+    browse.add.choices = [
+        (species.identifier, '+')
+        for rarity in rarities
+        for species in rarity.pokemon_species
+    ]
 
-        # Make sure it's a real, buyable Pokémon
-        try:
-            species = (db.DBSession.query(db.PokemonSpecies)
-                .filter_by(identifier=identifier)
-                .options(joinedload('rarity'), joinedload('default_form'))
-                .one()
-            )
-        except NoResultFound:
-            # The only way something can go wrong here is if someone's mucking
-            # around, so I don't really care about figuring out errors
-            pass
-        else:
-            if species.rarity_id is not None:
-                # Valid Pokémon; add it to the cart
-                request.session.setdefault('cart', []).append(species.identifier)
-                return httpexc.HTTPSeeOther('/pokemon/buy')
-    elif 'remove' in request.POST and 'cart' in request.session:
-        # Remove from cart
-        identifier = request.POST['remove']
+    cart_form.remove.choices = [(identifier, 'X') for identifier in cart]
 
-        try:
-            request.session['cart'].remove(identifier)
-        except ValueError:
-            # Again, if they're trying to remove something that's not in their
-            # cart, who cares?  Let them quietly fall back to the buy page.
-            pass
+    return_dict = {'rarities': rarities, 'quick_buy': quick_buy,
+        'cart': fetched_cart, 'browse': browse, 'cart_form': cart_form}
+
+    if quick_buy.quickbuy.data:
+        if not quick_buy.validate():
+            return return_dict
+
+        species = quick_buy.pokemon.data[1]
+        cart.append(species.identifier)
 
         return httpexc.HTTPSeeOther('/pokemon/buy')
+    elif browse.add.data:
+        if not browse.validate():
+            return return_dict
 
-    # If we haven't returned yet, something's gone wrong; back to the buy page
+        cart.append(browse.add.data)
 
-    if quick_buy is None:
-        quick_buy = QuickBuyForm(csrf_context=request.session)
+        return httpexc.HTTPSeeOther('/pokemon/buy')
+    elif cart_form.remove.data:
+        if not cart_form.validate():
+            return return_dict
 
-    rarities = get_rarities()
-    cart = fetch_cart(request.session.get('cart', []))
+        cart.remove(cart_form.remove.data)
 
-    return {'rarities': rarities, 'quick_buy': quick_buy, 'cart': cart}
+        return httpexc.HTTPSeeOther('/pokemon/buy')
 
 @view_config(route_name='pokemon.buy.checkout', permission='account.manage',
   request_method='GET', renderer='/buy/pokemon_checkout.mako')

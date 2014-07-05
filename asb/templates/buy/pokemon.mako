@@ -13,6 +13,8 @@
         'Rarity Seven',
         'Rarity Eight'
     ]
+
+    pokemon_buttons = iter(browse.add)
 %>
 
 <%def name="add_to_cart_col()">
@@ -20,28 +22,24 @@
 </%def>
 
 <%def name="add_to_cart_cell(pokemon)">
-<td class="input"><button name="add" value="${pokemon.species.identifier}">+</button></td>
+<td class="input">${next(pokemon_buttons)}</td>
 </%def>
 
 <form action="/pokemon/buy" method="POST">
 ${quick_buy.csrf_token() | n}
 Quick buy: ${quick_buy.pokemon(placeholder='Enter a Pokémon') | n}
 ${quick_buy.quickbuy() | n}
-% if quick_buy.errors:
-<ul class="form-error">
-    % for errors in quick_buy.errors.values():
-    % for error in errors:
-    <li>${error}</li>
-    % endfor
-    % endfor
-</ul>
-% endif
+
+${h.form_error_list(quick_buy.csrf_token.errors + quick_buy.pokemon.errors)}
 </form>
 
 % if cart:
 <% total = 0 %>
 <h1>Cart</h1>
 <form action="/pokemon/buy" method="POST">
+${cart_form.csrf_token()}
+${h.form_error_list(cart_form.csrf_token.errors)}
+
 <table class="standard-table">
 <col class="input-small">
 <col class="pokemon-icon">
@@ -55,9 +53,9 @@ ${quick_buy.quickbuy() | n}
   </tr>
 </thead>
 <tbody>
-  % for pokemon in cart:
+  % for pokemon, remove in zip(cart, cart_form.remove):
   <tr>
-    <td class="input"><button name="remove" value="${pokemon.identifier}">X</button></td>
+    <td class="input">${remove()}</td>
     <td class="icon">${h.pokemon_form_icon(pokemon.default_form)}</td>
     <td class="focus-column">${h.link(pokemon.default_form, text=pokemon.name)}</td>
     <td class="price">$${pokemon.rarity.price}</td>
@@ -87,6 +85,9 @@ ${quick_buy.quickbuy() | n}
 
 <h1>Browse</h1>
 <form action="/pokemon/buy" method="POST">
+${browse.csrf_token()}
+${h.form_error_list(browse.csrf_token.errors)}
+
 ${t.pokemon_form_table(
     *((p.default_form for p in rarity.pokemon_species) for rarity in rarities),
     subheaders=['{} (${})'.format(label, rarity.price) for label, rarity in zip(rarity_labels, rarities)],
