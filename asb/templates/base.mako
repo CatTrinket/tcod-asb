@@ -11,7 +11,7 @@
 </head>
 <body>
 <header>
-<a href="/"><img src="/static/banner.png"></a>
+<a href="/"><img src="/static/images/banner.png"></a>
 
 <nav>
 <ul id="menu-user">
