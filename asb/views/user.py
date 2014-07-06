@@ -418,7 +418,8 @@ def settings_process(context, request):
             return return_dict
 
         # Delete their stuff from other tables
-        for table in [db.TrainerItem, db.Pokemon, db.BankTransaction]:
+        for table in [db.TrainerItem, db.Pokemon, db.BankTransaction,
+          db.PromotionRecipient]:
             db.DBSession.execute(sqla.sql.delete(table,
                 table.trainer_id == trainer.id))
 
