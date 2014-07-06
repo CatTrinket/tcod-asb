@@ -33,8 +33,7 @@
     ${form.email() | n}
 
     <p>Eventually this will be used to reset your password if you forget it.
-    Until then (or if you never set an email) you'll have to wait for an ASB
-    mod to take care of it manually.</p>
+    Until then you'll have to get Zhorken to take care of it manually.</p>
 
 
     <p>${form.submit() | n}</p>

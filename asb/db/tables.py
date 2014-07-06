@@ -481,6 +481,7 @@ class Trainer(PlayerTable):
     name = Column(Unicode(30), nullable=False)
     tcodf_user_id = Column(Integer, unique=True, nullable=True)
     password_hash = Column(Unicode, nullable=True)
+    email = Column(Unicode(60), nullable=True)
     money = Column(Integer, nullable=False, default=45)
     last_collected_allowance = Column(Date, nullable=True)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)

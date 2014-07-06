@@ -106,7 +106,9 @@ class RegistrationForm(asb.forms.CSRFTokenForm):
     password = wtforms.PasswordField('Choose a password',
         [wtforms.validators.InputRequired("Your password can't be empty")])
     password_confirm = wtforms.PasswordField('Confirm')
-    email = wtforms.StringField('Email (optional)')
+    email = wtforms.StringField('Email (optional)',
+        [wtforms.validators.Optional(), wtforms.validators.Email(),
+            wtforms.validators.Length(max=60)])
     submit = wtforms.SubmitField('Register')
 
     def validate_password_confirm(form, field):
@@ -153,9 +155,13 @@ class SettingsForm(asb.forms.CSRFTokenForm):
     # or all blank.  This is super annoying to write as a validator, so we just
     # check that manually later.
     password = wtforms.PasswordField('Current password')
-    new_password = wtforms.PasswordField('New password')
+    new_password = wtforms.PasswordField('New password',
+        [wtforms.validators.Optional()])
     new_password_confirm = wtforms.PasswordField('Confirm new password',
         [wtforms.validators.EqualTo('new_password', "Passwords don't match")])
+    email = wtforms.TextField('Email',
+        [wtforms.validators.Optional(), wtforms.validators.Email(),
+            wtforms.validators.Length(max=60)])
 
     save = wtforms.SubmitField('Save')
 
@@ -232,7 +238,11 @@ def register_commit(context, request):
     # Create a new user
     username = form.username.data
     identifier = 'temp-{0}'.format(username)
-    user = db.Trainer(name=username, identifier=identifier)
+    user = db.Trainer(
+        name=username,
+        identifier=identifier,
+        email=form.email.data
+    )
 
     db.DBSession.add(user)
     db.DBSession.flush()  # Set their ID
@@ -353,16 +363,19 @@ def logout(context, request):
 def settings(context, request):
     """The settings page."""
 
+    settings = SettingsForm(csrf_context=request.session)
+    settings.email.data = request.user.email
+
     return {
         'update_username': UpdateUsernameForm(csrf_context=request.session),
-        'settings': SettingsForm(csrf_context=request.session),
+        'settings': settings,
         'reset_delete': ResetAccountForm(csrf_context=request.session)
     }
 
 @view_config(route_name='settings', renderer='/settings.mako',
   permission='account.manage', request_method='POST')
 def settings_process(context, request):
-    """Process a settings form or update username form."""
+    """Process any of the various forms on the settings page."""
 
     update_username = UpdateUsernameForm(request.POST,
         csrf_context=request.session)
@@ -394,19 +407,16 @@ def settings_process(context, request):
         if not settings.validate():
             return return_dict
 
-        if settings.new_password.data:
-            # Check their current password
-            if not trainer.check_password(settings.password.data):
-                settings.password.errors.append('Current password incorrect')
-                return return_dict
-
-            # new_password_confirm was checked with an actual validator, so
-            # we're good
-            trainer.set_password(settings.new_password.data)
-        elif settings.password.data:
-            # They didn't enter a new password, but they entered their old one
-            settings.new_password.errors.append("Your password can't be blank")
+        # Check their password, since we don't do this with a validator
+        if not trainer.check_password(settings.password.data):
+            settings.password.errors.append('Current password incorrect')
             return return_dict
+
+        if settings.new_password.data:
+            trainer.set_password(settings.new_password.data)
+
+        if settings.email.data:
+            trainer.email = settings.email.data
     elif reset_delete.reset.data or reset_delete.delete.data:
         # Validate form and also check their password
         correct_password = trainer.check_password(reset_delete.reset_pass.data)

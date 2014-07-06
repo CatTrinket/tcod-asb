@@ -238,7 +238,17 @@ table.effect-table td.damage-class-cell > .damage-class
 
 /* Settings form — a lot like the registration form */
 #settings-form label { display: block; font-weight: bold; }
-#settings-form input[type="password"] { display: block; margin-left: 1.5em; }
+
+#settings-form input[type="password"],
+#settings-form input[type="text"] {
+    display: block; margin-left: 1.5em;
+}
+
+#settings-form div + div {
+    border-top: 1px solid black;
+    padding-top: 0.5em;
+    margin-top: 0.5em;
+}
 
 /* Manage items page */
 /* I'M SO ANNOYED that this doesn't really fit into any of the other "centered

@@ -12,25 +12,35 @@
     ${h.form_error_list(update_username.update_username.errors)}
 </form>
 
+<h1>Change password/email</h1>
 <form action="/settings" method="POST" id="settings-form">
     ${settings.csrf_token() | n}
     ${h.form_error_list(settings.csrf_token.errors)}
 
-    <h1>Change password</h1>
-    ${settings.password.label() | n}
-    ${settings.password() | n}
+    <div>
+        ${settings.password.label() | n}
+        ${settings.password() | n}
+        ${h.form_error_list(settings.password.errors)}
+    </div>
 
-    ${settings.new_password.label() | n}
-    ${settings.new_password() | n}
+    <div>
+        ${settings.new_password.label() | n}
+        ${settings.new_password() | n}
 
-    ${settings.new_password_confirm.label() | n}
-    ${settings.new_password_confirm() | n}
+        ${settings.new_password_confirm.label() | n}
+        ${settings.new_password_confirm() | n}
 
-    ${h.form_error_list(
-        settings.password.errors +
-        settings.new_password.errors +
-        settings.new_password_confirm.errors
-    )}
+        ${h.form_error_list(
+            settings.new_password.errors +
+            settings.new_password_confirm.errors
+        )}
+    </div>
+
+    <div>
+        ${settings.email.label()}
+        ${settings.email()}
+        ${h.form_error_list(settings.email.errors)}
+    </div>
 
     <p>${settings.save() | n}</p>
 </form>
