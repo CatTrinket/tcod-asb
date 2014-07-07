@@ -76,3 +76,29 @@ ${damage_class.name.capitalize()}\
 </ul>
 % endif
 </%def>
+
+<%def name="appeal(move)">\
+% if move.appeal == -1:
++??\
+% elif move.appeal is not None:
++${move.appeal}\
+% endif
+% if move.bonus_appeal == -1:
+ (+??)\
+% elif move.bonus_appeal is not None:
+ (+${move.bonus_appeal})\
+% endif
+</%def>
+
+<%def name="jam(move)">\
+% if move.jam == -1:
+−??\
+% elif move.jam is not None:
+−${move.jam}\
+% endif
+% if move.bonus_jam == -1:
+ (−??)\
+% elif move.bonus_jam is not None:
+ (−${move.bonus_jam})\
+% endif
+</%def>

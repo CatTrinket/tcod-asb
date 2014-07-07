@@ -302,3 +302,7 @@ p.evolution-note { margin: 0; font-size: 75%; }
 /* Bank approval */
 dl#bank-approval-instructions > dt { width: 2em; }
 dl#bank-approval-instructions > dd { margin-left: 2em; }
+
+div#move-info > dl { float: left; width: 33%; margin: 0; }
+div#move-info > dl + dl { margin-left: 0.5%; }
+div#move-info:after { display: block; content: ''; clear: both; }

@@ -55,6 +55,27 @@ class Ability(PokedexTable):
 
         return self.identifier
 
+class ContestCategory(PokedexTable):
+    """A category of [****] a move can have in a contest."""
+
+    __tablename__ = 'contest_categories'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+    supercategory_id = Column(Integer,
+        ForeignKey('contest_supercategories.id'), nullable=False)
+    description = Column(Unicode, nullable=False)
+
+class ContestSupercategory(PokedexTable):
+    """A supercategory that groups contest categories."""
+
+    __tablename__ = 'contest_supercategories'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+
 class DamageClass(PokedexTable):
     """A damage class (physical, special, or non-damaging)."""
 
@@ -123,6 +144,12 @@ class Move(PokedexTable):
     accuracy = Column(Integer, nullable=True)
     priority = Column(Integer, nullable=False)
     target_id = Column(Integer, ForeignKey('move_targets.id'), nullable=False)
+    contest_category_id = Column(Integer, ForeignKey('contest_categories.id'),
+        nullable=True)
+    appeal = Column(Integer, nullable=True)
+    bonus_appeal = Column(Integer, nullable=True)
+    jam = Column(Integer, nullable=True)
+    bonus_jam = Column(Integer, nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
     category = Column(Unicode, nullable=True)  # XXX do something better later
@@ -588,6 +615,14 @@ BankTransaction.approver = relationship(Trainer,
 BankTransaction.trainer = relationship(Trainer,
     primaryjoin=BankTransaction.trainer_id == Trainer.id)
 
+ContestCategory.moves = relationship(Move, back_populates='contest_category',
+    order_by=Move.name)
+ContestCategory.supercategory = relationship(ContestSupercategory,
+    back_populates='categories')
+
+ContestSupercategory.categories = relationship(ContestCategory,
+    order_by=ContestCategory.id,  back_populates='supercategory')
+
 Item.category = relationship(ItemCategory, back_populates='items')
 
 ItemCategory.items = relationship(Item, back_populates='category',
@@ -598,6 +633,7 @@ Move.type = relationship(Type)
 Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
     secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
+Move.contest_category = relationship(ContestCategory)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)

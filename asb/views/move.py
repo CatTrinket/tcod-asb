@@ -1,11 +1,41 @@
+import itertools
+
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 from sqlalchemy import or_
-from sqlalchemy.orm import joinedload, subqueryload
+from sqlalchemy.orm import joinedload, subqueryload, subqueryload_all
 from sqlalchemy.orm.exc import NoResultFound
 
 from asb import db
 from asb.resources import MoveIndex
+
+@view_config(context=MoveIndex, name='contests',
+  renderer='/indices/contest_moves.mako')
+def contest_move_index(context, request):
+    """An alternate move index, displaying contest data instead of battle
+    data.
+    """
+
+    supercategories = (
+        db.DBSession.query(db.ContestSupercategory)
+        .order_by(db.ContestSupercategory.id)
+        .options(subqueryload_all('categories.moves'))
+        .all()
+    )
+
+    pure_points_moves = (
+        db.DBSession.query(db.Move)
+        .join(db.ContestCategory)
+        .filter(db.ContestCategory.identifier == 'pure-points')
+        .order_by(db.Move.appeal.desc(), db.Move.jam, db.Move.name)
+        .all()
+    )
+
+    pure_points_moves = itertools.groupby(pure_points_moves,
+        lambda move: (move.appeal, move.jam))
+
+    return {'supercategories': supercategories,
+        'pure_points_moves': pure_points_moves}
 
 @view_config(context=MoveIndex, renderer='/indices/moves.mako')
 def move_index(context, request):

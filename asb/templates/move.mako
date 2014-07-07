@@ -4,6 +4,8 @@
 <%block name='title'>${move.name} - Moves - The Cave of Dragonflies ASB</%block>\
 
 <h1>${move.name}</h1>
+
+<div id="move-info">
 <dl>
    <dt>Type</dt>
    <dd>${h.type_icon(move.type)}</dd>
@@ -11,6 +13,14 @@
    <dt>Stat</dt>
    <dd>${h.damage_class_icon(move.damage_class)}</dd>
 
+   <dt>Target</dt>
+   <dd>${move.target.name}</dd>
+
+   <dt>Category</dt>
+   <dd>${move.category or '???'}</dd>
+</dl>
+
+<dl>
    <dt>Base damage</dt>
    % if move.power is not None:
    <dd>${move.damage}% (${move.power} power)</dd>
@@ -43,13 +53,25 @@
 
    <dt>Priority</dt>
    <dd>${h.num(move.priority, invisible_plus=False)}</dd>
-
-   <dt>Target</dt>
-   <dd>${move.target.name}</dd>
-
-   <dt>Category</dt>
-   <dd>${move.category or '???'}</dd>
 </dl>
+
+% if move.contest_category is not None:
+<dl>
+    <dt>Contest type</dt>
+    <dd>${move.contest_category.name}
+
+    % if move.appeal is not None:
+    <dt>Appeal</dt>
+    <dd>${h.appeal(move)}</dd>
+    % endif
+
+    % if move.jam is not None:
+    <dt>Jam</dt>
+    <dd>${h.jam(move)}</dd>
+    % endif
+</dl>
+% endif
+</div>
 
 <h2>Summary</h2>
 <p>${move.summary}</p>
