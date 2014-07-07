@@ -329,7 +329,7 @@ class BankTransaction(PlayerTable):
     __tablename__ = 'bank_transactions'
 
     state_enum = Enum('pending', 'approved', 'denied',
-        name='bank_transaction_state', metadata=PlayerTable.metadata)
+        name='bank_transaction_state')
 
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
