@@ -56,7 +56,7 @@ class Ability(PokedexTable):
         return self.identifier
 
 class ContestCategory(PokedexTable):
-    """A category of [****] a move can have in a contest."""
+    """An effect moves can have in a contest."""
 
     __tablename__ = 'contest_categories'
 
