@@ -3,10 +3,20 @@
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 % if request.has_permission('edit.basics', pokemon):
-<p><a href="${request.resource_url(pokemon, 'edit')}">Edit ${pokemon.name} →</a></p>
+<p><a href="${request.resource_url(pokemon, 'edit')}">
+    Edit ${pokemon.name} →
+</a></p>
 % endif
+
+% if request.has_permission('edit.everything', pokemon):
+<p><a href="${request.resource_url(pokemon, 'super-edit')}">
+    Super-edit ${pokemon.name} →</a>
+</p>
+
 % if can_evolve and request.has_permission('edit.evolve', pokemon):
-<p><a href="${request.resource_url(pokemon, 'evolve')}">Evolve ${pokemon.name} →</a></p>
+<p><a href="${request.resource_url(pokemon, 'evolve')}">
+    Evolve ${pokemon.name} →
+</a></p>
 % endif
 
 <h1>${pokemon.name}</h1>

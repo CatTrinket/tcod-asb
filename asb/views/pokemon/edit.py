@@ -14,23 +14,49 @@ class EditPokemonForm(asb.forms.CSRFTokenForm):
     form = wtforms.SelectField(coerce=int)
     save = wtforms.SubmitField('Save')
 
+    def add_form_choices(self, pokemon):
+        """Figure out what forms this Pokémon can switch between, and add choices
+        to the "form" dropdown accordingly, or delete it if it's unnecessary.
+        """
 
-def add_form_choices(form, pokemon):
-    """Figure out what forms this Pokémon can switch between, and add choices
-    to the "form" dropdown accordingly, or delete it if it's unnecessary.
-    """
+        if pokemon.species.can_switch_forms or pokemon.form_uncertain:
+            self.form.choices = [
+                (form.id, form.form_name)
+                for form in pokemon.species.forms
+                if check_form_condition(pokemon, form)
+            ]
 
-    if pokemon.species.can_switch_forms or pokemon.form_uncertain:
-        form.form.choices = [
-            (form.id, form.form_name)
-            for form in pokemon.species.forms
-            if check_form_condition(pokemon, form)
+            if self.form.data is None:
+                self.form.data = pokemon.pokemon_form_id
+
+        if self.form.choices is None or len(self.form.choices) <= 1:
+            del self.form
+
+class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
+    """A form for editing things about a Pokémon that only admins can edit."""
+
+    experience = wtforms.IntegerField('Experience')
+    happiness = wtforms.IntegerField('Happiness')
+    unlocked_evolutions = asb.forms.MultiCheckboxField('Unlockable evos',
+        coerce=int)
+    save = wtforms.SubmitField('Save')
+
+    def add_evolution_choices(self, pokemon):
+        choices = [
+            (evo.id, evo.name)
+            for evo in pokemon.species.evolutions
+            if evo.evolution_method.item_id is not None or
+                evo.evolution_method.can_trade_instead
         ]
 
-        form.form.data = pokemon.pokemon_form_id
-        
-    if form.form.choices is None or len(form.form.choices) <= 1:
-        del form.form
+        if choices:
+            self.unlocked_evolutions.choices = choices
+
+            if self.unlocked_evolutions.data is None:
+                self.unlocked_evolutions.data = (
+                    [evo.id for evo in pokemon.unlocked_evolutions])
+        else:
+            del self.unlocked_evolutions
 
 
 @view_config(name='edit', context=db.Pokemon, permission='edit.basics',
@@ -40,19 +66,7 @@ def edit_pokemon(pokemon, request):
 
     form = EditPokemonForm(csrf_context=request.session)
     form.name.data = pokemon.name
-
-    # Figure out what forms this Pokémon can switch between
-    if pokemon.species.can_switch_forms or pokemon.form_uncertain:
-        form.form.choices = [
-            (form.id, form.form_name)
-            for form in pokemon.species.forms
-            if check_form_condition(pokemon, form)
-        ]
-
-        form.form.data = pokemon.pokemon_form_id
-
-    if form.form.choices is None or len(form.form.choices) <= 1:
-        del form.form
+    form.add_form_choices(pokemon)
 
     return {'pokemon': pokemon, 'form': form}
 
@@ -62,17 +76,7 @@ def edit_pokemon_commit(pokemon, request):
     """Process a request to edit a Pokémon."""
 
     form = EditPokemonForm(request.POST, csrf_context=request.session)
-
-    # Figure out what forms this Pokémon can switch between
-    if pokemon.species.can_switch_forms or pokemon.form_uncertain:
-        form.form.choices = [
-            (form.id, form.form_name)
-            for form in pokemon.species.forms
-            if check_form_condition(pokemon, form)
-        ]
-
-    if form.form.choices is None or len(form.form.choices) <= 1:
-        del form.form
+    form.add_form_choices(pokemon)
 
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
@@ -83,5 +87,40 @@ def edit_pokemon_commit(pokemon, request):
     if form.form is not None:
         pokemon.pokemon_form_id = form.form.data
         pokemon.form_uncertain = False
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon))
+
+@view_config(name='super-edit', context=db.Pokemon, request_method='GET',
+  permission='edit.everything', renderer='super_edit_pokemon.mako')
+def super_edit(pokemon, request):
+    form = SuperEditPokemonForm(csrf_context=request.session)
+    form.add_evolution_choices(pokemon)
+    form.experience.data = pokemon.experience
+    form.happiness.data = pokemon.happiness
+
+    return {'form': form, 'pokemon': pokemon}
+
+@view_config(name='super-edit', context=db.Pokemon, request_method='POST',
+  permission='edit.everything', renderer='super_edit_pokemon.mako')
+def super_edit_commit(pokemon, request):
+    form = SuperEditPokemonForm(request.POST, csrf_context=request.session)
+    form.add_evolution_choices(pokemon)
+
+    if not form.validate():
+        return {'form': form, 'pokemon': pokemon}
+
+    pokemon.experience = form.experience.data
+    pokemon.happiness = form.happiness.data
+
+    if form.unlocked_evolutions is not None:
+        (db.DBSession.query(db.PokemonUnlockedEvolution)
+            .filter_by(pokemon_id=pokemon.id)
+            .delete())
+
+        for evo_id in form.unlocked_evolutions.data:
+            db.DBSession.add(db.PokemonUnlockedEvolution(
+                pokemon_id=pokemon.id,
+                evolved_species_id=evo_id
+            ))
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
