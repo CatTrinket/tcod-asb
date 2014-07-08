@@ -20,18 +20,29 @@
     <ul>
         % for (evo, buy, item), option in zip(evolutions, form.evolution):
         <li>
+            <label>
             ${h.pokemon_form_sprite(evo, gender=pokemon.gender.identifier)}
-            ${option.label() | n}
+
+            <p class="evolution-name">${evo.species.name}</p>
+
+            % if evo.form_name:
+            <p class="evolution-note">${evo.form_name}</p>
+            % endif
+
+            % if buy:
             <p class="evolution-note">
-                % if buy:
                 (Costs $${evo.species.evolution_method.buyable_price})
-                % elif item:
-                (Uses up a held ${evo.species.evolution_method.item.name})
-                % else:
-                &nbsp;
-                % endif
             </p>
+            % endif
+
+            % if item:
+            <p class="evolution-note">
+                (Uses up a held ${evo.species.evolution_method.item.name})
+            </p>
+            % endif
+
             ${option() | n}
+            </label>
         </li>
         % endfor
     </ul>
