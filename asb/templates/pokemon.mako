@@ -12,6 +12,7 @@
 <p><a href="${request.resource_url(pokemon, 'super-edit')}">
     Super-edit ${pokemon.name} →</a>
 </p>
+% endif
 
 % if can_evolve and request.has_permission('edit.evolve', pokemon):
 <p><a href="${request.resource_url(pokemon, 'evolve')}">
