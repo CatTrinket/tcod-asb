@@ -1,9 +1,22 @@
+import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 import sqlalchemy as sqla
 import sqlalchemy.orm
+import wtforms
 
 from asb import db
+import asb.forms
 from asb.resources import TrainerIndex
+
+class TrainerEditForm(asb.forms.CSRFTokenForm):
+    """A form for editing a trainer.
+
+    To be expanded as need arises.
+    """
+
+    money_add = wtforms.IntegerField('Money')
+    save = wtforms.SubmitField('Save')
+
 
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
 def trainer_index(context, request):
@@ -34,3 +47,31 @@ def trainer(context, request):
     """A trainer's info page."""
 
     return {'trainer': context}
+
+@view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
+  request_method='GET', permission='trainer.edit')
+def edit(trainer, request):
+    """A page for editing a trainer."""
+
+    return {
+        'trainer': trainer,
+        'form': TrainerEditForm(csrf_context=request.session)
+    }
+
+@view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
+  request_method='POST', permission='trainer.edit')
+def edit_commit(trainer, request):
+    """Process a request to edit a trainer."""
+
+    form = TrainerEditForm(request.POST, csrf_context=request.session)
+
+    if not form.validate():
+        return {'trainer': trainer, 'form': form}
+
+    if form.money_add.data:
+        trainer.money += form.money_add.data
+
+    # Calling it like this avoids the trailing slash and thus a second redirect
+    return httpexc.HTTPSeeOther(
+        request.resource_path(trainer.__parent__, trainer.__name__)
+    )

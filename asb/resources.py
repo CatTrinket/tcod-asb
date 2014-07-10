@@ -23,6 +23,9 @@ class Root(dict):
         (sec.Allow, 'admin', 'bank.approve'),
         (sec.Allow, 'mod', 'bank.approve'),
         (sec.Deny, sec.Everyone, 'bank.approve'),
+
+        (sec.Allow, 'admin', 'trainer.edit'),
+        (sec.Deny, sec.Everyone, 'trainer.edit')
     ]
 
 class DexIndex:
