@@ -107,6 +107,32 @@ ${next(or_) | n}trade
     % endfor
 </table>
 
+% if len(pokemon.species.forms) > 1:
+<h1>Forms</h1>
+
+<ul id="species-form-list">
+% for form in pokemon.species.forms:
+% if form == pokemon:
+<li class="focus">
+    <img src="/static/images/pokemon/${form.identifier}.png" alt="${form.name}">
+</li>
+% else:
+<li>
+    <a href="${request.resource_path(form.__parent__, form.__name__)}">
+        <img src="/static/images/pokemon/${form.identifier}.png" alt="${form.name}">
+    </a>
+</li>
+% endif
+% endfor
+</ul>
+
+% for line in pokemon.species.form_explanation.splitlines():
+% if line:
+<p>${line}</p>
+% endif
+% endfor
+% endif
+
 <h1>Moves</h1>
 ${t.move_table(pokemon.moves)}
 

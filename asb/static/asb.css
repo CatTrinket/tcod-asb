@@ -258,7 +258,7 @@ td.give { text-align: center }
 /* Pokémon species list */
 td.population-zero { color: #AAAAAA; }
 
-/* Pokémon species pages — tables for evolution trees */
+/* Pokémon species pages */
 table.evolution-tree {
     margin: auto;
     border-spacing: 0.5rem;
@@ -278,6 +278,22 @@ table.evolution-tree td:hover { background: #D1DDF7; }
 table.evolution-tree td.focus { background: #C0CCE6; }
 
 p.evolution-method { font-size: 0.7rem; margin: 0; }
+
+ul#species-form-list { padding-left: 0; list-style: none; }
+ul#species-form-list li {
+    display: inline-block;
+    border: 1px solid transparent;
+}
+
+#species-form-list li:hover {
+    border: 1px solid #7799EE;
+    background: #DEE6F5;
+}
+
+ul#species-form-list li.focus {
+    border: 1px solid #7799EE;
+    background: #C0CCE6;
+}
 
 /* Pokémon pages */
 .evolution-progress { font-size: 14px; }

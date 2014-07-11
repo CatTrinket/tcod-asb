@@ -275,6 +275,7 @@ class PokemonSpecies(PokedexTable):
     form_carries_into_battle = Column(Boolean, nullable=False)
     forms_are_squashable = Column(Boolean, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
+    form_explanation = Column(Unicode, nullable=True)
 
     # Set up a couple constraints to make sure that evolves_from_species_id
     # points to a Pokémon in the same evolution family
