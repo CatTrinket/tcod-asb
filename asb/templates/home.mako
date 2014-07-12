@@ -14,6 +14,10 @@
 % endif
 </%def>
 
+<p>The database is, like, ready.  Whoah.  There's just a little more thread
+rewriting to go and we can launch.  Goof around in the beta while you still
+can.</p>
+
 % if bulletin is not UNDEFINED:
 <h1>Trainer bulletin</h1>
 
