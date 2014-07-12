@@ -1,4 +1,5 @@
 import datetime
+import itertools
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
@@ -8,6 +9,11 @@ import wtforms
 from asb import db
 import asb.forms
 import asb.tcodf
+
+# State IDs
+PENDING = 1
+PROCESSED = 2
+ACKNOWLEDGED = 3
 
 class AllowanceForm(asb.forms.CSRFTokenForm):
     """A simple form for collecting allowance."""
@@ -37,6 +43,11 @@ class DepositForm(asb.forms.CSRFTokenForm):
     )
     add_rows = wtforms.SubmitField('+')
     deposit = wtforms.SubmitField('Submit')
+
+class TransactionClearForm(asb.forms.CSRFTokenForm):
+    """A one-button form for clearing the "recent transactions" view."""
+
+    clear = wtforms.SubmitField('Clear non-pending transactions')
 
 class ApprovalForm(asb.forms.CSRFTokenForm):
     """A form for approving and denying bank transactions.
@@ -70,7 +81,7 @@ def approval_form(user, *args, **kwargs):
     # Get all pending transactions, except for the approver's own
     transactions = (
         db.DBSession.query(db.BankTransaction)
-        .filter_by(state='pending')
+        .filter_by(state_id=PENDING)
         .filter(db.BankTransaction.trainer_id != user.id)
         .order_by(db.BankTransaction.id)
         .all()
@@ -110,19 +121,53 @@ def can_collect_allowance(trainer):
 
     return trainer.last_collected_allowance < last_friday
 
+def recent_transactions(trainer):
+    """Get a trainer's pending, recently-approved, and recently-denied
+    transactions.
+    """
+
+    base = (
+        db.DBSession.query(db.BankTransaction)
+        .filter(db.BankTransaction.trainer_id == trainer.id)
+    )
+
+    pending = base.filter_by(state_id=PENDING).all()
+    processed = base.filter_by(state_id=PROCESSED)
+    approved = processed.filter(db.BankTransaction.is_approved == True).all()
+    denied = processed.filter(db.BankTransaction.is_approved == False).all()
+
+    transactions = {
+        'pending': pending,
+        'approved': approved,
+        'denied': denied
+    }
+
+    return transactions
+
 @view_config(route_name='bank', request_method='GET', renderer='/bank.mako',
   permission='account.manage')
 def bank(context, request):
     """The bank page."""
 
+    stuff = {
+        'allowance_form': None,
+        'deposit_form': DepositForm(csrf_context=request.session),
+        'clear_form': None
+    }
+
     if can_collect_allowance(request.user):
-        allowance_form = AllowanceForm(csrf_context=request.session)
-    else:
-        allowance_form = None
+        stuff['allowance_form'] = AllowanceForm(csrf_context=request.session)
 
-    deposit_form = DepositForm(csrf_context=request.session)
+    # Get recent transactions
+    transactions = recent_transactions(request.user)
+    stuff['recent_transactions'] = transactions
 
-    return {'allowance_form': allowance_form, 'deposit_form': deposit_form}
+    if transactions['approved'] or transactions['denied']:
+        stuff['clear_form'] = (
+            TransactionClearForm(csrf_context=request.session)
+        )
+
+    return stuff
 
 @view_config(route_name='bank', request_method='POST', renderer='/bank.mako',
   permission='account.manage')
@@ -141,7 +186,12 @@ def bank_process(context, request):
 
     deposit_form = DepositForm(request.POST, csrf_context=request.session)
 
-    forms = {'allowance_form': allowance_form, 'deposit_form': deposit_form}
+    transactions = recent_transactions(trainer)
+    clear_form = TransactionClearForm(request.POST,
+        csrf_context=request.session)
+
+    stuff = {'allowance_form': allowance_form, 'deposit_form': deposit_form,
+        'recent_transactions': transactions, 'clear_form': clear_form}
 
     if allowance_form is not None and allowance_form.collect_allowance.data:
         # Make sure everything's in order
@@ -150,7 +200,7 @@ def bank_process(context, request):
                 "You've already collected this week's allowance!")
 
         if not allowance_form.validate():
-            return forms
+            return stuff
 
         # Give the trainer their allowance
         trainer.money += 3
@@ -162,15 +212,15 @@ def bank_process(context, request):
         for n in range(5):
             deposit_form.transactions.append_entry()
 
-        return forms
+        return stuff
     elif deposit_form.deposit.data:
         # Add the transactions
         if not deposit_form.validate():
-            return forms
+            return stuff
 
         for transaction in deposit_form.transactions:
             if transaction.amount.data:
-                asb.db.DBSession.add(asb.db.BankTransaction(
+                db.DBSession.add(db.BankTransaction(
                     trainer_id=trainer.id,
                     amount=transaction.amount.data,
                     tcod_post_id=transaction.link.post_id
@@ -180,9 +230,16 @@ def bank_process(context, request):
             "an ASB mod verifies and approves your transaction.")
 
         return httpexc.HTTPSeeOther('/bank')
+    elif clear_form.clear.data:
+        # Mark the user's processed transactions as acknowledged
+        for transaction in itertools.chain(transactions['approved'],
+          transactions['denied']):
+            transaction.state_id = ACKNOWLEDGED
+
+        return httpexc.HTTPSeeOther('/bank')
 
     # Fallback
-    return forms
+    return stuff
 
 @view_config(route_name='bank.approve', request_method='GET',
   renderer='/bank_approve.mako', permission='bank.approve')
@@ -209,10 +266,12 @@ def bank_approve_process(context, request):
 
         if field.what_do.data == 'approve':
             transaction.trainer.money += transaction.amount
-            transaction.state = 'approved'
+            transaction.state_id = PROCESSED
+            transaction.is_approved = True
             transaction.approver_id = approver.id
         elif field.what_do.data == 'deny':
-            transaction.state = 'denied'
+            transaction.state_id = PROCESSED
+            transaction.is_approved = False
             transaction.approver_id = approver.id
 
             if field.reason.data:

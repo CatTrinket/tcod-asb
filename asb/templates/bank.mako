@@ -1,5 +1,29 @@
 <%inherit file='/base.mako'/>\
+<%namespace name='h' file='/helpers/helpers.mako'/>\
 <%block name='title'>Bank - The Cave of Dragonflies ASB</%block>\
+<% from asb.tcodf import post_link %>
+
+<%def name="transaction_tbody(transactions, header, reason_column=True)">
+% if transactions:
+<tbody>
+    <tr class="subheader-row"><td colspan="3">${header}</td></tr>
+
+    % for transaction in transactions:
+    <tr>
+        <td class="price">$${transaction.amount}</td>
+
+        <td><a href="${post_link(transaction.tcod_post_id)}">
+            Post #${transaction.tcod_post_id}
+        </a></td>
+
+        % if reason_column:
+        <td>${transaction.reason or ''}</td>
+        % endif
+    </tr>
+    % endfor
+</tbody>
+% endif
+</%def>
 
 <p><b>Your balance:</b> $${request.user.money}</p>
 
@@ -79,3 +103,30 @@ ${deposit_form.deposit(style="display: none;") | n}
 
 ${deposit_form.deposit() | n}
 </form>
+
+% if any(recent_transactions.values()):
+<% denied = bool(recent_transactions['denied']) %>
+<h1 id="recent">Recent transactions</h1>
+<table>
+<thead>
+    <tr>
+        <th>Amount</th>
+        <th>Link</th>
+        % if denied:
+        <th>Reason</th>
+        % endif
+    </tr>
+</thead>
+${transaction_tbody(recent_transactions['pending'], 'Pending', denied)}
+${transaction_tbody(recent_transactions['approved'], 'Approved', denied)}
+${transaction_tbody(recent_transactions['denied'], 'Denied')}
+</table>
+
+% if clear_form is not None:
+<form action="/bank" method="POST">
+${clear_form.csrf_token}
+${clear_form.clear}
+${h.form_error_list(clear_form.csrf_token.errors + clear_form.clear.errors)}
+</form>
+% endif
+% endif

@@ -55,6 +55,18 @@ class Ability(PokedexTable):
 
         return self.identifier
 
+class BankTransactionState(PokedexTable):
+    """A state for bank transactions, either "pending", "processed", or
+    "acknowledged".
+
+    This was an Enum but those are nigh-impossible to update with alembic.
+    """
+
+    __tablename__ = 'bank_transaction_states'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+
 class ContestCategory(PokedexTable):
     """An effect moves can have in a contest."""
 
@@ -356,14 +368,13 @@ class BankTransaction(PlayerTable):
 
     __tablename__ = 'bank_transactions'
 
-    state_enum = Enum('pending', 'approved', 'denied',
-        name='bank_transaction_state')
-
     id = Column(Integer, primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
     amount = Column(Integer, nullable=False)
     tcod_post_id = Column(Integer, nullable=False)
-    state = Column(state_enum, nullable=False, default='pending')
+    state_id = Column(Integer, ForeignKey(BankTransactionState.id),
+        nullable=False, default=1)
+    is_approved = Column(Boolean, nullable=False, default=False)
     approver_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
     reason = Column(UnicodeText, nullable=True)
 

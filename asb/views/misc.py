@@ -1,8 +1,30 @@
+import random
+
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 
 from asb import db
 import asb.forms
+
+empty_bulletin_messages = [
+    'The bulletin is empty for the time being.  Someone has arranged all the '
+         'thumbtacks into a smiling {pokemon} face.',
+    'The bulletin is empty for the time being... aside from a gaudy ad '
+        'exclaiming "Teach Your {pokemon} to DANCE!", anyway.',
+    'The bulletin is empty for the time being, except for a lonely "lost '
+        '{pokemon}" poster up in the corner.  "We miss Cupcake – last seen '
+        'Tuesday night – call if found!"'
+]
+
+def empty_bulletin_message():
+    """Return a silly message for when the trainer/mod bulletin is empty."""
+
+    pokemon = (
+        db.DBSession.query(db.PokemonSpecies)
+        .get(random.randrange(1, 720))
+    )
+
+    return random.choice(empty_bulletin_messages).format(pokemon=pokemon.name)
 
 @view_config(context=Exception, renderer='/error.mako')
 def error(error, request):
@@ -27,7 +49,62 @@ def error_specific(error, request):
 def home(context, request):
     """The home page."""
 
-    stuff = {}
+    trainer = request.user
+    stuff = {'empty_bulletin_message': empty_bulletin_message}
+
+    if request.has_permission('validate', trainer):
+        stuff['bulletin'] = [
+            ('Your account still needs to be validated', '/validate')
+        ]
+    elif trainer is not None:
+        bulletin = []
+
+        # Check if any of their Pokémon need their forms chosen
+        form_uncertain_pokemon = (
+            db.DBSession.query(db.Pokemon)
+            .filter_by(trainer_id=trainer.id, form_uncertain=True)
+            .all()
+        )
+
+        for pokemon in form_uncertain_pokemon:
+            bulletin.append((
+                "{}'s form needs to be chosen".format(pokemon.name),
+                request.resource_path(pokemon, 'edit')
+            ))
+
+        # Check if any of their bank transactions have been approved/denied
+        processed_state_id = (
+            db.DBSession.query(db.BankTransactionState)
+            .filter_by(identifier='processed')
+            .one().id
+        )
+
+        transaction_count_base = (
+            db.DBSession.query(db.BankTransaction)
+            .filter_by(trainer_id=trainer.id)
+            .filter_by(state_id=processed_state_id)
+        )
+
+        approved = transaction_count_base.filter_by(is_approved=True).count()
+        denied = transaction_count_base.filter_by(is_approved=False).count()
+        transactions = approved + denied
+
+        if transactions:
+            message = 'You have {n} new bank notification{s}'.format(
+                n=transactions,
+                s='s' if transactions > 1 else ''
+            )
+
+            if not denied:
+                message += ' ({} approved)'.format(approved)
+            elif not approved:
+                message += ' ({} denied)'.format(denied)
+            else:
+                message += ' ({} approved, {} denied)'.format(approved, denied)
+
+            bulletin.append((message, '/bank#recent'))
+
+        stuff['bulletin'] = bulletin
 
     # Find stuff to display on the Mod Bulletin, if applicable
     if any(role in ['mod', 'admin'] for role in request.effective_principals):
@@ -40,8 +117,9 @@ def home(context, request):
         # See if there are any pending bank transactions
         pending_transactions = (
             db.DBSession.query(db.BankTransaction)
-            .filter_by(state='pending')
-            .filter(db.BankTransaction.trainer_id != request.user.id)
+            .join(db.BankTransactionState)
+            .filter(db.BankTransactionState.identifier == 'pending')
+            .filter(db.BankTransaction.trainer_id != trainer.id)
             .count()
         )
 
