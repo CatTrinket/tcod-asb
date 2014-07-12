@@ -126,11 +126,13 @@ ${next(or_) | n}trade
 % endfor
 </ul>
 
+% if pokemon.species.form_explanation:
 % for line in pokemon.species.form_explanation.splitlines():
 % if line:
 <p>${line}</p>
 % endif
 % endfor
+% endif
 % endif
 
 <h1>Moves</h1>
