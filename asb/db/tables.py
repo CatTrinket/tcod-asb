@@ -368,7 +368,8 @@ class BankTransaction(PlayerTable):
 
     __tablename__ = 'bank_transactions'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('bank_transactions_id_seq'),
+        primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
     amount = Column(Integer, nullable=False)
     tcod_post_id = Column(Integer, nullable=False)
@@ -603,7 +604,7 @@ class TrainerItem(PlayerTable):
 
     __tablename__ = 'trainer_items'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('trainer_items_id_seq'), primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
     item_id = Column(Integer, ForeignKey(Item.id), nullable=False)
