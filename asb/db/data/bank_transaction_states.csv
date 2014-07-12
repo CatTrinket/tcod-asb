@@ -1,4 +1,4 @@
-id,identifier
-1,pending
-2,processed
-3,acknowledged
+identifier
+acknowledged
+pending
+processed

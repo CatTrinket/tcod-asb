@@ -73,16 +73,10 @@ def home(context, request):
             ))
 
         # Check if any of their bank transactions have been approved/denied
-        processed_state_id = (
-            db.DBSession.query(db.BankTransactionState)
-            .filter_by(identifier='processed')
-            .one().id
-        )
-
         transaction_count_base = (
             db.DBSession.query(db.BankTransaction)
             .filter_by(trainer_id=trainer.id)
-            .filter_by(state_id=processed_state_id)
+            .filter_by(state='processed')
         )
 
         approved = transaction_count_base.filter_by(is_approved=True).count()
@@ -117,8 +111,7 @@ def home(context, request):
         # See if there are any pending bank transactions
         pending_transactions = (
             db.DBSession.query(db.BankTransaction)
-            .join(db.BankTransactionState)
-            .filter(db.BankTransactionState.identifier == 'pending')
+            .filter_by(state='pending')
             .filter(db.BankTransaction.trainer_id != trainer.id)
             .count()
         )

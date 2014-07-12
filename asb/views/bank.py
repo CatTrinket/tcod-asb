@@ -10,10 +10,6 @@ from asb import db
 import asb.forms
 import asb.tcodf
 
-# State IDs
-PENDING = 1
-PROCESSED = 2
-ACKNOWLEDGED = 3
 
 class AllowanceForm(asb.forms.CSRFTokenForm):
     """A simple form for collecting allowance."""
@@ -81,7 +77,7 @@ def approval_form(user, *args, **kwargs):
     # Get all pending transactions, except for the approver's own
     transactions = (
         db.DBSession.query(db.BankTransaction)
-        .filter_by(state_id=PENDING)
+        .filter_by(state='pending')
         .filter(db.BankTransaction.trainer_id != user.id)
         .order_by(db.BankTransaction.id)
         .all()
@@ -131,8 +127,8 @@ def recent_transactions(trainer):
         .filter(db.BankTransaction.trainer_id == trainer.id)
     )
 
-    pending = base.filter_by(state_id=PENDING).all()
-    processed = base.filter_by(state_id=PROCESSED)
+    pending = base.filter_by(state='pending').all()
+    processed = base.filter_by(state='processed')
     approved = processed.filter(db.BankTransaction.is_approved == True).all()
     denied = processed.filter(db.BankTransaction.is_approved == False).all()
 
@@ -234,7 +230,7 @@ def bank_process(context, request):
         # Mark the user's processed transactions as acknowledged
         for transaction in itertools.chain(transactions['approved'],
           transactions['denied']):
-            transaction.state_id = ACKNOWLEDGED
+            transaction.state = 'acknowledged'
 
         return httpexc.HTTPSeeOther('/bank')
 
@@ -266,11 +262,11 @@ def bank_approve_process(context, request):
 
         if field.what_do.data == 'approve':
             transaction.trainer.money += transaction.amount
-            transaction.state_id = PROCESSED
+            transaction.state = 'processed'
             transaction.is_approved = True
             transaction.approver_id = approver.id
         elif field.what_do.data == 'deny':
-            transaction.state_id = PROCESSED
+            transaction.state = 'processed'
             transaction.is_approved = False
             transaction.approver_id = approver.id
 
