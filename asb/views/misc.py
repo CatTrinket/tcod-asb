@@ -13,7 +13,11 @@ empty_bulletin_messages = [
         'exclaiming "Teach Your {pokemon} to DANCE!", anyway.',
     'The bulletin is empty for the time being, except for a lonely "lost '
         '{pokemon}" poster up in the corner.  "We miss Cupcake – last seen '
-        'Tuesday night – call if found!"'
+        'Tuesday night – call if found!"',
+    'The bulletin is empty for the time being, ignoring the six identical '
+        'flyers taking advantage of the space.  "Discover this one weird '
+        'trick invented by a local {pokemon} — Nurse Joys everywhere HATE '
+        'her!"'
 ]
 
 def empty_bulletin_message():
