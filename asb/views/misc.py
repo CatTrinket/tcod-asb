@@ -56,7 +56,7 @@ def home(context, request):
     trainer = request.user
     stuff = {'empty_bulletin_message': empty_bulletin_message}
 
-    if request.has_permission('validate', trainer):
+    if request.has_permission('account.validate', trainer):
         stuff['bulletin'] = [
             ('Your account still needs to be validated', '/validate')
         ]
