@@ -93,9 +93,9 @@ ${next(or_) | n}trade
         <% current = evo == pokemon.species %>
         <td colspan="${colspan}" class="${'focus' if current else ''}">
             % if current:
-            ${h.pokemon_form_icon(pokemon)}${evo.name}
+            ${h.pokemon_form_icon(pokemon, alt='')}${evo.name}
             % else:
-            ${h.pokemon_form_icon(evo)}${h.link(evo.default_form, text=evo.name)}
+            ${h.pokemon_form_icon(evo, alt='')}${h.link(evo.default_form, text=evo.name)}
             % endif
 
             % if evo.evolution_method is not None:

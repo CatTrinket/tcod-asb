@@ -56,7 +56,7 @@ ${h.form_error_list(cart_form.csrf_token.errors)}
   % for (pokemon, promotion), remove in zip(cart_species, cart_form.remove):
   <tr>
     <td class="input">${remove()}</td>
-    <td class="icon">${h.pokemon_form_icon(pokemon.default_form)}</td>
+    <td class="icon">${h.pokemon_form_icon(pokemon.default_form, alt='')}</td>
     <td class="focus-column">${h.link(pokemon.default_form, text=pokemon.name)}</td>
     % if promotion is None:
     <td class="price">$${pokemon.rarity.price}</td>

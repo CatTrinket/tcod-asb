@@ -9,8 +9,11 @@
 <%def name="name_col()"><col class="pokemon-icon"><col class="pokemon"></%def>
 <%def name="name_header()"><th colspan="2">Name</th></%def>
 <%def name="name_cell(pokemon)">
-<td class="icon">${h.pokemon_form_icon(pokemon.form,
-    gender=pokemon.gender.identifier)}</td>
+<td class="icon">${h.pokemon_form_icon(
+    pokemon.form,
+    gender=pokemon.gender.identifier,
+    alt=''
+)}</td>
 <td class="focus-column">${h.link(pokemon)}</td>
 </%def>
 
@@ -55,7 +58,9 @@
 <%def name="item_header()"><th colspan="2">Item</th></%def>
 <%def name="item_cell(pokemon)">
 % if pokemon.item is not None:
-<td class="icon"><img src="/static/images/items/${pokemon.item.identifier}.png"></td>
+<td class="icon">
+    <img src="/static/images/items/${pokemon.item.identifier}.png" alt="">
+</td>
 <td>${h.link(pokemon.item)}</td>
 % else:
 <td colspan="2"></td>
@@ -257,7 +262,7 @@ really don't want to calculate the colspan manually. I'm sorry. -->
     ${column['td'](form)}
     % endfor
 
-    <td class="icon pokemon-icon">${h.pokemon_form_icon(form)}</td>
+    <td class="icon pokemon-icon">${h.pokemon_form_icon(form, alt='')}</td>
     <td class="focus-column">${h.link(form, text=name_override)}</td>
 
     <td class="type-cell">\

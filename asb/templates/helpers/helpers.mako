@@ -28,7 +28,7 @@ ${damage_class.name.capitalize()}\
 </span>\
 </%def>
 
-<%def name="pokemon_form_icon(form, gender=None)">\
+<%def name="pokemon_form_icon(form, gender=None, alt=None)">\
 <%
     if gender is not None and form.identifier in ['unfezant', 'frillish',
       'jellicent', 'pyroar']:
@@ -36,8 +36,11 @@ ${damage_class.name.capitalize()}\
         filename = '{}-{}.png'.format(form.identifier, gender)
     else:
         filename = '{}.png'.format(form.identifier)
+
+    if alt is None:
+        alt = form.name
 %>\
-<img src="/static/images/pokemon-icons/${filename}" alt="">\
+<img src="/static/images/pokemon-icons/${filename}" alt="${alt}">\
 </%def>
 
 <%def name="pokemon_form_sprite(form, gender=None)">\

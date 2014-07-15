@@ -11,7 +11,10 @@
 </head>
 <body>
 <header>
-<a href="/"><img src="/static/images/banner.png"></a>
+<a href="/">
+    <img src="/static/images/banner.png"
+    alt="The Cave of Dragonflies ASB Database">
+</a>
 
 <nav>
 <ul id="menu-user">
