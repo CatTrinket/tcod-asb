@@ -3,8 +3,12 @@
 <%block name='title'>${trainer.name} - Trainers - The Cave of Dragonflies ASB</%block>\
 
 <h1>Pokémon</h1>
-${t.pokemon_table(trainer.squad, trainer.pc,
-    subheaders=['Active squad', 'PC'], skip_cols=['trainer'])}
+${t.pokemon_table(
+    trainer.squad, trainer.pc,
+    subheaders=['Active squad', 'PC'],
+    subheader_colspan=9,
+    skip_cols=['trainer']
+)}
 
 % if trainer.bag:
 <h1>Bag</h1>

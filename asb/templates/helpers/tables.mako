@@ -68,13 +68,14 @@
 </%def>
 
 # The actual table function
-<%def name="pokemon_table(*pokemon_lists, **kwargs)">\
+<%def name="pokemon_table(*pokemon_lists, subheader_colspan=10,
+    subheaders=None, extra_left_cols=[], skip_cols=[], extra_right_cols=[])">\
 <%
-  subheaders = kwargs.pop('subheaders', [None] * len(pokemon_lists))
+  if subheaders is None:
+      subheaders = [None] * len(pokemon_lists)
 
   columns = []
-  columns.extend(kwargs.pop('extra_left_cols', []))
-  skip_cols = kwargs.pop('skip_cols', [])
+  columns.extend(extra_left_cols)
   columns.extend(funcs for name, funcs in [
       ('name', {'col': name_col, 'th': name_header, 'td': name_cell}),
       ('gender', {'col': gender_col, 'th': gender_header, 'td': gender_cell}),
@@ -85,7 +86,7 @@
       ('happiness', {'col': happiness_col, 'th': happiness_header, 'td': happiness_cell}),
       ('item', {'col': item_col, 'th': item_header, 'td': item_cell})
   ] if name not in skip_cols)
-  columns.extend(kwargs.pop('extra_right_cols', []))
+  columns.extend(extra_right_cols)
 %>
 <table class="standard-table">
 % for column in columns:
@@ -104,7 +105,7 @@ ${column['col']()}
 <tbody>
 % if subheader is not None:
 <tr class="subheader-row">
-    <td colspan="1000">${subheader}
+    <td colspan="${subheader_colspan}">${subheader}
 </tr>
 % endif
 
@@ -199,14 +200,12 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
 <col>
 </%def>
 
-<%def name="pokemon_form_table(*form_lists, **kwargs)">
+<%def name="pokemon_form_table(*form_lists, squashed_forms=False,
+    species_name=False, extra_left_cols=[], extra_right_cols=[],
+    subheaders=None, subheader_colspan=6)">
 <%
-  # Temporary fix until Mako can handle Python 3's AST
-  species_name = kwargs.pop('species_name', False)
-  squashed_forms = kwargs.pop('squashed_forms', False)
-  extra_left_cols = kwargs.pop('extra_left_cols', [])
-  extra_right_cols = kwargs.pop('extra_right_cols', [])
-  subheaders = kwargs.pop('subheaders', [None] * len(form_lists))
+    if subheaders is None:
+        subheaders = [None] * len(form_lists)
 %>
 <table class="standard-table">
 % for column in extra_left_cols:
@@ -240,9 +239,7 @@ ${column.get('col', _col)()}
 % if forms:
 <tbody>
 % if subheader is not None:
-<!-- I know this is incorrect, but colspan="0" doesn't work in Chrome and I
-really don't want to calculate the colspan manually. I'm sorry. -->
-<tr class="subheader-row"><td colspan="1000">${subheader}</td></tr>
+<tr class="subheader-row"><td colspan="${subheader_colspan}">${subheader}</td></tr>
 % endif
 
 % for form in forms:
