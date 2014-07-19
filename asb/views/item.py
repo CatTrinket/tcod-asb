@@ -11,6 +11,11 @@ from asb import db
 from asb.resources import ItemIndex
 import asb.forms
 
+class GiveItemForm(asb.forms.CSRFTokenForm):
+    """A form for choosing a Pokémon to give a particular item."""
+
+    pokemon = asb.forms.MultiSubmitField(coerce=int)
+
 class TakeItemsForm(asb.forms.CSRFTokenForm):
     """A form for selecting Pokémon whose held items to return to the bag."""
 
@@ -128,10 +133,12 @@ def item(context, request):
 def give_item(item, request):
     """A page for choosing a Pokémon to give an item to."""
 
+    trainer = request.user
+
     # Make sure this trainer actually has this item in their bag
-    has_item = (db.DBSession.query(db.TrainerItem)
-        .filter_by(trainer_id=request.user.id, item_id=item.id,
-            pokemon_id=None)
+    has_item = (
+        db.DBSession.query(db.TrainerItem)
+        .filter_by(trainer_id=trainer.id, item_id=item.id, pokemon_id=None)
     )
 
     has_item, = db.DBSession.query(has_item.exists()).one()
@@ -139,24 +146,23 @@ def give_item(item, request):
     if not has_item:
         raise httpexc.HTTPForbidden("You don't have this item in your bag!")
 
-    # No form here.  WTForms can't do multiple submit buttons by default, and I
-    # don't feel like writing my own goddamn form class or whatever, so the
-    # template constructs a form manually with a submit button for each
-    # Pokémon.
+    # Make form
+    form = GiveItemForm(request.POST, csrf_context=request.session)
+    form.pokemon.choices = [(pokemon.id, 'Give') for pokemon in trainer.squad]
+    form.pokemon.choices.extend((pokemon.id, 'Give') for pokemon in trainer.pc)
 
-    return {'item': item, 'csrf_failure': False}
+    return {'item': item, 'form': form}
 
 @view_config(name='give', context=db.Item, permission='account.manage',
   request_method='POST', renderer='/manage/give_item.mako')
 def give_item_commit(item, request):
     """Process a request to give an item to a Pokémon."""
 
-    # Again, not using WTForms, so we have to handle POST data manually
-
     trainer = request.user
 
-    # First, find the actual item
-    trainer_item = (db.DBSession.query(db.TrainerItem)
+    # Find this item in the trainer's bag
+    trainer_item = (
+        db.DBSession.query(db.TrainerItem)
         .filter_by(trainer_id=trainer.id, item_id=item.id, pokemon_id=None)
         .first()
     )
@@ -164,29 +170,22 @@ def give_item_commit(item, request):
     if trainer_item is None:
         raise httpexc.HTTPForbidden("You don't have this item in your bag!")
 
-    # Make sure the request data is actually all there...
-    if 'pokemon' not in request.POST:
-        raise httpexc.HTTPForbidden('what')
+    # Validate form
+    form = GiveItemForm(request.POST, csrf_context=request.session)
+    form.pokemon.choices = [(pokemon.id, 'Give') for pokemon in trainer.squad]
+    form.pokemon.choices.extend((pokemon.id, 'Give') for pokemon in trainer.pc)
 
-    # Check CSRF
-    if ('csrf_token' not in request.POST or
-      request.POST['csrf_token'] != request.session.get_csrf_token()):
-        return {'item': item, 'csrf_failure': True}
+    if not form.validate():
+        return {'item': item, 'form': form}
 
-    # Find the Pokémon we're giving the item to
-    pokemon = (db.DBSession.query(db.Pokemon)
-        .filter_by(id=request.POST['pokemon'])
-        .first()
-    )
+    # Give the Pokémon the item, replacing its current item (if any)
+    pokemon = db.DBSession.query(db.Pokemon).get(form.pokemon.data)
 
-    if pokemon is None or pokemon.trainer_id != trainer.id:
-        raise httpexc.HTTPForbidden("... That isn't one of your Pokémon...")
-
-    # FINALLY, give it the item, replacing its current item (if any)
     if pokemon.trainer_item is not None:
         request.session.flash("{0}'s {1} was replaced with the {2}.".format(
             pokemon.name, pokemon.item.name, item.name))
         pokemon.trainer_item.pokemon_id = None
+        db.DBSession.flush()
 
     trainer_item.pokemon_id = pokemon.id
 
