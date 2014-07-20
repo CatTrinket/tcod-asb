@@ -12,7 +12,9 @@ from asb.resources import ItemIndex
 import asb.forms
 
 class GiveItemForm(asb.forms.CSRFTokenForm):
-    """A form for choosing a Pokémon to give a particular item."""
+    """A form for choosing a Pokémon to give a particular item or use an item
+    on.
+    """
 
     pokemon = asb.forms.MultiSubmitField(coerce=int)
 
@@ -128,10 +130,56 @@ def item(context, request):
 
     return {'item': context}
 
+
+### ITEM GIVING
+
+def item_pokemon_choices(trainer, item, form):
+    """Determine which of the trainer's Pokémon this item can be given to/used
+    on, set choices for the form's pokemon field accordingly, and return the
+    list of Pokémon grouped into squad and PC.
+    """
+
+    # Query this trainer's Pokémon
+    query = (
+        db.DBSession.query(db.Pokemon)
+        .filter_by(trainer_id=trainer.id)
+        .order_by(db.Pokemon.is_in_squad.desc(), db.Pokemon.id)
+    )
+
+    # For the Ability Capsule, narrow it down to Pokémon that have a non-hidden
+    # ability and another non-hidden ability to switch to
+    if item.identifier == 'ability-capsule':
+        query = query.filter(db.Pokemon.ability_slot.in_([1, 2]))
+        query = query.filter(
+            db.DBSession.query(db.PokemonFormAbility)
+            .filter(db.PokemonFormAbility.pokemon_form_id ==
+                db.Pokemon.pokemon_form_id)
+            .filter_by(slot=2)
+            .exists()
+        )
+
+    pokemon = query.all()
+
+    # Set choices
+    if item.identifier in ['ability-capsule', 'rare-candy']:
+        label = 'Use'
+    else:
+        label = 'Give'
+
+    form.pokemon.choices = [(a_pokemon.id, label) for a_pokemon in pokemon]
+
+    # Group and return Pokémon
+    return [
+        list(pokemon) for is_in_squad, pokemon in
+        itertools.groupby(pokemon, lambda a_pokemon: a_pokemon.is_in_squad)
+    ]
+
 @view_config(name='give', context=db.Item, permission='account.manage',
   request_method='GET', renderer='/manage/give_item.mako')
 def give_item(item, request):
-    """A page for choosing a Pokémon to give an item to."""
+    """A page for choosing a Pokémon to give an item to/use an item on,
+    depending on the item.
+    """
 
     trainer = request.user
 
@@ -148,15 +196,16 @@ def give_item(item, request):
 
     # Make form
     form = GiveItemForm(request.POST, csrf_context=request.session)
-    form.pokemon.choices = [(pokemon.id, 'Give') for pokemon in trainer.squad]
-    form.pokemon.choices.extend((pokemon.id, 'Give') for pokemon in trainer.pc)
+    pokemon = item_pokemon_choices(trainer, item, form)
 
-    return {'item': item, 'form': form}
+    return {'item': item, 'form': form, 'pokemon': pokemon}
 
 @view_config(name='give', context=db.Item, permission='account.manage',
   request_method='POST', renderer='/manage/give_item.mako')
 def give_item_commit(item, request):
-    """Process a request to give an item to a Pokémon."""
+    """Process a request to give an item to a Pokémon or use an item on a
+    Pokémon, depending on the item.
+    """
 
     trainer = request.user
 
@@ -172,22 +221,38 @@ def give_item_commit(item, request):
 
     # Validate form
     form = GiveItemForm(request.POST, csrf_context=request.session)
-    form.pokemon.choices = [(pokemon.id, 'Give') for pokemon in trainer.squad]
-    form.pokemon.choices.extend((pokemon.id, 'Give') for pokemon in trainer.pc)
+    pokemon = item_pokemon_choices(trainer, item, form)
 
     if not form.validate():
-        return {'item': item, 'form': form}
+        return {'item': item, 'form': form, 'pokemon': pokemon}
 
-    # Give the Pokémon the item, replacing its current item (if any)
+    # Give item to/use item on (as the case may be) the Pokémon
     pokemon = db.DBSession.query(db.Pokemon).get(form.pokemon.data)
 
-    if pokemon.trainer_item is not None:
-        request.session.flash("{0}'s {1} was replaced with the {2}.".format(
-            pokemon.name, pokemon.item.name, item.name))
-        pokemon.trainer_item.pokemon_id = None
-        db.DBSession.flush()
+    if item.identifier == 'rare-candy':
+        # Rare Candy: give it 1 exp and happiness and delete the Candy
+        pokemon.experience += 1
+        pokemon.happiness += 1
 
-    trainer_item.pokemon_id = pokemon.id
+        db.DBSession.delete(trainer_item)
+    elif item.identifier == 'ability-capsule':
+        # Ability Capsule: switch to the other ability and delete the Capsule
+        if pokemon.ability_slot == 1:
+            pokemon.ability_slot = 2
+        elif pokemon.ability_slot == 2:
+            pokemon.ability_slot = 1
+
+        db.DBSession.delete(trainer_item)
+    else:
+        # Plain old held item: give it the item and replace current item if any
+        if pokemon.trainer_item is not None:
+            request.session.flash("{}'s {} was replaced with the {}.".format(
+                pokemon.name, pokemon.item.name, item.name))
+
+            pokemon.trainer_item.pokemon_id = None
+            db.DBSession.flush()
+
+        trainer_item.pokemon_id = pokemon.id
 
     return httpexc.HTTPSeeOther('/items/manage')
 

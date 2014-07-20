@@ -33,7 +33,15 @@
         </td>
         <td>${h.link(item)}</td>
         <td class="stat">${quantity}</td>
-        <td class="give"><a href="${request.resource_url(item, 'give')}">Give</a></td>
+        <td class="give">
+            <a href="${request.resource_url(item, 'give')}">
+                % if item.identifier in ['ability-capsule', 'rare-candy']:
+                Use
+                % else:
+                Give
+                % endif
+            </a>
+        </td>
     </tr>
     % endfor
 </tbody>

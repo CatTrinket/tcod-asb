@@ -21,7 +21,7 @@ ${form.csrf_token}
 ${h.form_error_list(form.csrf_token.errors)}
 
 ${t.pokemon_table(
-    request.user.squad, request.user.pc,
+    *pokemon,
     subheaders=['Active squad', 'PC'],
     skip_cols=['trainer'],
     extra_left_cols=[{'col': give_col, 'th': give_header, 'td': give}]
