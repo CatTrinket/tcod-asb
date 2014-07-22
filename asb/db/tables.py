@@ -370,13 +370,15 @@ class BankTransaction(PlayerTable):
 
     id = Column(Integer, Sequence('bank_transactions_id_seq'),
         primary_key=True)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
+        nullable=False)
     amount = Column(Integer, nullable=False)
     tcod_post_id = Column(Integer, nullable=False)
     state = Column(Unicode, ForeignKey(BankTransactionState.identifier),
         nullable=False, default='pending')
     is_approved = Column(Boolean, nullable=False, default=False)
-    approver_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
+    approver_id = Column(Integer, ForeignKey('trainers.id',
+        onupdate='cascade'), nullable=True)
     reason = Column(UnicodeText, nullable=True)
 
     @property
@@ -453,7 +455,7 @@ class PokemonUnlockedEvolution(PlayerTable):
     # something the Pokémon can actually evolve into.  It would be even *nicer*
     # if we could do without this table altogether...
 
-    pokemon_id = Column(Integer, ForeignKey('pokemon.id', ondelete='cascade'),
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         primary_key=True)
     evolved_species_id = Column(Integer, ForeignKey(PokemonSpecies.id),
         primary_key=True)
@@ -506,7 +508,8 @@ class PromotionRecipient(PlayerTable):
 
     promotion_id = Column(Integer, ForeignKey('promotions.id'),
         primary_key=True)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
+        primary_key=True)
     received = Column(Boolean, nullable=False)
 
 class Trainer(PlayerTable):
