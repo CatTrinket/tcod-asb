@@ -94,6 +94,9 @@ ${cart_form.buy() | n}
 
 <h1>Browse</h1>
 <form action="/items/buy" method="POST">
+${browse.csrf_token()}
+${h.form_error_list(browse.csrf_token.errors)}
+
 <table class="standard-table effect-table">
 <col class="input-small">
 <col class="item-icon">
@@ -110,22 +113,18 @@ ${cart_form.buy() | n}
     </tr>
 </thead>
 
-% for category, category_items in items:
+% for category, items in browse.categorized_items():
 <tbody>
     <tr class="subheader-row">
         <td colspan="5">${category.name}</td>
     </tr>
 
-    % for item in category_items:
+    % for item, button in items:
     <tr>
-        <td class="input"><button name="add" value="${item.identifier}">+</button></td>
+        <td class="input">${button}</td>
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
-        % if item.price is not None:
         <td class="price">$${item.price}</td>
-        % else:
-        <td class="price">—</td>
-        % endif
         <td>${item.summary}</td>
     </tr>
     % endfor

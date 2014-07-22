@@ -259,9 +259,41 @@ def give_item_commit(item, request):
 
 ### ITEM-BUYING
 
+class BuyItemsForm(asb.forms.CSRFTokenForm):
+    """A form for choosing an item to add to the cart."""
+
+    # Don't coerce: leave None as None and strings as strings
+    item = asb.forms.MultiSubmitField(coerce=lambda value: value)
+
+    def __init__(self, *args, **kwargs):
+        """Do usual form setup, then query all the buyable items, keep the
+        results, and set item choices.
+        """
+
+        super().__init__(*args, **kwargs)
+
+        self.buyable_items = (
+            db.DBSession.query(db.Item)
+            .join(db.ItemCategory)
+            .filter(db.Item.price.isnot(None))
+            .order_by(db.ItemCategory.order, db.Item.order, db.Item.name)
+            .all()
+        )
+
+        self.item.choices = [
+            (item.identifier, '+') for item in self.buyable_items
+        ]
+
+    def categorized_items(self):
+        """Return items with their buttons, grouped by category."""
+
+        items = zip(self.buyable_items, self.item)
+        items = itertools.groupby(items, lambda item: item[0].category)
+        return items
+
 class ItemField(wtforms.TextField):
     """A text field for the name of an item to buy, which also fetches and
-    validates  the item.
+    validates the item.
     """
 
     def process_formdata(self, valuelist):
@@ -317,42 +349,42 @@ def get_item_buying_stuff(request):
     """Return various things that both the GET and POST views for the item-
     buying page will need.
 
-    - A query to get all the buyable items; it is up to the caller method to
-      actually execute the query if it needs to
     - A quick buy form
+    - An item-buying form
     - A list of items in the cart, rather than identifiers (n.b. no quantities)
     - A form for the item cart
     """
 
-    # One: the item query
-    item_query = (
-        db.DBSession.query(db.Item)
-        .join(db.ItemCategory)
-        .options(joinedload('category'))
-        .filter(db.Item.price.isnot(None))
-        .order_by(db.ItemCategory.order, db.Item.order, db.Item.price,
-            db.Item.name)
-    )
+    # One: the quick buy form
+    quick_buy = QuickBuyForm(request.POST, csrf_context=request.session,
+        prefix='quick_buy')
 
-    # Two: the quick buy form
-    quick_buy = QuickBuyForm(request.POST, csrf_context=request.session)
-    quick_buy.csrf_token.id = 'csrf_token_quick_buy'
+    # Two: item form
+    browse = BuyItemsForm(request.POST, csrf_context=request.session,
+        prefix='browse')
 
     # Three: the cart
     cart = request.session.get('item_cart')
 
     if not cart:
         # If it's absent/empty, just return what we have
-        return (item_query, quick_buy, None, None)
+        return (quick_buy, browse, None, None)
 
-    items = item_query.filter(db.Item.identifier.in_(cart)).all()
+    cart_items = {
+        item.identifier: item for item in
+        db.DBSession.query(db.Item)
+        .filter(db.Item.identifier.in_(cart))
+        .all()
+    }
+
+    cart_items = [cart_items[item] for item in cart]
 
     # Four: the cart form
     # Stick all the item fields in a subform for easy iterating
     class ItemCartSubform(wtforms.Form):
         pass
 
-    for item in items:
+    for item in cart_items:
         field = wtforms.IntegerField(
             default=cart[item.identifier],
             validators=[
@@ -366,20 +398,19 @@ def get_item_buying_stuff(request):
     class ItemCartForm(ItemCartFormShell):
         items = wtforms.FormField(ItemCartSubform)
 
-    form = ItemCartForm(request.POST, csrf_context=request.session)
-    form.id = 'csrf_token_item_cart'
+    cart_form = ItemCartForm(request.POST, csrf_context=request.session,
+        prefix='cart')
 
-    return (item_query, quick_buy, items, form)
+    return (quick_buy, browse, cart_items, cart_form)
 
 @view_config(route_name='items.buy', permission='account.manage',
   request_method='GET', renderer='/buy/items.mako')
 def buy_items(context, request):
     """A page for buying items."""
 
-    item_query, quick_buy, cart, cart_form = get_item_buying_stuff(request)
-    items = itertools.groupby(item_query.all(), lambda item: item.category)
+    quick_buy, browse, cart, cart_form = get_item_buying_stuff(request)
 
-    return {'items': items, 'quick_buy': quick_buy, 'cart': cart,
+    return {'browse': browse, 'quick_buy': quick_buy, 'cart': cart,
         'cart_form': cart_form}
 
 @view_config(route_name='items.buy', permission='account.manage',
@@ -389,88 +420,69 @@ def buy_items_process(context, request):
     page.
     """
 
-    # Check if we're adding an item before anything else, since we're handling
-    # that separately
-    if 'add' in request.POST:
-        identifier = request.POST['add']
+    quick_buy, browse, cart, cart_form = get_item_buying_stuff(request)
 
-        # Check if this item exists and is buyable
-        is_valid_item = (
-           db.DBSession.query(db.Item)
-           .filter_by(identifier=identifier)
-           .filter(db.Item.price.isnot(None))
-           .exists()
-        )
-
-        is_valid_item = db.DBSession.query(is_valid_item).one()
-
-        # If so, add it
-        if is_valid_item:
-            (request.session.setdefault('item_cart', {})
-                .setdefault(identifier, 0))
-            request.session['item_cart'][identifier] += 1
-
-        # If not, it means they were messing around with the form, so I'm not
-        # going to bother giving a useful error
-
-        return httpexc.HTTPSeeOther('/items/buy')
-
-    # Otherwise, handle the various forms
-    item_query, quick_buy, cart, cart_form = get_item_buying_stuff(request)
-
-    # Figure out which form we're handling here and validate it
-    if quick_buy.quick_buy.data:
-        is_valid = quick_buy.validate()
-    else:
-        is_valid = cart_form is not None and cart_form.validate()
-
-    if not is_valid:
-        items = itertools.groupby(item_query.all(), lambda item: item.category)
-
-        return {'items': items, 'quick_buy': quick_buy, 'cart': cart,
-            'cart_form': cart_form}
+    return_dict = {'quick_buy': quick_buy, 'browse': browse,
+        'cart': cart, 'cart_form': cart_form}
 
     if quick_buy.quick_buy.data:
-        # Quick buy: just add the item to the cart
+        # Quick buy: add the item to the cart
+        if not quick_buy.validate():
+            return return_dict
+
         identifier = quick_buy.item.item.identifier
         request.session.setdefault('item_cart', {}).setdefault(identifier, 0)
         request.session['item_cart'][identifier] += 1
 
         return httpexc.HTTPSeeOther('/items/buy')
-    elif cart_form.update.data:
-        # Update the cart
-        for item, field in zip(cart, cart_form.items):
-            if not field.data:
-                # Quantity 0 or blank quantity means remove from cart
-                del request.session['item_cart'][item.identifier]
-            else:
-                # Otherwise, update the quantity
-                request.session['item_cart'][item.identifier] = field.data
+    elif browse.item.data:
+        # Browse: almost identical to quick buy
+        if not browse.validate():
+            return return_dict
+
+        item = browse.item.data
+        request.session.setdefault('item_cart', {}).setdefault(item, 0)
+        request.session['item_cart'][item] += 1
 
         return httpexc.HTTPSeeOther('/items/buy')
-    elif cart_form.buy.data:
-        # Buy!  Start buy pairing items with quantities.
-        final_cart = [(item, field.data) for item, field in
-            zip(cart, cart_form.items)]
+    elif cart_form is not None:
+        if not cart_form.validate():
+            return return_dict
 
-        # Make sure they have enough
-        grand_total = sum(item.price * qty for item, qty in final_cart)
+        if cart_form.update.data:
+            # Update the cart
+            for item, field in zip(cart, cart_form.items):
+                if not field.data:
+                    # Quantity 0 or blank quantity means remove from cart
+                    del request.session['item_cart'][item.identifier]
+                else:
+                    # Otherwise, update the quantity
+                    request.session['item_cart'][item.identifier] = field.data
 
-        if grand_total > request.user.money:
-            cart_form.buy.errors.append("You can't afford all that!")
-            items = itertools.groupby(item_query.all(),
-                lambda item: item.category)
-            return {'items': items, 'quick_buy': quick_buy, 'cart': cart,
-                'cart_form': cart_form}
+            return httpexc.HTTPSeeOther('/items/buy')
+        elif cart_form.buy.data:
+            # Buy!  Start buy pairing items with quantities.
+            final_cart = [(item, field.data) for item, field in
+                zip(cart, cart_form.items)]
 
-        # Give them the items
-        for item, quantity in final_cart:
-            for n in range(quantity):
-                new_item = db.TrainerItem(trainer_id=request.user.id,
-                    item_id=item.id)
-                db.DBSession.add(new_item)
+            # Make sure they have enough
+            grand_total = sum(item.price * qty for item, qty in final_cart)
 
-        request.user.money -= grand_total
-        del request.session['item_cart']
+            if grand_total > request.user.money:
+                cart_form.buy.errors.append("You can't afford all that!")
+                items = itertools.groupby(item_query.all(),
+                    lambda item: item.category)
+                return {'items': items, 'quick_buy': quick_buy, 'cart': cart,
+                    'cart_form': cart_form}
 
-        return httpexc.HTTPSeeOther('/items/manage')
+            # Give them the items
+            for item, quantity in final_cart:
+                for n in range(quantity):
+                    new_item = db.TrainerItem(trainer_id=request.user.id,
+                        item_id=item.id)
+                    db.DBSession.add(new_item)
+
+            request.user.money -= grand_total
+            del request.session['item_cart']
+
+            return httpexc.HTTPSeeOther('/items/manage')
