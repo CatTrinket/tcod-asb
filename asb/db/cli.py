@@ -119,8 +119,7 @@ def command_update(connection, alembic_config):
 
     # Reset sequences (the dict will be empty if we're not on Postgres)
     for sequence_name, value in player_table_sequences.items():
-        # - 1 because setval adds one, and we don't want that
-        connection.execute(sqla.func.setval(sequence_name, value - 1))
+        connection.execute(sqla.func.setval(sequence_name, value, False))
 
 def get_alembic_config(config_path, echo):
     """Create and return an alembic config."""
