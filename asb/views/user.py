@@ -305,6 +305,7 @@ def validate(context, request):
         trainer = old_trainer
         trainer.id = id
         trainer.identifier = identifier
+        trainer.unclaimed_from_hack = False
 
         # Update all their Pokémon's IDs
         for pokemon in trainer.pokemon:
