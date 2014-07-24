@@ -48,3 +48,12 @@ def pokemon(pokemon, request):
 
     return {'pokemon': pokemon, 'can_evolve': can_evolve(pokemon),
         'evo_info': evo_info}
+
+@view_config(name='sigstuff', context=db.Pokemon, renderer='/sig_stuff.mako')
+def sig_stuff(pokemon, request):
+    """A page for viewing a Pokémon's body modification and move modification,
+    if any.
+    """
+
+    return {'pokemon': pokemon, 'movemod': pokemon.move_modification,
+        'bodmod': pokemon.body_modification}

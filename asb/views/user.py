@@ -431,7 +431,8 @@ def settings_process(context, request):
         # Delete their stuff from other tables
         pokemon_ids = [pokemon.id for pokemon in trainer.pokemon]
 
-        for table in [db.PokemonUnlockedEvolution]:
+        for table in [db.PokemonUnlockedEvolution, db.BodyModification,
+          db.MoveModification]:
             db.DBSession.execute(sqla.sql.delete(table,
                 table.pokemon_id.in_(pokemon_ids)))
 

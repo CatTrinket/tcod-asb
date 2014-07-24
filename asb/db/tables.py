@@ -385,6 +385,42 @@ class BankTransaction(PlayerTable):
     def link(self):
         return asb.tcodf.post_link(self.tcod_post_id)
 
+class BodyModification(PlayerTable):
+    """A Pokémon's signature attribute or other body mod."""
+
+    __tablename__ = 'body_modifications'
+
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
+        primary_key=True)
+    name = Column(Unicode, nullable=False)
+    is_repeatable = Column(Boolean, nullable=False)
+    flavor = Column(Unicode, nullable=False)
+    effect = Column(Unicode, nullable=False)
+
+class MoveModification(PlayerTable):
+    """A Pokémon's signature move or other movepool mod.
+
+    This is a direct port of the hack's asb_move_mods table.  I was not the one
+    who decided the entire table should just be text.  (The only change I made
+    is pokemon_id — Negrek had the foreign key on the pokemon side.)
+    """
+
+    __tablename__ = 'move_modifications'
+
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
+        primary_key=True)
+    name = Column(Unicode, nullable=False)
+    type = Column(Unicode, nullable=True)
+    power = Column(Unicode, nullable=True)
+    energy = Column(Unicode, nullable=True)
+    accuracy = Column(Unicode, nullable=True)
+    target = Column(Unicode, nullable=True)
+    gap = Column(Unicode, nullable=True)
+    duration = Column(Unicode, nullable=True)
+    stat = Column(Unicode, nullable=True)
+    flavor = Column(Unicode, nullable=True)
+    effect = Column(Unicode, nullable=True)
+
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
 
@@ -653,11 +689,13 @@ Move.contest_category = relationship(ContestCategory)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
+Pokemon.body_modification = relationship(BodyModification, uselist=False)
 Pokemon.form = relationship(PokemonForm)
 Pokemon.gender = relationship(Gender)
 Pokemon.item = relationship(Item,
     secondary=TrainerItem.__table__, uselist=False)
 Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
+Pokemon.move_modification = relationship(MoveModification, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
 Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
