@@ -30,7 +30,7 @@ ${quick_buy.csrf_token() | n}
 Quick buy: ${quick_buy.pokemon(placeholder='Enter a Pokémon') | n}
 ${quick_buy.quickbuy() | n}
 
-${h.form_error_list(quick_buy.csrf_token.errors + quick_buy.pokemon.errors)}
+${h.form_error_list(*quick_buy.errors.values())}
 </form>
 
 % if cart_species:
@@ -38,7 +38,7 @@ ${h.form_error_list(quick_buy.csrf_token.errors + quick_buy.pokemon.errors)}
 <h1>Cart</h1>
 <form action="/pokemon/buy" method="POST">
 ${cart_form.csrf_token()}
-${h.form_error_list(cart_form.csrf_token.errors)}
+${h.form_error_list(*cart_form.errors.values())}
 
 <table class="standard-table">
 <col class="input-small">
@@ -97,7 +97,7 @@ ${h.form_error_list(cart_form.csrf_token.errors)}
 <h1>${promotion.name}</h1>
 <form action="/pokemon/buy" method="POST">
 ${form.csrf_token()}
-${h.form_error_list(form.csrf_token.errors)}
+${h.form_error_list(*form.errors.values())}
 
 ${t.pokemon_form_table(
     (p.default_form for p in promotion.pokemon_species),
@@ -114,7 +114,7 @@ ${t.pokemon_form_table(
 <h1>Browse</h1>
 <form action="/pokemon/buy" method="POST">
 ${browse.csrf_token()}
-${h.form_error_list(browse.csrf_token.errors)}
+${h.form_error_list(*browse.errors.values())}
 
 ${t.pokemon_form_table(
     *((p.default_form for p in rarity.pokemon_species) for rarity in rarities),

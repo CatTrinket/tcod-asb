@@ -29,6 +29,7 @@ ${quick_buy.quick_buy() | n}
 <h1>Cart</h1>
 <form action="/items/buy" method="POST">
 ${cart_form.csrf_token() | n}
+
 <table class="standard-table">
 <col class="item-icon">
 <col class="item">
@@ -75,13 +76,7 @@ ${cart_form.csrf_token() | n}
 </tfoot>
 </table>
 
-% if errors:
-<ul class="form-error">
-    % for error in errors:
-    <li>${error}</li>
-    % endfor
-</ul>
-% endif
+${h.form_error_list(cart_form.csrf_token.errors, errors)}
 
 ${cart_form.update() | n}
 % if remaining_money >= 0:
@@ -95,7 +90,7 @@ ${cart_form.buy() | n}
 <h1>Browse</h1>
 <form action="/items/buy" method="POST">
 ${browse.csrf_token()}
-${h.form_error_list(browse.csrf_token.errors)}
+${h.form_error_list(*browse.errors.values())}
 
 <table class="standard-table effect-table">
 <col class="input-small">

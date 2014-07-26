@@ -126,7 +126,7 @@ ${transaction_tbody(recent_transactions['denied'], 'Denied')}
 <form action="/bank" method="POST">
 ${clear_form.csrf_token}
 ${clear_form.clear}
-${h.form_error_list(clear_form.csrf_token.errors + clear_form.clear.errors)}
+${h.form_error_list(*clear_form.errors.values())}
 </form>
 % endif
 % endif

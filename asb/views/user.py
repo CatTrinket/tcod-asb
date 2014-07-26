@@ -424,7 +424,7 @@ def settings_process(context, request):
 
         if not (reset_delete.validate() and correct_password):
             if not correct_password:
-                reset_delete.password.errors.append('Wrong password')
+                reset_delete.reset_pass.errors.append('Wrong password')
 
             return return_dict
 

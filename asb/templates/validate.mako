@@ -23,10 +23,9 @@ below:</p>
 
 <form action="/validate" method="POST">
     ${form.csrf_token() | n}
-    ${h.form_error_list(form.csrf_token.errors)}
 
     ${form.profile_link(size=50) | n}
-    ${h.form_error_list(form.profile_link.errors)}
+    ${h.form_error_list(*form.errors.values())}
 
     ${form.submit() | n}
 </form>

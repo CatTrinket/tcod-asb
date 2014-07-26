@@ -20,7 +20,7 @@
     ${form.password_confirm.label() | n}
     ${form.password_confirm() | n}
 
-    ${h.form_error_list(form.password.errors + form.password_confirm.errors)}
+    ${h.form_error_list(form.password.errors, form.password_confirm.errors)}
 
     <p>This is separate from your forum password, but you can make it the same
     if you want.  Nobody can see it either way.</p>

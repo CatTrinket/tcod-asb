@@ -70,7 +70,8 @@ ${damage_class.name.capitalize()}\
 </span>\
 </%def>
 
-<%def name="form_error_list(errors)">
+<%def name="form_error_list(*error_lists)">
+<% errors = [error for list in error_lists for error in list] %>
 % if errors:
 <ul class="form-error">
     % for error in errors:

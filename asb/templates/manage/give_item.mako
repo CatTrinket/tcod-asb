@@ -18,7 +18,7 @@
 
 <form action="${request.resource_url(item, 'give')}" method="POST">
 ${form.csrf_token}
-${h.form_error_list(form.csrf_token.errors)}
+${h.form_error_list(*form.errors.values())}
 
 ${t.pokemon_table(
     *pokemon,

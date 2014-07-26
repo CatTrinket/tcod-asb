@@ -71,12 +71,12 @@ class PokemonSpeciesField(wtforms.StringField):
         try:
             species = (db.DBSession.query(db.PokemonSpecies)
                 .filter_by(identifier=identifier)
-                .options(joinedload('default_form'))
+                .options(sqla.orm.joinedload('default_form'))
                 .one()
             )
 
             self.data = (name, species)
-        except NoResultFound:
+        except sqla.orm.exc.NoResultFound:
             self.data = (name, None)
 
     def pre_validate(self, form):
