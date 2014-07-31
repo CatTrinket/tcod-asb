@@ -71,8 +71,7 @@ class IDRedirectResource(DexIndex):
     can redirect based on the ID if the slug is bogus.
     """
 
-    redirect_message = ("The ID and name in the URL you requested didn't "
-        "match up; you've been redirected from {0} to {1}")
+    redirect_message = 'Redirected from {0} to {1}'
 
     def _redirect(self, identifier):
         """Attempt to redirect based on the ID."""
