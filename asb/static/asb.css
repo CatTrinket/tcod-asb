@@ -21,6 +21,7 @@ abbr { border-bottom: 1px dotted black; }
 
 header, main { margin: 0; }
 header { background: #5577BB; text-align: center; }
+header img { max-width: 100%; }
 main { padding: 2em; }
 
 /* Headers */
