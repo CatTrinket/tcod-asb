@@ -129,6 +129,29 @@ def home(context, request):
 
             mod_stuff.append((message, '/bank/approve'))
 
+        # See if there are any battles to approve
+        pending_battles = (
+            db.DBSession.query(db.Battle)
+            .filter_by(needs_approval=True)
+            .all()
+        )
+
+        # Count up the ones they can actually approve, i.e. weren't involved in
+        # XXX Filter those out in the query?
+        pending_battles = sum(
+            1 for battle in pending_battles
+            if request.has_permission('battle.approve', battle)
+        )
+
+        if pending_battles:
+            if pending_battles == 1:
+                message = 'There is 1 closed battle awaiting approval'
+            else:
+                message = ('There are {} closed battles awaiting approval'
+                    .format(pending_battles))
+
+            mod_stuff.append((message, '/battles#waiting'))
+
         stuff['mod_stuff'] = mod_stuff
 
     return stuff

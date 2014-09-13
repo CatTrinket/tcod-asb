@@ -10,7 +10,7 @@ from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
 import asb.tcodf
-from .helpers import identifier
+from . import helpers
 
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
@@ -56,14 +56,53 @@ class Ability(PokedexTable):
         return self.identifier
 
 class BankTransactionState(PokedexTable):
-    """A state for bank transactions, either "pending", "processed", or
-    "acknowledged".
+    """A possible state for bank transactions.
+
+    Values:
+    - pending: A mod has to approve or deny the transaction.
+    - processed: The transaction has been approved/denied and the trainer
+        should be notified.
+    - acknowledged: The trainer has acknowledged that the transaction has been
+        approved or denied.
 
     The primary key is an identifier to mimic an Enum, while not being as
     impossible to update with alembic as an Enum.
     """
 
     __tablename__ = 'bank_transaction_states'
+
+    identifier = Column(Unicode, primary_key=True)
+
+class BattleLength(PokedexTable):
+    """A summary for how close a battle came to completion before it ended.
+
+    Values:
+    - full: The battle finished normally.
+    - short: Participants agreed to end the battle early.
+    - dq: The loser was disqualified.
+    - cancelled: The battle was cancelled before anything happened.
+
+    The primary key is an identifier to mimic an Enum, while not being as
+    impossible to update with alembic as an Enum.
+    """
+
+    __tablename__ = 'battle_lengths'
+
+    identifier = Column(Unicode, primary_key=True)
+
+class BattleOutcome(PokedexTable):
+    """A possible outcome for a team in a battle.
+
+    Values:
+    - win: This team was the single winning team.
+    - draw: This team tied for winner with at least one other team.
+    - loss: This team wasn't the winner.
+
+    The primary key is an identifier to mimic an Enum, while not being as
+    impossible to update with alembic as an Enum.
+    """
+
+    __tablename__ = 'battle_outcomes'
 
     identifier = Column(Unicode, primary_key=True)
 
@@ -385,6 +424,205 @@ class BankTransaction(PlayerTable):
     def link(self):
         return asb.tcodf.post_link(self.tcod_post_id)
 
+class Battle(PlayerTable):
+    """A battle."""
+
+    __tablename__ = 'battles'
+
+    battles_id_seq = Sequence('battles_id_seq')
+
+    id = Column(Integer, battles_id_seq, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, nullable=False)
+    tcodf_thread_id = Column(Integer, nullable=True)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=True)
+    length = Column(Unicode, ForeignKey(BattleLength.identifier),
+        nullable=True)
+    needs_approval = Column(Boolean, nullable=False, default=False)
+
+    @property
+    def link(self):
+        """A link to this battle's forum thread."""
+
+        return asb.tcodf.thread_link(self.tcodf_thread_id)
+
+    def set_auto_name(self):
+        """Automatically generate a name for this battle, then set its
+        identifier.
+        """
+
+        # Start with something like "A and B vs C and D"
+        base_name = name = ' vs '.join(
+            ' and '.join(trainer.name for trainer in team.trainers)
+            for team in self.teams
+        )
+
+        # If necessary, bump a roman numeral until we get a unique name
+        # e.g. "A and B vs C and D II"
+        n = 1
+
+        while DBSession.query(Battle).filter_by(name=name).count():
+            n += 1
+            name = '{} {}'.format(base_name, helpers.roman_numeral(n))
+
+        # Go for it
+        self.name = name
+        self.set_identifier()
+
+    def set_identifier(self):
+        """Set an identifier based on ID and name."""
+
+        self.identifier = helpers.identifier(self.name, id=self.id)
+
+    @property
+    def __acl__(self):
+        """Return an list of permissions for Pyramid's authorization."""
+
+        permissions = []
+
+        # Get ACL identifiers for ref + battlers
+        if self.ref is not None:
+            ref = 'user:{}'.format(self.ref.id)
+        else:
+            ref = None
+
+        trainers = [
+            'user:{}'.format(trainer.trainer_id)
+            for team in self.teams
+            for trainer in team.trainers
+            if trainer.trainer_id is not None
+        ]
+
+        if self.end_date is None:
+            # Battle's still going on
+            # Let the current ref manage the battle, but not join as an e-ref
+            if ref is not None:
+                if self.tcodf_thread_id is None:
+                    permissions.append((sec.Allow, ref, 'battle.link'))
+                else:
+                    permissions.append((sec.Allow, ref, 'battle.close'))
+
+                permissions.append((sec.Deny, ref, 'battle.e-ref'))
+
+            # Don't let any of the battlers e-ref, either
+            for trainer in trainers:
+                permissions.append((sec.Deny, trainer, 'battle.e-ref'))
+
+            # Let any other ref join as an e-ref
+            # Actually not yet because I don't have that working
+            # permissions.append((sec.Allow, 'referee', 'battle.e-ref'))
+        elif self.needs_approval:
+            # Battle ended; prizes need approval
+            # Let any mod/admin do so, unless they were involved in the battle
+            if ref is not None:
+                permissions.append((sec.Deny, ref, 'battle.approve'))
+
+            for trainer in trainers:
+                permissions.append((sec.Deny, trainer, 'battle.approve'))            
+
+            # XXX Ideally you'd have to be a mod/admin *and* a ref
+            permissions.append((sec.Allow, 'mod', 'battle.approve'))
+            permissions.append((sec.Allow, 'admin', 'battle.approve'))
+
+        return permissions
+
+    @property
+    def __name__(self):
+        """Return this battle's resource name for traversal."""
+
+        return self.identifier
+
+class BattlePokemon(PlayerTable):
+    """A Pokémon that is part of a trainer's squad for a particular battle, and
+    information about it at the time of the battle.
+
+    When a trainer resets or deletes their account, all their Pokémon's
+    battle_pokemon rows will stick around, with null pokemon_ids.  This way,
+    the battle can keep existing for the other participants' records.
+    """
+
+    __tablename__ = 'battle_pokemon'
+
+    id = Column(Integer, Sequence('battle_pokemon_id_seq'), primary_key=True)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True)
+    battle_trainer_id = Column(Integer, ForeignKey('battle_trainers.id'),
+        nullable=False)
+    name = Column(Unicode, nullable=False)
+    pokemon_form_id = Column(Integer, ForeignKey(PokemonForm.id),
+        nullable=False)
+    gender_id = Column(Integer, ForeignKey(Gender.id), nullable=False)
+    ability_slot = Column(Integer, nullable=False)
+    item_id = Column(Integer, ForeignKey(Item.id), nullable=True)
+    experience = Column(Integer, nullable=False)
+    happiness = Column(Integer, nullable=False)
+    experience_gained = Column(Integer, nullable=True)
+    happiness_gained = Column(Integer, nullable=True)
+    participated = Column(Boolean, nullable=False, default=False)
+    kos = Column(Integer, nullable=True)
+
+    # Set up a composite foreign key for ability
+    __table_args__ = (
+        ForeignKeyConstraint(
+            [pokemon_form_id, ability_slot],
+            [PokemonFormAbility.pokemon_form_id, PokemonFormAbility.slot],
+            name='pokemon_ability_fkey', use_alter=True
+        ),
+    )
+
+class BattleReferee(PlayerTable):
+    """A trainer who acted as a referee in a battle.
+
+    Unlike the other battle tables, rows in this table are deleted if the
+    trainer deletes their account (and kept if they reset, because why not).
+    """
+
+    __tablename__ = 'battle_referees'
+
+    battle_id = Column(Integer, ForeignKey('battles.id'), primary_key=True)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    is_emergency_ref = Column(Boolean, nullable=False, default=False)
+    is_current_ref = Column(Boolean, nullable=False, default=True)
+
+class BattleTeam(PlayerTable):
+    """A team of trainers participating in a battle.
+
+    If a trainer has no teammates, they count as a team of one.
+    """
+
+    __tablename__ = 'battle_teams'
+
+    battle_id = Column(Integer, ForeignKey('battles.id'), primary_key=True)
+    team_number = Column(Integer, primary_key=True, autoincrement=False)
+    outcome = Column(Unicode, ForeignKey(BattleOutcome.identifier),
+        nullable=True)
+
+class BattleTrainer(PlayerTable):
+    """A trainer participating in a battle.
+
+    When a trainer resets or deletes their account, all their rows in
+    battle_trainers will stick around, with null trainer_ids.  This way, the
+    battle can keep existing for the other participants' records.
+    """
+
+    __tablename__ = 'battle_trainers'
+
+    id = Column(Integer, Sequence('battle_trainers_id_seq'), primary_key=True)
+    battle_id = Column(Integer, ForeignKey('battles.id'), nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'))
+    name = Column(Unicode, nullable=False)
+    team_number = Column(Integer, autoincrement=False)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            [battle_id, team_number],
+            ['battle_teams.battle_id', 'battle_teams.team_number'],
+            name='battle_trainer_team_fkey'
+        ),
+
+        UniqueConstraint('battle_id', 'trainer_id')
+    )
+
 class BodyModification(PlayerTable):
     """A Pokémon's signature attribute or other body mod."""
 
@@ -454,7 +692,7 @@ class Pokemon(PlayerTable):
     def update_identifier(self):
         """Update this Pokémon's identifier."""
 
-        self.identifier = identifier(self.name, id=self.id)
+        self.identifier = helpers.identifier(self.name, id=self.id)
 
     @property
     def __name__(self):
@@ -583,7 +821,7 @@ class Trainer(PlayerTable):
     def update_identifier(self):
         """Like it says on the tin."""
 
-        self.identifier = identifier(self.name, id=self.id)
+        self.identifier = helpers.identifier(self.name, id=self.id)
 
     @property
     def has_items(self):
@@ -666,6 +904,30 @@ BankTransaction.approver = relationship(Trainer,
     primaryjoin=BankTransaction.approver_id == Trainer.id)
 BankTransaction.trainer = relationship(Trainer,
     primaryjoin=BankTransaction.trainer_id == Trainer.id)
+
+Battle.ref = relationship(Trainer, secondary=BattleReferee.__table__,
+    primaryjoin=and_(Battle.id == BattleReferee.battle_id,
+        BattleReferee.is_current_ref == True),
+    uselist=False)
+Battle.previous_refs = relationship(Trainer, secondary=BattleReferee.__table__,
+    primaryjoin=and_(Battle.id == BattleReferee.battle_id,
+        BattleReferee.is_current_ref == False))
+Battle.teams = relationship(BattleTeam, order_by=BattleTeam.team_number)
+
+BattlePokemon.ability = relationship(Ability,
+    secondary=PokemonFormAbility.__table__, uselist=False)
+BattlePokemon.form = relationship(PokemonForm)
+BattlePokemon.gender = relationship(Gender)
+BattlePokemon.item = relationship(Item)
+BattlePokemon.pokemon = relationship(Pokemon)
+BattlePokemon.species = association_proxy('form', 'species')
+BattlePokemon.trainer = relationship(BattleTrainer, back_populates='pokemon')
+
+BattleTeam.trainers = relationship(BattleTrainer, order_by=BattleTrainer.id)
+
+BattleTrainer.pokemon = relationship(BattlePokemon, order_by=BattlePokemon.id,
+    back_populates='trainer')
+BattleTrainer.trainer = relationship(Trainer)
 
 ContestCategory.moves = relationship(Move, back_populates='contest_category',
     order_by=Move.name)

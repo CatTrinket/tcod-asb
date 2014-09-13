@@ -228,6 +228,9 @@ table.effect-table td.damage-class-cell > .damage-class
 .positive-priority { color: #008000; }
 .negative-priority { color: #FF0000; }
 
+textarea { display: block; }
+
+ul.option-list { list-style-type: none; padding-left: 1em; }
 
 /**** SPECIFIC PAGES ****/
 

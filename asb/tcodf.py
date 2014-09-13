@@ -47,6 +47,52 @@ def post_link(post_id):
 
     return 'http://forums.dragonflycave.com/showpost.php?p={}'.format(post_id)
 
+def thread_id(link):
+    """Parse a post or thread link and return the thread ID."""
+
+    # People might reasonably give post links, or thread links with a post ID
+    # (/showthread.php?p=12345), so we should accept those too
+    try:
+        post = post_id(link)
+    except ValueError:
+        # Not a post link — hopefully it's a thread link!
+        link = parse_tcodf_url(link)
+        query = urllib.parse.parse_qs(link.query)
+
+        if link.path != '/showthread.php':
+            raise ValueError('Not a thread link')
+
+        if 't' not in query:
+            raise ValueError('Missing thread ID')
+        elif len(query['t']) > 1:
+            raise ValueError('Multiple thread IDs????')
+
+        [thread_id] = query['t']
+
+        if not thread_id.isdigit():
+            raise ValueError('Invalid thread ID')
+
+        return int(thread_id)
+    else:
+        # Post link.  Load the thread using the post ID, and then get the
+        # thread ID from the Show Printable Version link.  (Only place.)
+        link = ('http://forums.dragonflycave.com/showthread.php?p={}'
+            .format(post))
+
+        page = bs4.BeautifulSoup(urllib.request.urlopen(link))
+
+        print_link = page.find('a', text='Show Printable Version')
+        print_link = urllib.parse.urlparse(print_link['href'])
+        [id] = urllib.parse.parse_qs(print_link.query)['t']
+
+        return int(id)
+
+def thread_link(thread_id):
+    """Return a thread link."""
+
+    return ('http://forums.dragonflycave.com/showthread.php?t={}'
+        .format(thread_id))
+
 def user_id(link):
     """Given a link to a user's forum profile, parse and return the user ID."""
 

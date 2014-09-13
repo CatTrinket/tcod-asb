@@ -25,7 +25,10 @@ class Root(dict):
         (sec.Deny, sec.Everyone, 'bank.approve'),
 
         (sec.Allow, 'admin', 'trainer.edit'),
-        (sec.Deny, sec.Everyone, 'trainer.edit')
+        (sec.Deny, sec.Everyone, 'trainer.edit'),
+
+        (sec.Allow, 'referee', 'battle.open'),
+        (sec.Deny, sec.Everyone, 'battle.open')
     ]
 
 class DexIndex:
@@ -102,6 +105,10 @@ class PokemonIndex(IDRedirectResource):
     __name__ = 'pokemon'
     table = db.Pokemon
 
+class BattleIndex(IDRedirectResource):
+    __name__ = 'battles'
+    table = db.Battle
+
 class SpeciesIndex(DexIndex):
     """Actually a form index."""
 
@@ -140,6 +147,7 @@ def get_root(request):
     root = Root({
         'trainers': TrainerIndex(),
         'pokemon': PokemonIndex(),
+        'battles': BattleIndex(),
         'species': SpeciesIndex(),
         'moves': MoveIndex(),
         'abilities': AbilityIndex(),
