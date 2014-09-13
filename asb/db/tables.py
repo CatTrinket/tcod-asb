@@ -566,7 +566,7 @@ class BattlePokemon(PlayerTable):
         ForeignKeyConstraint(
             [pokemon_form_id, ability_slot],
             [PokemonFormAbility.pokemon_form_id, PokemonFormAbility.slot],
-            name='pokemon_ability_fkey', use_alter=True
+            name='battle_pokemon_ability_fkey', use_alter=True
         ),
     )
 

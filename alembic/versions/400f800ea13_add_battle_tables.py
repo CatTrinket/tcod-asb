@@ -15,13 +15,24 @@ import sqlalchemy as sa
 
 
 def upgrade():
+    battles_id_seq = sa.Sequence('battles_id_seq')
+    battle_trainers_id_seq = sa.Sequence('battle_trainers_id_seq')
+    battle_pokemon_id_seq = sa.Sequence('battle_pokemon_id_seq')
+
+    connection = op.get_bind()
+
+    battles_id_seq.create(bind=connection)
+    battle_trainers_id_seq.create(bind=connection)
+    battle_pokemon_id_seq.create(bind=connection)
+
     op.create_table('battles',
-        sa.Column('id', sa.Integer(), sa.Sequence('battles_id_seq'),
+        sa.Column('id', sa.Integer(), battles_id_seq,
             nullable=False),
         sa.Column('identifier', sa.Unicode(), nullable=False),
         sa.Column('name', sa.Unicode(), nullable=False),
         sa.Column('start_date', sa.Date(), nullable=False),
         sa.Column('end_date', sa.Date(), nullable=True),
+        sa.Column('tcodf_thread_id', sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('identifier'),
         sa.UniqueConstraint('identifier'),
@@ -48,7 +59,7 @@ def upgrade():
     )
 
     op.create_table('battle_trainers',
-        sa.Column('id', sa.Integer(), sa.Sequence('battle_trainers_id_seq'),
+        sa.Column('id', sa.Integer(), battle_trainers_id_seq,
             nullable=False),
         sa.Column('battle_id', sa.Integer(), nullable=False),
         sa.Column('trainer_id', sa.Integer(), nullable=False),
@@ -67,7 +78,7 @@ def upgrade():
     )
 
     op.create_table('battle_pokemon',
-        sa.Column('id', sa.Integer(), sa.Sequence('battle_pokemon_id_seq'),
+        sa.Column('id', sa.Integer(), battle_pokemon_id_seq,
             nullable=False),
         sa.Column('pokemon_id', sa.Integer(), nullable=True),
         sa.Column('battle_trainer_id', sa.Integer(), nullable=False),
@@ -75,6 +86,7 @@ def upgrade():
         sa.Column('pokemon_form_id', sa.Integer(), nullable=False),
         sa.Column('ability_slot', sa.Integer(), nullable=False),
         sa.Column('item_id', sa.Integer(), nullable=True),
+        sa.Column('gender_id', sa.Integer(), nullable=True),
         sa.Column('experience', sa.Integer(), nullable=False),
         sa.Column('happiness', sa.Integer(), nullable=False),
         sa.Column('participated', sa.Boolean(), nullable=False),
@@ -82,6 +94,13 @@ def upgrade():
         sa.ForeignKeyConstraint(['item_id'], ['items.id'], ),
         sa.ForeignKeyConstraint(['pokemon_form_id'], ['pokemon_forms.id']),
         sa.ForeignKeyConstraint(['pokemon_id'], ['pokemon.id'], ),
+        sa.ForeignKeyConstraint(['gender_id'], ['genders.id'], ),
+        sa.ForeignKeyConstraint(
+            ['pokemon_form_id', 'ability_slot'],
+            ['pokemon_form_abilities.pokemon_form_id',
+                'pokemon_form_abilities.slot'],
+            'battle_pokemon_ability_fkey'
+        ),
         sa.PrimaryKeyConstraint('id')
     )
 
