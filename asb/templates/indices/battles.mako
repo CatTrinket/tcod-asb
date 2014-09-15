@@ -43,7 +43,11 @@
 % endif
 
 <h1>Current battles</h1>
+% if open:
 ${battle_table(open)}
+% else:
+<p>None right now!</p>
+% endif
 
 <h1 id="waiting">Battles awaiting closure</h1>
 % if approval:
