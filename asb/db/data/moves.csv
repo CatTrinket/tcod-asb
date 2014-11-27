@@ -609,4 +609,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 612,power-up-punch,Power-Up Punch,7,1,40,3,100,0,1,,,,,,Has a 100% chance to raise the user's Attack.,"The Pokémon readies itself, then throws a skillful punch at its target's toughest area. This strengthens the Pokémon's fists and fortifies its spirit, raising its Attack one stage.",
 613,oblivion-wing,Oblivion Wing,10,2,80,4,100,0,1,,,,,,Drains 3/4 of the damage dealt to heal the user.,"The Pokémon uses its life-draining wings to engulf its opponent, stealing its lifeforce and absorbing 75% of the plunder itself. This attack may be used to attack either health or energy.",
 616,lands-wrath,Land's Wrath,9,1,90,5,100,0,2,,,,,,Deals damage.  No other effect.,"The Pokémon exerts total control over the land around it, upsetting the ground beneath all nearby foes' feet and creating a jostling mini earthquake.",
+618,origin-pulse,Origin Pulse,3,2,110,7,85,0,2,,,,,,,,
+619,precipice-blades,Precipice Blades,9,1,120,7,85,0,2,,,,,,,,
+620,dragon-ascent,Dragon Ascent,10,2,120,7,100,0,1,,,,,,,,
 10001,chill,Chill,1,3,,,,0,5,15,10,,,,Restores 10% of the user's energy.,"The user relaxes and settles down for a brief rest, recovering a small amount of energy in the process.",Healing (energy)

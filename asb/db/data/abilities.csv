@@ -187,3 +187,6 @@ id,identifier,name,summary,description
 186,dark-aura,Dark Aura,,"This Pokémon gives off a powerful, sinister aura that encourages dirty fighting and evildoing for all nearby. The base damage of all Dark-type attacks is increased by 2% while this Pokémon is on the field."
 187,fairy-aura,Fairy Aura,,This Pokémon gives off an extremely whimsical aura that promotes the magic and grace of all nearby. The base damage of all Fairy-type attacks is increased by 2% while this Pokémon is on the field.
 188,aura-break,Aura Break,,This Pokémon is no-nonsense and has a balancing aura. It naturally removes the effects of Dark Aura and Fairy Aura.
+189,primordial-sea,Primordial Sea,,
+190,desolate-land,Desolate Land,,
+191,delta-stream,Delta Stream,,
