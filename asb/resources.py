@@ -28,7 +28,9 @@ class Root(dict):
         (sec.Deny, sec.Everyone, 'trainer.edit'),
 
         (sec.Allow, 'referee', 'battle.open'),
-        (sec.Deny, sec.Everyone, 'battle.open')
+        (sec.Deny, sec.Everyone, 'battle.open'),
+
+        (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
     ]
 
 class DexIndex:

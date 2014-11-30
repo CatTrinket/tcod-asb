@@ -712,7 +712,6 @@ class Pokemon(PlayerTable):
             (sec.Allow, 'admin', 'edit.basics'),
             (sec.Allow, 'admin', 'edit.everything'),
             (sec.Allow, 'mod', 'edit.basics'),
-            (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
         ]
 
 class PokemonUnlockedEvolution(PlayerTable):
