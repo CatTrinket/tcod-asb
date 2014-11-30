@@ -159,9 +159,10 @@ col.two-types { width: 164px; }
 /* Big Pokémon sprite */
 .portrait-block { float: left; text-align: center; width: 175px; }
 
-.portrait {
+img.portrait {
     border: 5px ridge #0044FF;
     margin: 5px auto;
+    display: block;
 }
 
 .beside-portrait:after { clear: both; display: block; content: ""; }
