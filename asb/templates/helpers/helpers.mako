@@ -28,7 +28,7 @@ ${damage_class.name.capitalize()}\
 </span>\
 </%def>
 
-<%def name="pokemon_form_icon(form, gender=None, alt=None)">\
+<%def name="pokemon_form_icon(form, gender=None, alt='')">\
 <%
     if gender is not None and form.identifier in ['unfezant', 'frillish',
       'jellicent', 'pyroar']:
@@ -43,7 +43,7 @@ ${damage_class.name.capitalize()}\
 <img src="/static/images/pokemon-icons/${filename}" alt="${alt}">\
 </%def>
 
-<%def name="pokemon_form_sprite(form, gender=None)">\
+<%def name="pokemon_form_sprite(form, gender=None, alt='')">\
 <%
    filename = '/static/images/pokemon/{}.png'.format(form.identifier)
    if gender is not None:
@@ -55,7 +55,7 @@ ${damage_class.name.capitalize()}\
        if resource_exists('asb', alt_filename):
            filename = alt_filename
 %>\
-<div class="portrait" style="background-image: url(${filename})"></div>
+<img class="portrait" src="${filename}" alt="${alt}">
 </%def>
 
 <%def name="gender_symbol(gender)">\
