@@ -94,7 +94,7 @@ ${h.form_error_list(*cart_form.errors.values())}
 <td class="input">${next(promotion_buttons)}</td>
 </%def>
 
-<h1>${promotion.name}</h1>
+<h1 id="${promotion.identifier}">${promotion.name}</h1>
 <form action="/pokemon/buy" method="POST">
 ${form.csrf_token()}
 ${h.form_error_list(*form.errors.values())}

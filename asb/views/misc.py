@@ -63,6 +63,18 @@ def home(context, request):
     elif trainer is not None:
         bulletin = []
 
+        # Check if they're eligible for any promotions
+        for promotion in trainer.promotions:
+            if promotion.end_date is not None:
+                message = 'Check out the {0} — ends {1}!'.format(
+                    promotion.name, promotion.end_date.strftime('%Y %B %d')
+                )
+            else:
+                message = 'Check out the {0}!'.format(promotion.name)
+
+            path = '/pokemon/buy#{0}'.format(promotion.identifier)
+            bulletin.append((message, path))
+
         # Check if any of their Pokémon need their forms chosen
         form_uncertain_pokemon = (
             db.DBSession.query(db.Pokemon)
