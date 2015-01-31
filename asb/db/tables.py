@@ -251,6 +251,7 @@ class PokemonForm(PokedexTable):
     full_name = Column(Unicode, nullable=True)
     form_order = Column(Integer, nullable=False)
     is_default = Column(Boolean, nullable=False)
+    speed = Column(Integer, nullable=False)
     order = Column(Integer, unique=True, nullable=False)
 
     @property

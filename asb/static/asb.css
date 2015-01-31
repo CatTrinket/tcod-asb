@@ -151,6 +151,7 @@ col.population { width: 3.5rem; }
 col.price { width: 4rem; }
 col.summary { width: 100%; }
 col.stat { width: 3rem; }
+col.stat-speed { width: 4.5rem; }  /* Wide header */
 col.ticky { width: 2rem; }
 col.trainer { width: 13rem; }
 col.type-col { width: 90px; }

@@ -123,7 +123,7 @@ ${t.pokemon_form_table(
         '{} (${})'.format(label, rarity.price)
         for label, rarity in zip(rarity_labels, rarities)
     ],
-    subheader_colspan=7,
+    subheader_colspan=8,
     extra_left_cols=[{
         'col': add_to_cart_col,
         'th': t.empty_header,

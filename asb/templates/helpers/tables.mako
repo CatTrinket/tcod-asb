@@ -202,7 +202,7 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
 
 <%def name="pokemon_form_table(*form_lists, squashed_forms=False,
     species_name=False, extra_left_cols=[], extra_right_cols=[],
-    subheaders=None, subheader_colspan=6)">
+    subheaders=None, subheader_colspan=7)">
 <%
     if subheaders is None:
         subheaders = [None] * len(form_lists)
@@ -217,6 +217,7 @@ ${column.get('col', _col)()}
 <col class="ability">
 <col class="ability">
 <col class="ability">
+<col class="stat stat-speed">
 % for column in extra_right_cols:
 ${column.get('col', _col)()}
 % endfor
@@ -230,6 +231,7 @@ ${column.get('col', _col)()}
     <th>Ability 1</th>
     <th>Ability 2</th>
     <th>Hidden Ability</th>
+    <th><abbr title="Speed">Speed</abbr></th>
     % for column in extra_right_cols:
     ${column['th']()}
     % endfor
@@ -282,6 +284,8 @@ hidden-ability\
 ">${h.link(ability.ability)}</td>
     % endif
     % endfor
+
+    <td class="stat stat-speed">${form.speed}</td>
 
     % for column in extra_right_cols:
     ${column['td'](form)}

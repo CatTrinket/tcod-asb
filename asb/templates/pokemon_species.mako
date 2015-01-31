@@ -15,6 +15,9 @@ ${h.type_icon(type)}\
 
 <div class="beside-portrait">
 <dl>
+    <dt>Speed</dt>
+    <dd>${pokemon.speed}</dd>
+
     % if pokemon.species.rarity is not None:
     <dt>Rarity</dt>
     <dd>
