@@ -16,6 +16,8 @@
 <td class="input">${next(buttons)}</td>
 </%def>
 
+<h1>Give ${item.name}</h1>
+
 <form action="${request.resource_url(item, 'give')}" method="POST">
 ${form.csrf_token}
 ${h.form_error_list(*form.errors.values())}
