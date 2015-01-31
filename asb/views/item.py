@@ -304,7 +304,7 @@ class ItemField(wtforms.TextField):
 
         # Fudge fuzzy-matching by turning the input into an identifier
         try:
-            identifier = db.identifier(name)
+            identifier = db.helpers.identifier(name)
         except ValueError:
             # Reduces to empty identifier; obviously not going to be an item
             self.item = None

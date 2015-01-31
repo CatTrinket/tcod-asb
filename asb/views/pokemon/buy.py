@@ -55,7 +55,7 @@ class PokemonSpeciesField(wtforms.StringField):
         name, = valuelist
 
         try:
-            identifier = db.identifier(name)
+            identifier = db.helpers.identifier(name)
         except ValueError:
             # Reduces to empty identifier; obviously not going to be a species
             self.data = (name, None)
