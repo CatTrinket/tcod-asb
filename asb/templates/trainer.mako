@@ -2,6 +2,12 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${trainer.name} - Trainers - The Cave of Dragonflies ASB</%block>\
 
+% if request.has_permission('trainer.edit'):
+<p><a href="${request.resource_url(trainer, 'edit')}">
+    Edit ${trainer.name} →
+</a></p>
+% endif
+
 <h1>Pokémon</h1>
 ${t.pokemon_table(
     trainer.squad, trainer.pc,

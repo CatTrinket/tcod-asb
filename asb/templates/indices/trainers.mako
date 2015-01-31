@@ -21,7 +21,8 @@
         <td class="squad">
             % for pokemon in trainer.squad:
 <a href="${request.resource_url(pokemon.__parent__, pokemon.__name__)}">\
-${h.pokemon_form_icon(pokemon.form, pokemon.gender.identifier)}\
+${h.pokemon_form_icon(pokemon.form, pokemon.gender.identifier,
+                      alt=pokemon.form.name)}\
 </a>\
             % endfor
         </td>

@@ -14,8 +14,21 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     To be expanded as need arises.
     """
 
-    money_add = wtforms.IntegerField('Money')
+    money_add = wtforms.IntegerField('Money', [wtforms.validators.Optional()])
+    roles = asb.forms.MultiCheckboxField('Roles')
     save = wtforms.SubmitField('Save')
+
+    def set_roles(self, trainer):
+        """Set the choices for the roles field."""
+
+        self.roles.choices = (
+            db.DBSession.query(db.Role.identifier, db.Role.name)
+            .order_by(db.Role.id)
+            .all()
+        )
+
+        if self.roles.data is None:
+            self.roles.data = [role.identifier for role in trainer.roles]
 
 
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
@@ -53,10 +66,10 @@ def trainer(context, request):
 def edit(trainer, request):
     """A page for editing a trainer."""
 
-    return {
-        'trainer': trainer,
-        'form': TrainerEditForm(csrf_context=request.session)
-    }
+    form = TrainerEditForm(csrf_context=request.session)
+    form.set_roles(trainer)
+
+    return {'trainer': trainer, 'form': form}
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='POST', permission='trainer.edit')
@@ -64,12 +77,20 @@ def edit_commit(trainer, request):
     """Process a request to edit a trainer."""
 
     form = TrainerEditForm(request.POST, csrf_context=request.session)
+    form.set_roles(trainer)
 
     if not form.validate():
         return {'trainer': trainer, 'form': form}
 
-    if form.money_add.data:
+    if form.money_add.data is not None:
         trainer.money += form.money_add.data
+
+    if form.roles.data is not None:
+        trainer.roles = (
+            db.DBSession.query(db.Role)
+            .filter(db.Role.identifier.in_(form.roles.data))
+            .all()
+        )
 
     # Calling it like this avoids the trailing slash and thus a second redirect
     return httpexc.HTTPSeeOther(

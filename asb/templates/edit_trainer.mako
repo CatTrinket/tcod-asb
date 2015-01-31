@@ -14,6 +14,9 @@ ${h.form_error_list(form.csrf_token.errors)}
     % for error in form.money_add.errors:
     <dd class="form-error">${error}</dd>
     % endfor
+
+    <dt>${form.roles.label}</dt>
+    <dd>${form.roles}</dd>
 </dl>
 
 ${form.save() | n}
