@@ -11,17 +11,19 @@
 <p><a href="/items/buy">Buy items →</a></p>
 
 <h1>Bag</h1>
-<table class="standard-table">
+<table class="standard-table effect-table">
 <col class="item-icon">
 <col class="item">
 <col class="stat">
 <col class="give">
+<col class="summary">
 
 <thead>
     <tr>
         <th colspan="2">Item</th>
         <th><abbr title="Quantity">Qty</abbr></th>
         <th>Give</th>
+        <th>Summary</th>
     </tr>
 </thead>
 
@@ -33,7 +35,7 @@
         </td>
         <td>${h.link(item)}</td>
         <td class="stat">${quantity}</td>
-        <td class="give">
+        <td class="give focus-column">
             <a href="${request.resource_url(item, 'give')}">
                 % if item.identifier in ['ability-capsule', 'rare-candy']:
                 Use
@@ -42,6 +44,7 @@
                 % endif
             </a>
         </td>
+        <td>${item.summary}</td>
     </tr>
     % endfor
 </tbody>
