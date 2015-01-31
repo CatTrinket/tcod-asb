@@ -231,7 +231,7 @@ ${column.get('col', _col)()}
     <th>Ability 1</th>
     <th>Ability 2</th>
     <th>Hidden Ability</th>
-    <th><abbr title="Speed">Speed</abbr></th>
+    <th>Speed</th>
     % for column in extra_right_cols:
     ${column['th']()}
     % endfor
