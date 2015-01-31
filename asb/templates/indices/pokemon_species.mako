@@ -20,6 +20,10 @@
 % endif
 </%def>
 
+% if request.has_permission('account.manage'):
+<p><a href="/pokemon/buy">Buy Pokémon →</a></p>
+% endif
+
 ${t.pokemon_form_table(
     pokemon,
     extra_right_cols=[{'col': pop_col, 'th': pop_header, 'td': pop_cell}]

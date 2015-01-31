@@ -1,6 +1,10 @@
 <%inherit file='/base.mako'/>\
 <%block name='title'>Items - The Cave of Dragonflies ASB</%block>\
 
+% if request.has_permission('account.manage'):
+<p><a href="/items/buy">Buy items →</a></p>
+% endif
+
 <table class="standard-table effect-table">
 <col class="item-icon">
 <col class="item">
