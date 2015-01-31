@@ -14,9 +14,9 @@
 % endif
 </%def>
 
-<p>The database is, like, ready.  Whoah.  There's just a little more thread
-rewriting to go and we can launch.  Goof around in the beta while you still
-can.</p>
+<p>ASB is back!  See
+<a href="http://forums.dragonflycave.com/showthread.php?t=17397">the
+announcement on the forums</a> for details.</p>
 
 % if bulletin is not UNDEFINED:
 <h1>Trainer bulletin</h1>
