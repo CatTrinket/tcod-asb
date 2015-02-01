@@ -680,6 +680,8 @@ class Pokemon(PlayerTable):
     happiness = Column(Integer, nullable=False, default=0)
     is_in_squad = Column(Boolean, nullable=False, default=False)
     form_uncertain = Column(Boolean, nullable=False, default=False)
+    birthday = Column(Date, nullable=True)
+    was_from_hack = Column(Boolean, nullable=False, default=False)
 
     # Set up a composite foreign key for ability
     __table_args__ = (

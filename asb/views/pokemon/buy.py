@@ -1,3 +1,5 @@
+import datetime
+
 from pyramid.view import view_config
 import pyramid.httpexceptions as httpexc
 import sqlalchemy as sqla
@@ -396,6 +398,7 @@ def pokemon_checkout_commit(context, request):
 
     # Okay this is it.  Time to actually create these Pokémon.
     squad_count = len(trainer.squad)
+    today = datetime.date.today()
 
     for subform in form.pokemon:
         # Get the next available ID for this Pokémon
@@ -430,7 +433,9 @@ def pokemon_checkout_commit(context, request):
             gender_id=gender_id,
             trainer_id=trainer.id,
             is_in_squad=to_squad,
-            ability_slot=ability_slot
+            ability_slot=ability_slot,
+            birthday=today,
+            was_from_hack=False
         )
 
         db.DBSession.add(pokemon)
