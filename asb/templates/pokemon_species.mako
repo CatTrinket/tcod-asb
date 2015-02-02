@@ -3,6 +3,8 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon species - The Cave of Dragonflies ASB</%block>\
 
+<% from asb.markdown import md, chomp %>
+
 <h1>${pokemon.name}</h1>
 
 <div class="portrait-block">
@@ -45,10 +47,13 @@ ${h.type_icon(type)}\
     % for ability in abilities:
     % if ability.is_hidden:
     <dt class="hidden-ability">${h.link(ability.ability)}</dt>
-    <dd><i>(Hidden ability.)</i>  ${ability.ability.description}</dd>
+    <dd>
+        <i>(Hidden ability.)</i>
+        ${ability.ability.description | md.convert, chomp, n}
+    </dd>
     % else:
     <dt>${h.link(ability.ability)}</dt>
-    <dd>${ability.ability.description}</dd>
+    <dd>${ability.ability.description | md.convert, chomp, n}</dd>
     % endif
     % endfor
 </dl>

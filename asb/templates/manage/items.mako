@@ -2,6 +2,7 @@
 <%namespace name="h" file="/helpers/helpers.mako"/>\
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>Manage items - The Cave of Dragonflies ASB</%block>\
+<% from asb.markdown import md, chomp %>
 
 <% tickies = iter(take_form.holders) %>
 <%def name="take_item_ticky(pokemon)">
@@ -44,7 +45,7 @@
                 % endif
             </a>
         </td>
-        <td>${item.summary}</td>
+        <td>${item.summary | md.convert, chomp, n}</td>
     </tr>
     % endfor
 </tbody>

@@ -126,6 +126,7 @@ ${column['col']()}
 ### MOVE TABLES
 # Always the same columns
 <%def name="move_table(moves)">
+<% from asb.markdown import md, chomp %>\
 <table class="standard-table effect-table">
 <col class="move">
 <col class="type-col">
@@ -187,7 +188,7 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
 ">${h.num(move.priority, invisible_plus=False)}</td>
     % endif
 
-    <td>${move.summary}</td>
+    <td>${move.effect.summary | md.convert, chomp, n}</td>
 </tr>
 % endfor
 </tbody>

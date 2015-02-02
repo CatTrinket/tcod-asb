@@ -2,6 +2,8 @@
 <%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name='title'>Buy items - The Cave of Dragonflies ASB</%block>\
 
+<% from asb.markdown import md, chomp %>
+
 <form action="/items/buy" method="POST">
 ${quick_buy.csrf_token() | n}
 ${quick_buy.item.label() | n}:
@@ -120,7 +122,7 @@ ${h.form_error_list(*browse.errors.values())}
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
         <td class="price">$${item.price}</td>
-        <td>${item.summary}</td>
+        <td>${item.summary | md.convert, chomp, n}</td>
     </tr>
     % endfor
 </tbody>

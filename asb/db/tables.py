@@ -46,8 +46,6 @@ class Ability(PokedexTable):
     id = Column(Integer, primary_key=True)
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
-    summary = Column(Unicode, nullable=False)
-    description = Column(Unicode, nullable=False)
 
     @property
     def __name__(self):
@@ -160,8 +158,6 @@ class Item(PokedexTable):
     item_category_id = Column(Integer, ForeignKey('item_categories.id'),
         nullable=False)
     order = Column(Integer, nullable=True)
-    summary = Column(Unicode, nullable=False)
-    description = Column(Unicode, nullable=False)
 
     @property
     def __name__(self):
@@ -201,8 +197,6 @@ class Move(PokedexTable):
     bonus_appeal = Column(Integer, nullable=True)
     jam = Column(Integer, nullable=True)
     bonus_jam = Column(Integer, nullable=True)
-    summary = Column(Unicode, nullable=False)
-    description = Column(Unicode, nullable=False)
     category = Column(Unicode, nullable=True)  # XXX do something better later
 
     @property
@@ -402,6 +396,19 @@ class Type(PokedexTable):
 
 
 ### PLAYER TABLES
+
+class AbilityEffect(PlayerTable):
+    """An ability's flavour text."""
+
+    __tablename__ = 'ability_effects'
+
+    ability_id = Column(Integer, ForeignKey(Ability.id), primary_key=True)
+    edit_time = Column(DateTime, primary_key=True)
+    edited_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
+        nullable=True)
+    summary = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
+    is_current = Column(Boolean, nullable=False, default=True)
 
 class BankTransaction(PlayerTable):
     """A bank transaction."""
@@ -635,6 +642,32 @@ class BodyModification(PlayerTable):
     is_repeatable = Column(Boolean, nullable=False)
     flavor = Column(Unicode, nullable=False)
     effect = Column(Unicode, nullable=False)
+
+class ItemEffect(PlayerTable):
+    """An item's flavour text."""
+
+    __tablename__ = 'item_effects'
+
+    item_id = Column(Integer, ForeignKey(Item.id), primary_key=True)
+    edit_time = Column(DateTime, primary_key=True)
+    edited_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
+        nullable=True)
+    summary = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
+    is_current = Column(Boolean, nullable=False, default=True)
+
+class MoveEffect(PlayerTable):
+    """A move's flavour text."""
+
+    __tablename__ = 'move_effects'
+
+    move_id = Column(Integer, ForeignKey(Move.id), primary_key=True)
+    edit_time = Column(DateTime, primary_key=True)
+    edited_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
+        nullable=True)
+    summary = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
+    is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveModification(PlayerTable):
     """A Pokémon's signature move or other movepool mod.
@@ -963,6 +996,12 @@ class TrainerRole(PlayerTable):
 
 # Relationships go down here so that we don't have to use strings for
 # everything
+Ability.effect = relationship(AbilityEffect, uselist=False,
+    primaryjoin=and_(Ability.id == AbilityEffect.ability_id,
+                     AbilityEffect.is_current == True))
+Ability.summary = association_proxy('effect', 'summary')
+Ability.description = association_proxy('effect', 'description')
+
 BankTransaction.approver = relationship(Trainer,
     primaryjoin=BankTransaction.approver_id == Trainer.id)
 BankTransaction.trainer = relationship(Trainer,
@@ -1001,9 +1040,20 @@ ContestSupercategory.categories = relationship(ContestCategory,
     order_by=ContestCategory.id,  back_populates='supercategory')
 
 Item.category = relationship(ItemCategory, back_populates='items')
+Item.effect = relationship(ItemEffect, uselist=False,
+    primaryjoin=and_(Item.id == ItemEffect.item_id,
+                     ItemEffect.is_current == True))
+Item.summary = association_proxy('effect', 'summary')
+Item.description = association_proxy('effect', 'description')
 
 ItemCategory.items = relationship(Item, back_populates='category',
     order_by=(Item.order, Item.name))
+
+Move.effect = relationship(MoveEffect, uselist=False,
+     primaryjoin=and_(Move.id == MoveEffect.move_id,
+                      MoveEffect.is_current == True))
+Move.summary = association_proxy('effect', 'summary')
+Move.description = association_proxy('effect', 'description')
 
 Move.target = relationship(MoveTarget)
 Move.type = relationship(Type)

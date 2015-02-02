@@ -1,0 +1,103 @@
+"""[***write docstring]"""
+
+import markdown
+from pyramid.traversal import resource_path
+import sqlalchemy as sqla
+
+import asb.db as db
+
+class PokedexLinkExtension(markdown.extensions.Extension):
+    def extendMarkdown(self, md, md_globals):
+        md.inlinePatterns.add('ability_link', ability_link, '>link')
+        md.inlinePatterns.add('move_link', move_link, '>link')
+        md.inlinePatterns.add('item_link', item_link, '>link')
+        md.inlinePatterns.add('species_link', species_link, '>link')
+
+class PokedexLink(markdown.inlinepatterns.Pattern):
+    """[***write docstring]"""
+
+    def __init__(self, label, table):
+        """[***write docstring]"""
+
+        self.table = table
+
+        # {label:name} with some optional whitespace
+        pattern = r'({{\s*{0}\s*:\s*(.+?)\s*}})'.format(label)
+
+        super().__init__(pattern)
+
+    def fetch_thing(self, name):
+        """Fetch the thing from the database, and return it with its name.
+
+        The name is returned explicitly so that SpeciesLink can override this
+        sqla.function and figure out whether to use the form name or species name
+        for the link text.
+        """
+
+        thing = (
+            db.DBSession.query(self.table)
+            .filter(sqla.func.lower(self.table.name) == name.lower())
+            .one()
+        )
+
+        return (thing, thing.name)
+
+    def handleMatch(self, match):
+        """Turn a pattern match into a Pokédex link."""
+
+        name = match.group(3).strip()
+
+        try:
+            (thing, name) = self.fetch_thing(name)
+        except sqla.orm.exc.NoResultFound:
+            # Not a real thing; just leave the raw {label:name} alone
+            return markdown.util.AtomicString(match.group(2))
+
+        link = markdown.util.etree.Element('a')
+        link.set('href', resource_path(thing))
+        link.text = markdown.util.AtomicString(name)
+        return link
+
+class SpeciesLink(PokedexLink):
+    def fetch_thing(self, name):
+        """Try to find a Pokémon form with this name; if there isn't one, try
+        to find a Pokémon species with this name.
+        """
+
+        name = name.lower()
+
+        try:
+            form = (
+                db.DBSession.query(self.table)
+                .filter(sqla.func.lower(self.table.full_name) == name)
+                .one()
+            )
+
+            return (form, form.full_name)
+        except sqla.orm.exc.NoResultFound:
+            species = (
+                db.DBSession.query(db.PokemonSpecies)
+                .filter(sqla.func.lower(db.PokemonSpecies.name) == name)
+                .one()
+            )
+
+            return (species.default_form, species.name)
+
+def chomp(html):
+    """Chomp the paragraph tags off a block of HTML.  This function is not very
+    smart and will simply chop off the first three and last four characters.
+
+    XXX There's probably some way to extend Markdown to do this more nicely
+    """
+
+    return html[3:-4]
+
+ability_link = PokedexLink('ability', db.Ability)
+item_link = PokedexLink('item', db.Item)
+move_link = PokedexLink('move', db.Move)
+species_link = SpeciesLink('species', db.PokemonForm)
+
+md = markdown.Markdown(extensions=[
+    PokedexLinkExtension(),
+    'markdown.extensions.nl2br'
+])

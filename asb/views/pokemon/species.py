@@ -30,7 +30,7 @@ def species_index(context, request):
         db.DBSession.query(db.Pokemon.pokemon_form_id,
             sqla.func.count('*').label('population'))
         .select_from(db.Pokemon)
-        .join(db.Trainer)
+        .join(db.Pokemon.trainer)
         .filter(db.Trainer.unclaimed_from_hack == False)
         .group_by(db.Pokemon.pokemon_form_id)
         .subquery()
@@ -97,7 +97,7 @@ def species(pokemon, request):
     # Find all the Pokémon of this species/form in the league
     census = (
         db.DBSession.query(db.Pokemon)
-        .join(db.Trainer)
+        .join(db.Pokemon.trainer)
         .filter(db.Pokemon.pokemon_form_id == pokemon.id)
         .filter(db.Trainer.unclaimed_from_hack == False)
         .options(

@@ -328,3 +328,12 @@ dl#bank-approval-instructions > dd { margin-left: 2em; }
 div#move-info > dl { float: left; width: 33%; margin: 0; }
 div#move-info > dl + dl { margin-left: 0.5%; }
 div#move-info:after { display: block; content: ''; clear: both; }
+
+/* Flavour-editing pages */
+form.flavor-editor input[type="text"],
+form.flavor-editor textarea {
+    /* Default to sans-serif to avoid Courier at all costs */
+    font-family: DejaVu Sans Mono, Monaco, sans-serif;
+    font-size: 16px;
+    width: 100%;
+}

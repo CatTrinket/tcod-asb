@@ -1,6 +1,11 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="helpers" file="/helpers/helpers.mako"/>\
 <%block name='title'>${item.name} - Items - The Cave of Dragonflies ASB</%block>\
+<% from asb.markdown import md, chomp %>
+
+% if request.has_permission('flavor.edit'):
+<p><a href="${request.resource_path(item, 'edit')}">Edit ${item.name} →</a></p>
+% endif
 
 <h1>${item.name}</h1>
 <dl>
@@ -15,9 +20,9 @@
     % endif
 
     <dt>Summary</dt>
-    <dd>${item.summary}</dd>
+    <dd>${item.summary | md.convert, chomp, n}</dd>
 </dl>
 
 
 <h1>Description</h1>
-<p>${item.description}</p>
+${item.description | md.convert, n}
