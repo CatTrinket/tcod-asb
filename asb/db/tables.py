@@ -520,7 +520,7 @@ class Battle(PlayerTable):
                 permissions.append((sec.Deny, ref, 'battle.approve'))
 
             for trainer in trainers:
-                permissions.append((sec.Deny, trainer, 'battle.approve'))            
+                permissions.append((sec.Deny, trainer, 'battle.approve'))
 
             # XXX Ideally you'd have to be a mod/admin *and* a ref
             permissions.append((sec.Allow, 'mod', 'battle.approve'))
@@ -682,14 +682,25 @@ class Pokemon(PlayerTable):
     form_uncertain = Column(Boolean, nullable=False, default=False)
     birthday = Column(Date, nullable=True)
     was_from_hack = Column(Boolean, nullable=False, default=False)
+    original_trainer_id = Column(Integer, ForeignKey('trainers.id',
+        onupdate='cascade', ondelete='set null'))
+    trade_id = Column(Integer, ForeignKey('trades.id'), nullable=True)
 
-    # Set up a composite foreign key for ability
     __table_args__ = (
+        # Set up a composite foreign key for ability
         ForeignKeyConstraint(
             [pokemon_form_id, ability_slot],
             [PokemonFormAbility.pokemon_form_id, PokemonFormAbility.slot],
             name='pokemon_ability_fkey', use_alter=True
         ),
+
+        # If this Pokémon is being offered in a trade, make sure it's being
+        # offered by its actual trainer
+        ForeignKeyConstraint(
+            ['trade_id', 'trainer_id'],
+            ['trade_trainers.trade_id', 'trade_trainers.trainer_id'],
+            name='pokemon_trader_fkey'
+        )
     )
 
     def update_identifier(self):
@@ -787,6 +798,45 @@ class PromotionRecipient(PlayerTable):
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         primary_key=True)
     received = Column(Boolean, nullable=False)
+
+class Trade(PlayerTable):
+    """A trade between two players, including money, Pokémon, items, or some
+    combination of the three.
+
+    Gifts are also stored as trades, with only one party offering anything.
+    """
+
+    __tablename__ = 'trades'
+
+    trades_id_seq = Sequence('trades_id_seq')
+
+    id = Column(Integer, trades_id_seq, primary_key=True)
+    is_gift = Column(Boolean, nullable=False)
+    approved = Column(Boolean, nullable=False, default=False)
+
+    @property
+    def needs_approval(self):
+        """Return True if this trade needs to be approved by a mod.
+
+        Trades are only submitted for approval after all the trainers have
+        finalized the trade.  Gifts are submitted for approval and the
+        recipient's acceptance simultaneously.
+        """
+
+        return not self.approved and (
+            self.is_gift or
+            all(trainer.accepted for trainer in self.trainers)
+        )
+
+class TradeTrainer(PlayerTable):
+    """A trainer participating in a trade."""
+
+    __tablename__ = 'trade_trainers'
+
+    trade_id = Column(Integer, ForeignKey('trades.id'), primary_key=True)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    accepted = Column(Boolean, nullable=False, default=False)
+    money = Column(Integer, nullable=True)
 
 class Trainer(PlayerTable):
     """A member of the ASB league and user of this app thing."""
@@ -890,6 +940,17 @@ class TrainerItem(PlayerTable):
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
+    trade_id = Column(Integer, ForeignKey('trades.id'), nullable=True)
+
+    # If this item is being offered in a trade, make sure it's being offered by
+    # the trainer who owns it
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['trade_id', 'trainer_id'],
+            ['trade_trainers.trade_id', 'trade_trainers.trainer_id'],
+            name='item_trader_fkey'
+        ),
+    )
 
 class TrainerRole(PlayerTable):
     """A role that a trainer has."""
@@ -961,7 +1022,8 @@ Pokemon.item = relationship(Item,
 Pokemon.trainer_item = relationship(TrainerItem, uselist=False)
 Pokemon.move_modification = relationship(MoveModification, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
-Pokemon.trainer = relationship(Trainer, back_populates='pokemon')
+Pokemon.trainer = relationship(Trainer, foreign_keys=[Pokemon.trainer_id],
+    back_populates='pokemon')
 Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
     secondary=PokemonUnlockedEvolution.__table__)
 
@@ -1014,8 +1076,8 @@ Promotion.pokemon_species = relationship(PokemonSpecies,
 Rarity.pokemon_species = relationship(PokemonSpecies,
     order_by=PokemonSpecies.order, back_populates='rarity')
 
-Trainer.pokemon = relationship(Pokemon, back_populates='trainer',
-    order_by=Pokemon.id)
+Trainer.pokemon = relationship(Pokemon, foreign_keys=[Pokemon.trainer_id],
+    back_populates='trainer', order_by=Pokemon.id)
 Trainer.squad = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad),
     order_by=Pokemon.id)
