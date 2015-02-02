@@ -6,6 +6,7 @@ import setuptools
 requires = [
     'alembic==0.6.3',
     'beautifulsoup4==4.3.2',
+    'Markdown==2.4.1',
     'pbkdf2==1.3',
     'pyramid==1.5',
     'pyramid_beaker==0.8',
