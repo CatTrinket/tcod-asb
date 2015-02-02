@@ -57,7 +57,7 @@ class PokedexLink(markdown.inlinepatterns.Pattern):
             (thing, name) = self.fetch_thing(name)
         except sqla.orm.exc.NoResultFound:
             # Not a real thing; just leave the raw {label:name} alone
-            return markdown.util.AtomicString(match.group(2))
+            return match.group(2)
 
         link = markdown.util.etree.Element('a')
         link.set('href', resource_path(thing))
