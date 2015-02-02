@@ -1002,6 +1002,8 @@ Ability.effect = relationship(AbilityEffect, uselist=False,
 Ability.summary = association_proxy('effect', 'summary')
 Ability.description = association_proxy('effect', 'description')
 
+AbilityEffect.editor = relationship(Trainer)
+
 BankTransaction.approver = relationship(Trainer,
     primaryjoin=BankTransaction.approver_id == Trainer.id)
 BankTransaction.trainer = relationship(Trainer,
@@ -1049,6 +1051,8 @@ Item.description = association_proxy('effect', 'description')
 ItemCategory.items = relationship(Item, back_populates='category',
     order_by=(Item.order, Item.name))
 
+ItemEffect.editor = relationship(Trainer)
+
 Move.effect = relationship(MoveEffect, uselist=False,
      primaryjoin=and_(Move.id == MoveEffect.move_id,
                       MoveEffect.is_current == True))
@@ -1061,6 +1065,8 @@ Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
     secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
 Move.contest_category = relationship(ContestCategory)
+
+MoveEffect.editor = relationship(Trainer)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)

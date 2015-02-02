@@ -8,6 +8,9 @@ import asb.db as db
 import asb.forms
 
 class FlavorEditForm(asb.forms.CSRFTokenForm):
+    """A form for editing something's flavor text."""
+
+    edit_time = wtforms.HiddenField()
     summary = wtforms.StringField('Summary')
     description = wtforms.TextAreaField('Description')
     preview = wtforms.SubmitField('Preview')
@@ -21,6 +24,7 @@ def edit_move(move, request):
     form = FlavorEditForm(csrf_context=request.session)
     form.summary.data = move.summary
     form.description.data = move.description
+    form.edit_time.data = move.effect.edit_time.isoformat()
 
     return {'form': form, 'thing': move}
 
@@ -30,8 +34,20 @@ def process_edit_move(move, request):
     """Process a move flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
+    valid = form.validate()
+    edit_time = move.effect.edit_time.isoformat()
 
-    if not form.validate() or form.preview.data:
+    if form.edit_time.data != edit_time:
+        valid = False
+        form.edit_time.data = edit_time
+        form.edit_time.errors.append(
+            '{0} has edited {1} since you started editing.  The current '
+            'revision is shown below; please incorporate any changes into '
+            'your version.'
+            .format(move.effect.editor.name, move.name)
+        )
+
+    if not valid or form.preview.data:
         return {'form': form, 'thing': move}
 
     new_effect = db.MoveEffect(
