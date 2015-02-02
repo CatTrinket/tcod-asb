@@ -1,4 +1,4 @@
-"""[***write docstring]"""
+"""ASB-specific Markdown customizations."""
 
 import markdown
 from pyramid.traversal import resource_path
@@ -14,10 +14,16 @@ class PokedexLinkExtension(markdown.extensions.Extension):
         md.inlinePatterns.add('species_link', species_link, '>link')
 
 class PokedexLink(markdown.inlinepatterns.Pattern):
-    """[***write docstring]"""
+    """A pattern to turn {tablename:thingname} into a link.
+
+    For example, {ability:Serene Grace} will turn into a link to Serene Grace's
+    page.
+    """
 
     def __init__(self, label, table):
-        """[***write docstring]"""
+        """Set which table to look stuff up in and build the matching pattern,
+        then do regular setup.
+        """
 
         self.table = table
 

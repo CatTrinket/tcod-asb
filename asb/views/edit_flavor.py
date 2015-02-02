@@ -27,7 +27,7 @@ def edit_move(move, request):
 @view_config(name='edit', context=db.Move, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_move(move, request):
-    """"""
+    """Process a move flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
 
@@ -64,7 +64,7 @@ def edit_item(item, request):
 @view_config(name='edit', context=db.Item, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_item(item, request):
-    """"""
+    """Process an item flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
 
@@ -101,7 +101,7 @@ def edit_ability(ability, request):
 @view_config(name='edit', context=db.Ability, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_ability(ability, request):
-    """"""
+    """Process an ability flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
 
