@@ -12,7 +12,7 @@ def pokemon_index(context, request):
 
     pokemon = (
         db.DBSession.query(db.Pokemon)
-        .join(db.Trainer)
+        .join(db.Pokemon.trainer)
         .filter(db.Trainer.unclaimed_from_hack == False)
         .join(db.PokemonForm)
         .join(db.PokemonSpecies)
