@@ -74,6 +74,7 @@ def edit_item(item, request):
     form = FlavorEditForm(csrf_context=request.session)
     form.summary.data = item.summary
     form.description.data = item.description
+    form.edit_time.data = item.effect.edit_time.isoformat()
 
     return {'form': form, 'thing': item}
 
@@ -83,8 +84,20 @@ def process_edit_item(item, request):
     """Process an item flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
+    valid = form.validate()
+    edit_time = item.effect.edit_time.isoformat()
 
-    if not form.validate() or form.preview.data:
+    if form.edit_time.data != edit_time:
+        valid = False
+        form.edit_time.data = edit_time
+        form.edit_time.errors.append(
+            '{0} has edited {1} since you started editing.  The current '
+            'revision is shown below; please incorporate any changes into '
+            'your version.'
+            .format(item.effect.editor.name, item.name)
+        )
+
+    if not valid or form.preview.data:
         return {'form': form, 'thing': item}
 
     new_effect = db.ItemEffect(
@@ -111,6 +124,7 @@ def edit_ability(ability, request):
     form = FlavorEditForm(csrf_context=request.session)
     form.summary.data = ability.summary
     form.description.data = ability.description
+    form.edit_time.data = ability.effect.edit_time.isoformat()
 
     return {'form': form, 'thing': ability}
 
@@ -120,8 +134,20 @@ def process_edit_ability(ability, request):
     """Process an ability flavor editing form."""
 
     form = FlavorEditForm(request.POST, csrf_context=request.session)
+    valid = form.validate()
+    edit_time = ability.effect.edit_time.isoformat()
 
-    if not form.validate() or form.preview.data:
+    if form.edit_time.data != edit_time:
+        valid = False
+        form.edit_time.data = edit_time
+        form.edit_time.errors.append(
+            '{0} has edited {1} since you started editing.  The current '
+            'revision is shown below; please incorporate any changes into '
+            'your version.'
+            .format(ability.effect.editor.name, ability.name)
+        )
+
+    if not valid or form.preview.data:
         return {'form': form, 'thing': ability}
 
     new_effect = db.AbilityEffect(
