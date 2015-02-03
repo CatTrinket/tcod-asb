@@ -1,6 +1,7 @@
 import pbkdf2
 import pyramid.security as sec
-from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, UniqueConstraint, Sequence
+from sqlalchemy import (Column, ForeignKey, ForeignKeyConstraint,
+    UniqueConstraint, Sequence, func)
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
@@ -909,6 +910,25 @@ class Trainer(PlayerTable):
         self.identifier = helpers.identifier(self.name, id=self.id)
 
     @property
+    def bag(self):
+        """Return the items in the trainer's bag and a count of each."""
+
+        trainer_items = (
+            DBSession.query(TrainerItem.item_id, func.count('*').label('qty'))
+            .filter_by(trainer_id=self.id)
+            .filter(TrainerItem.pokemon_id.is_(None))
+            .group_by(TrainerItem.item_id)
+            .subquery()
+        )
+
+        return (
+            DBSession.query(Item, trainer_items.c.qty)
+            .join(trainer_items)
+            .order_by(Item.name)
+            .all()
+        )
+
+    @property
     def has_items(self):
         """Determine whether or not this trainer has any items without having
         to actually fetch them.
@@ -1141,9 +1161,6 @@ Trainer.pc = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad),
     order_by=Pokemon.id)
 
-Trainer.bag = relationship(Item, secondary=TrainerItem.__table__,
-    primaryjoin=and_(Trainer.id == TrainerItem.trainer_id,
-                     TrainerItem.pokemon_id == None))
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
 
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
