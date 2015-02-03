@@ -38,44 +38,27 @@ def item_index(context, request):
 
     return {'item_categories': item_categories}
 
-def _manage_items_queries(trainer):
-    """Perform the queries needed for the "manage items" page and return the
-    results.
-
-    The same queries are needed for both the GET and POST views, so this avoids
-    repeating some complex query code.
+def get_holders(trainer):
+    """Get a list of the trainer's Pokémon who are holding items, grouped by
+    squad vs PC.
     """
 
-    # A subquery to count how many of each item a trainer has in their bag
-    quantity = (
-        db.DBSession.query(db.TrainerItem.item_id,
-            func.count('*').label('quantity'))
-        .filter(db.TrainerItem.trainer_id == trainer.id,
-            db.TrainerItem.pokemon_id == None)
-        .group_by(db.TrainerItem.item_id)
-        .subquery()
-    )
-
-    # Get the trainer's bag, including the quantity of each item w/ subquery
-    holdable = (
-        db.DBSession.query(db.Item, quantity.c.quantity)
-        .join(quantity, db.Item.id == quantity.c.item_id)
-        .order_by(db.Item.name)
-        .all()
-    )
-
-    # Get a list of the trainer's Pokémon who are holding items
     holders = (
         db.DBSession.query(db.Pokemon)
-        .filter(db.Pokemon.trainer_id == trainer.id)
+        .filter_by(trainer_id=trainer.id)
         .join(db.TrainerItem)
         .join(db.Item)
         .order_by(db.Pokemon.is_in_squad.desc(), db.Item.name,
-            db.TrainerItem.id)
+                  db.TrainerItem.id)
         .all()
     )
 
-    return (holdable, holders)
+    holders = itertools.groupby(holders, lambda holder: holder.is_in_squad)
+
+    return [
+        ('Active squad' if is_in_squad else 'PC', list(group))
+        for (is_in_squad, group) in holders
+    ]
 
 @view_config(name='manage', context=ItemIndex, permission='account.manage',
   request_method='GET', renderer='/manage/items.mako')
@@ -83,13 +66,15 @@ def manage_items(context, request):
     """A page for managing one's items."""
 
     trainer = request.user
-
-    holdable, holders = _manage_items_queries(trainer)
-
+    holders = get_holders(trainer)
     take_form = TakeItemsForm(csrf_context=request.session)
-    take_form.holders.choices = [(pokemon.id, '') for pokemon in holders]
+    take_form.holders.choices = [
+        (pokemon.id, '')
+        for (header, group) in holders
+        for pokemon in group
+    ]
 
-    return {'holdable': holdable, 'holders': holders, 'take_form': take_form}
+    return {'holders': holders, 'take_form': take_form}
 
 @view_config(name='manage', context=ItemIndex, permission='account.manage',
   request_method='POST', renderer='/manage/items.mako')
@@ -100,21 +85,23 @@ def manage_items_commit(context, request):
     """
 
     trainer = request.user
-
-    holdable, holders = _manage_items_queries(trainer)
+    holders = get_holders(trainer)
 
     # Validate the form
     take_form = TakeItemsForm(request.POST, csrf_context=request.session)
-    take_form.holders.choices = [(pokemon.id, '') for pokemon in holders]
+    take_form.holders.choices = [
+        (pokemon.id, '')
+        for (header, group) in holders
+        for pokemon in group
+    ]
 
     if not take_form.validate():
-        return {'holdable': holdable, 'holders': holders,
-            'take_form': take_form}
+        return {'holders': holders, 'take_form': take_form}
 
     # Find the items held by the specified Pokémon
-    to_take = (db.DBSession.query(db.TrainerItem)
-        .filter(db.TrainerItem.pokemon_id.in_(
-            take_form.holders.data))
+    to_take = (
+        db.DBSession.query(db.TrainerItem)
+        .filter(db.TrainerItem.pokemon_id.in_(take_form.holders.data))
         .all()
     )
 

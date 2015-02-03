@@ -29,7 +29,7 @@
 </thead>
 
 <tbody>
-    % for item, quantity in holdable:
+    % for (item, quantity) in request.user.bag:
     <tr>
         <td class="icon">
             <img src="/static/images/items/${item.identifier}.png" alt="">
@@ -67,7 +67,10 @@
 <form action="/items/manage" method="POST">
 ${take_form.csrf_token() | n}
 
-${t.pokemon_table(holders, skip_cols=['item', 'trainer'],
+${t.pokemon_table(
+    *(group for (header, group) in holders),
+    subheaders=(header for (header, group) in holders),
+    skip_cols=['item', 'trainer'],
     extra_left_cols=[
         {'col': t.ticky_col, 'th': t.empty_header, 'td': take_item_ticky},
         {'col': t.item_col, 'th': t.item_header, 'td': t.item_cell},
