@@ -6,6 +6,7 @@ import wtforms
 
 from asb import db
 import asb.forms
+import asb.tcodf
 from asb.resources import TrainerIndex
 
 class TrainerEditForm(asb.forms.CSRFTokenForm):
@@ -56,10 +57,11 @@ def trainer_index(context, request):
     return {'trainers': trainers}
 
 @view_config(context=db.Trainer, renderer='/trainer.mako')
-def trainer(context, request):
+def trainer(trainer, request):
     """A trainer's info page."""
 
-    return {'trainer': context}
+    profile_link = asb.tcodf.user_forum_link(trainer.tcodf_user_id)
+    return {'trainer': trainer, 'profile_link': profile_link}
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='GET', permission='trainer.edit')

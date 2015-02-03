@@ -11,6 +11,18 @@
 </a></p>
 % endif
 
+<h1>${trainer.name}</h1>
+<dl>
+    <dt>Forum profile</dt>
+    <dd><a href="${profile_link}">Here</a></dd>
+
+    <dt>Money</dt>
+    <dd>$${trainer.money}</dd>
+
+    <dt>Pokémon count</dt>
+    <dd>${len(trainer.pokemon)}</dd>
+</dl>
+
 <h1>Pokémon</h1>
 ${t.pokemon_table(
     trainer.squad, trainer.pc,
