@@ -428,7 +428,7 @@ def pokemon_checkout_commit(context, request):
         pokemon = db.Pokemon(
             id=id,
             identifier='temp-{0}'.format(subform.name_.data),
-            name=subform.name_.data or subform.species.name,
+            name=subform.name_.data.strip() or subform.species.name,
             pokemon_form_id=form_id,
             gender_id=gender_id,
             trainer_id=trainer.id,
