@@ -1771,6 +1771,8 @@ pokemon_form_id,slot,ability_id,is_hidden
 717,1,186,False
 718,1,188,False
 719,1,29,False
+720,1,170,False
+721,1,11,False
 10001,1,26,False
 10002,1,26,False
 10003,1,26,False
@@ -2110,3 +2112,4 @@ pokemon_form_id,slot,ability_id,is_hidden
 10181,2,131,False
 10181,3,131,True
 10182,1,156,False
+10183,1,170,False

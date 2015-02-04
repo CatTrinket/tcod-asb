@@ -726,3 +726,5 @@ Outside of battle, Aegislash can change formes at any time, but only for display
 717,yveltal,Yveltal,362,,,False,False,False,717,
 718,zygarde,Zygarde,363,,,False,False,False,718,
 719,diancie,Diancie,364,,,False,False,False,719,Mega Evolution is coming soon.
+720,hoopa,Hoopa,365,,,True,True,False,720,"Hoopa's forms have different types and stats.  It may battle in either form, but cannot change forms in battle."
+721,volcanion,Volcanion,366,,,False,False,False,721,

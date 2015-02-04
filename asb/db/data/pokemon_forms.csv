@@ -718,6 +718,8 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 717,yveltal,717,,,1,True,99,898
 718,zygarde,718,,,1,True,95,899
 719,diancie,719,,,1,True,50,900
+720,hoopa-confined,720,Hoopa Confined,Hoopa Confined,1,True,70,902
+721,volcanion,721,,,1,True,70,904
 10001,unown-b,201,B,Unown B,2,False,48,250
 10002,unown-c,201,C,Unown C,3,False,48,251
 10003,unown-d,201,D,Unown D,4,False,48,252
@@ -900,3 +902,4 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 10180,gallade-mega,475,Mega Gallade,Mega Gallade,2,False,110,361
 10181,audino-mega,531,Mega Audino,Mega Audino,2,False,50,645
 10182,diancie-mega,719,Mega Diancie,Mega Diancie,2,False,110,901
+10183,hoopa-unbound,720,Hoopa Unbound,Hoopa Unbound,2,False,80,903
