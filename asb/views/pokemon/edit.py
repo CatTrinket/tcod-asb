@@ -81,7 +81,7 @@ def edit_pokemon_commit(pokemon, request):
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
 
-    pokemon.name = form.name.data or pokemon.species.name
+    pokemon.name = form.name.data.strip() or pokemon.species.name
     pokemon.update_identifier()
 
     if form.form is not None:
