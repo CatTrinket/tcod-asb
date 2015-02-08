@@ -15,7 +15,9 @@ ${n}\
 </%def>
 
 <%def name="type_icon(type)">\
-<span class="type type-${type.identifier}">${type.name}</span>\
+<span class="type type-${type.identifier}">\
+<a href="${request.resource_url(type.__parent__, type.__name__)}">\
+${type.name}</a></span>\
 </%def>
 
 <%def name="damage_class_icon(damage_class)">\

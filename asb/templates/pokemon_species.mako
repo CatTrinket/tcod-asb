@@ -41,7 +41,7 @@ ${h.type_icon(type)}\
 </dl>
 </div>
 
-<h1>Abilities</h1>
+<h2>Abilities</h2>
 
 <dl class="ability-list">
     % for ability in abilities:
@@ -55,6 +55,22 @@ ${h.type_icon(type)}\
     <dt>${h.link(ability.ability)}</dt>
     <dd>${ability.ability.description | md.convert, chomp, n}</dd>
     % endif
+    % endfor
+</dl>
+
+<h2>Type matchups</h2>
+<dl class="type-matchups">
+    % for (label, types) in type_matchups.values():
+    <dt>${label}</dt>
+    <dd>
+        % if types:
+        % for type in types:
+${h.type_icon(type)}\
+        % endfor
+        % else:
+        None
+        % endif
+    </dd>
     % endfor
 </dl>
 

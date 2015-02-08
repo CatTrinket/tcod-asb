@@ -65,6 +65,39 @@ def species(pokemon, request):
     just a detail.
     """
 
+    # Figure out type matchups
+    type_matchups = collections.OrderedDict([
+        (2, ('Very weak to (2×)', [])),
+        (1, ('Weak to (1.5×)', [])),
+        (-1, ('Resistant to (0.67×)', [])),
+        (-2, ('Very resistant to (0.5×)', [])),
+        (None, ('Immune to (0×)', []))
+    ])
+
+    if len(pokemon.types) == 1:
+        del type_matchups[2]
+        del type_matchups[-2]
+
+    zipped_matchups = zip(
+        *(type_.defending_matchups for type_ in pokemon.types)
+    )
+
+    for matchups in zipped_matchups:
+        type_ = matchups[0].attacking_type
+        result = 0
+
+        for matchup in matchups:
+            if matchup.result.identifier == 'super-effective':
+                result += 1
+            elif matchup.result.identifier == 'not-very-effective':
+                result -= 1
+            elif matchup.result.identifier == 'ineffective':
+                result = None
+                break
+
+        if result != 0:
+            type_matchups[result][1].append(type_)
+
     # Get this Pokémon's abilities but strip out the duplicates
     abilities = []
     for ability in pokemon.abilities:
@@ -109,5 +142,11 @@ def species(pokemon, request):
         .all()
     )
 
-    return {'pokemon': pokemon, 'abilities': abilities, 'evo_tree': evo_tree,
-        'or_iter': or_iter, 'census': census}
+    return {
+        'pokemon': pokemon,
+        'abilities': abilities,
+        'type_matchups': type_matchups,
+        'evo_tree': evo_tree,
+        'or_iter': or_iter,
+        'census': census
+    }

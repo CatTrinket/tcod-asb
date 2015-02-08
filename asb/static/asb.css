@@ -173,8 +173,12 @@ img.portrait {
     display: inline-block;
     width: 70px; height: 20px; border: 2px solid; border-radius: 12px;
     text-align: center; vertical-align: middle; line-height: 20px;
+    font-weight: normal !important;
     color: white; text-shadow: black 1px 1px;
 }
+
+.type > a  { color: white; }
+.type > a:hover { text-decoration: underline; }
 
 .type-normal { background: #ADAD7B; border-color: #735A4A; }
 .type-fire { background: #F75231; border-color: #943129; }
@@ -216,6 +220,10 @@ table.effect-table td.damage-class-cell > .damage-class
 .gender-symbol-female { color: #FF4273; }
 .gender-symbol-male { color: #00C5AD; }
 .gender-symbol-genderless { color: black; }
+
+/* Type matchup dls have long dts */
+dl.type-matchups > dt { width: 15em; }
+dl.type-matchups > dd { margin-left: 15.5em; }
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
@@ -336,4 +344,47 @@ form.flavor-editor textarea {
     font-family: DejaVu Sans Mono, Monaco, sans-serif;
     font-size: 16px;
     width: 100%;
+}
+
+/* Type chart */
+#type-chart { table-layout: fixed; width: 0; }
+#type-chart col#left-axis { width: 1rem; }
+#type-chart col#attacking-types { width: 96px; }
+#type-chart colgroup#matchups > col { width: 40px; }
+#type-chart tr { height: 40px; }
+
+#type-chart colgroup + colgroup { border-left: 2px solid #7799EE; }
+#type-chart td { font-weight: bold; text-align: center; }
+#type-chart td, #type-chart th { padding: 0; }
+
+#type-chart thead > tr#defending-types > th {
+    height: 80px;
+    padding: 0 16px;
+    transform-origin: 50% 68px;
+    transform: rotate(-0.25turn);
+    vertical-align: bottom;
+}
+
+/* XXX This ends up a little too high */
+#type-chart th#left-axis-label {
+    transform: rotate(-0.25turn);
+    white-space: nowrap;
+}
+
+.super-effective {
+    color: #008000;
+    background: #C0E8A8;
+    border: 2px solid #004000;
+}
+
+.not-very-effective {
+    color: #F0E0E0;
+    background: #D85050;
+    border: 2px solid #300000;
+}
+
+.ineffective {
+    color: #F0F0F0;
+    background: #404040;
+    border: 2px solid #000000;
 }

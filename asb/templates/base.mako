@@ -61,6 +61,7 @@
     <li><a href="/moves">Moves</a></li>
     <li><a href="/abilities">Abilities</a></li>
     <li><a href="/items">Items</a></li>
+    <li><a href="/types">Types</a></li>
     <li><a href="/battles">Battles</a></li>
 </ul>
 </nav>

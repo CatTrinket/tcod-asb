@@ -395,6 +395,33 @@ class Type(PokedexTable):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
+    @property
+    def __name__(self):
+        """Return this type's resource name for traversal."""
+
+        return self.identifier
+
+class TypeMatchup(PokedexTable):
+    """A damage matchup between an attacking type and a defending type."""
+
+    __tablename__ = 'type_matchups'
+
+    attacking_type_id = Column(Integer, ForeignKey('types.id'),
+        primary_key=True)
+    defending_type_id = Column(Integer, ForeignKey('types.id'),
+        primary_key=True)
+    result_id = Column(Integer, ForeignKey('type_matchup_results.id'))
+
+class TypeMatchupResult(PokedexTable):
+    """The result a type matchup can have, either "super-effective", "neutral",
+    "not very effective", or "ineffective".
+    """
+
+    __tablename__ = 'type_matchup_results'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+
 
 ### PLAYER TABLES
 
@@ -1080,7 +1107,7 @@ Move.summary = association_proxy('effect', 'summary')
 Move.description = association_proxy('effect', 'description')
 
 Move.target = relationship(MoveTarget)
-Move.type = relationship(Type)
+Move.type = relationship(Type, back_populates='moves')
 Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
     secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
@@ -1165,6 +1192,23 @@ Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
 
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
 
+Type.attacking_matchups = relationship(TypeMatchup,
+    foreign_keys=[TypeMatchup.attacking_type_id],
+    order_by=TypeMatchup.defending_type_id,
+    back_populates='attacking_type')
+Type.defending_matchups = relationship(TypeMatchup,
+    foreign_keys=[TypeMatchup.defending_type_id],
+    order_by=TypeMatchup.attacking_type_id,
+    back_populates='defending_type')
+Type.moves = relationship(Move, order_by=Move.name, back_populates='type')
 Type.pokemon_forms = relationship(PokemonForm,
     secondary=PokemonFormType.__table__, order_by=PokemonFormType.slot,
     back_populates='types')
+
+TypeMatchup.attacking_type = relationship(Type,
+    foreign_keys=[TypeMatchup.attacking_type_id],
+    back_populates='attacking_matchups')
+TypeMatchup.defending_type = relationship(Type,
+    foreign_keys=[TypeMatchup.defending_type_id],
+    back_populates='defending_matchups')
+TypeMatchup.result = relationship(TypeMatchupResult)

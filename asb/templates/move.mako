@@ -79,6 +79,24 @@
 % endif
 </div>
 
+% if matchups is not None:
+<h2>Type matchups</h2>
+<dl class="type-matchups">
+    % for (result, types) in matchups.items():
+    <dt>${matchup_labels[result]}</dt>
+    <dd>
+        % if types:
+        % for type in types:
+${h.type_icon(type)}\
+        % endfor
+        % else:
+        None
+        % endif
+    </dd>
+    % endfor
+</dl>
+% endif
+
 <h2>Summary</h2>
 ${move.effect.summary | md.convert, n}
 

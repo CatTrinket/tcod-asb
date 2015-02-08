@@ -147,6 +147,10 @@ class ItemIndex(DexIndex):
     __name__ = 'items'
     table = db.Item
 
+class TypeIndex(DexIndex):
+    __name__ = 'types'
+    table = db.Type
+
 def get_root(request):
     """Get a root object."""
 
@@ -157,7 +161,8 @@ def get_root(request):
         'species': SpeciesIndex(),
         'moves': MoveIndex(),
         'abilities': AbilityIndex(),
-        'items': ItemIndex()
+        'items': ItemIndex(),
+        'types': TypeIndex()
     })
     
     for name, index in root.items():

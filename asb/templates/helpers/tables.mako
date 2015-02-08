@@ -125,11 +125,13 @@ ${column['col']()}
 
 ### MOVE TABLES
 # Always the same columns
-<%def name="move_table(moves)">
+<%def name="move_table(moves, skip_type=False)">
 <% from asb.markdown import md, chomp %>\
 <table class="standard-table effect-table">
 <col class="move">
+% if not skip_type:
 <col class="type-col">
+% endif
 <col class="damage-class-col">
 <col class="percentage">
 <col class="percentage">
@@ -139,7 +141,9 @@ ${column['col']()}
 <thead>
 <tr>
     <th>Move</th>
+    % if not skip_type:
     <th>Type</th>
+    % endif
     <th>Stat</th>
     <th><abbr title="Base damage">Dmg</abbr></th>
     <th><abbr title="Base energy cost">En.</abbr></th>
@@ -154,7 +158,9 @@ ${column['col']()}
 <tr>
     <td class="focus-column"><a href="/moves/${move.identifier}">${move.name}</a></td>
 
+    % if not skip_type:
     <td class="type-cell">${h.type_icon(move.type)}</td>
+    % endif
 
     <td class="damage-class-cell">${h.damage_class_icon(move.damage_class)}</td>
 
@@ -247,8 +253,11 @@ ${column.get('col', _col)()}
 
 % for form in forms:
 <%
-    use_species = (species_name or (squashed_forms and
-        form.species.forms_are_squashable))
+    use_species = species_name or (
+        squashed_forms and
+        form.species.forms_are_squashable and
+        form.is_default
+    )
     name_override = form.species.name if use_species else None
 
     abilities = [(None, False), (None, False), (None, False)]
