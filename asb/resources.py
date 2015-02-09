@@ -34,6 +34,10 @@ class Root(dict):
         (sec.Allow, 'mod', 'flavor.edit'),
         (sec.Deny, sec.Everyone, 'flavor.edit'),
 
+        (sec.Allow, 'admin', 'news.post'),
+        (sec.Allow, 'mod', 'news.post'),
+        (sec.Deny, sec.Everyone, 'news.post'),
+
         (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
     ]
 

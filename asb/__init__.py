@@ -48,6 +48,9 @@ def main(global_config, **settings):
     config.add_route('bank', '/bank')
     config.add_route('bank.approve', '/bank/approve')
 
+    config.add_route('news', '/news')
+    config.add_route('news.post', '/news/post')
+
     # A route to redirect away trailing slashes instead of just 404ing
     config.add_route('slash_redirect', '/{path:.+}/')
 

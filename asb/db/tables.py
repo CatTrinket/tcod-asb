@@ -721,6 +721,20 @@ class MoveModification(PlayerTable):
     flavor = Column(Unicode, nullable=True)
     effect = Column(Unicode, nullable=True)
 
+class NewsPost(PlayerTable):
+    """A front page news post."""
+
+    __tablename__ = 'news_posts'
+
+    news_posts_id_seq = Sequence('news_posts_id_seq')
+
+    id = Column(Integer, news_posts_id_seq, primary_key=True)
+    post_time = Column(DateTime, nullable=False)
+    posted_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
+        nullable=False)
+    title = Column(Unicode, nullable=False)
+    text = Column(Unicode, nullable=False)
+
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
 
@@ -1114,6 +1128,8 @@ Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
 Move.contest_category = relationship(ContestCategory)
 
 MoveEffect.editor = relationship(Trainer)
+
+NewsPost.poster = relationship(Trainer)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)

@@ -54,7 +54,13 @@ def home(context, request):
     """The home page."""
 
     trainer = request.user
-    stuff = {'empty_bulletin_message': empty_bulletin_message}
+    stuff = {
+        'empty_bulletin_message': empty_bulletin_message,
+        'news': db.DBSession.query(db.NewsPost)
+                .order_by(db.NewsPost.post_time.desc())
+                .limit(5)
+                .all()
+    }
 
     if request.has_permission('account.validate', trainer):
         stuff['bulletin'] = [
