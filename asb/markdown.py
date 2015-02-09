@@ -12,6 +12,7 @@ class PokedexLinkExtension(markdown.extensions.Extension):
         md.inlinePatterns.add('move_link', move_link, '>link')
         md.inlinePatterns.add('item_link', item_link, '>link')
         md.inlinePatterns.add('species_link', species_link, '>link')
+        md.inlinePatterns.add('type_link', type_link, '>link')
 
 class PokedexLink(markdown.inlinepatterns.Pattern):
     """A pattern to turn {tablename:thingname} into a link.
@@ -102,6 +103,7 @@ ability_link = PokedexLink('ability', db.Ability)
 item_link = PokedexLink('item', db.Item)
 move_link = PokedexLink('move', db.Move)
 species_link = SpeciesLink('species', db.PokemonForm)
+type_link = PokedexLink('type', db.Type)
 
 md = markdown.Markdown(extensions=[
     PokedexLinkExtension(),
