@@ -106,7 +106,7 @@ thead { border-bottom: 2px solid #7799EE; }
 tfoot { border-top: 2px solid #7799EE; }
 tbody + tbody { border-top: 2px solid #7799EE; }
 
-tbody > tr:hover { background: #DEE6F5; }
+tbody > tr:hover { background: #D1D8E7; }
 
 tr.subheader-row {
     text-align: center;
