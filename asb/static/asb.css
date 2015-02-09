@@ -352,23 +352,22 @@ form.flavor-editor textarea {
 #type-chart col#attacking-types { width: 96px; }
 #type-chart colgroup#matchups > col { width: 40px; }
 #type-chart tr { height: 40px; }
+#type-chart tr#defending-types > th { height: 70px; vertical-align: bottom; }
 
 #type-chart colgroup + colgroup { border-left: 2px solid #7799EE; }
 #type-chart td { font-weight: bold; text-align: center; }
-#type-chart td, #type-chart th { padding: 0; }
 
-#type-chart thead > tr#defending-types > th {
-    height: 80px;
-    padding: 0 16px;
-    transform-origin: 50% 68px;
-    transform: rotate(-0.25turn);
-    vertical-align: bottom;
+#type-chart tr#defending-types .type {
+    transform: translateY(100%) rotate(-0.25turn);
+    transform-origin: 0 0;
 }
 
-/* XXX This ends up a little too high */
-#type-chart th#left-axis-label {
-    transform: rotate(-0.25turn);
-    white-space: nowrap;
+#type-chart th#left-axis-label { background: #F0F0F0 !important; }
+#type-chart th#left-axis-label span {
+    display: inline-block;
+    width: 10rem;
+    transform: translateY(5rem) rotate(-0.25turn);
+    transform-origin: 0 50%;
 }
 
 .super-effective {

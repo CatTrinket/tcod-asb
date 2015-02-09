@@ -32,7 +32,7 @@
     % for (n, type) in enumerate(types):
     <tr>
         % if n == 0:
-        <th rowspan=${len(types)} id="left-axis-label">Attacking type</th>
+        <th rowspan=${len(types)} id="left-axis-label"><span>Attacking type</span></th>
         % endif
 
         <th>${h.type_icon(type)}</th>
