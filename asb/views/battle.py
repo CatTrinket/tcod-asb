@@ -353,6 +353,7 @@ def approve_battle(battle, request):
         'form': BattleApproveForm(csrf_context=request.session),
         'battle': battle,
         'outcome': outcome,
+        'length': length_labels[battle.length]
     }
 
 @view_config(context=db.Battle, name='approve', request_method='POST',
