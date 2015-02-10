@@ -5,6 +5,7 @@ import re
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
+import sqlalchemy as sqla
 import wtforms
 
 from asb import db
@@ -184,21 +185,28 @@ class BattleTrainerField(wtforms.TextAreaField):
             return self._teams
 
         # Turn the names into actual trainer objects
-        names = [trainer for team in self.data for trainer in team]
+        names = [trainer.lower() for team in self.data for trainer in team]
         trainers = (
             db.DBSession.query(db.Trainer)
-            .filter(db.Trainer.name.in_(names))
+            .filter(sqla.func.lower(db.Trainer.name).in_(names))
             .filter_by(is_validated=True)
             .all()
         )
-        trainers = {trainer.name: trainer for trainer in trainers}
+        trainers = {trainer.name.lower(): trainer for trainer in trainers}
 
+        # Sort these trainer objects back into teams
         try:
-            teams = [[trainers[name] for name in team] for team in self.data]
+            teams = [
+                [trainers[name.lower()] for name in team]
+                for team in self.data
+            ]
         except KeyError:
-            raise KeyError(
-                ', '.join(name for name in names if name not in trainers)
-            )
+            # Find ALL the problematic names.  Kind of silly to go through
+            # again but it's a lot shorter than doing both in one pass.
+            raise KeyError(', '.join(
+               name for name in team for team in self.data
+               if name.lower() not in trainers
+            ))
 
         self._teams = teams
         return teams
