@@ -69,7 +69,7 @@ def battle_close_form(battle, request):
 
     # Add Pokémon subform, with all its subsubforms
     battle_pokemon = [
-        pokemon 
+        pokemon
         for team in battle.teams
         for trainer in team.trainers
         for pokemon in trainer.pokemon
@@ -326,7 +326,7 @@ def close_battle_submit(battle, request):
 
     battle.needs_approval = True
 
-    return httpexc.HTTPSeeOther(request.resource_path(battle)) 
+    return httpexc.HTTPSeeOther(request.resource_path(battle))
 
 @view_config(context=db.Battle, name='approve', request_method='GET',
   renderer='/approve_battle.mako')

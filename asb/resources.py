@@ -168,7 +168,7 @@ def get_root(request):
         'items': ItemIndex(),
         'types': TypeIndex()
     })
-    
+
     for name, index in root.items():
         index.__parent__ = root
         index.table.__parent__ = index

@@ -42,12 +42,12 @@ ${h.link(move)}\
 
 % for category in supercategory.categories:
     <p><b>${category.name}:</b> ${category.description}
-    
+
     % if category.identifier == 'pure-points':
         </p>
 
         <p>Pure Points moves, broken down by score, include: \
-    
+
         % for ((appeal, jam), moves) in pure_points_moves:
         <p>+${appeal}${'/−{}'.format(jam) if jam  else ''}: ${move_list(moves)}.</p>
         % endfor
