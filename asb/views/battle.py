@@ -232,7 +232,7 @@ def battle_index(context, request):
             battles['open'].append(battle)
         elif battle.needs_approval:
             battles['approval'].append(battle)
-        else:
+        elif battle.length != 'cancelled':
             battles['closed'].append(battle)
 
     return battles
