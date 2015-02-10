@@ -81,5 +81,33 @@
 <main>
 ${next.body()}\
 </main>
+
+<footer>
+<p>
+<a href="http://forums.dragonflycave.com/forumdisplay.php?f=43">The Cave of
+Dragonflies forums</a> •
+<a href="http://github.com/Zhorken/tcod-asb">tcod-asb on GitHub</a>
+</p>
+
+<p>
+TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a> •
+
+banner by
+<a href="http://forums.dragonflycave.com/member.php?u=1731">blazheirio889</a><br>
+
+Many thanks to
+<a href="http://forums.dragonflycave.com/member.php?u=527">Negrek</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=1731">blazheirio889</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=190">Eifie</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=2295">Mai</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=2243">Metallica Fanboy</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=2844">pathos</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=3374">The Omskivar</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=3541">Totodile</a>, and
+<a href="http://forums.dragonflycave.com/member.php?u=95">ultraviolet</a>
+</p>
+
+<p>Pokémon © Nintendo, The Pokémon Company, GAME FREAK, Creatures Inc.</p>
+</footer>
 </body>
 </html>

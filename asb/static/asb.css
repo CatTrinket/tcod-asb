@@ -7,7 +7,10 @@ html {
 body {
     font-family: DejaVu Sans, Verdana, sans-serif;
     margin: 0;
-    background: #F0F0F0;
+
+    /* This is the background colour intended for the footer, but we want the
+    space under the footer to be this colour, too, on short pages */
+    background: #D8D8D8;
 }
 
 main > :first-child { margin-top: 0; }
@@ -22,7 +25,13 @@ abbr { border-bottom: 1px dotted black; }
 header, main { margin: 0; }
 header { background: #5577BB; text-align: center; }
 header img { max-width: 100%; }
-main { padding: 2em; }
+main { padding: 2em; background: #F0F0F0; }
+footer {
+    bottom: 10rem;
+    padding: 0 2rem;
+    font-size: 14px;
+    text-align: center;
+}
 
 /* Headers */
 h1 {
