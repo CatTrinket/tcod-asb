@@ -24,7 +24,7 @@ ${h.form_error_list(*form.errors.values())}
 <h1>Preview</h1>
 <h2>${form.title.data}</h2>
 <p class="news-timestamp">
-    Posted <b>${now.strftime('%Y %B %d, %H:%M.%S EST')}</b>
+    Posted <b>${now.strftime('%Y %B %d, %H:%M.%S UTC')}</b>
     by <b>${h.link(request.user)}</b>
 </p>
 ${form.text.data | md.convert}

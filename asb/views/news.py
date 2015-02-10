@@ -43,10 +43,10 @@ def post_news_commit(context, request):
     form = NewsForm(request.POST, csrf_context=request.session)
 
     if not form.validate() or form.preview.data:
-        return {'form': form, 'now': datetime.datetime.now()}
+        return {'form': form, 'now': datetime.datetime.utcnow()}
 
     post = db.NewsPost(
-        post_time=datetime.datetime.now(),
+        post_time=datetime.datetime.utcnow(),
         posted_by_trainer_id=request.user.id,
         title=form.title.data,
         text=form.text.data

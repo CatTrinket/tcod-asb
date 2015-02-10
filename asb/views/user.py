@@ -1,3 +1,5 @@
+import datetime
+
 import pbkdf2
 import pyramid.httpexceptions as httpexc
 import pyramid.security
@@ -310,6 +312,7 @@ def validate(context, request):
         # Update all their Pokémon's IDs
         for pokemon in trainer.pokemon:
             pokemon.id = db.DBSession.execute(asb.db.Pokemon.pokemon_id_seq)
+            pokemon.birthday = datetime.datetime.utcnow().date()
             pokemon.update_identifier()
 
     username = info['username']

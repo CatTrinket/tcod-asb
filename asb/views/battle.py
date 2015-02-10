@@ -288,7 +288,7 @@ def close_battle_submit(battle, request):
             'form': form
         }
 
-    battle.end_date = datetime.date.today()
+    battle.end_date = datetime.datetime.utcnow().date()
     battle.length = form.length.data
 
     # Figure out who won
@@ -445,7 +445,7 @@ def new_battle_process(context, request):
         id=battle_id,
         name='temp-{}'.format(battle_id),
         identifier='temp-{}'.format(battle_id),
-        start_date=datetime.date.today()
+        start_date=datetime.datetime.utcnow().date()
     )
 
     db.DBSession.add(battle)

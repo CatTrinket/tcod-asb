@@ -12,7 +12,7 @@
 % for post in news:
 <h2>${post.title | md.convert, chomp}</h2>
 <p class="news-timestamp">
-    Posted <b>${post.post_time.strftime('%Y %B %d, %H:%M.%S EST')}</b>
+    Posted <b>${post.post_time.strftime('%Y %B %d, %H:%M.%S UTC')}</b>
     by <b>${h.link(post.poster)}</b>
 </p>
 

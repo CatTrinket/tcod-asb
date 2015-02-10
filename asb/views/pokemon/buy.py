@@ -398,7 +398,7 @@ def pokemon_checkout_commit(context, request):
 
     # Okay this is it.  Time to actually create these Pokémon.
     squad_count = len(trainer.squad)
-    today = datetime.date.today()
+    today = datetime.datetime.utcnow().date()
 
     for subform in form.pokemon:
         # Get the next available ID for this Pokémon

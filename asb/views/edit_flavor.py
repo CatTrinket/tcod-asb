@@ -52,7 +52,7 @@ def process_edit_move(move, request):
 
     new_effect = db.MoveEffect(
         move_id=move.id,
-        edit_time=datetime.datetime.now(),
+        edit_time=datetime.datetime.utcnow(),
         edited_by_trainer_id=request.user.id,
         summary=form.summary.data,
         description=form.description.data,
@@ -102,7 +102,7 @@ def process_edit_item(item, request):
 
     new_effect = db.ItemEffect(
         item_id=item.id,
-        edit_time=datetime.datetime.now(),
+        edit_time=datetime.datetime.utcnow(),
         edited_by_trainer_id=request.user.id,
         summary=form.summary.data,
         description=form.description.data,
@@ -152,7 +152,7 @@ def process_edit_ability(ability, request):
 
     new_effect = db.AbilityEffect(
         ability_id=ability.id,
-        edit_time=datetime.datetime.now(),
+        edit_time=datetime.datetime.utcnow(),
         edited_by_trainer_id=request.user.id,
         summary=form.summary.data,
         description=form.description.data,

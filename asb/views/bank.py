@@ -112,7 +112,7 @@ def can_collect_allowance(trainer):
 
     # Find the most recent Friday, possibly today.  Subtracting the weekday
     # brings us back to Monday; three days further is Friday; modulo one week.
-    today = datetime.date.today()
+    today = datetime.datetime.utcnow().date()
     last_friday = today - datetime.timedelta(days=(today.weekday() + 3) % 7)
 
     return trainer.last_collected_allowance < last_friday
@@ -200,7 +200,7 @@ def bank_process(context, request):
 
         # Give the trainer their allowance
         trainer.money += 3
-        trainer.last_collected_allowance = datetime.date.today()
+        trainer.last_collected_allowance = datetime.datetime.utcnow().date()
 
         return httpexc.HTTPSeeOther('/bank')
     elif deposit_form.add_rows.data:
