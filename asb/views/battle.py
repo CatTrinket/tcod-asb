@@ -13,6 +13,13 @@ import asb.forms
 from asb.resources import BattleIndex
 import asb.tcodf
 
+length_labels = {
+    'full': 'It finished normally',
+    'short': 'The battlers agreed to end it partway through',
+    'dq': 'The loser was disqualified',
+    'cancelled': 'It ended before anything happened'
+}
+
 class BattleApproveForm(asb.forms.CSRFTokenForm):
     """A form for letting a mod approve the prizes given out after a battle."""
 
@@ -39,12 +46,7 @@ class BattleCloseForm(asb.forms.CSRFTokenForm):
     length = wtforms.RadioField(
         'How did it end?',
         [wtforms.validators.Required()],
-        choices=[
-            ('full', 'It finished normally'),
-            ('short', 'The battlers agreed to end it partway through'),
-            ('dq', 'The loser was disqualified'),
-            ('cancelled', 'It ended before anything happened')
-        ]
+        choices=list(length_labels.items())
     )
 
     submit = wtforms.SubmitField('Close battle')
@@ -294,7 +296,7 @@ def close_battle_submit(battle, request):
     # Figure out who won
     if form.who_won.data == -1:
         for team in battle.teams:
-            team.outcome = 'tie'
+            team.outcome = 'draw'
     else:
         for team in battle.teams:
             if team.team_number == form.who_won.data:
@@ -333,7 +335,8 @@ def approve_battle(battle, request):
     and approving them.
     """
 
-    winners = [team for team in battle.teams if team.outcome in ['win', 'tie']]
+    winners = [team for team in battle.teams
+               if team.outcome in ['win', 'draw']]
 
     if winners[0].outcome == 'win':
         team = ' and '.join(trainer.name for trainer in winners[0].trainers)

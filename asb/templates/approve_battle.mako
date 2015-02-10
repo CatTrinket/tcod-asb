@@ -4,9 +4,17 @@
 <%block name='title'>${battle.name} - Battles - The Cave of Dragonflies ASB</%block>\
 
 <h1>Approve ${battle.name}</h1>
-<p><a href="${battle.link}">Thread link</a></p>
 
-<p>${outcome}</p>
+<dl>
+    <dt>Thread link</dt>
+    <dd><a href="${battle.link}">Here</a></dt>
+
+    <dt>Who won?</dt>
+    <dd>${outcome}</dd>
+
+    <dt>How did it end?</dt>
+    <dd>${length}.</dd>
+</dl>
 
 <h1>Pokémon</h1>
 
