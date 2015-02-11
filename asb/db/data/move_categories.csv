@@ -1,0 +1,16 @@
+id,identifier,name,description
+1,contact,Contact,Triggers {ability:Rough Skin} et al.
+2,direct-healing,Direct healing,Restores a large amount of health all at once
+3,indirect-healing,Indirect healing,Restores health gradually or as a side-effect
+4,exact-damage,Exact damage,Damage cannot be altered except by immunities
+5,sneaky,Sneaky,Bypasses {move:Substitute}
+6,reflectable,Reflectable,Reflected by {move:Magic Coat} and {ability:Magic Bounce}
+7,snatchable,Snatchable,Stolen by {move:Snatch}
+8,airborne,Airborne,Disabled during {move:Gravity}
+9,punching,Punching,Boosted by {ability:Iron Fist}
+10,biting,Biting,Boosted by {ability:Strong Jaw}
+11,pulse,Pulse,Boosted by {ability:Mega Launcher}
+12,sound,Sound,Blocked by {ability:Soundproof}
+13,ballistics,Ballistics,Blocked by {ability:Bulletproof}
+14,mental,Mental,Blocked by {item:Mental Herb} and {ability:Aroma Veil}
+15,powder,Powder,No effect on {type:Grass}-types; blocked by {ability:Overcoat} and {item:Safety Goggles}

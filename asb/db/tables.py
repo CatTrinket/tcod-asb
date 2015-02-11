@@ -198,7 +198,6 @@ class Move(PokedexTable):
     bonus_appeal = Column(Integer, nullable=True)
     jam = Column(Integer, nullable=True)
     bonus_jam = Column(Integer, nullable=True)
-    category = Column(Unicode, nullable=True)  # XXX do something better later
 
     @property
     def damage(self):
@@ -214,6 +213,25 @@ class Move(PokedexTable):
         """Return this move's resource name for traversal."""
 
         return self.identifier
+
+class MoveCategory(PokedexTable):
+    """A category of moves."""
+
+    __tablename__ = 'move_categories'
+
+    id = Column(Integer, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    name = Column(Unicode, unique=True, nullable=False)
+    description = Column(Unicode, nullable=False)
+
+class MoveCategoryMap(PokedexTable):
+    """A mapping between a move and a category it belongs to."""
+
+    __tablename__ = 'move_category_map'
+
+    move_category_id = Column(Integer, ForeignKey('move_categories.id'),
+        primary_key=True)
+    move_id = Column(Integer, ForeignKey('moves.id'), primary_key=True)
 
 class MoveTarget(PokedexTable):
     """A set of Pokémon that a move can target."""
@@ -1114,9 +1132,11 @@ ItemCategory.items = relationship(Item, back_populates='category',
 
 ItemEffect.editor = relationship(Trainer)
 
+Move.categories = relationship(MoveCategory, order_by=MoveCategory.id,
+    secondary=MoveCategoryMap.__table__, back_populates='moves')
 Move.effect = relationship(MoveEffect, uselist=False,
-     primaryjoin=and_(Move.id == MoveEffect.move_id,
-                      MoveEffect.is_current == True))
+    primaryjoin=and_(Move.id == MoveEffect.move_id,
+                     MoveEffect.is_current == True))
 Move.summary = association_proxy('effect', 'summary')
 Move.description = association_proxy('effect', 'description')
 
@@ -1126,6 +1146,9 @@ Move.damage_class = relationship(DamageClass)
 Move.pokemon_forms = relationship(PokemonForm, back_populates='moves',
     secondary=PokemonFormMove.__table__, order_by=PokemonForm.order)
 Move.contest_category = relationship(ContestCategory)
+
+MoveCategory.moves = relationship(Move, order_by=Move.name,
+    secondary=MoveCategoryMap.__table__, back_populates='categories')
 
 MoveEffect.editor = relationship(Trainer)
 

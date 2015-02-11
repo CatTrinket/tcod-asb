@@ -3,7 +3,7 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${move.name} - Moves - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md %>
+<% from asb.markdown import md, chomp %>
 
 % if request.has_permission('flavor.edit'):
 <p><a href="${request.resource_path(move, 'edit')}">Edit ${move.name} →</a></p>
@@ -21,9 +21,6 @@
 
    <dt>Target</dt>
    <dd>${move.target.name}</dd>
-
-   <dt>Category</dt>
-   <dd>${move.category or '???'}</dd>
 </dl>
 
 <dl>
@@ -61,22 +58,12 @@
    <dd>${h.num(move.priority, invisible_plus=False)}</dd>
 </dl>
 
-% if move.contest_category is not None:
 <dl>
-    <dt>Contest type</dt>
-    <dd>${move.contest_category.name}
-
-    % if move.appeal is not None:
-    <dt>Appeal</dt>
-    <dd>${h.appeal(move)}</dd>
-    % endif
-
-    % if move.jam is not None:
-    <dt>Jam</dt>
-    <dd>${h.jam(move)}</dd>
-    % endif
+    % for category in move.categories:
+    <dt>${category.name}</dt>
+    <dd>${category.description | md.convert, chomp}</dd>
+    % endfor
 </dl>
-% endif
 </div>
 
 % if matchups is not None:
