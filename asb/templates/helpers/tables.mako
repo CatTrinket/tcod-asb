@@ -172,9 +172,9 @@ ${column['col']()}
     <td class="stat">*</td>
     % endif
 
-    % if move.energy is None:
+    % if move.energy == 0:
     <td class="stat">—</td>
-    % elif move.energy == -1:
+    % elif move.energy is None:
     <td class="stat">*</td>
     % else:
     <td class="stat">${move.energy}%</td>

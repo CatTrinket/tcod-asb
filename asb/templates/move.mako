@@ -39,9 +39,9 @@
    % endif
 
    <dt>Base energy</dt>
-   % if move.energy is None:
+   % if move.energy == 0:
    <dd>—</dd>
-   % elif move.energy == -1:
+   % elif move.energy is None:
    <dd>Varies</dd>
    % else:
    <dd>${move.energy}%</dd>
