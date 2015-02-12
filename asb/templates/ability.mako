@@ -10,6 +10,11 @@
 <h1>${ability.name}</h1>
 ${ability.description | md.convert, n}
 
+% if move_category is not None:
+<h2>${move_category.name} moves</h2>
+${t.move_table(move_category.moves)}
+% endif
+
 <h1>Pokémon</h1>
 ${t.pokemon_form_table(normal_pokemon, hidden_pokemon,
     subheaders=('Regular ability', 'Hidden ability'), squashed_forms=True)}

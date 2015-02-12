@@ -25,6 +25,11 @@ class TakeItemsForm(asb.forms.CSRFTokenForm):
     take = wtforms.SubmitField('Take items')
 
 
+relevant_move_categories = {
+    'mental-herb': 'mental',
+    'safety-goggles': 'powder'
+}
+
 @view_config(context=ItemIndex, renderer='/indices/items.mako')
 def item_index(context, request):
     """The index of all the different items."""
@@ -37,6 +42,25 @@ def item_index(context, request):
     )
 
     return {'item_categories': item_categories}
+
+@view_config(context=db.Item, renderer='/item.mako')
+def item(context, request):
+    """An item's dex page."""
+
+    move_category = relevant_move_categories.get(context.identifier)
+
+    if move_category is not None:
+        move_category = (
+            db.DBSession.query(db.MoveCategory)
+            .filter_by(identifier=move_category)
+            .options(subqueryload(db.MoveCategory.moves))
+            .one()
+        )
+
+    return {'item': context, 'move_category': move_category}
+
+
+### YOUR ITEMS
 
 def get_holders(trainer):
     """Get a list of the trainer's Pokémon who are holding items, grouped by
@@ -110,12 +134,6 @@ def manage_items_commit(context, request):
         trainer_item.pokemon_id = None
 
     return httpexc.HTTPSeeOther('/items/manage')
-
-@view_config(context=db.Item, renderer='/item.mako')
-def item(context, request):
-    """An item's dex page."""
-
-    return {'item': context}
 
 
 ### ITEM GIVING

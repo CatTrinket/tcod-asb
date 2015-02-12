@@ -18,7 +18,7 @@ def type_matchups(move):
         return None
     elif move.identifier == 'flying-press':
         return flying_press_matchups(move)
-    elif move.identifier in specific_damage_moves:
+    elif any(cat.identifier == 'exact-damage' for cat in move.categories):
         return specific_damage_matchups(move)
 
     # Go through and group the matchups
@@ -84,12 +84,9 @@ def specific_damage_matchups(move):
         ]
     }
 
-# XXX Replace this with a move category once that's a thing
-specific_damage_moves = [
-    'bide', 'counter', 'dragon-rage', 'endeavor', 'final-gambit', 'fissure',
-    'guillotine', 'horn-drill', 'metal-burst', 'mirror-coat', 'night-shade',
-    'psywave', 'seismic-toss', 'sheer-cold', 'sonic-boom', 'super-fang'
-]
+relevant_move_categories = {
+    'gravity': 'airborne'
+}
 
 @view_config(context=MoveIndex, name='contests',
   renderer='/indices/contest_moves.mako')
@@ -138,6 +135,16 @@ def move(move, request):
 
     matchups = type_matchups(move)
 
+    move_category = relevant_move_categories.get(move.identifier)
+
+    if move_category is not None:
+        move_category = (
+            db.DBSession.query(db.MoveCategory)
+            .filter_by(identifier=move_category)
+            .options(joinedload('moves'))
+            .one()
+        )
+
     pokemon = (
         db.DBSession.query(db.PokemonForm)
         .join(db.PokemonSpecies)
@@ -157,5 +164,6 @@ def move(move, request):
         'move': move,
         'matchups': matchups,
         'matchup_labels': attacking_labels,
+        'move_category': move_category,
         'pokemon': pokemon
     }

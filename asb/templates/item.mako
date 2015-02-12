@@ -1,5 +1,5 @@
 <%inherit file='/base.mako'/>\
-<%namespace name="helpers" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${item.name} - Items - The Cave of Dragonflies ASB</%block>\
 <% from asb.markdown import md, chomp %>
 
@@ -26,3 +26,8 @@
 
 <h1>Description</h1>
 ${item.description | md.convert, n}
+
+% if move_category is not None:
+<h2>${move_category.name} moves</h2>
+${t.move_table(move_category.moves)}
+% endif

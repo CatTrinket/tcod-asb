@@ -90,5 +90,10 @@ ${move.effect.summary | md.convert, n}
 <h1>Description</h1>
 ${move.effect.description | md.convert, n}
 
+% if move_category is not None:
+<h2>${move_category.name} moves</h2>
+${t.move_table(move_category.moves)}
+% endif
+
 <h1>Pokémon</h1>
 ${t.pokemon_form_table(pokemon, squashed_forms=True)}
