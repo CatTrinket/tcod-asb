@@ -2,7 +2,7 @@ id,identifier,name,description
 1,contact,Contact,Triggers {ability:Rough Skin} et al.
 2,direct-healing,Direct healing,Restores a large amount of health all at once
 3,indirect-healing,Indirect healing,Restores health gradually or as a side-effect
-4,exact-damage,Exact damage,Damage cannot be altered except by immunities
+4,exact-damage,Exact damage,"Damage cannot be altered, except by immunities"
 5,sneaky,Sneaky,Bypasses {move:Substitute}
 6,reflectable,Reflectable,Reflected by {move:Magic Coat} and {ability:Magic Bounce}
 7,snatchable,Snatchable,Stolen by {move:Snatch}
