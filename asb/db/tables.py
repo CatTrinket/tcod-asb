@@ -1,3 +1,5 @@
+import datetime
+
 import pbkdf2
 import pyramid.security as sec
 from sqlalchemy import (Column, ForeignKey, ForeignKeyConstraint,
@@ -1015,24 +1017,31 @@ class Trainer(PlayerTable):
     def promotions(self):
         """Return any promotions this trainer is eligible to receive."""
 
+        # Subquery to find promotions specifically intended for this trainer
         my_promotions = (
             DBSession.query(PromotionRecipient)
             .filter_by(trainer_id=self.id)
             .subquery()
         )
 
-        return (
-            DBSession.query(Promotion)
-            .outerjoin(my_promotions)
-            .filter(or_(
-                my_promotions.c.received == False,
-                and_(
-                    Promotion.is_public == True,
-                    my_promotions.c.received.is_(None)
-                )
-            ))
-            .all()
+        # Find all promotions
+        query = DBSession.query(Promotion).outerjoin(my_promotions)
+
+        # Narrow it down to not-yet-received promotions that are either public
+        # or intended for this trainer
+        query = query.filter(or_(
+            ~my_promotions.c.received,
+            and_(Promotion.is_public, my_promotions.c.received.is_(None))
+        ))
+
+        # Filter out promotions that haven't started or have already ended
+        today = datetime.datetime.utcnow().date()
+        query = query.filter(
+            or_(Promotion.start_date.is_(None), Promotion.start_date <= today),
+            or_(Promotion.end_date.is_(None), Promotion.end_date >= today)
         )
+
+        return query.all()
 
     @property
     def __name__(self):
