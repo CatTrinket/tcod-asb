@@ -108,3 +108,32 @@ ${damage_class.name.capitalize()}\
  (−${move.bonus_jam})\
 % endif
 </%def>
+
+<%def name="news_post(post=None, h1=False, preview=False, **post_info)">
+<%
+    from asb.markdown import md
+
+    if post is not None:
+        post_info.setdefault('title', post.title)
+        post_info.setdefault('post_time', post.post_time)
+        post_info.setdefault('poster', post.poster)
+        post_info.setdefault('text', post.text)
+%>
+% if h1:
+<h1>${post_info['title']}</h1>
+% elif post is None or preview:
+<h2>${post_info['title']}</h2>
+% else:
+<h2>${link(post, text=post_info['title'])}</h2>
+% endif
+
+<p class="news-timestamp">
+    Posted <b>${post_info['post_time'].strftime('%Y %B %d, %H:%M.%S UTC')}</b>
+    by <b>${link(post_info['poster'])}</b>
+    % if not preview and request.has_permission('news.edit', post):
+    (<a href="${request.resource_url(post, 'edit')}">Edit</a>)
+    % endif
+</p>
+
+${post_info['text'] | md.convert}
+</%def>

@@ -2,8 +2,6 @@
 <%namespace name='h' file='/helpers/helpers.mako'/>\
 <%block name='title'>The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
-
 <%def name="bulletin_list(bulletin)">
 % if bulletin:
 <ul>
@@ -34,10 +32,5 @@ ${bulletin_list(mod_stuff)}
 <p><a href="/news/post">Post news →</a></p>
 % endif
 % for post in news:
-<h2>${post.title | md.convert, chomp}</h2>
-<p class="news-timestamp">
-    Posted <b>${post.post_time.strftime('%Y %B %d, %H:%M.%S UTC')}</b>
-    by <b>${h.link(post.poster)}</b>
-</p>
-${post.text | md.convert}
+${h.news_post(post)}
 % endfor

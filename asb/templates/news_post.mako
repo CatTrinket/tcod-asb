@@ -5,7 +5,7 @@
 <% from asb.markdown import md %>
 
 <h1>Post news</h1>
-<form id="news-form" action="/news/post" method="POST">
+<form id="news-form" action="${request.path}" method="POST">
 ${form.csrf_token}
 ${h.form_error_list(*form.errors.values())}
 <dl>
@@ -18,14 +18,33 @@ ${h.form_error_list(*form.errors.values())}
     <dd>${form.preview} ${form.post}</dd>
 </dl>
 
+% if delete_form is not undefined:
+<h2>Delete</h2>
+<!-- This form is deliberately within the same form element so that if someone
+accidentally clicks delete (without the ticky), they won't lose their post -->
+${delete_form.csrf_token}
+${h.form_error_list(*delete_form.errors.values())}
+
+<p>${delete_form.confirm.label.text} ${delete_form.confirm}</p>
+${delete_form.delete}
+% endif
 </form>
 
-% if form.preview.data:
+% if post is not None:
 <h1>Preview</h1>
-<h2>${form.title.data}</h2>
-<p class="news-timestamp">
-    Posted <b>${now.strftime('%Y %B %d, %H:%M.%S UTC')}</b>
-    by <b>${h.link(request.user)}</b>
-</p>
-${form.text.data | md.convert}
+${h.news_post(
+    post,
+    preview=True,
+    title=form.title.data,
+    text=form.text.data,
+)}
+% elif form.preview.data:
+<h1>Preview</h1>
+${h.news_post(
+    preview=True,
+    title=form.title.data,
+    post_time=now,
+    poster=request.user,
+    text=form.text.data
+)}
 % endif

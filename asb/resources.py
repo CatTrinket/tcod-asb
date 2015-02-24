@@ -119,6 +119,10 @@ class BattleIndex(IDRedirectResource):
     __name__ = 'battles'
     table = db.Battle
 
+class NewsIndex(IDRedirectResource):
+    __name__ = 'news'
+    table = db.NewsPost
+
 class SpeciesIndex(DexIndex):
     """Actually a form index."""
 
@@ -162,6 +166,7 @@ def get_root(request):
         'trainers': TrainerIndex(),
         'pokemon': PokemonIndex(),
         'battles': BattleIndex(),
+        'news': NewsIndex(),
         'species': SpeciesIndex(),
         'moves': MoveIndex(),
         'abilities': AbilityIndex(),

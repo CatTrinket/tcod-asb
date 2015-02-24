@@ -749,11 +749,34 @@ class NewsPost(PlayerTable):
     news_posts_id_seq = Sequence('news_posts_id_seq')
 
     id = Column(Integer, news_posts_id_seq, primary_key=True)
+    identifier = Column(Unicode, unique=True, nullable=False)
+    title = Column(Unicode, nullable=False)
     post_time = Column(DateTime, nullable=False)
     posted_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
         nullable=False)
-    title = Column(Unicode, nullable=False)
     text = Column(Unicode, nullable=False)
+
+    def set_identifier(self):
+        """Set an identifier based on ID and title."""
+
+        self.identifier = helpers.identifier(self.title, id=self.id)
+
+    @property
+    def __acl__(self):
+        """Return a list of permissions for Pyramid's authorization."""
+
+        poster = 'user:{0}'.format(self.posted_by_trainer_id)
+
+        return [
+            (sec.Allow, 'admin', 'news.edit'),
+            (sec.Allow, poster, 'news.edit')
+        ]
+
+    @property
+    def __name__(self):
+        """Return this post's name for Pyramid traversal."""
+
+        return self.identifier
 
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
