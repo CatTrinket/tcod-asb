@@ -7,6 +7,7 @@ html {
 body {
     font-family: DejaVu Sans, Verdana, sans-serif;
     margin: 0;
+    word-wrap: break-word;
 
     /* This is the background colour intended for the footer, but we want the
     space under the footer to be this colour, too, on short pages */
