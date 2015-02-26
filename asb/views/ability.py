@@ -37,7 +37,7 @@ def ability(ability, request):
 
     # Fetch relevant move category, if any
     move_category = relevant_move_categories.get(ability.identifier)
-    print(move_category, end=' hi' * 200)
+
     if move_category is not None:
         move_category = (
             db.DBSession.query(db.MoveCategory)
