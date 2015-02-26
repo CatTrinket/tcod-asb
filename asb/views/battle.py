@@ -206,7 +206,7 @@ class BattleTrainerField(wtforms.TextAreaField):
             # Find ALL the problematic names.  Kind of silly to go through
             # again but it's a lot shorter than doing both in one pass.
             raise KeyError(', '.join(
-               name for name in team for team in self.data
+               name for team in self.data for name in team
                if name.lower() not in trainers
             ))
 
