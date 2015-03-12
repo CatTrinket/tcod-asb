@@ -150,6 +150,7 @@ td.ticky + td { padding-left: 0; }
 
 col.ability { width: 10rem; }
 col.damage-class-col { width: 90px; }
+col.date { width: 5rem; }
 col.gender { width: 2rem; }
 col.give { width: 4rem; }
 col.input-small { width: 2.5rem; }
@@ -340,13 +341,16 @@ form#evolution-form > ul > li > option { display: block; }
 form#evolution-form p { margin: 0; }
 form#evolution-form p.evolution-name { font-size: 1.5rem; }
 
-/* Bank approval */
-dl#bank-approval-instructions > dt { width: 2em; }
-dl#bank-approval-instructions > dd { margin-left: 2em; }
-
+/* Move pages */
 div#move-info > dl { float: left; width: 33%; margin: 0; }
 div#move-info > dl + dl { margin-left: 0.5%; }
 div#move-info:after { display: block; content: ''; clear: both; }
+
+/* Bank */
+table.transactions { white-space: nowrap; }
+table.transactions tr { vertical-align: top; }
+table.transactions td.notes { white-space: normal; }
+table.transactions ul { margin: 0; padding-left: 1em; }
 
 /* Flavour-editing pages */
 form.flavor-editor input[type="text"],

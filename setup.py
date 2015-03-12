@@ -4,7 +4,7 @@ import setuptools
 
 # I'm going to just give exact versions that I know will work
 requires = [
-    'alembic==0.6.3',
+    'alembic==0.7.4',
     'beautifulsoup4==4.3.2',
     'Markdown==2.4.1',
     'pbkdf2==1.3',

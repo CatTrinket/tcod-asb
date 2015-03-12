@@ -15,7 +15,6 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     To be expanded as need arises.
     """
 
-    money_add = wtforms.IntegerField('Money', [wtforms.validators.Optional()])
     roles = asb.forms.MultiCheckboxField('Roles')
     save = wtforms.SubmitField('Save')
 
@@ -31,6 +30,36 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
         if self.roles.data is None:
             self.roles.data = [role.identifier for role in trainer.roles]
 
+class TrainerMoneyForm(asb.forms.CSRFTokenForm):
+    """A form for manually giving a trainer money."""
+
+    add = wtforms.IntegerField(validators=[
+        wtforms.validators.Optional(),
+        wtforms.validators.NumberRange(min=1, message='$1 minimum')
+    ])
+
+    subtract = wtforms.IntegerField(validators=[
+        wtforms.validators.Optional(),
+        wtforms.validators.NumberRange(min=1, message='$1 minimum')
+    ])
+
+    note = wtforms.StringField(
+        'Note (required)',
+        [wtforms.validators.Required()],
+        filters=[lambda note: note if note is None else note.strip()]
+    )
+
+    submit = wtforms.SubmitField('Cha-ching')
+
+    def validate_subtract(form, field):
+        """Complain if a number has been entered in both money_add and
+        money_subtract.
+        """
+
+        if form.add.data:
+            raise wtforms.validators.ValidationError(
+                "You can't add and subtract money in one transaction."
+            )
 
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
 def trainer_index(context, request):
@@ -68,31 +97,64 @@ def trainer(trainer, request):
 def edit(trainer, request):
     """A page for editing a trainer."""
 
-    form = TrainerEditForm(csrf_context=request.session)
-    form.set_roles(trainer)
+    stuff = {
+        'trainer': trainer,
+        'form': TrainerEditForm(prefix='edit', csrf_context=request.session),
+        'money_form':
+            TrainerMoneyForm(prefix='money', csrf_context=request.session)
+    }
 
-    return {'trainer': trainer, 'form': form}
+    stuff['form'].set_roles(trainer)
+    return stuff
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='POST', permission='trainer.edit')
 def edit_commit(trainer, request):
     """Process a request to edit a trainer."""
 
-    form = TrainerEditForm(request.POST, csrf_context=request.session)
+    form = TrainerEditForm(request.POST, prefix='edit',
+                           csrf_context=request.session)
     form.set_roles(trainer)
+    money_form = TrainerMoneyForm(request.POST, prefix='money',
+                                  csrf_context=request.session)
 
-    if not form.validate():
-        return {'trainer': trainer, 'form': form}
+    if form.save.data:
+        # Handle the main edit form
+        if not form.validate():
+            return {'trainer': trainer, 'form': form, 'money_form': money_form}
 
-    if form.money_add.data is not None:
-        trainer.money += form.money_add.data
+        # Update roles
+        if form.roles.data is not None:
+            trainer.roles = (
+                db.DBSession.query(db.Role)
+                .filter(db.Role.identifier.in_(form.roles.data))
+                .all()
+            )
 
-    if form.roles.data is not None:
-        trainer.roles = (
-            db.DBSession.query(db.Role)
-            .filter(db.Role.identifier.in_(form.roles.data))
-            .all()
+    if money_form.submit.data:
+        # Handle the money form
+        if not money_form.validate():
+            return {'trainer': trainer, 'form': form, 'money_form': money_form}
+
+        amount = money_form.add.data or -money_form.subtract.data
+
+        transaction = db.BankTransaction(
+            trainer_id=trainer.id,
+            amount=amount,
+            state='from-mod',
+            approver_id=request.user.id
         )
+        db.DBSession.add(transaction)
+        db.DBSession.flush()
+
+        note = db.BankTransactionNote(
+            bank_transaction_id=transaction.id,
+            trainer_id=request.user.id,
+            note=money_form.note.data
+        )
+        db.DBSession.add(note)
+
+        trainer.money += amount
 
     # Calling it like this avoids the trailing slash and thus a second redirect
     return httpexc.HTTPSeeOther(

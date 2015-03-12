@@ -61,10 +61,9 @@ class BankTransactionState(PokedexTable):
 
     Values:
     - pending: A mod has to approve or deny the transaction.
-    - processed: The transaction has been approved/denied and the trainer
-        should be notified.
-    - acknowledged: The trainer has acknowledged that the transaction has been
-        approved or denied.
+    - approved: The transaction was approved.
+    - denied: The transaction was denied.
+    - mod: This transaction was created manually by a mod.
 
     The primary key is an identifier to mimic an Enum, while not being as
     impossible to update with alembic as an Enum.
@@ -467,18 +466,46 @@ class BankTransaction(PlayerTable):
         primary_key=True)
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
+    date = Column(Date, nullable=True,
+        default=lambda: datetime.datetime.utcnow().date())
     amount = Column(Integer, nullable=False)
-    tcod_post_id = Column(Integer, nullable=False)
+    tcod_post_id = Column(Integer, nullable=True)
     state = Column(Unicode, ForeignKey(BankTransactionState.identifier),
         nullable=False, default='pending')
-    is_approved = Column(Boolean, nullable=False, default=False)
+    is_read = Column(Boolean, nullable=False, default=False)
     approver_id = Column(Integer, ForeignKey('trainers.id',
         onupdate='cascade'), nullable=True)
-    reason = Column(UnicodeText, nullable=True)
 
     @property
     def link(self):
         return asb.tcodf.post_link(self.tcod_post_id)
+
+    @property
+    def previous_transactions(self):
+        """Fetch any previous transactions by the same trainer for the same
+        post.
+        """
+
+        return (
+            DBSession.query(BankTransaction)
+            .filter_by(trainer_id=self.trainer_id,
+                       tcod_post_id=self.tcod_post_id)
+            .filter(BankTransaction.id < self.id)
+            .all()
+        )
+
+class BankTransactionNote(PlayerTable):
+    """A note on a bank transaction."""
+
+    __tablename__ = 'bank_transaction_notes'
+
+    bank_transaction_notes_id_seq = Sequence('bank_transaction_notes_id_seq')
+
+    id = Column(Integer, bank_transaction_notes_id_seq, primary_key=True)
+    bank_transaction_id = Column(Integer, ForeignKey('bank_transactions.id'),
+        nullable=False)
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
+    note = Column(Unicode(200), nullable=False)
 
 class Battle(PlayerTable):
     """A battle."""
@@ -1116,9 +1143,13 @@ Ability.description = association_proxy('effect', 'description')
 AbilityEffect.editor = relationship(Trainer)
 
 BankTransaction.approver = relationship(Trainer,
-    primaryjoin=BankTransaction.approver_id == Trainer.id)
+    foreign_keys=[BankTransaction.approver_id])
 BankTransaction.trainer = relationship(Trainer,
-    primaryjoin=BankTransaction.trainer_id == Trainer.id)
+    foreign_keys=[BankTransaction.trainer_id])
+BankTransaction.notes = relationship(BankTransactionNote,
+    order_by=BankTransactionNote.id)
+
+BankTransactionNote.trainer = relationship(Trainer)
 
 Battle.ref = relationship(Trainer, secondary=BattleReferee.__table__,
     primaryjoin=and_(Battle.id == BattleReferee.battle_id,
@@ -1260,7 +1291,6 @@ Trainer.pc = relationship(Pokemon,
     order_by=Pokemon.id)
 
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
-
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
 
 Type.attacking_matchups = relationship(TypeMatchup,

@@ -2,6 +2,7 @@ import random
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
+import sqlalchemy as sqla
 
 from asb import db
 import asb.forms
@@ -18,6 +19,12 @@ empty_bulletin_messages = [
         'flyers taking advantage of the space.  "Discover this one weird '
         'trick invented by a local {pokemon} — Nurse Joys everywhere HATE '
         'her!"'
+]
+
+bank_state_labels = [
+    ('approved', 'approved'),
+    ('denied', 'denied'),
+    ('from-mod', 'manually added by a mod')
 ]
 
 def empty_bulletin_message():
@@ -95,28 +102,25 @@ def home(context, request):
             ))
 
         # Check if any of their bank transactions have been approved/denied
-        transaction_count_base = (
-            db.DBSession.query(db.BankTransaction)
-            .filter_by(trainer_id=trainer.id)
-            .filter_by(state='processed')
+        transaction_counts = dict(
+            db.DBSession.query(db.BankTransaction.state, sqla.func.count('*'))
+            .filter_by(trainer_id=trainer.id, is_read=False)
+            .filter(db.BankTransaction.state != 'pending')
+            .group_by(db.BankTransaction.state)
         )
 
-        approved = transaction_count_base.filter_by(is_approved=True).count()
-        denied = transaction_count_base.filter_by(is_approved=False).count()
-        transactions = approved + denied
+        transactions = sum(transaction_counts.values())
 
         if transactions:
-            message = 'You have {n} new bank notification{s}'.format(
-                n=transactions,
-                s='s' if transactions > 1 else ''
+            breakdown = ', '.join(
+                '{0} {1}'.format(transaction_counts[identifier], label)
+                for (identifier, label) in bank_state_labels
+                if identifier in transaction_counts
             )
 
-            if not denied:
-                message += ' ({} approved)'.format(approved)
-            elif not approved:
-                message += ' ({} denied)'.format(denied)
-            else:
-                message += ' ({} approved, {} denied)'.format(approved, denied)
+            message = ('You have {n} new bank notification{s} ({breakdown})'
+                       .format(n=transactions, breakdown=breakdown,
+                               s='s' if transactions > 1 else ''))
 
             bulletin.append((message, '/bank#recent'))
 

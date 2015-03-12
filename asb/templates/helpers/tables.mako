@@ -307,3 +307,71 @@ hidden-ability\
 % endfor
 </table>
 </%def>
+
+
+### BANK TABLES
+<%def name="transaction_table(transaction_groups)">
+<table class="transactions">
+<thead>
+    <tr>
+        <th>Date</th>
+        <th><abbr title="Amount">Amt</abbr></th>
+        <th>Link</th>
+        <th>Status</th>
+        <th>Processed by</th>
+        <th>Notes</th>
+    </tr>
+</thead>
+% for (header, transactions) in transaction_groups:
+<tbody>
+    % if header:
+    <tr class="subheader-row"><td colspan="6">${header}</td></tr>
+    % endif
+
+    % for transaction in transactions:
+    <tr>
+        % if transaction.date is None:
+        <td>???</td>
+        % else:
+        <td>${transaction.date.strftime('%d %b')}</td>
+        % endif
+
+        <td class="price">$${transaction.amount}</td>
+
+        <td>
+            % if transaction.tcod_post_id is not None:
+            <a href="${transaction.link}">Post #${transaction.tcod_post_id}</a>
+            % endif
+        </td>
+
+        % if transaction.state == 'from-mod':
+        <td>From mod</td>
+        % else:
+        <td>${transaction.state.capitalize()}</td>
+        % endif
+
+        <td>
+            % if transaction.approver is not None:
+            ${h.link(transaction.approver)}
+            % endif
+        </td>
+
+        <td class="notes">
+            <ul>
+                % for note in transaction.notes:
+                % if note.trainer is None:
+                <li>??? said: ${note.note}</li>
+                % elif note.trainer == request.user:
+                <li>You said: ${note.note}</li>
+                % else:
+                <li>${note.trainer.name} said: ${note.note}</li>
+                % endif
+                % endfor
+            </ul>
+        </td>
+    </tr>
+    % endfor
+</tbody>
+% endfor
+</table>
+</%def>

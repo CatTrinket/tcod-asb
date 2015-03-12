@@ -1,3 +1,4 @@
+import collections
 import datetime
 import itertools
 
@@ -19,8 +20,13 @@ class AllowanceForm(asb.forms.CSRFTokenForm):
 class TransactionForm(wtforms.Form):
     """A single bank transaction."""
 
-    amount = wtforms.IntegerField()
+    amount = wtforms.IntegerField(
+        validators=[wtforms.validators.NumberRange(min=1, message='$1 minimum')]
+    )
     link = asb.forms.PostLinkField()
+    notes = wtforms.StringField(
+        filters=[lambda note: note if note is None else note.strip()]
+    )
 
     def validate(self):
         """Validate, unless all fields are empty."""
@@ -31,14 +37,89 @@ class TransactionForm(wtforms.Form):
         return True
 
 class DepositForm(asb.forms.CSRFTokenForm):
-    """A form for depositing (or withdrawing) money."""
+    """A form for depositing money."""
 
     transactions = wtforms.FieldList(
-        wtforms.FormField(TransactionForm, [wtforms.validators.optional()]),
+        wtforms.FormField(TransactionForm, [wtforms.validators.Optional()]),
         min_entries=5
     )
+
+    resubmitted = wtforms.HiddenField()
     add_rows = wtforms.SubmitField('+')
     deposit = wtforms.SubmitField('Submit')
+
+    def check_for_dupes(self, request):
+        """Check for posts that have been claimed multiple times, or that have
+        been claimed in the past.
+        """
+
+        no_dupes = True
+
+        # Count duplicate submissions
+        post_ids = collections.Counter(
+            transaction.link.post_id for transaction in self.transactions
+            if transaction.link.post_id is not None
+        )
+
+        # Find past transactions for the same posts
+        past_transactions = (
+            db.DBSession.query(db.BankTransaction)
+            .filter_by(trainer_id=request.user.id)
+            .filter(db.BankTransaction.tcod_post_id.in_(post_ids))
+            .all()
+        )
+
+        past_transaction_dict = {}
+        for transaction in past_transactions:
+            ts = past_transaction_dict.setdefault(transaction.tcod_post_id, [])
+            ts.append(transaction)
+
+        # Handle resubmitted ids
+        if self.resubmitted.data:
+            resubmitted_ids = map(int, self.resubmitted.data.split(','))
+        else:
+            # ''.split(',') == ['']
+            resubmitted_ids = []
+
+        to_resubmit = []
+
+        # Go through and add appropriate error messages
+        for transaction in self.transactions:
+            id = transaction.link.post_id
+            if id is None:
+                continue
+
+            # Complain about duplicate submissions
+            if post_ids[id] > 1:
+                transaction.link.errors.append(
+                    "You've entered the same link (post #{0}) for multiple "
+                    "transactions.".format(id)
+                ) 
+                no_dupes = False
+
+            # If they're deliberately resubmitting this post, continue
+            to_resubmit.append(id)
+            if id in resubmitted_ids and transaction.notes.data:
+                continue
+
+            # If not, complain about past transactions
+            for past_t in past_transaction_dict.get(id, []):
+                message = ["You've claimed post #{0} before, and".format(id)]
+                if past_t.state == 'pending':
+                    message.append("it's still pending.")
+                else:
+                    message.append('it was {0}.'.format(past_t.state))
+
+                message.append('If you really want to claim it again,')
+                if not transaction.notes.data:
+                    message.append('add a note explaining why and')
+                message.append('press "Submit" again.')
+
+                transaction.link.errors.append(' '.join(message))
+                no_dupes = False
+
+        self.resubmitted.data = ','.join(map(str, to_resubmit))
+        return no_dupes
 
 class TransactionClearForm(asb.forms.CSRFTokenForm):
     """A one-button form for clearing the "recent transactions" view."""
@@ -62,14 +143,35 @@ class ApprovalTransactionForm(wtforms.Form):
         ('deny', None)
     ], default='ignore')
 
-    reason = wtforms.TextField()
+    correction = wtforms.IntegerField(validators=[
+        wtforms.validators.Optional(),
+        wtforms.validators.NumberRange(min=1, message='$1 minimum')
+    ])
 
-    def validate_reason(form, field):
-        """Require a reason when denying a transaction."""
+    notes = wtforms.TextField()
 
-        if form.what_do.data == 'deny' and not field.data.strip():
-            raise wtforms.validators.ValidationError('Please give a reason '
-                'for denying this transaction.')
+    def validate_correction(form, field):
+        """Only allow a correction when approving a transaction."""
+
+        if field.data is not None and form.what_do.data != 'approve':
+            raise wtforms.validators.ValidationError(
+                'You can only correct a transaction when approving it.'
+            )
+
+    def validate_notes(form, field):
+        """Require a note when denying or correcting a transaction."""
+
+        if not field.data.strip():
+            if form.what_do.data == 'deny':
+                raise wtforms.validators.ValidationError(
+                    "Please include a note explaining why you're denying this "
+                    "transaction."
+                )
+            elif form.correction.data is not None:
+                raise wtforms.validators.ValidationError(
+                    "Please include a note explaining why you're correcting "
+                    "this transaction."
+                )
 
 def approval_form(user, *args, **kwargs):
     """Create and return an approval form."""
@@ -124,21 +226,41 @@ def recent_transactions(trainer):
 
     base = (
         db.DBSession.query(db.BankTransaction)
-        .filter(db.BankTransaction.trainer_id == trainer.id)
+        .filter_by(trainer_id=trainer.id)
     )
 
-    pending = base.filter_by(state='pending').all()
-    processed = base.filter_by(state='processed')
-    approved = processed.filter(db.BankTransaction.is_approved == True).all()
-    denied = processed.filter(db.BankTransaction.is_approved == False).all()
+    last_ten = (
+        base.filter(db.BankTransaction.state != 'pending')
+        .order_by(db.BankTransaction.id.desc())
+        .limit(10)
+        .subquery().select()
+    )
 
-    transactions = {
-        'pending': pending,
-        'approved': approved,
-        'denied': denied
-    }
+    current = base.filter_by(is_read=False)
 
-    return transactions
+    transactions = (
+        current
+        .union(last_ten)
+        .order_by((db.BankTransaction.state == 'pending').desc(),
+                  db.BankTransaction.is_read,
+                  db.BankTransaction.id.desc())
+        .all()
+    )
+
+    return itertools.groupby(transactions, recent_transaction_header)
+
+def recent_transaction_header(transaction):
+    """Return a string heading that this transaction should be sorted under
+    under "recent transactions".  Also mark unread transactions as read.
+    """
+
+    if transaction.state == 'pending':
+        return 'Pending'
+    elif not transaction.is_read:
+        transaction.is_read = True
+        return 'Unread'
+    else:
+        return 'Recent'
 
 @view_config(route_name='bank', request_method='GET', renderer='/bank.mako',
   permission='account.manage')
@@ -148,29 +270,18 @@ def bank(context, request):
     stuff = {
         'allowance_form': None,
         'deposit_form': DepositForm(csrf_context=request.session),
-        'clear_form': None
+        'recent_transactions': recent_transactions(request.user)
     }
 
     if can_collect_allowance(request.user):
         stuff['allowance_form'] = AllowanceForm(csrf_context=request.session)
-
-    # Get recent transactions
-    transactions = recent_transactions(request.user)
-    stuff['recent_transactions'] = transactions
-
-    if transactions['approved'] or transactions['denied']:
-        stuff['clear_form'] = (
-            TransactionClearForm(csrf_context=request.session)
-        )
 
     return stuff
 
 @view_config(route_name='bank', request_method='POST', renderer='/bank.mako',
   permission='account.manage')
 def bank_process(context, request):
-    """Give the trainer their allowance, if they haven't already collected it
-    this week.
-    """
+    """Give the trainer their allowance, or let them deposit money."""
 
     trainer = request.user
 
@@ -210,17 +321,30 @@ def bank_process(context, request):
 
         return stuff
     elif deposit_form.deposit.data:
-        # Add the transactions
-        if not deposit_form.validate():
+        # Validate
+        valid = deposit_form.validate()
+        valid = deposit_form.check_for_dupes(request) and valid
+        if not valid:
             return stuff
 
-        for transaction in deposit_form.transactions:
-            if transaction.amount.data:
-                db.DBSession.add(db.BankTransaction(
+        # Add the transactions
+        for transaction_field in deposit_form.transactions:
+            if transaction_field.amount.data:
+                transaction = db.BankTransaction(
                     trainer_id=trainer.id,
-                    amount=transaction.amount.data,
-                    tcod_post_id=transaction.link.post_id
-                ))
+                    amount=transaction_field.amount.data,
+                    tcod_post_id=transaction_field.link.post_id
+                )
+                db.DBSession.add(transaction)
+
+                # Add note, if applicable
+                if transaction_field.notes.data:
+                    db.DBSession.flush()
+                    db.DBSession.add(db.BankTransactionNote(
+                        bank_transaction_id=transaction.id,
+                        trainer_id=trainer.id,
+                        note=transaction_field.notes.data
+                    ))
 
         request.session.flash("Success!  You'll receive your money as soon as "
             "an ASB mod verifies and approves your transaction.")
@@ -260,17 +384,49 @@ def bank_approve_process(context, request):
     for field in form.transactions:
         transaction = field.transaction
 
-        if field.what_do.data == 'approve':
-            transaction.trainer.money += transaction.amount
-            transaction.state = 'processed'
-            transaction.is_approved = True
-            transaction.approver_id = approver.id
-        elif field.what_do.data == 'deny':
-            transaction.state = 'processed'
-            transaction.is_approved = False
-            transaction.approver_id = approver.id
+        if field.notes.data:
+            db.DBSession.add(db.BankTransactionNote(
+                bank_transaction_id=transaction.id,
+                trainer_id=approver.id,
+                note=field.notes.data
+            ))
 
-            if field.reason.data:
-                transaction.reason = field.reason.data
+        if field.what_do.data == 'ignore':
+            continue
+        elif field.what_do.data == 'approve':
+            if field.correction.data is not None:
+                transaction.amount = field.correction.data
+
+            transaction.trainer.money += transaction.amount
+            transaction.state = 'approved'
+        elif field.what_do.data == 'deny':
+            transaction.state = 'denied'
+
+        transaction.approver_id = approver.id
 
     return httpexc.HTTPSeeOther('/bank/approve')
+
+def transaction_month(transaction):
+    """Return a header stating what month this transaction happened in, for
+    the bank history page.
+    """
+
+    if transaction.date is None:
+        return 'Older than 11 March 2015'
+    else:
+        return transaction.date.strftime('%B %Y')
+
+@view_config(route_name='bank.history', request_method='GET',
+  renderer='/bank_history.mako', permission='account.manage')
+def bank_history(context, request):
+    """A list of all the user's previous transactions."""
+
+    transactions = (
+        db.DBSession.query(db.BankTransaction)
+        .filter_by(trainer_id=request.user.id)
+        .order_by(db.BankTransaction.id.desc())
+    )
+
+    transactions = itertools.groupby(transactions, transaction_month)
+
+    return {'transactions': transactions}
