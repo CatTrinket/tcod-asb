@@ -320,8 +320,8 @@ def close_battle_submit(battle, request):
             if pokemon.item is None:
                 pass
             elif pokemon.item.identifier == 'lucky-egg':
-                pokemon.experience_gained += pokemon.kos
-            elif pokemon.item.identifier == 'soothe-bell' and pokemon.kos == 0:
+                pokemon.experience_gained += 1
+            elif pokemon.item.identifier == 'soothe-bell':
                 pokemon.happiness_gained += 1
 
     battle.needs_approval = True
