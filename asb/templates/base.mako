@@ -90,16 +90,11 @@ Dragonflies forums</a> •
 </p>
 
 <p>
-TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a> •
-
-banner by
-<a href="http://forums.dragonflycave.com/member.php?u=1731">blazheirio889</a><br>
+TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a><br>
 
 Many thanks to
 <a href="http://forums.dragonflycave.com/member.php?u=527">Negrek</a>,
-<a href="http://forums.dragonflycave.com/member.php?u=1731">blazheirio889</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=190">Eifie</a>,
-<a href="http://forums.dragonflycave.com/member.php?u=2295">Mai</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=2243">Metallica Fanboy</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=2844">pathos</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=3374">The Omskivar</a>,
