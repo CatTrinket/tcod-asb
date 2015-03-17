@@ -399,7 +399,7 @@ def approve_battle_submit(battle, request):
         if team.outcome == 'win':
             prize_money = 8 * enemy_pokemon_count
             ref_money = 5 * enemy_pokemon_count
-        elif team.outcome == 'tie':
+        elif team.outcome == 'draw':
             prize_money = 4 * enemy_pokemon_count
             ref_money = max(ref_money, 5 * enemy_pokemon_count)
         elif team.outcome == 'loss':
