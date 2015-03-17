@@ -32,7 +32,7 @@ def empty_bulletin_message():
 
     pokemon = (
         db.DBSession.query(db.PokemonSpecies)
-        .get(random.randrange(1, 720))
+        .get(random.randrange(1, 722))
     )
 
     return random.choice(empty_bulletin_messages).format(pokemon=pokemon.name)
