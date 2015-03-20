@@ -43,6 +43,7 @@
     <li><a href="/logout?csrf_token=${request.session.get_csrf_token()}">Log out</a></li>
 % else:
     <li class="menu-focus-link"><a href="/register">Register</a></li>
+    <li><a href="/reset-password">Reset password</a></li>
     <li>
       <form action="/login" method="POST" id="login">
         ${login_form.csrf_token(id='login-csrf') | n}

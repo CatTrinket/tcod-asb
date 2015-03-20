@@ -40,6 +40,10 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('settings', '/settings')
 
+    config.add_route('reset-password', '/reset-password')
+    config.add_route('reset-password.sent', '/reset-password/sent')
+    config.add_route('reset-password.reset', '/reset-password/{token}')
+
     config.add_route('pokemon.buy', '/pokemon/buy')
     config.add_route('pokemon.buy.checkout', '/pokemon/buy/checkout')
 

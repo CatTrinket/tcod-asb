@@ -805,6 +805,17 @@ class NewsPost(PlayerTable):
 
         return self.identifier
 
+class PasswordResetRequest(PlayerTable):
+    """A request to reset someone's password."""
+
+    __tablename__ = 'password_reset_requests'
+
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    timestamp = Column(DateTime, primary_key=True,
+        default=datetime.datetime.utcnow)
+    token = Column(Unicode, nullable=False, unique=True)
+    completed = Column(Boolean, nullable=False, default=False)
+
 class Pokemon(PlayerTable):
     """An individual Pokémon owned by a trainer."""
 
@@ -1216,6 +1227,8 @@ MoveCategory.moves = relationship(Move, order_by=Move.name,
 MoveEffect.editor = relationship(Trainer)
 
 NewsPost.poster = relationship(Trainer)
+
+PasswordResetRequest.trainer = relationship(Trainer)
 
 Pokemon.ability = relationship(Ability,
     secondary=PokemonFormAbility.__table__, uselist=False)
