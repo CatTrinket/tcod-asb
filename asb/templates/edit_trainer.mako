@@ -37,3 +37,13 @@ ${h.form_error_list(*money_form.errors.values())}
 
 ${money_form.submit}
 </form>
+
+
+<h2>Reset password</h2>
+<form action="${request.path}" method="POST">
+${password_form.csrf_token()}
+${h.form_error_list(*password_form.errors.values())}
+<p>${password_form.confirm.label} ${password_form.confirm}</p>
+
+${password_form.reset}
+</form>

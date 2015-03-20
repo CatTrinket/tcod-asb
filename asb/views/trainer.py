@@ -1,3 +1,5 @@
+import random
+
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 import sqlalchemy as sqla
@@ -61,6 +63,23 @@ class TrainerMoneyForm(asb.forms.CSRFTokenForm):
                 "You can't add and subtract money in one transaction."
             )
 
+class TrainerPasswordResetForm(asb.forms.CSRFTokenForm):
+    """A form for resetting a trainer's password."""
+
+    confirm = wtforms.BooleanField("Yes, I want to reset this user's password",
+                                   [wtforms.validators.Required()])
+    reset = wtforms.SubmitField('Reset')
+
+def random_password():
+    """Return a random sixteen-character alphanumeric password."""
+
+    return ''.join(
+        random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                      'abcdefghijklmnopqrstuvwxyz'
+                      '0123456789')
+        for n in range(16)
+    )
+
 @view_config(context=TrainerIndex, renderer='/indices/trainers.mako')
 def trainer_index(context, request):
     """The index of all the trainers in the league."""
@@ -100,8 +119,10 @@ def edit(trainer, request):
     stuff = {
         'trainer': trainer,
         'form': TrainerEditForm(prefix='edit', csrf_context=request.session),
-        'money_form':
-            TrainerMoneyForm(prefix='money', csrf_context=request.session)
+        'money_form': TrainerMoneyForm(prefix='money',
+                                       csrf_context=request.session),
+        'password_form': TrainerPasswordResetForm(prefix='password',
+                                                  csrf_context=request.session)
     }
 
     stuff['form'].set_roles(trainer)
@@ -117,11 +138,15 @@ def edit_commit(trainer, request):
     form.set_roles(trainer)
     money_form = TrainerMoneyForm(request.POST, prefix='money',
                                   csrf_context=request.session)
+    password_form = TrainerPasswordResetForm(request.POST, prefix='password',
+                                             csrf_context=request.session)
+    return_dict = {'trainer': trainer, 'form': form, 'money_form': money_form,
+                   'password_form': password_form}
 
     if form.save.data:
         # Handle the main edit form
         if not form.validate():
-            return {'trainer': trainer, 'form': form, 'money_form': money_form}
+            return return_dict
 
         # Update roles
         if form.roles.data is not None:
@@ -130,11 +155,10 @@ def edit_commit(trainer, request):
                 .filter(db.Role.identifier.in_(form.roles.data))
                 .all()
             )
-
-    if money_form.submit.data:
+    elif money_form.submit.data:
         # Handle the money form
         if not money_form.validate():
-            return {'trainer': trainer, 'form': form, 'money_form': money_form}
+            return return_dict
 
         amount = money_form.add.data or -money_form.subtract.data
 
@@ -155,6 +179,15 @@ def edit_commit(trainer, request):
         db.DBSession.add(note)
 
         trainer.money += amount
+    elif password_form.reset.data:
+        # Handle the password reset form
+        if not password_form.validate():
+            return return_dict
+
+        password = random_password()
+        trainer.set_password(password)
+        request.session.flash("{0}'s temporary password is: {1}"
+                              .format(trainer.name, password))
 
     # Calling it like this avoids the trailing slash and thus a second redirect
     return httpexc.HTTPSeeOther(
