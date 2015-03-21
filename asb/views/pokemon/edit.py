@@ -150,6 +150,8 @@ def super_edit_commit(pokemon, request):
 
     if form.trainer is not None:
         pokemon.trainer_id = form.trainer.id
+        pokemon.is_in_squad = False
+
         if pokemon.trainer_item is not None:
             pokemon.trainer_item.trainer_id = form.trainer.id
 
