@@ -354,17 +354,6 @@ class PokemonSpecies(PokedexTable):
         ),
     )
 
-    @property
-    def number(self):
-        """Return national dex number for canon Pokémon, or an "A##" number for
-        fakemon,
-        """
-
-        if self.id < 10000:
-            return '{0:03}'.format(self.id)
-        else:
-            return 'A{0:02}'.format(self.id - 10000)
-
 class PokemonSpeciesEvolution(PokedexTable):
     """The method by which a Pokémon species evolves."""
 
