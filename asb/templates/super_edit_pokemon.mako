@@ -28,6 +28,12 @@ ${h.form_error_list(form.csrf_token.errors)}
     <dd class="form-error">${error}</dd>
     % endfor
     % endif
+
+    <dt>${form.give_to.label}</dt>
+    <dd>${form.give_to}</dd>
+    % for error in form.give_to.errors:
+    <dd class="form-error">${error}</dd>
+    % endfor
 </dl>
 
 ${form.save() | n}
