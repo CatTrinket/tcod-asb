@@ -40,7 +40,7 @@ class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
     happiness = wtforms.IntegerField('Happiness')
     unlocked_evolutions = asb.forms.MultiCheckboxField('Unlockable evos',
         coerce=int)
-    give_to = wtforms.StringField('Give to')
+    give_to = wtforms.StringField('Give to', [wtforms.validators.Optional()])
     save = wtforms.SubmitField('Save')
 
     trainer = None
