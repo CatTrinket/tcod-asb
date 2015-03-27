@@ -29,6 +29,12 @@ week.</p>
 % endif
 
 <h1>Deposit</h1>
+<p>Usually, the only thing that needs to be claimed here is reffings.  The
+Database automatically hands out end-of-battle prizes (including the ref's)
+when a battle is closed, and mods will transfer money from the Trading Post
+and Birthday Center manually.  For anything else, if you're not sure, feel
+free to ask.</p>
+
 <form id="deposit" action="/bank" method="POST">
 ${deposit_form.resubmitted()}
 ${deposit_form.csrf_token() | n}
