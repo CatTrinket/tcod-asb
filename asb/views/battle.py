@@ -247,7 +247,8 @@ def battle(battle, request):
         'link_form': BattleLinkForm(csrf_context=request.session)
     }
 
-@view_config(context=db.Battle, renderer='/battle.mako', request_method='POST')
+@view_config(context=db.Battle, renderer='/battle.mako', request_method='POST',
+  permission='battle.link')
 def battle_link(battle, request):
     """Add a forum link to a battle."""
 
@@ -265,7 +266,7 @@ def battle_link(battle, request):
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 
 @view_config(context=db.Battle, name='close', renderer='/close_battle.mako',
-  request_method='GET')
+  request_method='GET', permission='battle.close')
 def close_battle(battle, request):
     """A page for closing a battle and distributing prizes."""
 
@@ -276,7 +277,7 @@ def close_battle(battle, request):
     }
 
 @view_config(context=db.Battle, name='close', renderer='/close_battle.mako',
-  request_method='POST')
+  request_method='POST', permission='battle.close')
 def close_battle_submit(battle, request):
     """Figure out prizes upon closing a battle."""
 
@@ -329,7 +330,7 @@ def close_battle_submit(battle, request):
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 
 @view_config(context=db.Battle, name='approve', request_method='GET',
-  renderer='/approve_battle.mako')
+  renderer='/approve_battle.mako', permission='battle.approve')
 def approve_battle(battle, request):
     """A page for reviewing the prizes set to be given out for a closed battle,
     and approving them.
@@ -357,7 +358,7 @@ def approve_battle(battle, request):
     }
 
 @view_config(context=db.Battle, name='approve', request_method='POST',
-  renderer='/approve_battle.mako')
+  renderer='/approve_battle.mako', permission='battle.approve')
 def approve_battle_submit(battle, request):
     """Approve a battle and give out prizes."""
 
