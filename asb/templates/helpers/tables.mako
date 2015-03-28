@@ -336,7 +336,11 @@ hidden-ability\
         <td>${transaction.date.strftime('%d %b')}</td>
         % endif
 
+        % if transaction.amount >= 0:
         <td class="price">$${transaction.amount}</td>
+        % else:
+        <td class="price">−$${-transaction.amount}</td>
+        % endif
 
         <td>
             % if transaction.tcod_post_id is not None:
