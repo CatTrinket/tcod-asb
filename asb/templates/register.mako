@@ -10,6 +10,9 @@
     ${form.username(maxlength=30) | n}
     ${h.form_error_list(form.username.errors)}
 
+    <p>Note that creating multiple accounts to play the game is considered
+    cheating, and anyone caught doing so will be banned from ASB.</p>
+
 
     <hr>
 
@@ -22,8 +25,8 @@
 
     ${h.form_error_list(form.password.errors, form.password_confirm.errors)}
 
-    <p>This is separate from your forum password, but you can make it the same
-    if you want.  Nobody can see it either way.</p>
+    <p>This is separate from your forum password.  While we don't encourage
+    reusing passwords, nobody can see your password either way.</p>
 
 
     <hr>
@@ -32,8 +35,7 @@
     ${form.email.label() | n}
     ${form.email() | n}
 
-    <p>Eventually this will be used to reset your password if you forget it.
-    Until then you'll have to get Zhorken to take care of it manually.</p>
+    <p>This will be used to reset your password if you forget it.</p>
 
 
     <p>${form.submit() | n}</p>
