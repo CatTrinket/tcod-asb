@@ -20,12 +20,18 @@ def get_user(request):
     if id is None:
         return None
 
-    try:
-        user = (db.DBSession.query(db.Trainer)
-            .filter_by(id=id)
-            .one()
+    user = (
+        db.DBSession.query(db.Trainer)
+        .options(sqla.orm.joinedload('ban'))
+        .get(id)
+    )
+
+    if user.ban is not None:
+        request.session.flash(
+            'You have been banned by {0} for the following reason: {1}'
+            .format(user.ban.banned_by.name, user.ban.reason)
         )
-    except sqla.orm.exc.NoResultFound:
+        request.response.headers.extend(pyramid.security.forget(request))
         return None
 
     return user
@@ -56,18 +62,31 @@ class UsernameField(wtforms.StringField):
     any, from the database.
     """
 
+    trainer = None
+
     def process_formdata(self, valuelist):
         self.data, = valuelist
 
         try:
-            trainer = (db.DBSession.query(db.Trainer)
+            trainer = (
+                db.DBSession.query(db.Trainer)
                 .filter(sqla.func.lower(db.Trainer.name) == self.data.lower())
                 .filter_by(unclaimed_from_hack=False)
-                .one())
+                .options(sqla.orm.joinedload('ban'))
+                .one()
+            )
+
+            if trainer.ban is not None:
+                raise wtforms.validators.ValidationError(
+                    'You have been banned by {0} for the following reason: {1}'
+                    .format(trainer.ban.banned_by.name, trainer.ban.reason)
+                )
 
             self.trainer = trainer
         except sqla.orm.exc.NoResultFound:
-            self.trainer = None
+            raise wtforms.validators.ValidationError(
+                'Invalid username or password.'
+            )
 
 class LoginForm(asb.forms.CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
@@ -79,12 +98,6 @@ class LoginForm(asb.forms.CSRFTokenForm):
     # n.b. we don't want the username and password fields to present separate
     # errors to the user because that might look like a security risk to the
     # average person (even though there's a public userlist)
-    def validate_username(form, field):
-        """Make sure we actually found a current user for this username."""
-
-        if field.trainer is None:
-            raise wtforms.validators.ValidationError
-
     def validate_password(form, field):
         """If we got a valid user, check their password against the password
         we got.
@@ -92,13 +105,15 @@ class LoginForm(asb.forms.CSRFTokenForm):
 
         trainer = form.username.trainer
 
-        if trainer is None or trainer.unclaimed_from_hack:
+        if trainer is None:
             # The username field will raise an error; there's no sensible
             # second error to be raised here
             return None
 
         if not trainer.check_password(field.data):
-            raise wtforms.validators.ValidationError
+            raise wtforms.validators.ValidationError(
+                'Invalid username or password.'
+            )
 
 class RegistrationForm(asb.forms.CSRFTokenForm):
     """A registration form."""

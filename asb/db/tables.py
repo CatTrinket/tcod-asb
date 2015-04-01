@@ -496,6 +496,18 @@ class BankTransactionNote(PlayerTable):
     trainer_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
     note = Column(Unicode(200), nullable=False)
 
+class BannedTrainer(PlayerTable):
+    """A record indicating that a trainer was banned, and information about
+    the ban.
+    """
+
+    __tablename__ = 'banned_trainers'
+
+    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
+    banned_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
+        nullable=False)
+    reason = Column(Unicode, nullable=False)
+
 class Battle(PlayerTable):
     """A battle."""
 
@@ -1151,6 +1163,9 @@ BankTransaction.notes = relationship(BankTransactionNote,
 
 BankTransactionNote.trainer = relationship(Trainer)
 
+BannedTrainer.banned_by = relationship(Trainer,
+    foreign_keys=[BannedTrainer.banned_by_trainer_id])
+
 Battle.ref = relationship(Trainer, secondary=BattleReferee.__table__,
     primaryjoin=and_(Battle.id == BattleReferee.battle_id,
         BattleReferee.is_current_ref == True),
@@ -1283,6 +1298,8 @@ Promotion.pokemon_species = relationship(PokemonSpecies,
 Rarity.pokemon_species = relationship(PokemonSpecies,
     order_by=PokemonSpecies.order, back_populates='rarity')
 
+Trainer.ban = relationship(BannedTrainer,
+    foreign_keys=[BannedTrainer.trainer_id], uselist=False)
 Trainer.pokemon = relationship(Pokemon, foreign_keys=[Pokemon.trainer_id],
     back_populates='trainer', order_by=Pokemon.id)
 Trainer.squad = relationship(Pokemon,

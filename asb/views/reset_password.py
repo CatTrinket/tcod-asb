@@ -74,8 +74,8 @@ def reset_password_request_process(context, request):
     trainer = form.username.trainer
 
     if trainer is None:
-        valid = False
-        form.username.errors.append('Unknown username')
+        # Whatever happened will have already been caught in validation
+        pass
     elif not trainer.email:
         valid = False
         form.username.errors.append('No email address for that username.  '

@@ -47,3 +47,20 @@ ${h.form_error_list(*password_form.errors.values())}
 
 ${password_form.reset}
 </form>
+
+
+<h2>Ban</h2>
+<form action="${request.path}" method="POST">
+${ban_form.csrf_token()}
+${h.form_error_list(*ban_form.errors.values())}
+
+<dl>
+    <dt>Confirm</dt>
+    <dd>Yes, I want to ban this user ${ban_form.confirm}</dd>
+
+    <dt>${ban_form.reason.label}</dt>
+    <dd>${ban_form.reason(size=60)}</dd>
+</dl>
+
+${ban_form.ban}
+<form>

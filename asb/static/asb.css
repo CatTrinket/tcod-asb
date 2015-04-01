@@ -259,7 +259,7 @@ ul.option-list { list-style-type: none; padding-left: 1em; }
 #registration-form #submit { margin-left: 0; }
 
 /* Login page */
-#login-page-form p { text-align: center; }
+#login-page-form { text-align: center; }
 
 /* Settings form — a lot like the registration form */
 #settings-form label { display: block; font-weight: bold; }

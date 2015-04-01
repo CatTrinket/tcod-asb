@@ -70,6 +70,16 @@ class TrainerPasswordResetForm(asb.forms.CSRFTokenForm):
                                    [wtforms.validators.Required()])
     reset = wtforms.SubmitField('Reset')
 
+class TrainerBanForm(asb.forms.CSRFTokenForm):
+    """A form for banning a trainer.
+
+    TODO: Implement *un*-banning, if we ever need it.
+    """
+
+    confirm = wtforms.BooleanField(validators=[wtforms.validators.Required()])
+    reason = wtforms.StringField('Reason', [wtforms.validators.Required()])
+    ban = wtforms.SubmitField('Ban')
+
 def random_password():
     """Return a random sixteen-character alphanumeric password."""
 
@@ -97,7 +107,7 @@ def trainer_index(context, request):
         .select_from(db.Trainer)
         .join(pokemon_count, pokemon_count.c.trainer_id == db.Trainer.id)
         .options(sqla.orm.subqueryload('squad'))
-        .filter(db.Trainer.unclaimed_from_hack == False)
+        .filter(db.Trainer.is_validated, ~db.Trainer.ban.has())
         .order_by(db.Trainer.name)
         .all()
     )
@@ -116,13 +126,18 @@ def trainer(trainer, request):
 def edit(trainer, request):
     """A page for editing a trainer."""
 
+    # XXX This is getting to be a lot of forms; it might actually be easier at
+    # this point to just make them all one form and complicate validation a bit
     stuff = {
         'trainer': trainer,
         'form': TrainerEditForm(prefix='edit', csrf_context=request.session),
-        'money_form': TrainerMoneyForm(prefix='money',
-                                       csrf_context=request.session),
-        'password_form': TrainerPasswordResetForm(prefix='password',
-                                                  csrf_context=request.session)
+        'money_form': TrainerMoneyForm(
+            prefix='money', csrf_context=request.session
+        ),
+        'password_form': TrainerPasswordResetForm(
+            prefix='password', csrf_context=request.session
+        ),
+        'ban_form': TrainerBanForm(prefix='ban', csrf_context=request.session)
     }
 
     stuff['form'].set_roles(trainer)
@@ -133,6 +148,7 @@ def edit(trainer, request):
 def edit_commit(trainer, request):
     """Process a request to edit a trainer."""
 
+    # Get ye forms
     form = TrainerEditForm(request.POST, prefix='edit',
                            csrf_context=request.session)
     form.set_roles(trainer)
@@ -140,8 +156,11 @@ def edit_commit(trainer, request):
                                   csrf_context=request.session)
     password_form = TrainerPasswordResetForm(request.POST, prefix='password',
                                              csrf_context=request.session)
+    ban_form = TrainerBanForm(request.POST, prefix='ban',
+                              csrf_context=request.session)
+
     return_dict = {'trainer': trainer, 'form': form, 'money_form': money_form,
-                   'password_form': password_form}
+                   'password_form': password_form, 'ban_form': ban_form}
 
     if form.save.data:
         # Handle the main edit form
@@ -188,6 +207,16 @@ def edit_commit(trainer, request):
         trainer.set_password(password)
         request.session.flash("{0}'s temporary password is: {1}"
                               .format(trainer.name, password))
+    elif ban_form.ban.data:
+        # Handle the ban form
+        if not ban_form.validate():
+            return return_dict
+
+        db.DBSession.add(db.BannedTrainer(
+            trainer_id=trainer.id,
+            banned_by_trainer_id=request.user.id,
+            reason = ban_form.reason.data
+        ))
 
     # Calling it like this avoids the trailing slash and thus a second redirect
     return httpexc.HTTPSeeOther(

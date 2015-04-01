@@ -12,6 +12,12 @@
 % endif
 
 <h1>${trainer.name}</h1>
+% if trainer.ban is not None:
+<p><strong>${trainer.name} was banned by ${trainer.ban.banned_by.name} for the
+following reason: ${trainer.ban.reason}</strong></p>
+<hr>
+% endif
+
 <dl>
     <dt>Forum profile</dt>
     <dd><a href="${profile_link}">Here</a></dd>
