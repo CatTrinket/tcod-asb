@@ -68,25 +68,15 @@ class UsernameField(wtforms.StringField):
         self.data, = valuelist
 
         try:
-            trainer = (
+            self.trainer = (
                 db.DBSession.query(db.Trainer)
                 .filter(sqla.func.lower(db.Trainer.name) == self.data.lower())
                 .filter_by(unclaimed_from_hack=False)
                 .options(sqla.orm.joinedload('ban'))
                 .one()
             )
-
-            if trainer.ban is not None:
-                raise wtforms.validators.ValidationError(
-                    'You have been banned by {0} for the following reason: {1}'
-                    .format(trainer.ban.banned_by.name, trainer.ban.reason)
-                )
-
-            self.trainer = trainer
         except sqla.orm.exc.NoResultFound:
-            raise wtforms.validators.ValidationError(
-                'Invalid username or password.'
-            )
+            pass
 
 class LoginForm(asb.forms.CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
@@ -98,6 +88,21 @@ class LoginForm(asb.forms.CSRFTokenForm):
     # n.b. we don't want the username and password fields to present separate
     # errors to the user because that might look like a security risk to the
     # average person (even though there's a public userlist)
+    def validate_username(form, field):
+        """Check that we got a valid user."""
+
+        trainer = field.trainer
+
+        if trainer is None:
+            raise wtforms.validators.ValidationError(
+                'Invalid username or password'
+            )
+        elif trainer.ban is not None:
+            raise wtforms.validators.ValidationError(
+                'You have been banned by {0} for the following reason: {1}'
+                .format(trainer.ban.banned_by.name, trainer.ban.reason)
+            )
+
     def validate_password(form, field):
         """If we got a valid user, check their password against the password
         we got.
@@ -112,7 +117,7 @@ class LoginForm(asb.forms.CSRFTokenForm):
 
         if not trainer.check_password(field.data):
             raise wtforms.validators.ValidationError(
-                'Invalid username or password.'
+                'Invalid username or password'
             )
 
 class RegistrationForm(asb.forms.CSRFTokenForm):

@@ -28,6 +28,43 @@ class PasswordResetRequestForm(asb.forms.CSRFTokenForm):
     username = UsernameField('Username')
     submit = wtforms.SubmitField('Submit')
 
+    def validate_username(form, field):
+        """Make sure we got a valid user."""
+
+        trainer = field.trainer
+
+        if trainer is None:
+            # Make sure we got a user
+            raise wtforms.validators.ValidationError('Unknown username')
+        elif trainer.ban is not None:
+            # Make sure they're not banned
+            raise wtforms.validators.ValidationError(
+                'You have been banned by {0} for the following reason: {1}'
+                .format(trainer.ban.banned_by.name, trainer.ban.reason)
+            )
+        elif not trainer.email:
+            # Make sure they have an email address set
+            raise wtforms.validators.ValidationError(
+                'No email address for that username.  PM Zhorken to get '
+                'things sorted out.'
+            )
+        else:
+            # Check if they've already sent three password requests today
+            midnight = (datetime.datetime.utcnow()
+                        .replace(hour=0, minute=0, second=0, microsecond=0))
+
+            recent_requests = (
+                db.DBSession.query(db.PasswordResetRequest)
+                .filter_by(trainer_id=trainer.id)
+                .filter(db.PasswordResetRequest.timestamp >= midnight)
+                .count()
+            )
+
+            if recent_requests >= 3:
+                raise wtforms.validators.ValidationError(
+                    'You can only send three password reset requests per day.'
+                )
+
 class PasswordResetForm(asb.forms.CSRFTokenForm):
     """A form for actually resetting one's password."""
 
@@ -70,35 +107,11 @@ def reset_password_request_process(context, request):
 
     # Process form
     form = PasswordResetRequestForm(request.POST, csrf_context=request.session)
-    valid = form.validate()
-    trainer = form.username.trainer
 
-    if trainer is None:
-        # Whatever happened will have already been caught in validation
-        pass
-    elif not trainer.email:
-        valid = False
-        form.username.errors.append('No email address for that username.  '
-                                    'PM Zhorken to get things sorted out.')
-    else:
-        # Check if they've already sent three password requests today
-        midnight = (datetime.datetime.utcnow()
-                    .replace(hour=0, minute=0, second=0, microsecond=0))
-
-        recent_requests = (
-            db.DBSession.query(db.PasswordResetRequest)
-            .filter_by(trainer_id=trainer.id)
-            .filter(db.PasswordResetRequest.timestamp >= midnight)
-            .count()
-        )
-
-        if recent_requests >= 3:
-            valid = False
-            form.username.errors.append('You can only send three password '
-                                        'reset requests per day.')
-
-    if not valid:
+    if not form.validate():
         return {'form': form}
+
+    trainer = form.username.trainer
 
     # Add a password reset token
     pw_request = db.PasswordResetRequest(
