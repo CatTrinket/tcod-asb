@@ -5,8 +5,8 @@ import asb.db
 def can_evolve(pokemon):
     """Return whether or not this Pokémon can evolve at all."""
 
-    return any(can_evolve_species(pokemon, evo)[0] for evo in
-        pokemon.species.evolutions)
+    return any(can_evolve_species(pokemon, evo)[0]
+               for evo in pokemon.species.evolutions)
 
 def can_evolve_species(pokemon, species):
     """Return three things: whether or not this Pokémon can evolve into this
@@ -33,6 +33,8 @@ def can_evolve_species(pokemon, species):
         return (True, False, False)
     elif evo.happiness is not None and pokemon.happiness >= evo.happiness:
         return (True, False, False)
+    elif evo.item is not None and has_battled_with(pokemon, evo.item):
+        return (True, False, True)
     elif (evo.buyable_price is not None and
       pokemon.trainer.money >= evo.buyable_price):
         return (True, True, False)
@@ -90,3 +92,25 @@ def check_form_condition(pokemon, form):
 
     # If we haven't bailed yet, we're good to go
     return True
+
+def has_battled_with(pokemon, item):
+    """Check whether the Pokémon has battled with this item, as its current
+    species.
+    """
+
+    battle = (
+        asb.db.DBSession.query(asb.db.BattlePokemon)
+        .join(asb.db.BattlePokemon.form)
+        .join(asb.db.BattlePokemon.trainer)
+        .join(asb.db.BattleTrainer.battle)
+        .filter(
+             asb.db.BattlePokemon.pokemon_id == pokemon.id,
+             asb.db.BattlePokemon.participated,
+             asb.db.BattlePokemon.item_id == item.id,
+             asb.db.PokemonForm.species_id == pokemon.form.species_id,
+             asb.db.Battle.end_date.isnot(None),
+             ~asb.db.Battle.needs_approval
+        )
+    )
+
+    return asb.db.DBSession.query(battle.exists()).scalar()

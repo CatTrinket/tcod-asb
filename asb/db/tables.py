@@ -1186,6 +1186,7 @@ BattlePokemon.trainer = relationship(BattleTrainer, back_populates='pokemon')
 
 BattleTeam.trainers = relationship(BattleTrainer, order_by=BattleTrainer.id)
 
+BattleTrainer.battle = relationship(Battle)
 BattleTrainer.pokemon = relationship(BattlePokemon, order_by=BattlePokemon.id,
     back_populates='trainer')
 BattleTrainer.trainer = relationship(Trainer)
