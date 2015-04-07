@@ -57,31 +57,10 @@ def get_user_roles(userid, request):
 
     return roles
 
-class UsernameField(wtforms.StringField):
-    """A username field that also fetches the corresponding registered user, if
-    any, from the database.
-    """
-
-    trainer = None
-
-    def process_formdata(self, valuelist):
-        self.data, = valuelist
-
-        try:
-            self.trainer = (
-                db.DBSession.query(db.Trainer)
-                .filter(sqla.func.lower(db.Trainer.name) == self.data.lower())
-                .filter_by(unclaimed_from_hack=False)
-                .options(sqla.orm.joinedload('ban'))
-                .one()
-            )
-        except sqla.orm.exc.NoResultFound:
-            pass
-
 class LoginForm(asb.forms.CSRFTokenForm):
     """A login form, used both at the top of every page and on /login."""
 
-    username = UsernameField('Username', [asb.forms.name_validator])
+    username = asb.forms.TrainerField('Username')
     password = wtforms.PasswordField('Password')
     log_in = wtforms.SubmitField('Log in')
 
@@ -123,7 +102,7 @@ class LoginForm(asb.forms.CSRFTokenForm):
 class RegistrationForm(asb.forms.CSRFTokenForm):
     """A registration form."""
 
-    username = UsernameField('TCoD forum username',
+    username = asb.forms.TrainerField('TCoD forum username',
         [wtforms.validators.InputRequired(), asb.forms.name_validator])
     password = wtforms.PasswordField('Choose a password',
         [wtforms.validators.InputRequired("Your password can't be empty")])

@@ -11,7 +11,6 @@ import wtforms
 
 import asb.db as db
 import asb.forms
-from asb.views.user import UsernameField
 
 
 email_template = """\
@@ -25,7 +24,7 @@ this email.
 class PasswordResetRequestForm(asb.forms.CSRFTokenForm):
     """A form for requesting a password reset."""
 
-    username = UsernameField('Username')
+    username = asb.forms.TrainerField('Username')
     submit = wtforms.SubmitField('Submit')
 
     def validate_username(form, field):

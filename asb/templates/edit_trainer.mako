@@ -6,11 +6,20 @@
 
 <form action="${request.path}" method="POST">
 ${form.csrf_token()}
-${h.form_error_list(*form.errors.values())}
+${h.form_error_list(form.csrf_token.errors)}
 
 <dl>
     <dt>${form.roles.label}</dt>
     <dd>${form.roles(class_='option-list')}</dd>
+    % for error in form.roles.errors:
+    <dd class="form-error">${error}</dd>
+    % endfor
+
+    <dt>Move item</dt>
+    <dd>Move one ${form.item} to ${form.item_recipient}</dd>
+    % for error in form.item.errors + form.item_recipient.errors:
+    <dd class="form-error">${error}</dd>
+    % endfor
 </dl>
 
 ${form.save()}

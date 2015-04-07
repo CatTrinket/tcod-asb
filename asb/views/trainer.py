@@ -18,6 +18,11 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     """
 
     roles = asb.forms.MultiCheckboxField('Roles')
+
+    trainer_item = None
+    item = wtforms.StringField(validators=[wtforms.validators.Optional()])
+    item_recipient = asb.forms.TrainerField()
+
     save = wtforms.SubmitField('Save')
 
     def set_roles(self, trainer):
@@ -31,6 +36,36 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
 
         if self.roles.data is None:
             self.roles.data = [role.identifier for role in trainer.roles]
+
+    def get_item(self, trainer):
+        """Fetch the named item from the trainer's bag, if possible."""
+
+        if self.item.data:
+            self.trainer_item = (
+                db.DBSession.query(db.TrainerItem)
+                .filter_by(trainer_id=trainer.id, pokemon_id=None)
+                .join(db.Item)
+                .filter(sqla.func.lower(db.Item.name) ==
+                        self.item.data.lower())
+                .first()
+            )
+
+    def validate_item(form, field):
+        """Make sure an item was found.
+
+        n.b. the Optional validator will go first.
+        """
+
+        if form.trainer_item is None:
+            raise wtforms.validators.ValidationError('Item not found in bag')
+
+    def validate_item_recipient(form, field):
+        """Make sure the intended recipient actually exists, if an item is
+        being moved.
+        """
+
+        if form.trainer_item is not None and field.trainer is None:
+            raise wtforms.validators.ValidationError('Unknown username')
 
 class TrainerMoneyForm(asb.forms.CSRFTokenForm):
     """A form for manually giving a trainer money."""
@@ -152,6 +187,7 @@ def edit_commit(trainer, request):
     form = TrainerEditForm(request.POST, prefix='edit',
                            csrf_context=request.session)
     form.set_roles(trainer)
+    form.get_item(trainer)
     money_form = TrainerMoneyForm(request.POST, prefix='money',
                                   csrf_context=request.session)
     password_form = TrainerPasswordResetForm(request.POST, prefix='password',
@@ -174,6 +210,10 @@ def edit_commit(trainer, request):
                 .filter(db.Role.identifier.in_(form.roles.data))
                 .all()
             )
+
+        # Move item
+        if form.trainer_item is not None:
+            form.trainer_item.trainer_id = form.item_recipient.trainer.id
     elif money_form.submit.data:
         # Handle the money form
         if not money_form.validate():

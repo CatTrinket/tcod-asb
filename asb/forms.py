@@ -70,6 +70,27 @@ class PostLinkField(wtforms.TextField):
         except ValueError as error:
             self.errors.append('Invalid link ({0})'.format(error))
 
+class TrainerField(wtforms.StringField):
+    """A string field that also fetches the registered trainer with that name,
+    if any, from the database.
+    """
+
+    trainer = None
+
+    def process_formdata(self, valuelist):
+        [self.data] = valuelist
+
+        try:
+            self.trainer = (
+                db.DBSession.query(db.Trainer)
+                .filter(sqla.func.lower(db.Trainer.name) == self.data.lower())
+                .filter_by(unclaimed_from_hack=False)
+                .options(sqla.orm.joinedload('ban'))
+                .one()
+            )
+        except sqla.orm.exc.NoResultFound:
+            pass
+
 def name_validator(form, field):
     """Validate a Pokémon or trainer name."""
 
