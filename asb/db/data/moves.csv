@@ -362,7 +362,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 361,healing-wish,Healing Wish,11,3,,,,0,5,12,80,,,
 362,brine,Brine,3,2,65,3,100,0,1,4,20,20,,
 363,natural-gift,Natural Gift,1,1,,,100,0,1,6,20,40,,
-364,feint,Feint,1,1,30,2,100,2,1,20,20,,10,40
+364,feint,Feint,1,1,30,3,100,2,1,20,20,,10,40
 365,pluck,Pluck,10,1,60,3,100,0,1,23,20,,10,-1
 366,tailwind,Tailwind,10,3,,4,,0,8,26,30,,,
 367,acupressure,Acupressure,1,3,,2,,0,7,16,10,,,
@@ -387,7 +387,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 386,punishment,Punishment,16,1,,,100,0,1,23,20,,10,-1
 387,last-resort,Last Resort,1,1,140,8,100,0,1,19,30,,,
 388,worry-seed,Worry Seed,4,3,,3,100,0,1,24,20,,,
-389,sucker-punch,Sucker Punch,16,1,80,4,100,1,1,26,30,,,
+389,sucker-punch,Sucker Punch,16,1,80,5,100,1,1,26,30,,,
 390,toxic-spikes,Toxic Spikes,8,3,,3,,0,2,25,20,,,
 391,heart-swap,Heart Swap,11,3,,3,,0,1,2,10,-1,,
 392,aqua-ring,Aqua Ring,3,3,,5,,0,5,16,10,,,
@@ -418,7 +418,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 417,nasty-plot,Nasty Plot,16,3,,2,,0,5,16,10,,,
 418,bullet-punch,Bullet Punch,17,1,40,3,100,1,1,26,30,,,
 419,avalanche,Avalanche,6,1,60,3,100,-4,1,6,20,40,,
-420,ice-shard,Ice Shard,6,1,40,2,100,1,1,26,30,,,
+420,ice-shard,Ice Shard,6,1,40,3,100,1,1,26,30,,,
 421,shadow-claw,Shadow Claw,14,1,70,4,100,0,1,7,20,40,,
 422,thunder-fang,Thunder Fang,5,1,65,3,95,0,1,9,40,,,
 423,ice-fang,Ice Fang,6,1,65,3,95,0,1,9,40,,,
