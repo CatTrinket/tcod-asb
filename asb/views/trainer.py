@@ -169,7 +169,31 @@ def trainer(trainer, request):
     """A trainer's info page."""
 
     profile_link = asb.tcodf.user_forum_link(trainer.tcodf_user_id)
-    return {'trainer': trainer, 'profile_link': profile_link}
+
+    wins = []
+    losses = []
+    draws = []
+    open_battles = []
+    for battle_trainer in trainer.battle_trainers:
+        outcome = battle_trainer.team.outcome
+        battle = battle_trainer.battle
+
+        if not outcome:
+            # Battle still in progress
+            open_battles.append(battle)
+
+        elif outcome == 'win':
+            wins.append(battle)
+
+        elif outcome == 'loss':
+            losses.append(battle)
+
+        elif outcome == 'draw':
+            draws.append(battle)
+
+    return {'trainer': trainer, 'profile_link': profile_link,
+            'wins': wins, 'losses': losses, 'draws': draws,
+            'open_battles': open_battles}
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='GET', permission='trainer.edit')

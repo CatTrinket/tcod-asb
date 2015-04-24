@@ -1191,6 +1191,7 @@ BattleTeam.trainers = relationship(BattleTrainer, order_by=BattleTrainer.id)
 BattleTrainer.battle = relationship(Battle)
 BattleTrainer.pokemon = relationship(BattlePokemon, order_by=BattlePokemon.id,
     back_populates='trainer')
+BattleTrainer.team = relationship(BattleTeam)
 BattleTrainer.trainer = relationship(Trainer)
 
 ContestCategory.moves = relationship(Move, back_populates='contest_category',
@@ -1311,6 +1312,7 @@ Trainer.squad = relationship(Pokemon,
 Trainer.pc = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad),
     order_by=Pokemon.id)
+Trainer.battle_trainers = relationship(BattleTrainer)
 
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
