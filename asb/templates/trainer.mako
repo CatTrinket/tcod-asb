@@ -68,16 +68,35 @@ ${t.pokemon_table(
 
 <h1>Battles</h1>
 
+<table class="stats-table">
+<thead>
+    <tr>
+        <th>Wins</th>
+        <th>Losses</th>
+        <th>Draws</th>
+        <th>Total</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td>${len(wins)}</td>
+    <td>${len(losses)}</td>
+    <td>${len(draws)}</td>
+    <td>${len(wins) + len(losses) + len(draws)}</td>
+</tr>
+</tbody>
+</table>
+
 % if wins or losses or draws or open_battles:
 <p>
-    <strong>Win</strong>: ${len(wins)}
-    <strong>Loss</strong>: ${len(losses)}
-    <strong>Draw</strong>: ${len(draws)}
+    <strong>Wins</strong>: ${len(wins)}
+    <strong>Losses</strong>: ${len(losses)}
+    <strong>Draws</strong>: ${len(draws)}
     <strong>Total</strong>: ${len(wins) + len(losses) + len(draws)}
 </p>
 
 ${t.battle_table(wins, losses, draws, open_battles,
-    subheaders=['Win', 'Loss', 'Draw', 'In Progress'], show_end=True)}
+    subheaders=['Wins', 'Losses', 'Draws', 'In Progress'], show_end=True)}
 % else:
 <p>None yet!</p>
 % endif
