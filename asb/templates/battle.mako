@@ -124,6 +124,8 @@ ${h.form_error_list(*link_form.errors.values())}
 % for team in battle.teams:
 % if team_battle:
 <h1>Team ${team.team_number}</h1>
+% elif team.trainers[0].trainer is not None:
+<h1>${h.link(team.trainers[0].trainer)}</h1>
 % else:
 <h1>${team.trainers[0].name}</h1>
 % endif
