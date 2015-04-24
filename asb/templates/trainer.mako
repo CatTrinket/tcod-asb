@@ -66,8 +66,11 @@ ${t.pokemon_table(
 </table>
 % endif
 
-% if win_battles or loss_battles or draw_battles or open_battles:
 <h1>Battles</h1>
+
+% if win_battles or loss_battles or draw_battles or open_battles:
 ${t.battle_table(win_battles, loss_battles, draw_battles, open_battles,
     subheaders=['Win', 'Loss', 'Draw', 'In Progress'], show_end=True)}
+% else:
+<p>None yet!</p>
 % endif
