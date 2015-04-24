@@ -155,9 +155,9 @@ def trainer(trainer, request):
 
     profile_link = asb.tcodf.user_forum_link(trainer.tcodf_user_id)
 
-    win_battles = []
-    loss_battles = []
-    draw_battles = []
+    wins = []
+    losses = []
+    draws = []
     open_battles = []
     for battle_trainer in trainer.battle_trainers:
         outcome = battle_trainer.team.outcome
@@ -168,17 +168,17 @@ def trainer(trainer, request):
             open_battles.append(battle)
 
         elif outcome == 'win':
-            win_battles.append(battle)
+            wins.append(battle)
 
         elif outcome == 'loss':
-            loss_battles.append(battle)
+            losses.append(battle)
 
         elif outcome == 'draw':
-            draw_battles.append(battle)
+            draws.append(battle)
 
     return {'trainer': trainer, 'profile_link': profile_link,
-            'win_battles': win_battles, 'loss_battles': loss_battles,
-            'draw_battles': draw_battles, 'open_battles': open_battles}
+            'wins': wins, 'losses': losses, 'draws': draws,
+            'open_battles': open_battles}
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='GET', permission='trainer.edit')
