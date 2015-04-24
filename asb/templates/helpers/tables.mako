@@ -402,7 +402,7 @@ hidden-ability\
 
 % for battles, subheader in zip(battle_lists, subheaders):
 <tbody>
-% if subheader is not None:
+% if subheader is not None and battles:
 <tr class="subheader-row">
     <td colspan="${subheader_colspan}">${subheader}
 </tr>
@@ -420,7 +420,11 @@ hidden-ability\
         <td>${battle.start_date.strftime('%Y %B %d')}</td>
 
         % if show_end:
-        <td>${battle.end_date.strftime('%Y %B %d')}</td>
+        <td>
+        % if battle.end_date:
+        ${battle.end_date.strftime('%Y %B %d')}
+        %endif
+        </td>
         % endif
     </tr>
     % endfor
