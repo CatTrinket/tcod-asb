@@ -416,3 +416,6 @@ form#news-form textarea {
 
 form#news-form dt { width: 5em; }
 form#news-form dd { margin-left: 5.5em; }
+
+/* Battle histories */
+table.battle-table td.null-cell { text-align: center; }

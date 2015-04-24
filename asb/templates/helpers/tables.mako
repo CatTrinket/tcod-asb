@@ -387,7 +387,7 @@ hidden-ability\
     if subheaders is None:
         subheaders = [None] * len(battle_lists)
 %>
-<table>
+<table class="battle-table">
 <thead>
 <tr>
     <th>Battle</th>
@@ -419,13 +419,11 @@ hidden-ability\
 
         <td>${battle.start_date.strftime('%Y %B %d')}</td>
 
-        % if show_end:
-        <td>
-        % if battle.end_date:
-        ${battle.end_date.strftime('%Y %B %d')}
+        % if show_end and battle.end_date:
+        <td>${battle.end_date.strftime('%Y %B %d')}</td>
+        % elif show_end:
+        <td class="null-cell">—</td>
         %endif
-        </td>
-        % endif
     </tr>
     % endfor
 </tbody>
