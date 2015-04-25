@@ -127,7 +127,7 @@ ${h.form_error_list(*link_form.errors.values())}
 ${t.pokemon_table(
     *(trainer.pokemon for trainer in team.trainers),
     skip_cols=['name', 'trainer'],
-    subheaders=(h.link(trainer.trainer) for trainer in team.trainers)
+    subheaders=(trainer.name for trainer in team.trainers)
         if team_battle else None,
     subheader_colspan=9,
     extra_left_cols=[{'col': t.name_col, 'th': t.name_header, 'td': name}]
