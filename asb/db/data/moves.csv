@@ -213,7 +213,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 212,mean-look,Mean Look,1,3,,4,,0,1,25,20,,,
 213,attract,Attract,1,3,,4,100,0,1,25,20,,,
 214,sleep-talk,Sleep Talk,1,3,,,,0,5,1,30,,,
-215,heal-bell,Heal Bell,1,3,,3,,0,8,6,20,40,,
+215,heal-bell,Heal Bell,1,3,,4,,0,8,6,20,40,,
 216,return,Return,1,1,,,100,0,1,29,10,10,,
 217,present,Present,1,1,,,90,0,1,1,30,,,
 218,frustration,Frustration,1,1,,,100,0,1,29,10,10,,
@@ -285,7 +285,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 284,eruption,Eruption,2,2,150,9,100,0,2,31,10,-1,,
 285,skill-swap,Skill Swap,11,3,,3,,0,1,2,10,-1,,
 286,imprison,Imprison,11,3,,5,,0,5,18,30,,,
-287,refresh,Refresh,1,3,,3,,0,5,16,10,,,
+287,refresh,Refresh,1,3,,4,,0,5,16,10,,,
 288,grudge,Grudge,14,3,,5,,0,5,31,10,-1,,
 289,snatch,Snatch,16,3,,,,4,5,23,20,,10,-1
 290,secret-power,Secret Power,1,1,70,5,100,0,1,30,-1,,,
@@ -310,7 +310,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 309,meteor-mash,Meteor Mash,17,1,90,5,90,0,1,14,20,40,,
 310,astonish,Astonish,14,1,30,3,100,0,1,9,20,,30,
 311,weather-ball,Weather Ball,1,2,50,3,100,0,1,4,20,20,,
-312,aromatherapy,Aromatherapy,4,3,,3,,0,8,6,20,40,,
+312,aromatherapy,Aromatherapy,4,3,,4,,0,8,6,20,40,,
 313,fake-tears,Fake Tears,16,3,,2,100,0,1,6,20,40,,
 314,air-cutter,Air Cutter,10,2,60,3,95,0,2,21,20,,20,30
 315,overheat,Overheat,2,2,130,8,90,0,1,11,60,,,
