@@ -25,6 +25,10 @@ ${pokemon.name}\
 <p><a href="${request.resource_path(battle, 'approve')}">Approve this battle →</a></p>
 % endif
 
+% if request.has_permission('battle.edit'):
+<p><a href="${request.resource_path(battle, 'edit')}">Edit this battle →</a></p>
+% endif
+
 % if request.has_permission('battle.link'):
 <h1>BBCode</h1>
 <p>Includes battlers' active squads and a link to this page.  You'll still have

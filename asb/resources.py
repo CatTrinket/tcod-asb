@@ -30,6 +30,9 @@ class Root(dict):
         (sec.Allow, 'referee', 'battle.open'),
         (sec.Deny, sec.Everyone, 'battle.open'),
 
+        (sec.Allow, 'admin', 'battle.edit'),
+        (sec.Deny, sec.Everyone, 'battle.edit'),
+
         (sec.Allow, 'admin', 'flavor.edit'),
         (sec.Allow, 'mod', 'flavor.edit'),
         (sec.Deny, sec.Everyone, 'flavor.edit'),
