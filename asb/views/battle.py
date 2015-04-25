@@ -320,16 +320,17 @@ def edit_battle_process(battle, request):
     if not form.validate():
         return {'form': form, 'battle': battle}
 
+    for ref in battle.all_refs:
+        db.DBSession.delete(ref)
+
     for row in form.refs:
         if row.ref.trainer is not None:
-            db.DBSession.merge(db.BattleReferee(
+            db.DBSession.add(db.BattleReferee(
                 battle_id=battle.id,
                 trainer_id=row.ref.trainer.id,
                 is_current_ref=row.current.data,
                 is_emergency_ref=row.emergency.data
             ))
-
-    db.DBSession.flush()
 
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 
