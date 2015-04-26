@@ -600,7 +600,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 599,venom-drench,Venom Drench,8,3,,3,100,0,2,,,,,
 600,powder,Powder,12,3,,3,100,1,1,,,,,
 601,geomancy,Geomancy,18,3,,6,,0,5,,,,,
-602,magnetic-flux,Magnetic Flux,5,3,,2,,0,8,,,,,
+602,magnetic-flux,Magnetic Flux,5,3,,,,0,8,,,,,
 603,happy-hour,Happy Hour,1,3,,1,,0,8,,,,,
 604,electric-terrain,Electric Terrain,5,3,,5,,0,9,,,,,
 605,dazzling-gleam,Dazzling Gleam,18,2,80,4,100,0,2,,,,,
