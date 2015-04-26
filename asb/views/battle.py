@@ -476,7 +476,7 @@ def approve_battle_submit(battle, request):
             if battle.length == 'dq':
                 prize_money = 0
             else:
-                prize_money = 3 * enemy_pokemon_count
+                prize_money = 4 * enemy_pokemon_count
 
         # Give that much money to each trainer on this team
         for battle_trainer in team.trainers:
