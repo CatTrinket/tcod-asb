@@ -266,7 +266,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 265,smelling-salts,Smelling Salts,1,1,70,4,100,0,1,9,20,,30,
 266,follow-me,Follow Me,1,3,,1,,2,5,19,30,,,
 267,nature-power,Nature Power,1,3,,,,0,1,28,30,,,
-268,charge,Charge,5,3,,3,,0,5,14,20,40,,
+268,charge,Charge,5,3,,4,,0,5,14,20,40,,
 269,taunt,Taunt,16,3,,4,100,0,1,25,20,,,
 270,helping-hand,Helping Hand,1,3,,,,5,6,25,20,,,
 271,trick,Trick,11,3,,3,100,0,1,14,20,40,,
