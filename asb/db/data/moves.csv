@@ -106,7 +106,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 105,recover,Recover,1,3,,,,0,5,21,20,,20,30
 106,harden,Harden,1,3,,1,,0,5,17,20,,,
 107,minimize,Minimize,1,3,,2,,0,5,17,20,,,
-108,smokescreen,Smokescreen,1,3,,,100,0,1,19,30,,,
+108,smokescreen,Smokescreen,1,3,,1,100,0,1,19,30,,,
 109,confuse-ray,Confuse Ray,14,3,,4,100,0,1,28,30,,,
 110,withdraw,Withdraw,3,3,,1,,0,5,24,20,,,
 111,defense-curl,Defense Curl,1,3,,1,,0,5,17,20,,,
