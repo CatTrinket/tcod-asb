@@ -485,7 +485,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 484,heavy-slam,Heavy Slam,17,1,,,100,0,1,,,,,
 485,synchronoise,Synchronoise,11,2,120,7,100,0,3,,,,,
 486,electro-ball,Electro Ball,5,2,,,100,0,1,,,,,
-487,soak,Soak,3,3,,3,100,0,1,,,,,
+487,soak,Soak,3,3,,5,100,0,1,,,,,
 488,flame-charge,Flame Charge,2,1,50,4,100,0,1,,,,,
 489,coil,Coil,8,3,,3,,0,5,,,,,
 490,low-sweep,Low Sweep,7,1,65,4,100,0,1,,,,,
