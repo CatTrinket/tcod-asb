@@ -121,13 +121,13 @@ ${h.form_error_list(*link_form.errors.values())}
 % if team_battle:
 <h1>Team ${team.team_number}</h1>
 % else:
-<h1>${h.link(team.trainers[0].trainer)}</h1>
+<h1>${team.trainers[0].name}</h1>
 % endif
 
 ${t.pokemon_table(
     *(trainer.pokemon for trainer in team.trainers),
     skip_cols=['name', 'trainer'],
-    subheaders=(h.link(trainer.trainer) for trainer in team.trainers)
+    subheaders=(trainer.name for trainer in team.trainers)
         if team_battle else None,
     subheader_colspan=9,
     extra_left_cols=[{'col': t.name_col, 'th': t.name_header, 'td': name}]
