@@ -66,6 +66,7 @@ ${t.pokemon_table(
 </table>
 % endif
 
+% if wins or losses or draws or open_battles:
 <h1>Battles</h1>
 <%
     num_wins = len(wins)
@@ -74,34 +75,25 @@ ${t.pokemon_table(
     total_completed = num_wins + num_losses + num_draws
 %>
 
-<table class="stats-table">
-<thead>
-    <tr>
-        <th><abbr title="Wins">W</abbr></th>
-        <th><abbr title="Losses">L</abbr></th>
-        <th><abbr title="Draws">D</abbr></th>
-        <th>Total</th>
-        <th>Win Ratio</th>
-    </tr>
-</thead>
-<tbody>
-<tr>
-    <td>${num_wins}</td>
-    <td>${num_losses}</td>
-    <td>${num_draws}</td>
-    <td>${total_completed}</td>
-    % if total_completed:
-    <td>${round(num_wins / total_completed * 100, 1)}%</td>
-    % else:
-    <td>—</td>
-    % endif
-</tr>
-</tbody>
-</table>
+% if total_completed:
+<dl class="stats">
+    <dt>Wins</dt>
+    <dd>${num_wins}</dd>
 
-% if wins or losses or draws or open_battles:
-${t.battle_table(wins, losses, draws, open_battles,
-    subheaders=['Wins', 'Losses', 'Draws', 'In Progress'], show_end=True)}
-% else:
-<p>None yet!</p>
+    <dt>Losses</dt>
+    <dd>${num_losses}</dd>
+
+    <dt>Draws</dt>
+    <dd>${num_draws}</dd>
+
+    <dt>Total</dt>
+    <dd>${total_completed}</dd>
+
+    <dt>Win Percentage</dt>
+    <dd>${round(num_wins / total_completed * 100, 1)}%</dd>
+</dl>
+% endif
+
+${t.battle_table(open_battles, wins, losses, draws,
+    subheaders=['In Progress', 'Wins', 'Losses', 'Draws'], show_end=True)}
 % endif
