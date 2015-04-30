@@ -43,7 +43,7 @@ ${h.form_error_list(form.csrf_token.errors)}
 
     <dt>${form.bp.label() | n}</dt>
     <dd>${form.bp() | n}</dd>
-    <dd>The actual base power of the attack, <em>not</em> the base damage percentage.</dd>
+    <dd>The actual base power of the attack, <em>not</em> the base damage percentage. Leave blank if this attack doesn't do damage, or its damage varies.</dd>
     % for error in form.bp.errors:
     <dd class="form-error">${error}</dd>
     % endfor
@@ -57,6 +57,7 @@ ${h.form_error_list(form.csrf_token.errors)}
 
     <dt>${form.accuracy.label() | n}</dt>
     <dd>${form.accuracy() | n}</dd>
+    <dd>Leave blank if this attack cannot miss.</dd>
     % for error in form.accuracy.errors:
     <dd class="form-error">${error}</dd>
     % endfor

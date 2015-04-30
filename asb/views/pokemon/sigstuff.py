@@ -46,21 +46,24 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
 
     name = wtforms.TextField(
         'Name',
-        [name_validator, wtforms.validators.Required()])
+        validators=[name_validator, wtforms.validators.Required()])
     description = wtforms.TextAreaField(
         'Description',
-        [wtforms.validators.Required()])
+        validators=[wtforms.validators.Required()])
     move_type = wtforms.SelectField('Type', coerce=int)
     damage_class = wtforms.SelectField('Damage Class', coerce=int)
     bp = wtforms.IntegerField(
         'Base Power',
-        validators=[wtforms.validators.NumberRange(min=0)])
+        validators=[wtforms.validators.NumberRange(min=0),
+                    wtforms.validators.Optional()])
     energy = wtforms.IntegerField(
         'Energy Cost',
-        validators=[wtforms.validators.NumberRange(min=1)])
+        validators=[wtforms.validators.NumberRange(min=1),
+                    wtforms.validators.Optional()])
     accuracy = wtforms.IntegerField(
         'Accuracy',
-        validators=[wtforms.validators.NumberRange(min=0)])
+        validators=[wtforms.validators.NumberRange(min=0),
+                    wtforms.validators.Optional()])
     target = wtforms.SelectField('Target', coerce=int)
     duration = wtforms.TextField('Duration')
     usage_gap = wtforms.TextField(
