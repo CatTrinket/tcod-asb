@@ -11,7 +11,7 @@
     description_hint = "Give background as to how your Pokémon developed this move or how it came to have the ability to execute it. Explain how the attack is performed. It should be clear from the description why the attack has the effects that it does."
 
     effects_hint = "The effects of a signature move can include anything from stat boosts to causing your Pokémon to sprout wings. Everything besides damage that the attack accomplishes should go here, and if the damage and energy costs are not straightforward, or the attack can behave in variable ways, all its different permutations should be explained here. Only if the attack does absolutely nothing but cause damage should this field be left blank."
-    %>\
+%>\
 ${form.csrf_token() | n}
 ${h.form_error_list(form.csrf_token.errors)}
 
