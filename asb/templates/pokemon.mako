@@ -88,6 +88,28 @@ ${h.gender_symbol(pokemon.gender)}
 <h2><a name="move-mod">Move Modification</a></h2>
 
 % if pokemon.move_modification:
+% if pokemon.move_modification.needs_approval:
+<p>${pokemon.name}'s move modification is still pending approval. If you haven't already, paste the following into the [something] thread to let the approvers review it.</p>
+<textarea readonly rows="10" cols="80">
+[b]Pokémon[/b]: [url=${request.resource_url(pokemon)}]${pokemon.name}[/url] the ${pokemon.gender.name} ${pokemon.species.name}
+[b]Ability[/b]: ${pokemon.ability.name}
+[b]Signature Move[/b]: ${pokemon.move_modification.name}
+
+${pokemon.move_modification.description}
+
+[b]Type[/b]: ${pokemon.move_modification.type.name}
+[b]Damage Class[/b]: ${pokemon.move_modification.damage_class.name}
+[b]Base Power[/b]: ${pokemon.move_modification.power}
+[b]Energy[/b]: ${pokemon.move_modification.energy}%
+[b]Accuracy[/b]: ${pokemon.move_modification.accuracy}
+[b]Target[/b]: ${pokemon.move_modification.target.name}
+[b]Duration[/b]: ${pokemon.move_modification.duration}
+
+[b]Effects[/b]: ${pokemon.move_modification.effect}
+
+[b]Usage Gap[/b]: ${pokemon.move_modification.gap}
+</textarea>
+% else:
 <dl>
     <dt>Name</dt>
     <dd>${pokemon.move_modification.name}</dd>
@@ -138,6 +160,7 @@ ${h.gender_symbol(pokemon.gender)}
     <dt>Effects</dt>
     <dd>${pokemon.move_modification.effect}</dd>
 </dl>
+% endif
 % elif request.has_permission('edit.basics', pokemon):
 <p><a href="${request.resource_url(pokemon, 'move')}">
     Give ${pokemon.name} a signature move →
@@ -146,6 +169,18 @@ ${h.gender_symbol(pokemon.gender)}
 
 <h2><a name="body-mod">Body Modification</a></h2>
 % if pokemon.body_modification:
+% if pokemon.body_modification.needs_approval:
+<p>${pokemon.name}'s body modification is still pending approval. If you haven't already, paste the following into the [something] thread to let the approvers review it.</p>
+<textarea readonly rows="10" cols="80">
+[b]Pokémon[/b]: [url=${request.resource_url(pokemon)}]${pokemon.name}[/url] the ${pokemon.gender.name} ${pokemon.species.name}
+[b]Ability[/b]: ${pokemon.ability.name}
+[b]Signature Attribute[/b]: ${pokemon.body_modification.name}
+
+[b]Description[/b]: ${pokemon.body_modification.description}
+
+[b]Effects[/b]: ${pokemon.body_modification.effect}
+</textarea>
+% else:
 <dl>
     <dt>Name</dt>
     <dd>${pokemon.body_modification.name}</dd>
@@ -156,9 +191,10 @@ ${h.gender_symbol(pokemon.gender)}
     <dt>Effects</dt>
     <dd>${pokemon.body_modification.effect}</dd>
 </dl>
+% endif
 % elif request.has_permission('edit.basics', pokemon):
 <p><a href="${request.resource_url(pokemon, 'attribute')}">
     Give ${pokemon.name} a signature attribute →
 </a></p>
-%endif
+% endif
 % endif
