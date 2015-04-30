@@ -718,6 +718,7 @@ class BodyModification(PlayerTable):
     is_repeatable = Column(Boolean, nullable=False)
     description = Column(Unicode, nullable=False)
     effect = Column(Unicode, nullable=False)
+    needs_approval = Column(Boolean, nullable=False, default=True)
 
 class ItemEffect(PlayerTable):
     """An item's flavour text."""
@@ -764,6 +765,7 @@ class MoveModification(PlayerTable):
         nullable=False)
     description = Column(Unicode, nullable=True)
     effect = Column(Unicode, nullable=True)
+    needs_approval = Column(Boolean, nullable=False, default=True)
 
 class NewsPost(PlayerTable):
     """A front page news post."""
