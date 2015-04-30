@@ -108,8 +108,19 @@ def submit_sig_attribute_commit(pokemon, request):
         return {'pokemon': pokemon, 'form': form}
 
     # Do stuff
+    attribute = db.BodyModification(
+        pokemon_id=pokemon.id,
+        name=form.name.data,
+        is_repeatable=False,  # what even is this
+        description=form.bio.data,
+        effect=form.effects.data)
+    db.DBSession.add(attribute)
 
-    return httpexc.HTTPSeeOther(request.resource_url(pokemon))
+    request.session.flash(
+        "Success!  You'll need to paste the info from the text box below in "
+        "the [something] thread to proceed with the approval process.")
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#body-mod")
 
 @view_config(name='move', context=db.Pokemon, permission='edit.basics',
   request_method='GET', renderer='submit_sig_move.mako')
@@ -133,5 +144,23 @@ def submit_sig_move_commit(pokemon, request):
         return {'pokemon': pokemon, 'form': form}
 
     # Do stuff
+    move = db.MoveModification(
+        pokemon_id=pokemon.id,
+        name=form.name.data,
+        type_id=form.type.data,
+        power=form.bp.data,
+        energy=form.energy.data,
+        accuracy=form.accuracy.data,
+        target_id=form.target.data,
+        gap=form.usage_gap.data,
+        duration=form.duration.data,
+        damage_class_id=form.damage_class.data,
+        description=form.description.data,
+        effect=form.effects.data)
+    db.DBSession.add(move)
 
-    return httpexc.HTTPSeeOther(request.resource_url(pokemon))
+    request.session.flash(
+        "Success!  You'll need to paste the info from the text box below in "
+        "the [something] thread to proceed with the approval process.")
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")

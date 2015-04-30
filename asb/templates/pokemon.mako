@@ -82,36 +82,83 @@ ${h.gender_symbol(pokemon.gender)}
 </dl>
 </div>
 
-% if pokemon.move_modification or pokemon.body_modification:
+% if (pokemon.move_modification or pokemon.body_modification or request.has_permission('edit.basics', pokemon)):
 <h1>Modifications</h1>
 
-<h2>Move Modification</h2>
+<h2><a name="move-mod">Move Modification</a></h2>
 
 % if pokemon.move_modification:
-<p>stuff</p>
+<dl>
+    <dt>Name</dt>
+    <dd>${pokemon.move_modification.name}</dd>
+
+    <dt>Type</dt>
+    <dd>${pokemon.move_modification.type.name}</dd>
+
+    <dt>Base Power</dt>
+    % if pokemon.move_modification.power:
+    <dd>${pokemon.move_modification.power}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Energy</dt>
+    % if pokemon.move_modification.energy:
+    <dd>${pokemon.move_modification.energy}%</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Accuracy</dt>
+    % if pokemon.move_modification.accuracy:
+    <dd>${pokemon.move_modification.accuracy}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Target</dt>
+    <dd>${pokemon.move_modification.target.name}</dd>
+
+    <dt>Damage Class</dt>
+    <dd>${pokemon.move_modification.damage_class.name.capitalize()}</dd>
+
+    <dt>Duration</dt>
+    % if pokemon.move_modification.duration:
+    <dd>${pokemon.move_modification.duration}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Usage Gap</dt>
+    <dd>${pokemon.move_modification.gap}</dd>
+
+    <dt>Description</dt>
+    <dd>${pokemon.move_modification.description}</dd>
+
+    <dt>Effects</dt>
+    <dd>${pokemon.move_modification.effect}</dd>
+</dl>
 % elif request.has_permission('edit.basics', pokemon):
 <p><a href="${request.resource_url(pokemon, 'move')}">
     Give ${pokemon.name} a signature move →
 </a></p>
 % endif
 
-<h2>Body Modification</h2>
+<h2><a name="body-mod">Body Modification</a></h2>
 % if pokemon.body_modification:
-<p>stuff</p>
+<dl>
+    <dt>Name</dt>
+    <dd>${pokemon.body_modification.name}</dd>
+
+    <dt>Bio</dt>
+    <dd>${pokemon.body_modification.description}</dd>
+
+    <dt>Effects</dt>
+    <dd>${pokemon.body_modification.effect}</dd>
+</dl>
 % elif request.has_permission('edit.basics', pokemon):
 <p><a href="${request.resource_url(pokemon, 'attribute')}">
     Give ${pokemon.name} a signature attribute →
 </a></p>
 %endif
-
-% elif request.has_permission('edit.basics', pokemon):
-<h1>Modifications</h1>
-
-<p><a href="${request.resource_url(pokemon, 'move')}">
-    Give ${pokemon.name} a signature move →
-</a></p>
-
-<p><a href="${request.resource_url(pokemon, 'attribute')}">
-    Give ${pokemon.name} a signature attribute →
-</a></p>
 % endif
