@@ -6,6 +6,14 @@
 <p><a href="${request.resource_url(pokemon, 'edit')}">
     Edit ${pokemon.name} →
 </a></p>
+
+<p><a href="${request.resource_url(pokemon, 'attribute')}">
+    Give ${pokemon.name} a signature attribute →
+</a></p>
+
+<p><a href="${request.resource_url(pokemon, 'move')}">
+    Give ${pokemon.name} a signature move →
+</a></p>
 % endif
 
 % if request.has_permission('edit.everything', pokemon):
