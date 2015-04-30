@@ -6,14 +6,6 @@
 <p><a href="${request.resource_url(pokemon, 'edit')}">
     Edit ${pokemon.name} →
 </a></p>
-
-<p><a href="${request.resource_url(pokemon, 'attribute')}">
-    Give ${pokemon.name} a signature attribute →
-</a></p>
-
-<p><a href="${request.resource_url(pokemon, 'move')}">
-    Give ${pokemon.name} a signature move →
-</a></p>
 % endif
 
 % if request.has_permission('edit.everything', pokemon):
@@ -89,3 +81,37 @@ ${h.gender_symbol(pokemon.gender)}
     </dd>
 </dl>
 </div>
+
+% if pokemon.move_modification or pokemon.body_modification:
+<h1>Modifications</h1>
+
+<h2>Move Modification</h2>
+
+% if pokemon.move_modification:
+<p>stuff</p>
+% elif request.has_permission('edit.basics', pokemon):
+<p><a href="${request.resource_url(pokemon, 'move')}">
+    Give ${pokemon.name} a signature move →
+</a></p>
+% endif
+
+<h2>Body Modification</h2>
+% if pokemon.body_modification:
+<p>stuff</p>
+% elif request.has_permission('edit.basics', pokemon):
+<p><a href="${request.resource_url(pokemon, 'attribute')}">
+    Give ${pokemon.name} a signature attribute →
+</a></p>
+%endif
+
+% elif request.has_permission('edit.basics', pokemon):
+<h1>Modifications</h1>
+
+<p><a href="${request.resource_url(pokemon, 'move')}">
+    Give ${pokemon.name} a signature move →
+</a></p>
+
+<p><a href="${request.resource_url(pokemon, 'attribute')}">
+    Give ${pokemon.name} a signature attribute →
+</a></p>
+% endif
