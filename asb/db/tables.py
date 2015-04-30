@@ -754,14 +754,14 @@ class MoveModification(PlayerTable):
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         primary_key=True)
     name = Column(Unicode, nullable=False)
-    type_id = Column(Integer, ForeignKey('types.id'), nullable=False)
+    type_id = Column(Integer, ForeignKey(Type.id), nullable=False)
     power = Column(Integer, nullable=True)
     energy = Column(Integer, nullable=True)
     accuracy = Column(Integer, nullable=True)
-    target_id = Column(Integer, ForeignKey('move_targets.id'), nullable=False)
+    target_id = Column(Integer, ForeignKey(MoveTarget.id), nullable=False)
     gap = Column(Unicode, nullable=True)
     duration = Column(Unicode, nullable=True)
-    damage_class_id = Column(Integer, ForeignKey('damage_classes.id'),
+    damage_class_id = Column(Integer, ForeignKey(DamageClass.id),
         nullable=False)
     description = Column(Unicode, nullable=True)
     effect = Column(Unicode, nullable=True)
@@ -1228,6 +1228,10 @@ MoveCategory.moves = relationship(Move, order_by=Move.name,
     secondary=MoveCategoryMap.__table__, back_populates='categories')
 
 MoveEffect.editor = relationship(Trainer)
+
+MoveModification.target = relationship(MoveTarget)
+MoveModification.type = relationship(Type)
+MoveModification.damage_class = relationship(DamageClass)
 
 NewsPost.poster = relationship(Trainer)
 
