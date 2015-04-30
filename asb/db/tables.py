@@ -716,7 +716,7 @@ class BodyModification(PlayerTable):
         primary_key=True)
     name = Column(Unicode, nullable=False)
     is_repeatable = Column(Boolean, nullable=False)
-    flavor = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
     effect = Column(Unicode, nullable=False)
 
 class ItemEffect(PlayerTable):
@@ -746,27 +746,23 @@ class MoveEffect(PlayerTable):
     is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveModification(PlayerTable):
-    """A Pokémon's signature move or other movepool mod.
-
-    This is a direct port of the hack's asb_move_mods table.  I was not the one
-    who decided the entire table should just be text.  (The only change I made
-    is pokemon_id — Negrek had the foreign key on the pokemon side.)
-    """
+    """A Pokémon's signature move or other movepool mod."""
 
     __tablename__ = 'move_modifications'
 
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         primary_key=True)
     name = Column(Unicode, nullable=False)
-    type = Column(Unicode, nullable=True)
-    power = Column(Unicode, nullable=True)
-    energy = Column(Unicode, nullable=True)
-    accuracy = Column(Unicode, nullable=True)
-    target = Column(Unicode, nullable=True)
+    type_id = Column(Integer, ForeignKey('types.id'), nullable=False)
+    power = Column(Integer, nullable=True)
+    energy = Column(Integer, nullable=True)
+    accuracy = Column(Integer, nullable=True)
+    target_id = Column(Integer, ForeignKey('move_targets.id'), nullable=False)
     gap = Column(Unicode, nullable=True)
     duration = Column(Unicode, nullable=True)
-    stat = Column(Unicode, nullable=True)
-    flavor = Column(Unicode, nullable=True)
+    damage_class_id = Column(Integer, ForeignKey('damage_classes.id'),
+        nullable=False)
+    description = Column(Unicode, nullable=True)
     effect = Column(Unicode, nullable=True)
 
 class NewsPost(PlayerTable):
