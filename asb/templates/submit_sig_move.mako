@@ -29,9 +29,9 @@ ${h.form_error_list(form.csrf_token.errors)}
     <dd class="form-error">${error}</dd>
     % endfor
 
-    <dt>${form.move_type.label() | n}</dt>
-    <dd>${form.move_type() | n}</dd>
-    % for error in form.move_type.errors:
+    <dt>${form.type.label() | n}</dt>
+    <dd>${form.type() | n}</dd>
+    % for error in form.type.errors:
     <dd class="form-error">${error}</dd>
     % endfor
 

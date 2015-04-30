@@ -50,7 +50,7 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
     description = wtforms.TextAreaField(
         'Description',
         validators=[wtforms.validators.Required()])
-    move_type = wtforms.SelectField('Type', coerce=int)
+    type = wtforms.SelectField('Type', coerce=int)
     damage_class = wtforms.SelectField('Damage Class', coerce=int)
     bp = wtforms.IntegerField(
         'Base Power',
@@ -78,7 +78,7 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
         """Query the DB for a list of types for the type field."""
 
         types = db.DBSession.query(db.Type).all()
-        self.move_type.choices = [(t.id, t.name) for t in types]
+        self.type.choices = [(t.id, t.name) for t in types]
 
         damage_classes = db.DBSession.query(db.DamageClass).all()
         self.damage_class.choices = [(c.id, c.name.capitalize())
