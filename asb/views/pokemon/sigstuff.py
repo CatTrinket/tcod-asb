@@ -3,10 +3,10 @@ from pyramid.view import view_config
 import sqlalchemy as sqla
 import wtforms
 
+import unicodedata
+
 from asb import db
 import asb.forms
-
-
 
 
 def name_validator(form, field):
@@ -34,7 +34,7 @@ class SigAttributeForm(asb.forms.CSRFTokenForm):
 
     name = wtforms.TextField(
         'Name',
-        [asb.forms.name_validator, wtforms.validators.Required()])
+        [name_validator, wtforms.validators.Required()])
     bio = wtforms.TextAreaField('Bio')
     effects = wtforms.TextAreaField(
         'Effects',
