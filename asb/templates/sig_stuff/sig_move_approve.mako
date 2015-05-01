@@ -5,4 +5,6 @@
 
 <h1>Signature moves awaiting approval</h1>
 
-${moves}
+% for move in moves:
+${sig.display_move_mod(move)}
+% endfor

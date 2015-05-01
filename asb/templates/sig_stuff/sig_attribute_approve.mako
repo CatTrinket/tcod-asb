@@ -5,4 +5,6 @@
 
 <h1>Signature attributes awaiting approval</h1>
 
-${attributes}
+% for attribute in attributes:
+${sig.display_body_mod(attribute)}
+% endfor
