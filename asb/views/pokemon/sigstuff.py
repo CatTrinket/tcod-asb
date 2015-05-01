@@ -88,24 +88,27 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
         self.target.choices = [(t.id, t.name) for t in targets]
 
 
+def fill_attribute_form(form, mod):
+    """Prefill the given SigAttributeForm with the data from mod."""
+
+    form.name.data = mod.name
+    form.bio.data = mod.description
+    form.effects.data = mod.effect
+
 @view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
   request_method='GET', renderer='/sig_stuff/submit_sig_attribute.mako')
-def submit_sig_attribute(pokemon, request):
-    """A page for submitting a signature attribute for approval."""
+def modify_sig_attribute(pokemon, request):
+    """A page for submitting or editing a signature attribute for approval."""
 
     form = SigAttributeForm(csrf_context=request.session)
 
-    return {'pokemon': pokemon, 'form': form, 'action': 'attribute'}
+    if pokemon.body_modification:
+        fill_attribute_form(form, pokemon.body_modification)
 
-@view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
-  request_method='POST', renderer='/sig_stuff/submit_sig_attribute.mako')
-def submit_sig_attribute_commit(pokemon, request):
+    return {'pokemon': pokemon, 'form': form}
+
+def submit_sig_attribute(form, pokemon):
     """Process a request to submit a signature attribute for approval."""
-
-    form = SigAttributeForm(request.POST, csrf_context=request.session)
-
-    if not form.validate():
-        return {'pokemon': pokemon, 'form': form, 'action': 'attribute'}
 
     attribute = db.BodyModification(
         pokemon_id=pokemon.id,
@@ -115,68 +118,66 @@ def submit_sig_attribute_commit(pokemon, request):
         effect=form.effects.data)
     db.DBSession.add(attribute)
 
-    request.session.flash(
-        "Success!  You'll need to paste the info from the text box below in "
-        "the [something] thread to proceed with the approval process.")
-
-    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#body-mod")
-
-@view_config(name='attribute-edit', context=db.Pokemon,
-  permission='edit.basics', request_method='GET',
-  renderer='/sig_stuff/submit_sig_attribute.mako')
-def edit_sig_attribute(pokemon, request):
-    """A page for editing a signature attribute that's pending approval."""
-
-    mod = pokemon.body_modification
-    form = SigAttributeForm(csrf_context=request.session)
-    form.name.data = mod.name
-    form.bio.data = mod.description
-    form.effects.data = mod.effect
-
-    return {'pokemon': pokemon, 'form': form, 'action': 'attribute-edit'}
-
-@view_config(name='attribute-edit', context=db.Pokemon,
-  permission='edit.basics', request_method='POST',
-  renderer='/sig_stuff/submit_sig_attribute.mako')
-def edit_sig_attribute_commit(pokemon, request):
+def edit_sig_attribute(form, attribute):
     """Process a request to edit a signature attribute pending approval."""
 
-    form = SigAttributeForm(request.POST, csrf_context=request.session)
-
-    if not form.validate():
-        return {'pokemon': pokemon, 'form': form, 'action': 'attribute-edit'}
-
-    attribute = pokemon.body_modification
     attribute.name = form.name.data
     attribute.description = form.bio.data
     attribute.effect = form.effects.data
 
+@view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
+  request_method='POST', renderer='/sig_stuff/submit_sig_attribute.mako')
+def modify_sig_attribute_commit(pokemon, request):
+    """
+    Process a request to submit or edit a signature attribute for approval.
+    """
+
+    form = SigAttributeForm(request.POST, csrf_context=request.session)
+
+    if not form.validate():
+        return {'pokemon': pokemon, 'form': form}
+
+    if pokemon.body_modification:
+        edit_sig_attribute(form, pokemon.body_modification)
+    else:
+        submit_sig_attribute(form, pokemon)
+
     request.session.flash(
         "Success!  You'll need to paste the info from the text box below in "
         "the [something] thread to proceed with the approval process.")
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#body-mod")
 
+def fill_move_form(form, mod):
+    """Prefill the given SigMoveForm with the data from mod."""
+
+    form.name.data = mod.name
+    form.description.data = mod.description
+    form.type.data = mod.type_id
+    form.damage_class.data = mod.damage_class_id
+    form.bp.data =  mod.power
+    form.energy.data = mod.energy
+    form.accuracy.data = mod.accuracy
+    form.target.data = mod.target_id
+    form.duration.data = mod.duration
+    form.usage_gap.data = mod.gap
+    form.effects.data = mod.effect
+
 @view_config(name='move', context=db.Pokemon, permission='edit.basics',
   request_method='GET', renderer='/sig_stuff/submit_sig_move.mako')
-def submit_sig_move(pokemon, request):
-    """A page for submitting a signature move for approval."""
+def modify_sig_move(pokemon, request):
+    """A page for submitting or editing a signature move for approval."""
 
     form = SigMoveForm(csrf_context=request.session)
     form.populate_form_choices()
 
-    return {'pokemon': pokemon, 'form': form, 'action': 'move'}
+    if pokemon.move_modification:
+        fill_move_form(form, pokemon.move_modification)
 
-@view_config(name='move', context=db.Pokemon, permission='edit.basics',
-  request_method='POST', renderer='/sig_stuff/submit_sig_move.mako')
-def submit_sig_move_commit(pokemon, request):
+    return {'pokemon': pokemon, 'form': form}
+
+def submit_sig_move(form, pokemon):
     """Process a request to submit a signature move for approval."""
-
-    form = SigMoveForm(request.POST, csrf_context=request.session)
-    form.populate_form_choices()
-
-    if not form.validate():
-        return {'pokemon': pokemon, 'form': form, 'action': move}
 
     move = db.MoveModification(
         pokemon_id=pokemon.id,
@@ -193,49 +194,14 @@ def submit_sig_move_commit(pokemon, request):
         effect=form.effects.data)
     db.DBSession.add(move)
 
-    request.session.flash(
-        "Success!  You'll need to paste the info from the text box below in "
-        "the [something] thread to proceed with the approval process.")
-
-    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
-
-@view_config(name='move-edit', context=db.Pokemon,
-    permission='edit.basics', request_method='GET',
-    renderer='/sig_stuff/submit_sig_move.mako')
-def edit_sig_move(pokemon, request):
-    """A page for editing a signature move that's pending approval."""
-
-    mod = pokemon.move_modification
-    form = SigMoveForm(csrf_context=request.session)
-    form.populate_form_choices()
-
-    form.name.data = mod.name
-    form.description.data = mod.description
-    form.type.data = mod.type_id
-    form.damage_class.data = mod.damage_class_id
-    form.bp.data =  mod.power
-    form.energy.data = mod.energy
-    form.accuracy.data = mod.accuracy
-    form.target.data = mod.target_id
-    form.duration.data = mod.duration
-    form.usage_gap.data = mod.gap
-    form.effects.data = mod.effect
-
-    return {'pokemon': pokemon, 'form': form, 'action': 'move-edit'}
-
-@view_config(name='move-edit', context=db.Pokemon,
-  permission='edit.basics', request_method='POST',
-  renderer='/sig_stuff/submit_sig_move.mako')
-def edit_sig_move_commit(pokemon, request):
+def edit_sig_move(form, move):
     """Process a request to edit a signature move pending approval."""
 
-    form = SigMoveForm(request.POST, csrf_context=request.session)
     form.populate_form_choices()
 
     if not form.validate():
         return {'pokemon': pokemon, 'form': form, 'action': 'move-edit'}
 
-    move = pokemon.move_modification
     move.name = form.name.data
     move.description = form.description.data
     move.type_id = form.type.data
@@ -247,6 +213,22 @@ def edit_sig_move_commit(pokemon, request):
     move.duration = form.duration.data
     move.gap = form.usage_gap.data
     move.effect = form.effects.data
+
+@view_config(name='move', context=db.Pokemon, permission='edit.basics',
+  request_method='POST', renderer='/sig_stuff/submit_sig_move.mako')
+def modify_sig_move_commit(pokemon, request):
+    """Process a request to submit or edit a signature move for approval."""
+
+    form = SigMoveForm(request.POST, csrf_context=request.session)
+    form.populate_form_choices()
+
+    if not form.validate():
+        return {'pokemon': pokemon, 'form': form}
+
+    if pokemon.move_modification:
+        edit_sig_move(form, pokemon.move_modification)
+    else:
+        submit_sig_move(form, pokemon)
 
     request.session.flash(
         "Success!  You'll need to paste the info from the text box below in "

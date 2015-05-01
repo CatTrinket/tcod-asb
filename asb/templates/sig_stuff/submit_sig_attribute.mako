@@ -6,7 +6,7 @@
 
 <p>A signature attribute is something about a Pokémon's physical capabilities or appearance that make it notably different than others of its species. It's free to apply for and add a signature attribute to your Pokémon, but all signature attributes are subject to approval, and if your signature attribute proves to be unbalanced in battle, you may be asked to alter it.</p>
 
-<form action="${action}" method="POST">
+<form action="attribute" method="POST">
 ${form.csrf_token() | n}
 ${h.form_error_list(form.csrf_token.errors)}
 

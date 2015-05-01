@@ -95,7 +95,7 @@ ${h.gender_symbol(pokemon.gender)}
 
 ${sig.display_pending_move_mod(pokemon)}
 
-<p><a href="${request.resource_url(pokemon, 'move-edit')}">
+<p><a href="${request.resource_url(pokemon, 'move')}">
     Edit ${pokemon.name}'s signature move application →
 </a></p>
 % endif
@@ -116,7 +116,7 @@ ${sig.display_move_mod(pokemon.move_modification)}
 
 ${sig.display_pending_body_mod(pokemon)}
 
-<p><a href="${request.resource_url(pokemon, 'attribute-edit')}">
+<p><a href="${request.resource_url(pokemon, 'attribute')}">
     Edit ${pokemon.name}'s signature attribute application →
 </a></p>
 % endif
