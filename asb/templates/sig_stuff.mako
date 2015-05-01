@@ -1,7 +1,3 @@
-<%inherit file='/base.mako'/>\
-<%namespace name="h" file="/helpers/helpers.mako"/>\
-<%block name='title'>${pokemon.name}'s sig stuff - Pokémon - The Cave of Dragonflies ASB</%block>\
-
 <%def name="paragraphs(text)">
 % if text is None:
 None
@@ -14,66 +10,104 @@ None
 % endif
 </%def>
 
-% if bodmod:
-<h1>Body modification</h1>
+<%def name="display_pending_move_mod(pokemon)">\
+<% mod = pokemon.move_modification %>\
+<textarea readonly rows="10" cols="80">
+[b]Pokémon[/b]: [url=${request.resource_url(pokemon)}]${pokemon.name}[/url] the ${pokemon.gender.name} ${pokemon.species.name}
+[b]Ability[/b]: ${pokemon.ability.name}
+[b]Signature Move[/b]: ${mod.name}
 
+${mod.description}
+
+[b]Type[/b]: ${mod.type.name}
+[b]Damage Class[/b]: ${mod.damage_class.name}
+[b]Base Power[/b]: ${mod.power}
+[b]Energy[/b]: ${mod.energy}%
+[b]Accuracy[/b]: ${mod.accuracy}
+[b]Target[/b]: ${mod.target.name}
+[b]Duration[/b]: ${mod.duration}
+
+[b]Effects[/b]: ${mod.effect}
+
+[b]Usage Gap[/b]: ${mod.gap}
+</textarea>
+</%def>
+
+<%def name="display_pending_body_mod(pokemon)">\
+<% mod = pokemon.body_modification %>\
+<textarea readonly rows="10" cols="80">
+[b]Pokémon[/b]: [url=${request.resource_url(pokemon)}]${pokemon.name}[/url] the ${pokemon.gender.name} ${pokemon.species.name}
+[b]Ability[/b]: ${pokemon.ability.name}
+[b]Signature Attribute[/b]: ${mod.name}
+
+[b]Description[/b]: ${mod.description}
+
+[b]Effects[/b]: ${mod.effect}
+</textarea>
+</%def>
+
+<%def name="display_move_mod(mod)">
 <dl>
     <dt>Name</dt>
-    <dd>${bodmod.name}
-
-    <dt>Repeatable</dt>
-    <dd>${bodmod.is_repeatable}</dd>
-
-    <dt>Flavor</dt>
-    <dd>
-        ${paragraphs(bodmod.flavor)}
-    </dd>
-
-    <dt>Effect</dt>
-    <dd>
-        ${paragraphs(bodmod.effect)}
-    </dd>
-% endif
-
-% if movemod:
-<h1>Move modification</h1>
-
-<dl>
-    <dt>Name</dt>
-    <dd>${movemod.name}
+    <dd>${mod.name}</dd>
 
     <dt>Type</dt>
-    <dd>${movemod.type}</dd>
+    <dd>${mod.type.name}</dd>
 
-    <dt>Power</dt>
-    <dd>${movemod.power}</dd>
+    <dt>Base Power</dt>
+    % if mod.power:
+    <dd>${mod.power}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
 
     <dt>Energy</dt>
-    <dd>${movemod.energy}</dd>
+    % if mod.energy:
+    <dd>${mod.energy}%</dd>
+    % else:
+    <dd>—</dd>
+    % endif
 
     <dt>Accuracy</dt>
-    <dd>${movemod.accuracy}</dd>
+    % if mod.accuracy:
+    <dd>${mod.accuracy}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
 
     <dt>Target</dt>
-    <dd>${movemod.target}</dd>
+    <dd>${mod.target.name}</dd>
 
-    <dt>Gap</dt>
-    <dd>${movemod.gap}</dd>
+    <dt>Damage Class</dt>
+    <dd>${mod.damage_class.name.capitalize()}</dd>
 
     <dt>Duration</dt>
-    <dd>${movemod.duration}</dd>
+    % if mod.duration:
+    <dd>${mod.duration}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
 
-    <dt>Stat</dt>
-    <dd>${movemod.stat}</dd>
+    <dt>Usage Gap</dt>
+    <dd>${mod.gap}</dd>
 
-    <dt>Flavor</dt>
-    <dd>
-        ${paragraphs(movemod.flavor)}
-    </dd>
+    <dt>Description</dt>
+    <dd>${paragraphs(mod.description)}</dd>
 
-    <dt>Effect</dt>
-    <dd>
-        ${paragraphs(movemod.effect)}
-    </dd>
+    <dt>Effects</dt>
+    <dd>${paragraphs(mod.effect)}</dd>
 </dl>
-% endif
+</%def>
+
+<%def name="display_body_mod(mod)">
+<dl>
+    <dt>Name</dt>
+    <dd>${mod.name}</dd>
+
+    <dt>Bio</dt>
+    <dd>${paragraphs(mod.description)}</dd>
+
+    <dt>Effects</dt>
+    <dd>${paragraphs(mod.effect)}</dd>
+</dl>
+</%def>
