@@ -51,7 +51,7 @@ ${mod.description}
 <%def name="display_move_mod(move, show_pokemon=False)">
 <h2>${move.name}</h2>
 
-<div class="move-info">
+<div class="sig-move-info">
 % if show_pokemon:
 <dl>
     <dt>Pokémon</dt>

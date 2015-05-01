@@ -418,7 +418,6 @@ form#news-form dt { width: 5em; }
 form#news-form dd { margin-left: 5.5em; }
 
 /* Signature move display */
-/* This is separate from move info in case I want to restyle them later */
-div.move-info > dl { float: left; width: 33%; margin: 0; }
-div.move-info > dl + dl { margin-left: 0.5%; }
-div.move-info:after { display: block; content: ''; clear: both; }
+div.sig-move-info > dl { float: left; width: 33%; margin: 0; }
+div.sig-move-info > dl + dl { margin-left: 0.5%; }
+div.sig-move-info:after { display: block; content: ''; clear: both; }
