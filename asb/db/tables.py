@@ -1189,6 +1189,8 @@ BattleTrainer.pokemon = relationship(BattlePokemon, order_by=BattlePokemon.id,
     back_populates='trainer')
 BattleTrainer.trainer = relationship(Trainer)
 
+BodyModification.pokemon = relationship(Pokemon)
+
 ContestCategory.moves = relationship(Move, back_populates='contest_category',
     order_by=Move.name)
 ContestCategory.supercategory = relationship(ContestSupercategory,
@@ -1232,6 +1234,7 @@ MoveEffect.editor = relationship(Trainer)
 MoveModification.target = relationship(MoveTarget)
 MoveModification.type = relationship(Type)
 MoveModification.damage_class = relationship(DamageClass)
+MoveModification.pokemon = relationship(Pokemon)
 
 NewsPost.poster = relationship(Trainer)
 
