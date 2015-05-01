@@ -175,12 +175,15 @@ def home(context, request):
             mod_stuff.append((message, '/battles#waiting'))
 
         # For now, let's just assume that mods and sig approvers are the same.
-        # TODO: filter out applications that the user isn't involved in.
         pending_sig_moves = (
             db.DBSession.query(db.MoveModification)
             .filter_by(needs_approval=True)
-            .count()
+            .all()
         )
+
+        # Filter out applications that the user is involved in
+        pending_sig_moves = len([move for move in pending_sig_moves
+                                if move.pokemon.trainer_id != trainer.id])
 
         if pending_sig_moves:
             if pending_sig_moves == 1:
@@ -194,8 +197,11 @@ def home(context, request):
         pending_sig_attributes = (
             db.DBSession.query(db.BodyModification)
             .filter_by(needs_approval=True)
-            .count()
+            .all()
         )
+
+        pending_sig_attributes = len([att for att in pending_sig_attributes
+                                      if att.pokemon.trainer_id != trainer.id])
 
         if pending_sig_attributes:
             if pending_sig_attributes == 1:

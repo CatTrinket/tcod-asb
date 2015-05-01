@@ -247,6 +247,9 @@ def approve_sig_move(context, request):
         .all()
     )
 
+    pending_moves = [move for move in pending_moves
+                     if move.pokemon.trainer_id != request.user.id]
+
     return {'moves': pending_moves}
 
 @view_config(name='approve-attribute', permission='bank.approve',
@@ -259,6 +262,9 @@ def approve_sig_attribute(context, request):
         .filter_by(needs_approval=True)
         .all()
     )
+
+    pending_attributes = [att for att in pending_attributes
+                          if att.pokemon.trainer_id != request.user.id]
 
     return {'attributes': pending_attributes}
 
