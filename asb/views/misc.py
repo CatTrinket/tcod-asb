@@ -189,7 +189,7 @@ def home(context, request):
                 message = ('There are {} signature moves awaiting approval'
                     .format(pending_sig_moves))
 
-            mod_stuff.append((message, '#')) # TODO: actual url
+            mod_stuff.append((message, '/approve-move')) # TODO: actual url
 
         pending_sig_attributes = (
             db.DBSession.query(db.BodyModification)
@@ -204,7 +204,7 @@ def home(context, request):
                 message = ('There are {} signature attributes awaiting '
                            'approval'.format(pending_sig_attributes))
 
-            mod_stuff.append((message, '#')) # TODO: actual url
+            mod_stuff.append((message, 'approve-attribute')) # TODO: actual url
 
         stuff['mod_stuff'] = mod_stuff
 

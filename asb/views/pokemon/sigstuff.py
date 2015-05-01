@@ -89,7 +89,7 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
 
 
 @view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
-  request_method='GET', renderer='submit_sig_attribute.mako')
+  request_method='GET', renderer='/sig_stuff/submit_sig_attribute.mako')
 def submit_sig_attribute(pokemon, request):
     """A page for submitting a signature attribute for approval."""
 
@@ -98,7 +98,7 @@ def submit_sig_attribute(pokemon, request):
     return {'pokemon': pokemon, 'form': form}
 
 @view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
-  request_method='POST', renderer='submit_sig_attribute.mako')
+  request_method='POST', renderer='/sig_stuff/submit_sig_attribute.mako')
 def submit_sig_attribute_commit(pokemon, request):
     """Process a request to submit a signature attribute for approval."""
 
@@ -123,7 +123,7 @@ def submit_sig_attribute_commit(pokemon, request):
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#body-mod")
 
 @view_config(name='move', context=db.Pokemon, permission='edit.basics',
-  request_method='GET', renderer='submit_sig_move.mako')
+  request_method='GET', renderer='/sig_stuff/submit_sig_move.mako')
 def submit_sig_move(pokemon, request):
     """A page for submitting a signature move for approval."""
 
@@ -133,7 +133,7 @@ def submit_sig_move(pokemon, request):
     return {'pokemon': pokemon, 'form': form}
 
 @view_config(name='move', context=db.Pokemon, permission='edit.basics',
-  request_method='POST', renderer='submit_sig_move.mako')
+  request_method='POST', renderer='/sig_stuff/submit_sig_move.mako')
 def submit_sig_move_commit(pokemon, request):
     """Process a request to submit a signature move for approval."""
 
@@ -164,3 +164,30 @@ def submit_sig_move_commit(pokemon, request):
         "the [something] thread to proceed with the approval process.")
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
+
+@view_config(name='approve-move', permission='bank.approve',
+    request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
+def approve_sig_move(context, request):
+    """The signature move approving page."""
+
+    pending_moves = (
+        db.DBSession.query(db.MoveModification)
+        .filter_by(needs_approval=True)
+        .all()
+    )
+
+    return {'moves': pending_moves}
+
+@view_config(name='approve-attribute', permission='bank.approve',
+    request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
+def approve_sig_attribute(context, request):
+    """The signature attribute approving page."""
+
+    pending_attributes = (
+        db.DBSession.query(db.BodyModification)
+        .filter_by(needs_approval=True)
+        .all()
+    )
+
+    return {'attributes': pending_attributes}
+
