@@ -30,7 +30,7 @@ def name_validator(form, field):
                 'Printable characters only please.')
 
 class SigAttributeForm(asb.forms.CSRFTokenForm):
-    """A form."""
+    """A form for submitting or editing a signature attribute."""
 
     name = wtforms.TextField(
         'Name',
@@ -42,7 +42,7 @@ class SigAttributeForm(asb.forms.CSRFTokenForm):
     submit = wtforms.SubmitField('Submit')
 
 class SigMoveForm(asb.forms.CSRFTokenForm):
-    """A form."""
+    """A form for submitting or editing a signature move."""
 
     name = wtforms.TextField(
         'Name',
@@ -86,7 +86,6 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
 
         targets = db.DBSession.query(db.MoveTarget).all()
         self.target.choices = [(t.id, t.name) for t in targets]
-
 
 def fill_attribute_form(form, mod):
     """Prefill the given SigAttributeForm with the data from mod."""
