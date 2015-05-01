@@ -6,5 +6,5 @@
 <h1>Signature attributes awaiting approval</h1>
 
 % for attribute in attributes:
-${sig.display_body_mod(attribute, show_pokemon=True)}
+${sig.display_body_mod(attribute, show_approval=True)}
 % endfor

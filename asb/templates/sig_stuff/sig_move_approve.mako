@@ -6,5 +6,5 @@
 <h1>Signature moves awaiting approval</h1>
 
 % for move in moves:
-${sig.display_move_mod(move, show_pokemon=True)}
+${sig.display_move_mod(move, show_approval=True)}
 % endfor

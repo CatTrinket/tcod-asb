@@ -421,3 +421,13 @@ form#news-form dd { margin-left: 5.5em; }
 div.sig-move-info > dl { float: left; width: 33%; margin: 0; }
 div.sig-move-info > dl + dl { margin-left: 0.5%; }
 div.sig-move-info:after { display: block; content: ''; clear: both; }
+
+/* The approve, edit, deny links in approving sig stuff */
+span.approval-links {
+    float: right;
+    font-size: 0.75em;
+    font-weight: normal;
+}
+
+span.approval-links a { text-decoration: none; color: #144BB8; }
+span.approval-links a:hover { color: #759EF0; }

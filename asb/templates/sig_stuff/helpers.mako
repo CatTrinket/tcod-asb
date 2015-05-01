@@ -48,11 +48,20 @@ ${mod.description}
 </textarea>
 </%def>
 
-<%def name="display_move_mod(move, show_pokemon=False)">
-<h2>${move.name}</h2>
+<%def name="display_move_mod(move, show_approval=False)">
+<h2>
+${move.name}
+% if show_approval:
+<span class="approval-links">
+     <a href="#">Approve</a> |
+     <a href="${request.resource_url(move.pokemon) + 'move'}">Edit</a> |
+     <a href="#">Deny</a>
+</span>
+% endif
+</h2>
 
 <div class="sig-move-info">
-% if show_pokemon:
+% if show_approval:
 <dl>
     <dt>Pokémon</dt>
     <dd>${h.link(move.pokemon)}</dd>
@@ -110,8 +119,18 @@ ${mod.description}
 </dl>
 </%def>
 
-<%def name="display_body_mod(mod, show_pokemon=False)">
-<h2>${mod.name}</h2>
+<%def name="display_body_mod(mod, show_approval=False)">
+<h2>
+${mod.name}
+% if show_approval:
+<span class="approval-links">
+     <a href="#">Approve</a> |
+     <a href="${request.resource_url(mod.pokemon) + 'attribute'}">Edit</a> |
+     <a href="#">Deny</a>
+</span>
+% endif
+</h2>
+
 <dl>
     % if show_pokemon:
     <dt>Pokémon</dt>
