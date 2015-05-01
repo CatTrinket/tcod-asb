@@ -174,6 +174,38 @@ def home(context, request):
 
             mod_stuff.append((message, '/battles#waiting'))
 
+        # For now, let's just assume that mods and sig approvers are the same.
+        # TODO: filter out applications that the user isn't involved in.
+        pending_sig_moves = (
+            db.DBSession.query(db.MoveModification)
+            .filter_by(needs_approval=True)
+            .count()
+        )
+
+        if pending_sig_moves:
+            if pending_sig_moves == 1:
+                message = 'There is 1 signature move awaiting approval'
+            else:
+                message = ('There are {} signature moves awaiting approval'
+                    .format(pending_sig_moves))
+
+            mod_stuff.append((message, '#')) # TODO: actual url
+
+        pending_sig_attributes = (
+            db.DBSession.query(db.BodyModification)
+            .filter_by(needs_approval=True)
+            .count()
+        )
+
+        if pending_sig_attributes:
+            if pending_sig_attributes == 1:
+                message = 'There is 1 signature attribute awaiting approval'
+            else:
+                message = ('There are {} signature attributes awaiting '
+                           'approval'.format(pending_sig_attributes))
+
+            mod_stuff.append((message, '#')) # TODO: actual url
+
         stuff['mod_stuff'] = mod_stuff
 
     return stuff
