@@ -83,10 +83,8 @@ ${h.gender_symbol(pokemon.gender)}
 </dl>
 </div>
 
-% if pokemon.move_modification or pokemon.body_modification or request.has_permission('edit.basics', pokemon):
-<h1>Modifications</h1>
-
-<h2><a name="move-mod">Move Modification</a></h2>
+% if pokemon.move_modification or request.has_permission('edit.basics', pokemon):
+<h1><a name="move-mod">Move Modification</a></h1>
 
 % if pokemon.move_modification:
 % if pokemon.move_modification.needs_approval:
@@ -98,17 +96,25 @@ ${sig.display_pending_move_mod(pokemon)}
 <p><a href="${request.resource_url(pokemon, 'move')}">
     Edit ${pokemon.name}'s signature move application →
 </a></p>
+
+% else:
+<p>${pokemon.name}'s move modification is pending approval.</p>
 % endif
+
 % else:
 ${sig.display_move_mod(pokemon.move_modification)}
 % endif
-% elif request.has_permission('edit.basics', pokemon):
+
+% else:
 <p><a href="${request.resource_url(pokemon, 'move')}">
     Give ${pokemon.name} a signature move →
 </a></p>
 % endif
+% endif
 
-<h2><a name="body-mod">Body Modification</a></h2>
+% if pokemon.body_modification or request.has_permission('edit.basics', pokemon):
+<h1><a name="body-mod">Body Modification</a></h1>
+
 % if pokemon.body_modification:
 % if pokemon.body_modification.needs_approval:
 % if request.has_permission('edit.basics', pokemon):
@@ -119,11 +125,16 @@ ${sig.display_pending_body_mod(pokemon)}
 <p><a href="${request.resource_url(pokemon, 'attribute')}">
     Edit ${pokemon.name}'s signature attribute application →
 </a></p>
+
+% else:
+<p>${pokemon.name}'s body modification is pending approval.</p>
 % endif
+
 % else:
 ${sig.display_body_mod(pokemon.body_modification)}
 % endif
-% elif request.has_permission('edit.basics', pokemon):
+
+% else:
 <p><a href="${request.resource_url(pokemon, 'attribute')}">
     Give ${pokemon.name} a signature attribute →
 </a></p>
