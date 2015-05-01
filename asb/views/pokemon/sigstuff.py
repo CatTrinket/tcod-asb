@@ -88,7 +88,7 @@ class SigMoveForm(asb.forms.CSRFTokenForm):
         self.target.choices = [(t.id, t.name) for t in targets]
 
 def fill_attribute_form(form, mod):
-    """Prefill the given SigAttributeForm with the data from mod."""
+    """Pre-fill the given SigAttributeForm with the data from mod."""
 
     form.name.data = mod.name
     form.bio.data = mod.description
@@ -101,6 +101,7 @@ def modify_sig_attribute(pokemon, request):
 
     form = SigAttributeForm(csrf_context=request.session)
 
+    # Pre-fill the form if necessary
     if pokemon.body_modification:
         fill_attribute_form(form, pokemon.body_modification)
 
@@ -136,8 +137,10 @@ def modify_sig_attribute_commit(pokemon, request):
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
 
+    # Edit existing signature attribute
     if pokemon.body_modification:
         edit_sig_attribute(form, pokemon.body_modification)
+    # Submit new signature attribute
     else:
         submit_sig_attribute(form, pokemon)
 
@@ -170,6 +173,7 @@ def modify_sig_move(pokemon, request):
     form = SigMoveForm(csrf_context=request.session)
     form.populate_form_choices()
 
+    # Pre-fill the form if necessary
     if pokemon.move_modification:
         fill_move_form(form, pokemon.move_modification)
 
@@ -196,11 +200,6 @@ def submit_sig_move(form, pokemon):
 def edit_sig_move(form, move):
     """Process a request to edit a signature move pending approval."""
 
-    form.populate_form_choices()
-
-    if not form.validate():
-        return {'pokemon': pokemon, 'form': form, 'action': 'move-edit'}
-
     move.name = form.name.data
     move.description = form.description.data
     move.type_id = form.type.data
@@ -224,8 +223,10 @@ def modify_sig_move_commit(pokemon, request):
     if not form.validate():
         return {'pokemon': pokemon, 'form': form}
 
+    # Edit an existing signature move
     if pokemon.move_modification:
         edit_sig_move(form, pokemon.move_modification)
+    # Submit a new signature move
     else:
         submit_sig_move(form, pokemon)
 
