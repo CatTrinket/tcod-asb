@@ -6,7 +6,7 @@
 
 <p>All trainers may use a Pokémon's movepool modification slot to teach it  an attack unique to that Pokémon and often more powerful or spectacular than the standard attacks that many different Pokémon can learn. Signature moves can be serious or silly, powerful or bizarre, complicated or straightforward, but keep in mind that all signature moves are subject to approval, and if your signature move proves to be unbalanced in battle, you may be asked to alter it.</p>
 
-<form action="move" method="POST">
+<form action="${action}" method="POST">
 <%
     description_hint = "Give background as to how your Pokémon developed this move or how it came to have the ability to execute it. Explain how the attack is performed. It should be clear from the description why the attack has the effects that it does."
 

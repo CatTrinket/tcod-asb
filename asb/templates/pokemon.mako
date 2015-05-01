@@ -94,6 +94,10 @@ ${h.gender_symbol(pokemon.gender)}
 <p>${pokemon.name}'s move modification is still pending approval. If you haven't already, paste the following into the [something] thread to let the approvers review it.</p>
 
 ${sig.display_pending_move_mod(pokemon)}
+
+<p><a href="${request.resource_url(pokemon, 'move-edit')}">
+    Edit ${pokemon.name}'s signature move application →
+</a></p>
 % endif
 % else:
 ${sig.display_move_mod(pokemon.move_modification)}
@@ -111,6 +115,10 @@ ${sig.display_move_mod(pokemon.move_modification)}
 <p>${pokemon.name}'s body modification is still pending approval. If you haven't already, paste the following into the [something] thread to let the approvers review it.</p>
 
 ${sig.display_pending_body_mod(pokemon)}
+
+<p><a href="${request.resource_url(pokemon, 'attribute-edit')}">
+    Edit ${pokemon.name}'s signature attribute application →
+</a></p>
 % endif
 % else:
 ${sig.display_body_mod(pokemon.body_modification)}

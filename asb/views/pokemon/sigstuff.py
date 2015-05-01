@@ -95,7 +95,7 @@ def submit_sig_attribute(pokemon, request):
 
     form = SigAttributeForm(csrf_context=request.session)
 
-    return {'pokemon': pokemon, 'form': form}
+    return {'pokemon': pokemon, 'form': form, 'action': 'attribute'}
 
 @view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
   request_method='POST', renderer='/sig_stuff/submit_sig_attribute.mako')
@@ -105,9 +105,8 @@ def submit_sig_attribute_commit(pokemon, request):
     form = SigAttributeForm(request.POST, csrf_context=request.session)
 
     if not form.validate():
-        return {'pokemon': pokemon, 'form': form}
+        return {'pokemon': pokemon, 'form': form, 'action': 'attribute'}
 
-    # Do stuff
     attribute = db.BodyModification(
         pokemon_id=pokemon.id,
         name=form.name.data,
@@ -115,6 +114,42 @@ def submit_sig_attribute_commit(pokemon, request):
         description=form.bio.data,
         effect=form.effects.data)
     db.DBSession.add(attribute)
+
+    request.session.flash(
+        "Success!  You'll need to paste the info from the text box below in "
+        "the [something] thread to proceed with the approval process.")
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#body-mod")
+
+@view_config(name='attribute-edit', context=db.Pokemon,
+  permission='edit.basics', request_method='GET',
+  renderer='/sig_stuff/submit_sig_attribute.mako')
+def edit_sig_attribute(pokemon, request):
+    """A page for editing a signature attribute that's pending approval."""
+
+    mod = pokemon.body_modification
+    form = SigAttributeForm(csrf_context=request.session)
+    form.name.data = mod.name
+    form.bio.data = mod.description
+    form.effects.data = mod.effect
+
+    return {'pokemon': pokemon, 'form': form, 'action': 'attribute-edit'}
+
+@view_config(name='attribute-edit', context=db.Pokemon,
+  permission='edit.basics', request_method='POST',
+  renderer='/sig_stuff/submit_sig_attribute.mako')
+def edit_sig_attribute_commit(pokemon, request):
+    """Process a request to edit a signature attribute pending approval."""
+
+    form = SigAttributeForm(request.POST, csrf_context=request.session)
+
+    if not form.validate():
+        return {'pokemon': pokemon, 'form': form, 'action': 'attribute-edit'}
+
+    attribute = pokemon.body_modification
+    attribute.name = form.name.data
+    attribute.description = form.bio.data
+    attribute.effect = form.effects.data
 
     request.session.flash(
         "Success!  You'll need to paste the info from the text box below in "
@@ -130,7 +165,7 @@ def submit_sig_move(pokemon, request):
     form = SigMoveForm(csrf_context=request.session)
     form.populate_form_choices()
 
-    return {'pokemon': pokemon, 'form': form}
+    return {'pokemon': pokemon, 'form': form, 'action': 'move'}
 
 @view_config(name='move', context=db.Pokemon, permission='edit.basics',
   request_method='POST', renderer='/sig_stuff/submit_sig_move.mako')
@@ -141,9 +176,8 @@ def submit_sig_move_commit(pokemon, request):
     form.populate_form_choices()
 
     if not form.validate():
-        return {'pokemon': pokemon, 'form': form}
+        return {'pokemon': pokemon, 'form': form, 'action': move}
 
-    # Do stuff
     move = db.MoveModification(
         pokemon_id=pokemon.id,
         name=form.name.data,
@@ -165,8 +199,63 @@ def submit_sig_move_commit(pokemon, request):
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
 
+@view_config(name='move-edit', context=db.Pokemon,
+    permission='edit.basics', request_method='GET',
+    renderer='/sig_stuff/submit_sig_move.mako')
+def edit_sig_move(pokemon, request):
+    """A page for editing a signature move that's pending approval."""
+
+    mod = pokemon.move_modification
+    form = SigMoveForm(csrf_context=request.session)
+    form.populate_form_choices()
+
+    form.name.data = mod.name
+    form.description.data = mod.description
+    form.type.data = mod.type_id
+    form.damage_class.data = mod.damage_class_id
+    form.bp.data =  mod.power
+    form.energy.data = mod.energy
+    form.accuracy.data = mod.accuracy
+    form.target.data = mod.target_id
+    form.duration.data = mod.duration
+    form.usage_gap.data = mod.gap
+    form.effects.data = mod.effect
+
+    return {'pokemon': pokemon, 'form': form, 'action': 'move-edit'}
+
+@view_config(name='move-edit', context=db.Pokemon,
+  permission='edit.basics', request_method='POST',
+  renderer='/sig_stuff/submit_sig_move.mako')
+def edit_sig_move_commit(pokemon, request):
+    """Process a request to edit a signature move pending approval."""
+
+    form = SigMoveForm(request.POST, csrf_context=request.session)
+    form.populate_form_choices()
+
+    if not form.validate():
+        return {'pokemon': pokemon, 'form': form, 'action': 'move-edit'}
+
+    move = pokemon.move_modification
+    move.name = form.name.data
+    move.description = form.description.data
+    move.type_id = form.type.data
+    move.damage_class_id = form.damage_class.data
+    move.power = form.bp.data
+    move.energy = form.energy.data
+    move.accuracy = form.accuracy.data
+    move.target_id = form.target.data
+    move.duration = form.duration.data
+    move.gap = form.usage_gap.data
+    move.effect = form.effects.data
+
+    request.session.flash(
+        "Success!  You'll need to paste the info from the text box below in "
+        "the [something] thread to proceed with the approval process.")
+
+    return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
+
 @view_config(name='approve-move', permission='bank.approve',
-    request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
+  request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
 def approve_sig_move(context, request):
     """The signature move approving page."""
 
@@ -179,7 +268,7 @@ def approve_sig_move(context, request):
     return {'moves': pending_moves}
 
 @view_config(name='approve-attribute', permission='bank.approve',
-    request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
+  request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
 def approve_sig_attribute(context, request):
     """The signature attribute approving page."""
 
