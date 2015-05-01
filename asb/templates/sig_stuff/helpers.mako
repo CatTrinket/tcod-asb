@@ -1,3 +1,5 @@
+<%namespace name="h" file="/helpers/helpers.mako"/>
+
 <%def name="paragraphs(text)">
 % if text is None:
 None
@@ -46,56 +48,65 @@ ${mod.description}
 </textarea>
 </%def>
 
-<%def name="display_move_mod(mod)">
+<%def name="display_move_mod(move, show_pokemon=False)">
+<h2>${move.name}</h2>
+
+<div class="move-info">
+% if show_pokemon:
 <dl>
-    <dt>Name</dt>
-    <dd>${mod.name}</dd>
+    <dt>Pokémon</dt>
+    <dd>${h.link(move.pokemon)}</dd>
 
-    <dt>Type</dt>
-    <dd>${mod.type.name}</dd>
+    <dt>Species</dt>
+    <dd>${move.pokemon.species.name}</dd>
+</dl>
 
-    <dt>Base Power</dt>
-    % if mod.power:
-    <dd>${mod.power}</dd>
-    % else:
-    <dd>—</dd>
-    % endif
+%endif
+<dl>
+   <dt>Type</dt>
+   <dd>${h.type_icon(move.type)}</dd>
 
-    <dt>Energy</dt>
-    % if mod.energy:
-    <dd>${mod.energy}%</dd>
-    % else:
-    <dd>—</dd>
-    % endif
+   <dt>Stat</dt>
+   <dd>${h.damage_class_icon(move.damage_class)}</dd>
 
-    <dt>Accuracy</dt>
-    % if mod.accuracy:
-    <dd>${mod.accuracy}</dd>
-    % else:
-    <dd>—</dd>
-    % endif
+   <dt>Target</dt>
+   <dd>${move.target.name}</dd>
+</dl>
 
-    <dt>Target</dt>
-    <dd>${mod.target.name}</dd>
+<dl>
+   <dt>Base power</dt>
+   % if move.power is not None:
+   <dd>${move.power}</dd>
+   % elif move.damage_class.identifier == 'non-damaging':
+   <dd>n/a</dd>
+   % else:
+   <dd>Varies</dd>
+   % endif
 
-    <dt>Damage Class</dt>
-    <dd>${mod.damage_class.name.capitalize()}</dd>
+   <dt>Base energy</dt>
+   % if move.energy == 0:
+   <dd>—</dd>
+   % elif move.energy is None:
+   <dd>Varies</dd>
+   % else:
+   <dd>${move.energy}%</dd>
+   % endif
 
-    <dt>Duration</dt>
-    % if mod.duration:
-    <dd>${mod.duration}</dd>
-    % else:
-    <dd>—</dd>
-    % endif
+   <dt>Accuracy</dt>
+   % if move.accuracy is None:
+   <dd>—</dd>
+   % else:
+   <dd>${move.accuracy}%</dd>
+   % endif
+</dl>
+</div>
 
-    <dt>Usage Gap</dt>
-    <dd>${mod.gap}</dd>
-
+<dl>
     <dt>Description</dt>
-    <dd>${paragraphs(mod.description)}</dd>
+    <dd>${move.description}</dd>
 
     <dt>Effects</dt>
-    <dd>${paragraphs(mod.effect)}</dd>
+    <dd>${move.effect}</dd>
 </dl>
 </%def>
 
