@@ -110,10 +110,16 @@ ${mod.description}
 </dl>
 </%def>
 
-<%def name="display_body_mod(mod)">
+<%def name="display_body_mod(mod, show_pokemon=False)">
+<h2>${mod.name}</h2>
 <dl>
-    <dt>Name</dt>
-    <dd>${mod.name}</dd>
+    % if show_pokemon:
+    <dt>Pokémon</dt>
+    <dd>${h.link(mod.pokemon)}</dd>
+
+    <dt>Species</dt>
+    <dd>${mod.pokemon.species.name}</dd>
+    %endif
 
     <dt>Bio</dt>
     <dd>${paragraphs(mod.description)}</dd>
