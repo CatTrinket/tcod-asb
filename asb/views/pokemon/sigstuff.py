@@ -236,7 +236,7 @@ def modify_sig_move_commit(pokemon, request):
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
 
-@view_config(name='approve-move', permission='sigmove.approve',
+@view_config(name='approve-move', permission='sigmove.view',
   request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
 def approve_sig_move(context, request):
     """The signature move approving page."""
@@ -252,7 +252,7 @@ def approve_sig_move(context, request):
 
     return {'moves': pending_moves}
 
-@view_config(name='approve-attribute', permission='sigattr.approve',
+@view_config(name='approve-attribute', permission='sigattr.view',
   request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
 def approve_sig_attribute(context, request):
     """The signature attribute approving page."""

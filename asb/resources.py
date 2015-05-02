@@ -38,14 +38,10 @@ class Root(dict):
         (sec.Allow, 'mod', 'news.post'),
         (sec.Deny, sec.Everyone, 'news.post'),
 
-        (sec.Allow, 'admin', 'sigattr.approve'),
-        (sec.Allow, 'attr-approver', 'sigattr.approve'),
-        (sec.Allow, 'admin', 'sigattr.edit'),
-        (sec.Allow, 'attr-approver', 'sigattr.edit'),
-        (sec.Allow, 'admin', 'sigmove.approve'),
-        (sec.Allow, 'move-approver', 'sigmove.approve'),
-        (sec.Allow, 'admin', 'sigmove.edit'),
-        (sec.Allow, 'move-approver', 'sigmove.edit'),
+        (sec.Allow, 'admin', 'sigmove.view'),
+        (sec.Allow, 'move-approver', 'sigmove.view'),
+        (sec.Allow, 'admin', 'sigattr.view'),
+        (sec.Allow, 'attr-approver', 'sigattr.view'),
 
         (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
     ]
