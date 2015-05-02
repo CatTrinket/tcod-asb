@@ -366,7 +366,6 @@ class PokemonSpeciesEvolution(PokedexTable):
     item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
     buyable_price = Column(Integer, nullable=True)
-    can_trade_instead = Column(Boolean, nullable=False)
 
 class PokemonSpeciesGender(PokedexTable):
     """A gender a Pokémon species can have."""

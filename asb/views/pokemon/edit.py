@@ -53,8 +53,7 @@ class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
         choices = [
             (evo.id, evo.name)
             for evo in pokemon.species.evolutions
-            if evo.evolution_method.item_id is not None or
-                evo.evolution_method.can_trade_instead
+            if evo.evolution_method.item_id is not None
         ]
 
         if choices:
