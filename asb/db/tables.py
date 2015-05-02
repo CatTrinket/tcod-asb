@@ -881,6 +881,8 @@ class Pokemon(PlayerTable):
             (sec.Allow, 'admin', 'edit.basics'),
             (sec.Allow, 'admin', 'edit.everything'),
             (sec.Allow, 'mod', 'edit.basics'),
+            (sec.Allow, trainer, 'sigattr.edit'),
+            (sec.Allow, trainer, 'sigmove.edit')
         ]
 
 class PokemonUnlockedEvolution(PlayerTable):

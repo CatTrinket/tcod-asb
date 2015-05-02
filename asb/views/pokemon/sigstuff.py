@@ -94,7 +94,7 @@ def fill_attribute_form(form, mod):
     form.bio.data = mod.description
     form.effects.data = mod.effect
 
-@view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
+@view_config(name='attribute', context=db.Pokemon, permission='sigattr.edit',
   request_method='GET', renderer='/sig_stuff/submit_sig_attribute.mako')
 def modify_sig_attribute(pokemon, request):
     """A page for submitting or editing a signature attribute for approval."""
@@ -125,7 +125,7 @@ def edit_sig_attribute(form, attribute):
     attribute.description = form.bio.data
     attribute.effect = form.effects.data
 
-@view_config(name='attribute', context=db.Pokemon, permission='edit.basics',
+@view_config(name='attribute', context=db.Pokemon, permission='sigattr.edit',
   request_method='POST', renderer='/sig_stuff/submit_sig_attribute.mako')
 def modify_sig_attribute_commit(pokemon, request):
     """
@@ -165,7 +165,7 @@ def fill_move_form(form, mod):
     form.usage_gap.data = mod.gap
     form.effects.data = mod.effect
 
-@view_config(name='move', context=db.Pokemon, permission='edit.basics',
+@view_config(name='move', context=db.Pokemon, permission='sigmove.edit',
   request_method='GET', renderer='/sig_stuff/submit_sig_move.mako')
 def modify_sig_move(pokemon, request):
     """A page for submitting or editing a signature move for approval."""
@@ -212,7 +212,7 @@ def edit_sig_move(form, move):
     move.gap = form.usage_gap.data
     move.effect = form.effects.data
 
-@view_config(name='move', context=db.Pokemon, permission='edit.basics',
+@view_config(name='move', context=db.Pokemon, permission='sigmove.edit',
   request_method='POST', renderer='/sig_stuff/submit_sig_move.mako')
 def modify_sig_move_commit(pokemon, request):
     """Process a request to submit or edit a signature move for approval."""
@@ -236,7 +236,7 @@ def modify_sig_move_commit(pokemon, request):
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
 
-@view_config(name='approve-move', permission='bank.approve',
+@view_config(name='approve-move', permission='sigmove.approve',
   request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
 def approve_sig_move(context, request):
     """The signature move approving page."""
@@ -252,7 +252,7 @@ def approve_sig_move(context, request):
 
     return {'moves': pending_moves}
 
-@view_config(name='approve-attribute', permission='bank.approve',
+@view_config(name='approve-attribute', permission='sigattr.approve',
   request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
 def approve_sig_attribute(context, request):
     """The signature attribute approving page."""
