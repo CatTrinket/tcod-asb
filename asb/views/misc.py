@@ -174,7 +174,13 @@ def home(context, request):
 
             mod_stuff.append((message, '/battles#waiting'))
 
-        # For now, let's just assume that mods and sig approvers are the same.
+        stuff['mod_stuff'] = mod_stuff
+
+    sig_stuff = []
+
+    if (any(role in ('move-approver', 'admin')
+        for role in request.effective_principals)):
+
         pending_sig_moves = (
             db.DBSession.query(db.MoveModification)
             .filter_by(needs_approval=True)
@@ -192,7 +198,10 @@ def home(context, request):
                 message = ('There are {} signature moves awaiting approval'
                     .format(pending_sig_moves))
 
-            mod_stuff.append((message, '/approve-move')) # TODO: actual url
+            sig_stuff.append((message, '/approve-move')) # TODO: actual url
+
+    if (any(role in ('attr-approver', 'admin')
+        for role in request.effective_principals)):
 
         pending_sig_attributes = (
             db.DBSession.query(db.BodyModification)
@@ -210,8 +219,11 @@ def home(context, request):
                 message = ('There are {} signature attributes awaiting '
                            'approval'.format(pending_sig_attributes))
 
-            mod_stuff.append((message, 'approve-attribute')) # TODO: actual url
+            sig_stuff.append((message, 'approve-attribute')) # TODO: actual url
 
-        stuff['mod_stuff'] = mod_stuff
+    if sig_stuff and stuff['mod_stuff']:
+        stuff['mod_stuff'].extend(sig_stuff)
+    elif sig_stuff:
+        stuff['mod_stuff'] = sig_stuff
 
     return stuff
