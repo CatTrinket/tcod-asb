@@ -35,11 +35,11 @@ def can_evolve_species(pokemon, species):
         return (True, False, False)
     elif evo.item is not None and has_battled_with(pokemon, evo.item):
         return (True, False, True)
-    elif (evo.buyable_price is not None and
-      pokemon.trainer.money >= evo.buyable_price):
-        return (True, True, False)
     elif species in pokemon.unlocked_evolutions:
         return (True, False, evo.item_id is not None)
+    elif (evo.buyable_price is not None and
+          pokemon.trainer.money >= evo.buyable_price):
+        return (True, True, False)
     else:
         # No dice
         return (False, False, False)
