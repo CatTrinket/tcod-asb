@@ -16,152 +16,91 @@ class FlavorEditForm(asb.forms.CSRFTokenForm):
     preview = wtforms.SubmitField('Preview')
     save = wtforms.SubmitField('Save')
 
+def timestamp(effect):
+    """Return a string timestamp representing the edit time of the given
+    effect, which may be None.
+    """
+
+    if effect is None:
+        return 'never'
+    else:
+        return effect.edit_time.isoformat()
+
+def edit_flavor(thing, request):
+    """A flavor-editing page for whatever."""
+
+    form = FlavorEditForm(csrf_context=request.session)
+    form.summary.data = thing.summary
+    form.description.data = thing.description
+    form.edit_time.data = timestamp(thing.effect)
+
+    return {'form': form, 'thing': thing}
+
+def process_edit_flavor(thing, request, effect_class, foreign_key_name):
+    """Process a flavor editing form."""
+
+    form = FlavorEditForm(request.POST, csrf_context=request.session)
+    valid = form.validate()
+    edit_time = timestamp(thing.effect)
+
+    if form.edit_time.data != edit_time:
+        valid = False
+        form.edit_time.data = edit_time
+        form.edit_time.errors.append(
+            '{0} has edited {1} since you started editing.  The current '
+            'revision is shown below; please incorporate any changes into '
+            'your version.'
+            .format(thing.effect.editor.name, move.name)
+        )
+
+    if not valid or form.preview.data:
+        return {'form': form, 'thing': thing}
+
+    new_effect = effect_class(
+        edit_time=datetime.datetime.utcnow(),
+        edited_by_trainer_id=request.user.id,
+        summary=form.summary.data,
+        description=form.description.data,
+        is_current=True
+    )
+    setattr(new_effect, foreign_key_name, thing.id)
+
+    if thing.effect is not None:
+        thing.effect.is_current = False
+
+    db.DBSession.add(new_effect)
+
+    return httpexc.HTTPSeeOther(
+        request.resource_path(thing.__parent__, thing.__name__)
+    )
+
 @view_config(name='edit', context=db.Move, permission='flavor.edit',
   request_method='GET', renderer='/edit_flavor.mako')
 def edit_move(move, request):
-    """A flavor-editing page for moves."""
-
-    form = FlavorEditForm(csrf_context=request.session)
-    form.summary.data = move.summary
-    form.description.data = move.description
-    form.edit_time.data = move.effect.edit_time.isoformat()
-
-    return {'form': form, 'thing': move}
+    return edit_flavor(move, request)
 
 @view_config(name='edit', context=db.Move, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_move(move, request):
-    """Process a move flavor editing form."""
-
-    form = FlavorEditForm(request.POST, csrf_context=request.session)
-    valid = form.validate()
-    edit_time = move.effect.edit_time.isoformat()
-
-    if form.edit_time.data != edit_time:
-        valid = False
-        form.edit_time.data = edit_time
-        form.edit_time.errors.append(
-            '{0} has edited {1} since you started editing.  The current '
-            'revision is shown below; please incorporate any changes into '
-            'your version.'
-            .format(move.effect.editor.name, move.name)
-        )
-
-    if not valid or form.preview.data:
-        return {'form': form, 'thing': move}
-
-    new_effect = db.MoveEffect(
-        move_id=move.id,
-        edit_time=datetime.datetime.utcnow(),
-        edited_by_trainer_id=request.user.id,
-        summary=form.summary.data,
-        description=form.description.data,
-        is_current=True
-    )
-
-    move.effect.is_current = False
-    db.DBSession.add(new_effect)
-
-    return httpexc.HTTPSeeOther(
-        request.resource_path(move.__parent__, move.__name__)
-    )
+    return process_edit_flavor(move, request, db.MoveEffect, 'move_id')
 
 @view_config(name='edit', context=db.Item, permission='flavor.edit',
   request_method='GET', renderer='/edit_flavor.mako')
 def edit_item(item, request):
-    """A flavor-editing page for items."""
-
-    form = FlavorEditForm(csrf_context=request.session)
-    form.summary.data = item.summary
-    form.description.data = item.description
-    form.edit_time.data = item.effect.edit_time.isoformat()
-
-    return {'form': form, 'thing': item}
+    return edit_flavor(item, request)
 
 @view_config(name='edit', context=db.Item, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_item(item, request):
-    """Process an item flavor editing form."""
-
-    form = FlavorEditForm(request.POST, csrf_context=request.session)
-    valid = form.validate()
-    edit_time = item.effect.edit_time.isoformat()
-
-    if form.edit_time.data != edit_time:
-        valid = False
-        form.edit_time.data = edit_time
-        form.edit_time.errors.append(
-            '{0} has edited {1} since you started editing.  The current '
-            'revision is shown below; please incorporate any changes into '
-            'your version.'
-            .format(item.effect.editor.name, item.name)
-        )
-
-    if not valid or form.preview.data:
-        return {'form': form, 'thing': item}
-
-    new_effect = db.ItemEffect(
-        item_id=item.id,
-        edit_time=datetime.datetime.utcnow(),
-        edited_by_trainer_id=request.user.id,
-        summary=form.summary.data,
-        description=form.description.data,
-        is_current=True
-    )
-
-    item.effect.is_current = False
-    db.DBSession.add(new_effect)
-
-    return httpexc.HTTPSeeOther(
-        request.resource_path(item.__parent__, item.__name__)
-    )
+    return process_edit_flavor(item, request, db.ItemEffect, 'item_id')
 
 @view_config(name='edit', context=db.Ability, permission='flavor.edit',
   request_method='GET', renderer='/edit_flavor.mako')
 def edit_ability(ability, request):
-    """A flavor-editing page for abilitys."""
-
-    form = FlavorEditForm(csrf_context=request.session)
-    form.summary.data = ability.summary
-    form.description.data = ability.description
-    form.edit_time.data = ability.effect.edit_time.isoformat()
-
-    return {'form': form, 'thing': ability}
+    return edit_flavor(ability, request)
 
 @view_config(name='edit', context=db.Ability, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_ability(ability, request):
-    """Process an ability flavor editing form."""
-
-    form = FlavorEditForm(request.POST, csrf_context=request.session)
-    valid = form.validate()
-    edit_time = ability.effect.edit_time.isoformat()
-
-    if form.edit_time.data != edit_time:
-        valid = False
-        form.edit_time.data = edit_time
-        form.edit_time.errors.append(
-            '{0} has edited {1} since you started editing.  The current '
-            'revision is shown below; please incorporate any changes into '
-            'your version.'
-            .format(ability.effect.editor.name, ability.name)
-        )
-
-    if not valid or form.preview.data:
-        return {'form': form, 'thing': ability}
-
-    new_effect = db.AbilityEffect(
-        ability_id=ability.id,
-        edit_time=datetime.datetime.utcnow(),
-        edited_by_trainer_id=request.user.id,
-        summary=form.summary.data,
-        description=form.description.data,
-        is_current=True
-    )
-
-    ability.effect.is_current = False
-    db.DBSession.add(new_effect)
-
-    return httpexc.HTTPSeeOther(
-        request.resource_path(ability.__parent__, ability.__name__)
-    )
+    return process_edit_flavor(ability, request, db.AbilityEffect,
+                               'ability_id')
