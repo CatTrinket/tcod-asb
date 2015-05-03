@@ -19,9 +19,12 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
 
     roles = asb.forms.MultiCheckboxField('Roles')
 
-    trainer_item = None
-    item = wtforms.StringField(validators=[wtforms.validators.Optional()])
+    move_item = wtforms.StringField(validators=[wtforms.validators.Optional()])
     item_recipient = asb.forms.TrainerField()
+    trainer_item = None
+
+    give_item = wtforms.StringField(validators=[wtforms.validators.Optional()])
+    item = None
 
     save = wtforms.SubmitField('Save')
 
@@ -40,17 +43,17 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     def get_item(self, trainer):
         """Fetch the named item from the trainer's bag, if possible."""
 
-        if self.item.data:
+        if self.move_item.data:
             self.trainer_item = (
                 db.DBSession.query(db.TrainerItem)
                 .filter_by(trainer_id=trainer.id, pokemon_id=None)
                 .join(db.Item)
                 .filter(sqla.func.lower(db.Item.name) ==
-                        self.item.data.lower())
+                        self.move_item.data.lower())
                 .first()
             )
 
-    def validate_item(form, field):
+    def validate_move_item(form, field):
         """Make sure an item was found.
 
         n.b. the Optional validator will go first.
@@ -66,6 +69,18 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
 
         if form.trainer_item is not None and field.trainer is None:
             raise wtforms.validators.ValidationError('Unknown username')
+
+    def validate_give_item(form, field):
+        """Fetch the named item; make sure we actually get one."""
+
+        try:
+            form.item = (
+                db.DBSession.query(db.Item)
+                .filter(sqla.func.lower(db.Item.name) == field.data.lower())
+                .one()
+            )
+        except sqla.orm.exc.NoResultFound:
+            raise wtforms.validators.ValidationError('Unknown item')
 
 class TrainerMoneyForm(asb.forms.CSRFTokenForm):
     """A form for manually giving a trainer money."""
@@ -214,6 +229,13 @@ def edit_commit(trainer, request):
         # Move item
         if form.trainer_item is not None:
             form.trainer_item.trainer_id = form.item_recipient.trainer.id
+
+        # Give item
+        if form.give_item.data:
+            db.DBSession.add(db.TrainerItem(
+                trainer_id=trainer.id,
+                item_id=form.item.id
+            ))
     elif money_form.submit.data:
         # Handle the money form
         if not money_form.validate():

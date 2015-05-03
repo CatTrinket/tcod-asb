@@ -16,8 +16,14 @@ ${h.form_error_list(form.csrf_token.errors)}
     % endfor
 
     <dt>Move item</dt>
-    <dd>Move one ${form.item} to ${form.item_recipient}</dd>
-    % for error in form.item.errors + form.item_recipient.errors:
+    <dd>Move one ${form.move_item} to ${form.item_recipient}</dd>
+    % for error in form.move_item.errors + form.item_recipient.errors:
+    <dd class="form-error">${error}</dd>
+    % endfor
+
+    <dt>Give item</dt>
+    <dd>Give one ${form.give_item}</dd>
+    % for error in form.give_item.errors:
     <dd class="form-error">${error}</dd>
     % endfor
 </dl>
