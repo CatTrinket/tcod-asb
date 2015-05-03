@@ -127,7 +127,7 @@ ${h.form_error_list(*link_form.errors.values())}
 % elif team.trainers[0].trainer is not None:
 <h1>${h.link(team.trainers[0].trainer)}</h1>
 % else:
-<h1>${team.trainers[0].name}</h1>
+<h1>${h.link(team.trainers[0].trainer)}</h1>
 % endif
 
 ${t.pokemon_table(
