@@ -85,10 +85,10 @@ ${h.type_icon(type)}\
 % endif
 
 <h2>Summary</h2>
-${move.effect.summary | md.convert, n}
+${move.summary | md.convert, n}
 
 <h1>Description</h1>
-${move.effect.description | md.convert, n}
+${move.description | md.convert, n}
 
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>
