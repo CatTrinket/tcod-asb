@@ -882,16 +882,10 @@ class Pokemon(PlayerTable):
             (sec.Allow, 'mod', 'edit.basics'),
 
             # Sig stuff
-            (sec.Deny, trainer, 'sigattr.approve'),
-            (sec.Deny, trainer, 'sigmove.approve'),
             (sec.Allow, trainer, 'sigattr.edit'),
             (sec.Allow, trainer, 'sigmove.edit'),
-            (sec.Allow, 'admin', 'sigattr.approve'),
-            (sec.Allow, 'attr-approver', 'sigattr.approve'),
             (sec.Allow, 'admin', 'sigattr.edit'),
             (sec.Allow, 'attr-approver', 'sigattr.edit'),
-            (sec.Allow, 'admin', 'sigmove.approve'),
-            (sec.Allow, 'move-approver', 'sigmove.approve'),
             (sec.Allow, 'admin', 'sigmove.edit'),
             (sec.Allow, 'move-approver', 'sigmove.edit'),
         ]

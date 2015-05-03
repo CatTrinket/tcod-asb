@@ -5,6 +5,6 @@
 
 <h1>Signature attributes awaiting approval</h1>
 
-% for attribute in attributes:
-${sig.display_body_mod(attribute, show_approval=True)}
+% for sig_thing in form.sigs:
+${sig.display_body_mod(sig_thing.sig, approval_form=sig_thing)}
 % endfor

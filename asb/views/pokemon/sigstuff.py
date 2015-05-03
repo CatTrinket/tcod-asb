@@ -236,35 +236,131 @@ def modify_sig_move_commit(pokemon, request):
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon) + "#move-mod")
 
-@view_config(name='approve-move', permission='sigmove.view',
+class SigApprovalForm(wtforms.Form):
+    """A form for approving or denying signature moves and attributes."""
+
+    pass
+
+class SigApprovalSubForm(wtforms.Form):
+    """A form for approving or denying a single signature move or attribute."""
+
+    approve = wtforms.SubmitField('Approve')
+    deny = wtforms.SubmitField('Deny')
+
+def sig_approval_form(sigs, *args, **kwargs):
+    """
+    Create and return a SigApprovalForm populated with SigApprovalSubForms
+    for the items in sigs.
+    """
+
+    class SubForm(wtforms.Form):
+        """A form to hold a bunch of SigApprovalSubForms."""
+
+        pass
+
+    for (i, sig_thing) in enumerate(sigs):
+        class SubSubForm(SigApprovalSubForm):
+            """A SigApprovalSubForm that holds the sig thing it's for."""
+
+            sig = sig_thing
+
+        setattr(SubForm, 'sig-{}'.format(i), wtforms.FormField(SubSubForm))
+
+    class Form(SigApprovalForm):
+        sigs = wtforms.FormField(SubForm)
+
+    return Form(*args, **kwargs)
+
+def sig_attribute_approval_form(user, *args, **kwargs):
+    """
+    Create and return a SigApprovalForm populated with SigApprovalSubForms for
+    signature attributes.
+    """
+
+    attributes = (
+        db.DBSession.query(db.BodyModification)
+        .filter_by(needs_approval=True)
+        .all())
+
+    # Filter out the user's own submitted attributes
+    attributes = [att for att in attributes
+                  if att.pokemon.trainer_id != user.id]
+
+    return sig_approval_form(attributes, *args, **kwargs)
+
+def sig_move_approval_form(user, *args, **kwargs):
+    """
+    Create and return a SigApprovalForm populates with SigApprovalSubForms for
+    signature moves.
+    """
+
+    moves = (
+        db.DBSession.query(db.MoveModification)
+        .filter_by(needs_approval=True)
+        .all())
+
+    # Filter out the user's own submitted attributes
+    moves = [move for move in moves if move.pokemon.trainer_id != user.id]
+
+    return sig_approval_form(moves, *args, **kwargs)
+
+@view_config(name='approve-move', permission='sigmove.approve',
   request_method='GET', renderer='/sig_stuff/sig_move_approve.mako')
 def approve_sig_move(context, request):
     """The signature move approving page."""
 
-    pending_moves = (
-        db.DBSession.query(db.MoveModification)
-        .filter_by(needs_approval=True)
-        .all()
-    )
+    return {'form': sig_move_approval_form(request.user)}
 
-    pending_moves = [move for move in pending_moves
-                     if move.pokemon.trainer_id != request.user.id]
+@view_config(name='approve-move', permission='sigmove.approve',
+    request_method='POST', renderer='/sig_stuff/sig_move_approve.mako')
+def approve_sig_move_commit(context, request):
+    """Process a request to approve or deny a signature move."""
 
-    return {'moves': pending_moves}
+    form = sig_move_approval_form(request.user, request.POST)
 
-@view_config(name='approve-attribute', permission='sigattr.view',
+    for subform in form.sigs:
+        # Approve; just change the approval flag
+        if subform.approve.data:
+            subform.sig.needs_approval = False
+            request.session.flash('Success! "{}"" has been approved.'.format(
+                subform.sig.name))
+
+        # Deny; delete from the database
+        # TODO: probably don't delete altogether
+        elif subform.deny.data:
+            db.DBSession.delete(subform.sig)
+            request.session.flash('Success! "{}" has been denied.'.format(
+                subform.sig.name))
+
+    return {'form': sig_move_approval_form(request.user)}
+
+@view_config(name='approve-attribute', permission='sigattr.approve',
   request_method='GET', renderer='/sig_stuff/sig_attribute_approve.mako')
 def approve_sig_attribute(context, request):
     """The signature attribute approving page."""
 
-    pending_attributes = (
-        db.DBSession.query(db.BodyModification)
-        .filter_by(needs_approval=True)
-        .all()
-    )
+    return {'form': sig_attribute_approval_form(request.user)}
 
-    pending_attributes = [att for att in pending_attributes
-                          if att.pokemon.trainer_id != request.user.id]
+@view_config(name='approve-attribute', permission='sigattr.approve',
+    request_method='POST', renderer='/sig_stuff/sig_attribute_approve.mako')
+def approve_sig_attribute_commit(context, request):
+    """Process a request to approve or deny a signature attribute."""
 
-    return {'attributes': pending_attributes}
+    form = sig_attribute_approval_form(request.user, request.POST)
+
+    for subform in form.sigs:
+        # Approve; just change the approval flag
+        if subform.approve.data:
+            subform.sig.needs_approval = False
+            request.session.flash("Success! {} has been approved.".format(
+                subform.sig.name))
+
+        # Deny; delete from the database
+        # TODO: probably don't delete altogether
+        elif subform.deny.data:
+            db.DBSession.delete(subform.sig)
+            request.session.flash('Success! "{}" has been denied.'.format(
+                subform.sig.name))
+
+    return {'form': sig_attribute_approval_form(request.user)}
 

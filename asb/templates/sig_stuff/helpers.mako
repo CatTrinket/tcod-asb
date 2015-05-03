@@ -48,20 +48,20 @@ ${mod.description}
 </textarea>
 </%def>
 
-<%def name="display_move_mod(move, show_approval=False)">
+<%def name="display_move_mod(move, approval_form=None)">
 <h2>
 ${move.name}
-% if show_approval:
-<span class="approval-links">
-     <a href="#">Approve</a> |
+% if approval_form:
+<form class="approval-form" action="approve-move" method="POST">
+     ${approval_form.approve() | n} |
      <a href="${request.resource_url(move.pokemon) + 'move'}">Edit</a> |
-     <a href="#">Deny</a>
-</span>
+     ${approval_form.deny() | n}
+</form>
 % endif
 </h2>
 
 <div class="sig-move-info">
-% if show_approval:
+% if approval_form:
 <dl>
     <dt>Pokémon</dt>
     <dd>${h.link(move.pokemon)}</dd>
@@ -119,20 +119,20 @@ ${move.name}
 </dl>
 </%def>
 
-<%def name="display_body_mod(mod, show_approval=False)">
+<%def name="display_body_mod(mod, approval_form=None)">
 <h2>
 ${mod.name}
-% if show_approval:
-<span class="approval-links">
-     <a href="#">Approve</a> |
+% if approval_form:
+<form class="approval-form" action="approve-attribute" method="POST">
+     ${approval_form.approve() | n} |
      <a href="${request.resource_url(mod.pokemon) + 'attribute'}">Edit</a> |
-     <a href="#">Deny</a>
-</span>
+     ${approval_form.deny() | n}
+</form>
 % endif
 </h2>
 
 <dl>
-    % if show_pokemon:
+    % if approval_form:
     <dt>Pokémon</dt>
     <dd>${h.link(mod.pokemon)}</dd>
 
@@ -141,7 +141,11 @@ ${mod.name}
     %endif
 
     <dt>Bio</dt>
+    % if mod.description:
     <dd>${paragraphs(mod.description)}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
 
     <dt>Effects</dt>
     <dd>${paragraphs(mod.effect)}</dd>

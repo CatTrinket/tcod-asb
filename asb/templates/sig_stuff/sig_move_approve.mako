@@ -5,6 +5,6 @@
 
 <h1>Signature moves awaiting approval</h1>
 
-% for move in moves:
-${sig.display_move_mod(move, show_approval=True)}
+% for sig_thing in form.sigs:
+${sig.display_move_mod(sig_thing.sig, approval_form=sig_thing)}
 % endfor
