@@ -322,7 +322,7 @@ def approve_sig_move_commit(context, request):
         # Approve; just change the approval flag
         if subform.approve.data:
             subform.sig.needs_approval = False
-            request.session.flash('Success! "{}"" has been approved.'.format(
+            request.session.flash('Success! "{}" has been approved.'.format(
                 subform.sig.name))
 
         # Deny; delete from the database
@@ -352,7 +352,7 @@ def approve_sig_attribute_commit(context, request):
         # Approve; just change the approval flag
         if subform.approve.data:
             subform.sig.needs_approval = False
-            request.session.flash("Success! {} has been approved.".format(
+            request.session.flash('Success! "{}" has been approved.'.format(
                 subform.sig.name))
 
         # Deny; delete from the database
