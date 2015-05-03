@@ -133,11 +133,11 @@ ${next(or_) | n}pay $${method.buyable_price}\
 <ul id="species-form-list">
 % for form in pokemon.species.forms:
 % if form == pokemon:
-<li class="focus">
+<li class="focus portrait">
     <img src="/static/images/pokemon/${form.identifier}.png" alt="${form.name}">
 </li>
 % else:
-<li>
+<li class="portrait">
     <a href="${request.resource_path(form.__parent__, form.__name__)}">
         <img src="/static/images/pokemon/${form.identifier}.png" alt="${form.name}">
     </a>

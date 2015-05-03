@@ -176,10 +176,11 @@ col.two-types { width: 164px; }
 /* Big Pokémon sprite */
 .portrait-block { float: left; text-align: center; width: 175px; }
 
-img.portrait {
-    border: 5px ridge #0044FF;
-    margin: 5px auto;
-    display: block;
+.portrait {
+    border-radius: 50%;
+    background: #C0CCE6;
+    width: 120px;  height: 120px;
+    margin: 10px auto;
 }
 
 .beside-portrait:after { clear: both; display: block; content: ""; }
@@ -307,18 +308,11 @@ p.evolution-method { font-size: 0.7rem; margin: 0; }
 ul#species-form-list { padding-left: 0; list-style: none; }
 ul#species-form-list li {
     display: inline-block;
-    border: 1px solid transparent;
+    background: none;
 }
 
-#species-form-list li:hover {
-    border: 1px solid #7799EE;
-    background: #DEE6F5;
-}
-
-ul#species-form-list li.focus {
-    border: 1px solid #7799EE;
-    background: #C0CCE6;
-}
+ul#species-form-list li.focus { background: #B5C0D8; }
+ul#species-form-list li:hover { background: #D1D8E7; }
 
 /* Pokémon pages */
 .evolution-progress { font-size: 14px; }

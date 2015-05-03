@@ -57,7 +57,9 @@ ${damage_class.name.capitalize()}\
        if resource_exists('asb', alt_filename):
            filename = alt_filename
 %>\
-<img class="portrait" src="${filename}" alt="${alt}">
+<div class="portrait">
+    <img src="${filename}" alt="${alt}">
+</div>
 </%def>
 
 <%def name="gender_symbol(gender)">\
