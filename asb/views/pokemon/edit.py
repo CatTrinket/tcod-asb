@@ -38,31 +38,25 @@ class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
 
     experience = wtforms.IntegerField('Experience')
     happiness = wtforms.IntegerField('Happiness')
-    unlocked_evolutions = asb.forms.MultiCheckboxField('Unlockable evos',
-        coerce=int)
+    unlocked_evolutions = asb.forms.MultiCheckboxField('Manual evos',
+                                                       coerce=int)
     give_to = wtforms.StringField('Give to', [wtforms.validators.Optional()])
     save = wtforms.SubmitField('Save')
 
     trainer = None
 
     def add_evolution_choices(self, pokemon):
-        """Set the choices for unlocked_evolutions.  Only item and trade evos
-        are unlockable.
-        """
+        """Set the choices for unlocked_evolutions."""
 
-        choices = [
-            (evo.id, evo.name)
-            for evo in pokemon.species.evolutions
-            if evo.evolution_method.item_id is not None or
-                evo.evolution_method.can_trade_instead
-        ]
+        choices = [(evo.id, evo.name) for evo in pokemon.species.evolutions]
 
         if choices:
             self.unlocked_evolutions.choices = choices
 
             if self.unlocked_evolutions.data is None:
-                self.unlocked_evolutions.data = (
-                    [evo.id for evo in pokemon.unlocked_evolutions])
+                self.unlocked_evolutions.data = [
+                    evo.id for evo in pokemon.unlocked_evolutions
+                ]
         else:
             del self.unlocked_evolutions
 

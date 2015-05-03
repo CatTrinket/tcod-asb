@@ -25,6 +25,10 @@ ${pokemon.name}\
 <p><a href="${request.resource_path(battle, 'approve')}">Approve this battle →</a></p>
 % endif
 
+% if request.has_permission('battle.edit'):
+<p><a href="${request.resource_path(battle, 'edit')}">Edit this battle →</a></p>
+% endif
+
 % if request.has_permission('battle.link'):
 <h1>BBCode</h1>
 <p>Includes battlers' active squads and a link to this page.  You'll still have
@@ -120,6 +124,8 @@ ${h.form_error_list(*link_form.errors.values())}
 % for team in battle.teams:
 % if team_battle:
 <h1>Team ${team.team_number}</h1>
+% elif team.trainers[0].trainer is not None:
+<h1>${h.link(team.trainers[0].trainer)}</h1>
 % else:
 <h1>${team.trainers[0].name}</h1>
 % endif

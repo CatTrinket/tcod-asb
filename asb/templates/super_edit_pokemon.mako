@@ -5,25 +5,25 @@
 <h1>Edit ${pokemon.name}</h1>
 
 <form action="super-edit" method="POST">
-${form.csrf_token() | n}
+${form.csrf_token}
 ${h.form_error_list(form.csrf_token.errors)}
 
 <dl>
-    <dt>${form.experience.label()}</dt>
+    <dt>${form.experience.label}</dt>
     <dd>${form.experience(size=1)}</dd>
     % for error in form.experience.errors:
     <dd class="form-error">${error}</dd>
     % endfor
 
-    <dt>${form.happiness.label()}</dt>
+    <dt>${form.happiness.label}</dt>
     <dd>${form.happiness(size=1)}</dd>
     % for error in form.happiness.errors:
     <dd class="form-error">${error}</dd>
     % endfor
 
     % if form.unlocked_evolutions is not None:
-    <dt>${form.unlocked_evolutions.label()}</dt>
-    <dd>${form.unlocked_evolutions()}</dd>
+    <dt>${form.unlocked_evolutions.label}</dt>
+    <dd>${form.unlocked_evolutions(class_='option-list')}</dd>
     % for error in form.unlocked_evolutions.errors:
     <dd class="form-error">${error}</dd>
     % endfor
@@ -36,5 +36,5 @@ ${h.form_error_list(form.csrf_token.errors)}
     % endfor
 </dl>
 
-${form.save() | n}
+${form.save}
 </form>

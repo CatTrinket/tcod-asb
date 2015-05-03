@@ -366,7 +366,6 @@ class PokemonSpeciesEvolution(PokedexTable):
     item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
     gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
     buyable_price = Column(Integer, nullable=True)
-    can_trade_instead = Column(Boolean, nullable=False)
 
 class PokemonSpeciesGender(PokedexTable):
     """A gender a Pokémon species can have."""
@@ -1180,11 +1179,12 @@ BannedTrainer.banned_by = relationship(Trainer,
 
 Battle.ref = relationship(Trainer, secondary=BattleReferee.__table__,
     primaryjoin=and_(Battle.id == BattleReferee.battle_id,
-        BattleReferee.is_current_ref == True),
+                     BattleReferee.is_current_ref == True),
     uselist=False)
 Battle.previous_refs = relationship(Trainer, secondary=BattleReferee.__table__,
     primaryjoin=and_(Battle.id == BattleReferee.battle_id,
-        BattleReferee.is_current_ref == False))
+                     BattleReferee.is_current_ref == False))
+Battle.all_refs = relationship(BattleReferee)
 Battle.teams = relationship(BattleTeam, order_by=BattleTeam.team_number)
 
 BattlePokemon.ability = relationship(Ability,
@@ -1195,6 +1195,8 @@ BattlePokemon.item = relationship(Item)
 BattlePokemon.pokemon = relationship(Pokemon)
 BattlePokemon.species = association_proxy('form', 'species')
 BattlePokemon.trainer = relationship(BattleTrainer, back_populates='pokemon')
+
+BattleReferee.trainer = relationship(Trainer)
 
 BattleTeam.trainers = relationship(BattleTrainer, order_by=BattleTrainer.id)
 

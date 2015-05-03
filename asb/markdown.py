@@ -6,6 +6,19 @@ import sqlalchemy as sqla
 
 import asb.db as db
 
+class NoneMarkdown(markdown.Markdown):
+    """A Markdown class that will accept None and produce an empty string.
+
+    This is useful because if a move, ability, or item has not been given an
+    effect yet, its summary and description will both be None.
+    """
+
+    def convert(self, source):
+        if source is None:
+            return ''
+        else:
+            return super().convert(source)
+
 class PokedexLinkExtension(markdown.extensions.Extension):
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns.add('ability_link', ability_link, '>link')
@@ -105,7 +118,7 @@ move_link = PokedexLink('move', db.Move)
 species_link = SpeciesLink('species', db.PokemonForm)
 type_link = PokedexLink('type', db.Type)
 
-md = markdown.Markdown(extensions=[
+md = NoneMarkdown(extensions=[
     PokedexLinkExtension(),
     'markdown.extensions.nl2br'
 ])

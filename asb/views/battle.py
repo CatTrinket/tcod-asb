@@ -103,6 +103,41 @@ def battle_close_form(battle, request):
 
     return form
 
+class BattleEditRefForm(wtforms.Form):
+    """A single row for a ref in a BattleEditForm."""
+
+    ref = asb.forms.TrainerField()
+    current = wtforms.BooleanField()
+    emergency = wtforms.BooleanField()
+
+    def validate_ref(form, field):
+        """Make sure we got a valid trainer."""
+
+        if field.data and field.trainer is None:
+            raise wtforms.validators.ValidationError('Unknown trainer')
+
+class BattleEditForm(asb.forms.CSRFTokenForm):
+    """An admin-only form for editing a battle."""
+
+    refs = wtforms.FieldList(
+        wtforms.FormField(BattleEditRefForm, [wtforms.validators.Optional()]),
+    )
+    save = wtforms.SubmitField('Save')
+
+    def set_refs(self, battle):
+        """Set data for the ref table based on the battle's current refs."""
+
+        for ref in battle.all_refs:
+            print(self.refs.data)
+            self.refs.append_entry({
+                'ref': ref.trainer.name,
+                'current': ref.is_current_ref,
+                'emergency': ref.is_emergency_ref
+            })
+
+        # Also add one blank row
+        self.refs.append_entry()
+
 class BattleLinkForm(asb.forms.CSRFTokenForm):
     """A form for pasting a link to a battle's thread on the forums."""
 
@@ -265,6 +300,40 @@ def battle_link(battle, request):
     battle.tcodf_thread_id = link_form.thread_id
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 
+@view_config(context=db.Battle, name='edit', renderer='/edit_battle.mako',
+  request_method='GET', permission='battle.edit')
+def edit_battle(battle, request):
+    """A page for editing a battle."""
+
+    form = BattleEditForm(csrf_context=request.session)
+    form.set_refs(battle)
+
+    return {'form': form, 'battle': battle}
+
+@view_config(context=db.Battle, name='edit', renderer='/edit_battle.mako',
+  request_method='POST', permission='battle.edit')
+def edit_battle_process(battle, request):
+    """Process a request to edit a battle."""
+
+    form = BattleEditForm(request.POST, csrf_context=request.session)
+
+    if not form.validate():
+        return {'form': form, 'battle': battle}
+
+    for ref in battle.all_refs:
+        db.DBSession.delete(ref)
+
+    for row in form.refs:
+        if row.ref.trainer is not None:
+            db.DBSession.add(db.BattleReferee(
+                battle_id=battle.id,
+                trainer_id=row.ref.trainer.id,
+                is_current_ref=row.current.data,
+                is_emergency_ref=row.emergency.data
+            ))
+
+    return httpexc.HTTPSeeOther(request.resource_path(battle))
+
 @view_config(context=db.Battle, name='close', renderer='/close_battle.mako',
   request_method='GET', permission='battle.close')
 def close_battle(battle, request):
@@ -407,7 +476,7 @@ def approve_battle_submit(battle, request):
             if battle.length == 'dq':
                 prize_money = 0
             else:
-                prize_money = 3 * enemy_pokemon_count
+                prize_money = 4 * enemy_pokemon_count
 
         # Give that much money to each trainer on this team
         for battle_trainer in team.trainers:
