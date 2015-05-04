@@ -379,3 +379,54 @@ hidden-ability\
 % endfor
 </table>
 </%def>
+
+### BATTLE TABLES
+<%def name="battle_table(*battle_lists, subheaders=None, show_end=False)">
+<%
+    subheader_colspan = 3
+    if subheaders is None:
+        subheaders = [None] * len(battle_lists)
+%>
+<table class="battle-table">
+<thead>
+<tr>
+    <th>Battle</th>
+    <th>Ref</th>
+    <th>Started</th>
+    % if show_end:
+    <th>Ended</th>
+    <% subheader_colspan = 4 %>\
+    % endif
+</tr>
+</thead>
+
+% for battles, subheader in zip(battle_lists, subheaders):
+<tbody>
+% if subheader is not None and battles:
+<tr class="subheader-row">
+    <td colspan="${subheader_colspan}">${subheader}
+</tr>
+% endif
+% for battle in battles:
+    <tr>
+        <td class="focus-column">${h.link(battle)}</td>
+
+        % if battle.ref is None:
+        <td>???</td>
+        % else:
+        <td>${h.link(battle.ref)}</td>
+        % endif
+
+        <td>${battle.start_date.strftime('%Y %B %d')}</td>
+
+        % if show_end and battle.end_date:
+        <td>${battle.end_date.strftime('%Y %B %d')}</td>
+        % elif show_end:
+        <td class="null-cell">—</td>
+        %endif
+    </tr>
+    % endfor
+</tbody>
+% endfor
+</table>
+</%def>

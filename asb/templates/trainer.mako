@@ -65,3 +65,35 @@ ${t.pokemon_table(
 </tbody>
 </table>
 % endif
+
+% if wins or losses or draws or open_battles:
+<h1>Battles</h1>
+<%
+    num_wins = len(wins)
+    num_losses = len(losses)
+    num_draws = len(draws)
+    total_completed = num_wins + num_losses + num_draws
+%>
+
+% if total_completed:
+<dl class="stats">
+    <dt>Wins</dt>
+    <dd>${num_wins}</dd>
+
+    <dt>Losses</dt>
+    <dd>${num_losses}</dd>
+
+    <dt>Draws</dt>
+    <dd>${num_draws}</dd>
+
+    <dt>Total</dt>
+    <dd>${total_completed}</dd>
+
+    <dt>Win Percentage</dt>
+    <dd>${round(num_wins / total_completed * 100, 1)}%</dd>
+</dl>
+% endif
+
+${t.battle_table(open_battles, wins, losses, draws,
+    subheaders=['In Progress', 'Wins', 'Losses', 'Draws'], show_end=True)}
+% endif
