@@ -45,7 +45,7 @@
                 % endif
             </a>
         </td>
-        <td>${item.summary | md.convert, chomp, n}</td>
+        <td>${item.summary | md.convert, chomp}</td>
     </tr>
     % endfor
 </tbody>

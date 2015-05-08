@@ -8,7 +8,7 @@
 % endif
 
 <h1>${ability.name}</h1>
-${ability.description | md.convert, n}
+${ability.description | md.convert}
 
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>

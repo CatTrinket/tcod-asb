@@ -6,5 +6,5 @@
 
 % for ability in abilities:
 <p><strong>${h.link(ability)}:</strong> \
-${ability.description | md.convert, chomp, n}</p>
+${ability.description | md.convert, chomp}</p>
 % endfor

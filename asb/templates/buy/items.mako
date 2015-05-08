@@ -122,7 +122,7 @@ ${h.form_error_list(*browse.errors.values())}
         <td class="icon"><img src="/static/images/items/${item.identifier}.png" alt=""></td>
         <td class="focus-column"><a href="/items/${item.identifier}">${item.name}</a></td>
         <td class="price">$${item.price}</td>
-        <td>${item.summary | md.convert, chomp, n}</td>
+        <td>${item.summary | md.convert, chomp}</td>
     </tr>
     % endfor
 </tbody>

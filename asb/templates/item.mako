@@ -20,12 +20,12 @@
     % endif
 
     <dt>Summary</dt>
-    <dd>${item.summary | md.convert, chomp, n}</dd>
+    <dd>${item.summary | md.convert, chomp}</dd>
 </dl>
 
 
 <h1>Description</h1>
-${item.description | md.convert, n}
+${item.description | md.convert}
 
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>

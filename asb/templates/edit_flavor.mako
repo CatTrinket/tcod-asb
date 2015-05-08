@@ -23,12 +23,12 @@ ${form.save}
 
 % if form.edit_time.errors:
 <h1>Current revision</h1>
-<p><b>Summary:</b> ${thing.summary | md.convert, chomp, n}</p>
+<p><b>Summary:</b> ${thing.summary | md.convert, chomp}</p>
 <hr>
-${thing.description | md.convert, n}
+${thing.description | md.convert}
 % endif
 
 <h1>Preview</h1>
-<p><b>Summary:</b> ${form.summary.data | md.convert, chomp, n}</p>
+<p><b>Summary:</b> ${form.summary.data | md.convert, chomp}</p>
 <hr>
-${form.description.data | md.convert, n}
+${form.description.data | md.convert}

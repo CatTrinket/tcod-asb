@@ -49,11 +49,11 @@ ${h.type_icon(type)}\
     <dt class="hidden-ability">${h.link(ability.ability)}</dt>
     <dd>
         <i>(Hidden ability.)</i>
-        ${ability.ability.description | md.convert, chomp, n}
+        ${ability.ability.description | md.convert, chomp}
     </dd>
     % else:
     <dt>${h.link(ability.ability)}</dt>
-    <dd>${ability.ability.description | md.convert, chomp, n}</dd>
+    <dd>${ability.ability.description | md.convert, chomp}</dd>
     % endif
     % endfor
 </dl>
