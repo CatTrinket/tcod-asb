@@ -121,7 +121,7 @@ thead { border-bottom: 2px solid #7799EE; }
 tfoot { border-top: 2px solid #7799EE; }
 tbody + tbody { border-top: 2px solid #7799EE; }
 
-tbody > tr:hover { background: #D1D8E7; }
+tbody > tr:hover:not(.subheader-row) { background: #D1D8E7; }
 
 tr.subheader-row {
     text-align: center;
@@ -311,8 +311,8 @@ ul#species-form-list li {
     background: none;
 }
 
-ul#species-form-list li.focus { background: #B5C0D8; }
 ul#species-form-list li:hover { background: #D1D8E7; }
+ul#species-form-list li.focus { background: #B5C0D8; }
 
 /* Pokémon pages */
 .evolution-progress { font-size: 14px; }
