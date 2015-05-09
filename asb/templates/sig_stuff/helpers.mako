@@ -23,11 +23,25 @@ ${mod.description}
 
 [b]Type[/b]: ${mod.type.name}
 [b]Damage Class[/b]: ${mod.damage_class.name}
+% if mod.power is not None:
 [b]Base Power[/b]: ${mod.power}
+% elif mod.damage_class.identifier != 'non-damaging':
+[b]Base Power[/b]: varies
+% endif
+% if mod.energy is not None:
 [b]Energy[/b]: ${mod.energy}%
+% else:
+[b]Energy[/b]: varies
+% endif
+% if mod.accuracy is not None:
 [b]Accuracy[/b]: ${mod.accuracy}
+% else:
+[b]Accuracy[/b]: —
+% endif
 [b]Target[/b]: ${mod.target.name}
+% if mod.duration:
 [b]Duration[/b]: ${mod.duration}
+% endif
 
 [b]Effects[/b]: ${mod.effect}
 
