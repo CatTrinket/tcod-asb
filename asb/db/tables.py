@@ -715,8 +715,9 @@ class BodyModification(PlayerTable):
         primary_key=True)
     name = Column(Unicode, nullable=False)
     is_repeatable = Column(Boolean, nullable=False)
-    flavor = Column(Unicode, nullable=False)
+    description = Column(Unicode, nullable=False)
     effect = Column(Unicode, nullable=False)
+    needs_approval = Column(Boolean, nullable=False, default=True)
 
 class ItemEffect(PlayerTable):
     """An item's flavour text."""
@@ -745,28 +746,25 @@ class MoveEffect(PlayerTable):
     is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveModification(PlayerTable):
-    """A Pokémon's signature move or other movepool mod.
-
-    This is a direct port of the hack's asb_move_mods table.  I was not the one
-    who decided the entire table should just be text.  (The only change I made
-    is pokemon_id — Negrek had the foreign key on the pokemon side.)
-    """
+    """A Pokémon's signature move or other movepool mod."""
 
     __tablename__ = 'move_modifications'
 
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         primary_key=True)
     name = Column(Unicode, nullable=False)
-    type = Column(Unicode, nullable=True)
-    power = Column(Unicode, nullable=True)
-    energy = Column(Unicode, nullable=True)
-    accuracy = Column(Unicode, nullable=True)
-    target = Column(Unicode, nullable=True)
+    type_id = Column(Integer, ForeignKey(Type.id), nullable=False)
+    power = Column(Integer, nullable=True)
+    energy = Column(Integer, nullable=True)
+    accuracy = Column(Integer, nullable=True)
+    target_id = Column(Integer, ForeignKey(MoveTarget.id), nullable=False)
     gap = Column(Unicode, nullable=True)
     duration = Column(Unicode, nullable=True)
-    stat = Column(Unicode, nullable=True)
-    flavor = Column(Unicode, nullable=True)
+    damage_class_id = Column(Integer, ForeignKey(DamageClass.id),
+        nullable=False)
+    description = Column(Unicode, nullable=True)
     effect = Column(Unicode, nullable=True)
+    needs_approval = Column(Boolean, nullable=False, default=True)
 
 class NewsPost(PlayerTable):
     """A front page news post."""
@@ -882,6 +880,14 @@ class Pokemon(PlayerTable):
             (sec.Allow, 'admin', 'edit.basics'),
             (sec.Allow, 'admin', 'edit.everything'),
             (sec.Allow, 'mod', 'edit.basics'),
+
+            # Sig stuff
+            (sec.Allow, trainer, 'sigattr.edit'),
+            (sec.Allow, trainer, 'sigmove.edit'),
+            (sec.Allow, 'admin', 'sigattr.edit'),
+            (sec.Allow, 'attr-approver', 'sigattr.edit'),
+            (sec.Allow, 'admin', 'sigmove.edit'),
+            (sec.Allow, 'move-approver', 'sigmove.edit'),
         ]
 
 class PokemonUnlockedEvolution(PlayerTable):
@@ -1193,6 +1199,8 @@ BattleTrainer.pokemon = relationship(BattlePokemon, order_by=BattlePokemon.id,
     back_populates='trainer')
 BattleTrainer.trainer = relationship(Trainer)
 
+BodyModification.pokemon = relationship(Pokemon)
+
 ContestCategory.moves = relationship(Move, back_populates='contest_category',
     order_by=Move.name)
 ContestCategory.supercategory = relationship(ContestSupercategory,
@@ -1232,6 +1240,11 @@ MoveCategory.moves = relationship(Move, order_by=Move.name,
     secondary=MoveCategoryMap.__table__, back_populates='categories')
 
 MoveEffect.editor = relationship(Trainer)
+
+MoveModification.target = relationship(MoveTarget)
+MoveModification.type = relationship(Type)
+MoveModification.damage_class = relationship(DamageClass)
+MoveModification.pokemon = relationship(Pokemon)
 
 NewsPost.poster = relationship(Trainer)
 

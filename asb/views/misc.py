@@ -176,4 +176,54 @@ def home(context, request):
 
         stuff['mod_stuff'] = mod_stuff
 
+    sig_stuff = []
+
+    if (any(role in ('move-approver', 'admin')
+        for role in request.effective_principals)):
+
+        pending_sig_moves = (
+            db.DBSession.query(db.MoveModification)
+            .filter_by(needs_approval=True)
+            .all()
+        )
+
+        # Filter out applications that the user is involved in
+        pending_sig_moves = len([move for move in pending_sig_moves
+                                if move.pokemon.trainer_id != trainer.id])
+
+        if pending_sig_moves:
+            if pending_sig_moves == 1:
+                message = 'There is 1 signature move awaiting approval'
+            else:
+                message = ('There are {} signature moves awaiting approval'
+                    .format(pending_sig_moves))
+
+            sig_stuff.append((message, '/approve-move')) # TODO: actual url
+
+    if (any(role in ('attr-approver', 'admin')
+        for role in request.effective_principals)):
+
+        pending_sig_attributes = (
+            db.DBSession.query(db.BodyModification)
+            .filter_by(needs_approval=True)
+            .all()
+        )
+
+        pending_sig_attributes = len([att for att in pending_sig_attributes
+                                      if att.pokemon.trainer_id != trainer.id])
+
+        if pending_sig_attributes:
+            if pending_sig_attributes == 1:
+                message = 'There is 1 signature attribute awaiting approval'
+            else:
+                message = ('There are {} signature attributes awaiting '
+                           'approval'.format(pending_sig_attributes))
+
+            sig_stuff.append((message, 'approve-attribute')) # TODO: actual url
+
+    if sig_stuff and stuff['mod_stuff']:
+        stuff['mod_stuff'].extend(sig_stuff)
+    elif sig_stuff:
+        stuff['mod_stuff'] = sig_stuff
+
     return stuff

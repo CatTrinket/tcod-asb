@@ -410,3 +410,34 @@ form#news-form textarea {
 
 form#news-form dt { width: 5em; }
 form#news-form dd { margin-left: 5.5em; }
+
+/* Signature move display */
+div.sig-move-info > dl { float: left; width: 33%; margin: 0; }
+div.sig-move-info > dl + dl { margin-left: 0.5%; }
+div.sig-move-info:after { display: block; content: ''; clear: both; }
+
+/* The approve, edit, deny links in approving sig stuff */
+form.approval-form {
+    float: right;
+    font-size: 0.75em;
+    font-weight: normal;
+}
+
+/* Make the submit buttons look like links */
+form.approval-form input[type=submit] {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+form.approval-form a, form.approval-form input[type=submit] {
+    text-decoration: none;
+    color: #144BB8;
+}
+form.approval-form a:hover, form.approval-form input[type=submit]:hover {
+    text-decoration: underline;
+    color: #759EF0;
+}

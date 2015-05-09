@@ -2,3 +2,5 @@ id,identifier,name
 1,admin,admin
 2,mod,mod
 3,referee,referee
+4,attr-approver,attr-approver
+5,move-approver,move-approver

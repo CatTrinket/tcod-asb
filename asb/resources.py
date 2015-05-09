@@ -41,6 +41,11 @@ class Root(dict):
         (sec.Allow, 'mod', 'news.post'),
         (sec.Deny, sec.Everyone, 'news.post'),
 
+        (sec.Allow, 'admin', 'sigmove.approve'),
+        (sec.Allow, 'move-approver', 'sigmove.approve'),
+        (sec.Allow, 'admin', 'sigattr.approve'),
+        (sec.Allow, 'attr-approver', 'sigattr.approve'),
+
         (sec.Deny, sec.Everyone, sec.ALL_PERMISSIONS)
     ]
 
