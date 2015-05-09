@@ -69,8 +69,8 @@ ${move.name}
     <dt>Species</dt>
     <dd>${move.pokemon.species.name}</dd>
 </dl>
-
 %endif
+
 <dl>
    <dt>Type</dt>
    <dd>${h.type_icon(move.type)}</dd>
@@ -108,9 +108,35 @@ ${move.name}
    <dd>${move.accuracy}%</dd>
    % endif
 </dl>
+
+% if not approval_form:
+<dl>
+    <dt>Duration</dt>
+    % if move.duration:
+    <dd>${move.duration}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Usage Gap</dt>
+    <dd>${move.gap}</dd>
+</dl>
+%endif
 </div>
 
 <dl>
+    % if approval_form:
+    <dt>Duration</dt>
+    % if move.duration:
+    <dd>${move.duration}</dd>
+    % else:
+    <dd>—</dd>
+    % endif
+
+    <dt>Usage Gap</dt>
+    <dd>${move.gap}</dd>
+    %endif
+
     <dt>Description</dt>
     <dd>${move.description}</dd>
 
