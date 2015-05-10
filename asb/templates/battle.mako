@@ -118,6 +118,14 @@ ${h.form_error_list(*link_form.errors.values())}
     % if battle.end_date is not None:
     <dt>Ended</dt>
     <dd>${battle.end_date.strftime('%Y %B %d')}</dd>
+
+    %  if not battle.needs_approval:
+    <dt>Winners</dt>
+    <dd>${outcome}</dd>
+
+    <dt>How did it end?</dt>
+    <dd>${length}.</dd>
+    % endif
     % endif
 </dl>
 

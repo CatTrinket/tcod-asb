@@ -254,6 +254,29 @@ class NewBattleForm(asb.forms.CSRFTokenForm):
     trainers = BattleTrainerField()
     submit = wtforms.SubmitField('Submit')
 
+def format_outcome(battle):
+    """
+    Return a tuple of the format (outcome, length) where outcome is a formatted
+    description of who won Battle battle and length if a formatted description
+    of how battle ended.
+    """
+
+    winners = [team for team in battle.teams
+               if team.outcome in ['win', 'draw']]
+
+    if winners[0].outcome == 'win':
+        team = ' and '.join(trainer.name for trainer in winners[0].trainers)
+        outcome = '{} won.'.format(team)
+    else:
+        teams = ' and '.join(
+            '/'.join(trainer.name for trainer in team.trainers)
+            for team in winners
+        )
+
+        outcome = '{} tied.'.format(teams)
+
+    return (outcome, length_labels[battle.length])
+
 
 @view_config(context=BattleIndex, renderer='/indices/battles.mako')
 def battle_index(context, request):
@@ -276,10 +299,18 @@ def battle_index(context, request):
 def battle(battle, request):
     """A battle."""
 
+    if battle.end_date is not None:
+        outcome, length = format_outcome(battle)
+    else:
+        outcome = None
+        length = None
+
     return {
         'battle': battle,
         'team_battle': any(len(team.trainers) > 1 for team in battle.teams),
-        'link_form': BattleLinkForm(csrf_context=request.session)
+        'link_form': BattleLinkForm(csrf_context=request.session),
+        'outcome': outcome,
+        'length': length
     }
 
 @view_config(context=db.Battle, renderer='/battle.mako', request_method='POST',
@@ -405,25 +436,13 @@ def approve_battle(battle, request):
     and approving them.
     """
 
-    winners = [team for team in battle.teams
-               if team.outcome in ['win', 'draw']]
-
-    if winners[0].outcome == 'win':
-        team = ' and '.join(trainer.name for trainer in winners[0].trainers)
-        outcome = '{} won.'.format(team)
-    else:
-        teams = ' and '.join(
-            '/'.join(trainer.name for trainer in team.trainers)
-            for team in winners
-        )
-
-        outcome = '{} tied.'.format(teams)
+    outcome, length = format_outcome(battle)
 
     return {
         'form': BattleApproveForm(csrf_context=request.session),
         'battle': battle,
         'outcome': outcome,
-        'length': length_labels[battle.length]
+        'length': length
     }
 
 @view_config(context=db.Battle, name='approve', request_method='POST',
