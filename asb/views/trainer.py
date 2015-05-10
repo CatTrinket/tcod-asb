@@ -178,16 +178,16 @@ def trainer(trainer, request):
         outcome = battle_trainer.team.outcome
         battle = battle_trainer.battle
 
-        if not outcome:
+        if battle.length == 'cancelled':
+            # Ended before anything happened; doesn't count for anything
+            continue
+        elif not outcome:
             # Battle still in progress
             open_battles.append(battle)
-
         elif outcome == 'win':
             wins.append(battle)
-
         elif outcome == 'loss':
             losses.append(battle)
-
         elif outcome == 'draw':
             draws.append(battle)
 
