@@ -37,7 +37,11 @@ ${h.type_icon(type)}\
     </dd>
 
     <dt>Population</dt>
+    % if census:
     <dd><a href="#census">${len(census)}</a></dd>
+    % else:
+    <dd>0</dd>
+    % endif
 </dl>
 </div>
 
@@ -158,5 +162,7 @@ ${next(or_) | n}pay $${method.buyable_price}\
 <h1>Moves</h1>
 ${t.move_table(pokemon.moves)}
 
+% if census:
 <h1 id="census">${pokemon.name} in the league</h1>
 ${t.pokemon_table(census, skip_cols=['species'])}
+% endif
