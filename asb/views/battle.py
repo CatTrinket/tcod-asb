@@ -257,7 +257,7 @@ class NewBattleForm(asb.forms.CSRFTokenForm):
 def format_outcome(battle):
     """
     Return a tuple of the format (outcome, length) where outcome is a formatted
-    description of who won Battle battle and length if a formatted description
+    description of who won Battle battle and length is a formatted description
     of how battle ended.
     """
 

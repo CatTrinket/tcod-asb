@@ -143,8 +143,12 @@ ${t.pokemon_table(
     skip_cols=['name', 'trainer'],
     subheaders=(trainer.trainer for trainer in team.trainers)
         if team_battle else None,
-    subheader_colspan=9,
+    subheader_colspan=10,
     extra_left_cols=[{'col': t.name_col, 'th': t.name_header, 'td': name}],
+    extra_right_cols=[{'col': t.ko_col, 'th': t.ko_header, 'td': t.ko_cell}]
+        if battle.end_date is not None and not battle.needs_approval else [],
+    highlight_condition=(lambda pokemon: pokemon.participated)
+        if battle.end_date is not None and not battle.needs_approval else None,
     link_subheaders=True
 )}
 % endfor
