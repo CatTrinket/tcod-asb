@@ -1,23 +1,48 @@
 """ASB-specific Markdown customizations."""
 
+import bleach
 import markdown
 from pyramid.traversal import resource_path
 import sqlalchemy as sqla
 
 import asb.db as db
 
-class NoneMarkdown(markdown.Markdown):
-    """A Markdown class that will accept None and produce an empty string.
+class ASBMarkdown(markdown.Markdown):
+    """A Markdown class whose output is sanitized using bleach, and which will
+    accept None as input and produce an empty string.
 
-    This is useful because if a move, ability, or item has not been given an
-    effect yet, its summary and description will both be None.
+    Although the bleach docs don't seem to mention it anywhere, JavaScript
+    links will have their hrefs stripped out, too.
+
+    The None thing is useful because if a move, ability, or item has not been
+    given an effect yet, its summary and description will both be None.
     """
 
+    # Allowed elements: everything that Markdown can produce, unless I missed
+    # something
+    tags = [
+        'p', 'br',
+        'a', 'strong', 'em',
+        'ul', 'ol', 'li',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'img', 'blockquote', 'hr',
+        'code', 'pre'
+    ]
+
+    # Allowed attributes
+    attributes = {
+        'a': ['href', 'title'],
+        'img': ['src', 'alt', 'title']
+    }
+
     def convert(self, source):
+        """Check for None, convert to HTML, and sanitize."""
+
         if source is None:
             return ''
         else:
-            return super().convert(source)
+            return bleach.clean(super().convert(source),
+                                tags=self.tags, attributes=self.attributes)
 
 class PokedexLinkExtension(markdown.extensions.Extension):
     def extendMarkdown(self, md, md_globals):
@@ -118,7 +143,7 @@ move_link = PokedexLink('move', db.Move)
 species_link = SpeciesLink('species', db.PokemonForm)
 type_link = PokedexLink('type', db.Type)
 
-md = NoneMarkdown(extensions=[
+md = ASBMarkdown(extensions=[
     PokedexLinkExtension(),
     'markdown.extensions.nl2br'
 ])

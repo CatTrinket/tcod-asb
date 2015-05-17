@@ -137,5 +137,5 @@ ${damage_class.name.capitalize()}\
     % endif
 </p>
 
-${post_info['text'] | md.convert}
+${post_info['text'] | md.convert, n}
 </%def>

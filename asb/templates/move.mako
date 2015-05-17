@@ -61,7 +61,7 @@
 <dl>
     % for category in move.categories:
     <dt>${category.name}</dt>
-    <dd>${category.description | md.convert, chomp}</dd>
+    <dd>${category.description | md.convert, chomp, n}</dd>
     % endfor
 </dl>
 </div>
@@ -85,10 +85,10 @@ ${h.type_icon(type)}\
 % endif
 
 <h2>Summary</h2>
-${move.summary | md.convert}
+${move.summary | md.convert, n}
 
 <h1>Description</h1>
-${move.description | md.convert}
+${move.description | md.convert, n}
 
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>
