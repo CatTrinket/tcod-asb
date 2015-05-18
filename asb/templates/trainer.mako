@@ -94,3 +94,12 @@ ${t.pokemon_table(
 ${t.battle_table(open_battles, wins, losses, draws,
     subheaders=['In Progress', 'Wins', 'Losses', 'Draws'], show_end=True)}
 % endif
+
+% if ref_open or ref_done:
+<h1>Battles Reffed</h1>
+
+${t.battle_table(
+    ref_open, ref_done,
+    subheaders=['In Progress', 'Past'],
+    show_end=True)}
+% endif
