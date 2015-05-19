@@ -75,7 +75,7 @@ class PokedexLink(markdown.inlinepatterns.Pattern):
         """Fetch the thing from the database, and return it with its name.
 
         The name is returned explicitly so that SpeciesLink can override this
-        sqla.function and figure out whether to use the form name or species name
+        function and figure out whether to use the form name or species name
         for the link text.
         """
 
