@@ -214,7 +214,7 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
 ">${h.num(move.priority, invisible_plus=False)}</td>
     % endif
 
-    <td>${move.summary | md.convert, chomp}</td>
+    <td>${move.summary | md.convert, chomp, n}</td>
 </tr>
 % endfor
 </tbody>

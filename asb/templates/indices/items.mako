@@ -33,7 +33,7 @@
         % else:
         <td class="price">—</td>
         % endif
-        <td>${item.summary | md.convert, chomp}</td>
+        <td>${item.summary | md.convert, chomp, n}</td>
     </tr>
     % endfor
 </tbody>

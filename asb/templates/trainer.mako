@@ -59,7 +59,7 @@ ${t.pokemon_table(
         </td>
         <td class="focus-column">${h.link(item)}</td>
         <td class="stat">${qty}</td>
-        <td>${item.summary | md.convert, chomp}</td>
+        <td>${item.summary | md.convert, chomp, n}</td>
     </tr>
     % endfor
 </tbody>
