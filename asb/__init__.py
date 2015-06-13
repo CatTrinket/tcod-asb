@@ -3,10 +3,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
-from .db import (
-    DBSession,
-    Base,
-    )
+from .db import DBSession, Base
 from .views import user
 from asb.resources import get_root
 
