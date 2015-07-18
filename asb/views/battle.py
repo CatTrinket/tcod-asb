@@ -13,12 +13,12 @@ import asb.forms
 from asb.resources import BattleIndex
 import asb.tcodf
 
-length_labels = {
-    'full': 'It finished normally',
-    'short': 'The battlers agreed to end it partway through',
-    'dq': 'The loser was disqualified',
-    'cancelled': 'It ended before anything happened'
-}
+length_labels = collections.OrderedDict([
+    ('full', 'It finished normally'),
+    ('short', 'The battlers agreed to end it partway through'),
+    ('dq', 'The loser was disqualified'),
+    ('cancelled', 'It ended before anything happened')
+])
 
 class BattleApproveForm(asb.forms.CSRFTokenForm):
     """A form for letting a mod approve the prizes given out after a battle."""
