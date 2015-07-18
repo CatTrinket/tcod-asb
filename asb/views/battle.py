@@ -485,7 +485,12 @@ def approve_battle_submit(battle, request):
 
             battle_trainer.trainer.money += prize_money
 
-    battle.ref.money += ref_money
+    # Divide up ref money
+    ref_money //= len(battle.all_refs)
+
+    for ref in battle.all_refs:
+        ref.trainer.money += ref_money
+
     battle.needs_approval = False
 
     return httpexc.HTTPSeeOther(request.resource_path(battle))
