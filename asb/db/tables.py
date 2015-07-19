@@ -201,15 +201,6 @@ class Move(PokedexTable):
     bonus_jam = Column(Integer, nullable=True)
 
     @property
-    def damage(self):
-        """Return this move's base damage."""
-
-        if self.power is None:
-            return None
-        else:
-            return self.power // 10
-
-    @property
     def __name__(self):
         """Return this move's resource name for traversal."""
 

@@ -24,16 +24,11 @@
 </dl>
 
 <dl>
-   <dt>Base damage</dt>
+   <dt>Power</dt>
    % if move.power is not None:
-   <dd>${move.damage}% (${move.power} power)</dd>
+   <dd>${move.power}</dd>
    % elif move.damage_class.identifier == 'non-damaging':
    <dd>n/a</dd>
-   ## XXX It'd be nice not to special-case these two
-   % elif move.identifier == 'dragon-rage':
-   <dd>4% (fixed)</dd>
-   % elif move.identifier == 'sonic-boom':
-   <dd>2% (fixed)</dd>
    % else:
    <dd>Varies</dd>
    % endif

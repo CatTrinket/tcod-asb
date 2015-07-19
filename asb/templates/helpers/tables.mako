@@ -145,7 +145,7 @@ ${column['col']()}
     <th>Type</th>
     % endif
     <th>Stat</th>
-    <th><abbr title="Base damage">Dmg</abbr></th>
+    <th><abbr title="Power">Pow.</abbr></th>
     <th><abbr title="Base energy cost">En.</abbr></th>
     <th><abbr title="Accuracy">Acc.</abbr></th>
     <th><abbr title="Priority">Pri.</abbr></th>
@@ -164,8 +164,8 @@ ${column['col']()}
 
     <td class="damage-class-cell">${h.damage_class_icon(move.damage_class)}</td>
 
-    % if move.damage is not None:
-    <td class="stat">${move.damage}%</td>
+    % if move.power is not None:
+    <td class="stat">${move.power}</td>
     % elif move.damage_class.identifier == 'non-damaging':
     <td class="stat">—</td>
     % else:
