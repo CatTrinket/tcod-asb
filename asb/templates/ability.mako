@@ -8,6 +8,9 @@
 % endif
 
 <h1>${ability.name}</h1>
+${'**Summary:** ' + ability.summary | md.convert, n}
+
+<h2>Description</h2>
 ${ability.description | md.convert, n}
 
 % if move_category is not None:
