@@ -8,6 +8,7 @@
 <head>
     <title><%block name='title'>The Cave of Dragonflies ASB</%block></title>
     <link rel="stylesheet" href="/static/asb.css">
+    <link rel="stylesheet" href="/static/icons.css">
     <link rel="icon" href="/static/images/favicon.png">
 </head>
 <body>

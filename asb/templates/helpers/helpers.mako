@@ -31,18 +31,13 @@ ${damage_class.name.capitalize()}\
 </%def>
 
 <%def name="pokemon_form_icon(form, gender=None, alt='')">\
-<%
-    if gender is not None and form.identifier in ['unfezant', 'frillish',
-      'jellicent', 'pyroar']:
-        # Meowstic's genders are forms, so that's already in the identifier
-        filename = '{}-{}.png'.format(form.identifier, gender)
-    else:
-        filename = '{}.png'.format(form.identifier)
-
-    if alt is None:
-        alt = form.name
-%>\
-<img src="/static/images/pokemon-icons/${filename}" alt="${alt}">\
+## alt is currently unused because I can't figure out how to make it work with
+## this trick
+<span class="pokemon-icon ${form.identifier}\
+% if gender is not None:
+ ${gender}\
+% endif
+"></span>\
 </%def>
 
 <%def name="pokemon_form_sprite(form, gender=None, alt='')">\
