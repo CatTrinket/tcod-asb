@@ -559,6 +559,7 @@ def new_battle_process(context, request):
                     gender_id=pokemon.gender_id,
                     ability_slot=pokemon.ability_slot,
                     item_id=None if pokemon.item is None else pokemon.item.id,
+                    is_shiny=pokemon.is_shiny,
                     experience=pokemon.experience,
                     happiness=pokemon.happiness
                 )

@@ -53,7 +53,12 @@ to add the arena.</p>
 [b]${trainer.name}'s active squad[/b]
 
 % for pokemon in trainer.pokemon:
+% if pokemon.is_shiny:
+[sprite=party-shiny]\
+% else:
 [sprite=party]\
+% endif
+\
 % if pokemon.gender.identifier == 'female' and pokemon.species.identifier in \
     ['unfezant', 'frillish', 'jellicent', 'pyroar', 'meowstic']:
 ${pokemon.species.identifier}-f\
@@ -62,6 +67,7 @@ meowstic\
 % else:
 ${pokemon.form.identifier}\
 % endif
+\
 [/sprite] [b]${pokemon.name}[/b] the \
 ${pokemon.gender.name} ${pokemon.species.name} \
 % if pokemon.species.form_carries_into_battle and \

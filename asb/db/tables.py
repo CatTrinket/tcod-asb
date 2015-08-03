@@ -628,6 +628,7 @@ class BattlePokemon(PlayerTable):
     gender_id = Column(Integer, ForeignKey(Gender.id), nullable=False)
     ability_slot = Column(Integer, nullable=False)
     item_id = Column(Integer, ForeignKey(Item.id), nullable=True)
+    is_shiny = Column(Boolean, nullable=False, default=False)
     experience = Column(Integer, nullable=False)
     happiness = Column(Integer, nullable=False)
     experience_gained = Column(Integer, nullable=True)
