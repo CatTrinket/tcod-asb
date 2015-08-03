@@ -31,27 +31,41 @@ ${damage_class.name.capitalize()}\
 </%def>
 
 <%def name="pokemon_icon(pokemon)">\
-${pokemon_form_icon(pokemon.form, gender=pokemon.gender.identifier)}\
+${pokemon_form_icon(pokemon.form, gender=pokemon.gender.identifier,
+                    shiny=pokemon.is_shiny)}\
 </%def>
 
-<%def name="pokemon_form_icon(form, gender=None, alt='')">\
+<%def name="pokemon_form_icon(form, gender=None, shiny=False, alt='')">\
 ## alt is currently unused because I can't figure out how to make it work with
 ## this trick
 <span class="pokemon-icon ${form.identifier}\
 % if gender is not None:
  ${gender}\
 % endif
+% if shiny:
+ shiny\
+% endif
 "></span>\
 </%def>
 
-<%def name="pokemon_form_sprite(form, gender=None, alt='')">\
+<%def name="pokemon_sprite(pokemon)">\
+${pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier,
+                      shiny=pokemon.is_shiny)}\
+</%def>
+
+<%def name="pokemon_form_sprite(form, gender=None, shiny=False, alt='')">\
 <%
-   filename = '/static/images/pokemon/{}.png'.format(form.identifier)
+   if shiny:
+       path = '/static/images/pokemon/shiny'
+   else:
+       path = '/static/images/pokemon'
+
+   filename = '{}/{}.png'.format(path, form.identifier)
+
    if gender is not None:
        from pkg_resources import resource_exists
 
-       alt_filename = '/static/images/pokemon/{}-{}.png'.format(
-           form.identifier, gender)
+       alt_filename = '{}/{}-{}.png'.format(path, form.identifier, gender)
 
        if resource_exists('asb', alt_filename):
            filename = alt_filename

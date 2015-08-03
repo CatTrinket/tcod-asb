@@ -22,7 +22,7 @@
 
 <h1>${pokemon.name}</h1>
 <div class="portrait-block">
-${h.pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier)}
+${h.pokemon_sprite(pokemon)}
 
 ${h.link(pokemon.form, text=pokemon.species.name)}
 % if (pokemon.gender.identifier != 'genderless' and \

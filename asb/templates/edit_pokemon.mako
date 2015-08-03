@@ -28,6 +28,21 @@ ${h.form_error_list(form.csrf_token.errors)}
     <dd class="form-error">${error}</dd>
     % endfor
     % endif
+
+    <dt>${form.color.label()}</dt>
+    <dd>
+        <ul class="option-list" id="pokemon-color-list">
+            % for color in form.color:
+            <li>
+                <label>
+                    ${color} ${color.label.text}
+                    ${h.pokemon_form_sprite(pokemon.form, gender=pokemon.gender,
+                                            shiny=color.label.text == 'Shiny')}
+                </label>
+            </li>
+            % endfor
+        </ul>
+    </dd>
 </dl>
 
 ${form.save() | n}

@@ -823,6 +823,7 @@ class Pokemon(PlayerTable):
     trainer_id = Column(Integer, ForeignKey('trainers.id', onupdate='cascade'),
         nullable=False)
     ability_slot = Column(Integer, nullable=False)
+    is_shiny = Column(Boolean, nullable=False, default=False)
     experience = Column(Integer, nullable=False, default=0)
     happiness = Column(Integer, nullable=False, default=0)
     is_in_squad = Column(Boolean, nullable=False, default=False)

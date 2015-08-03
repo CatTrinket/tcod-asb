@@ -321,6 +321,18 @@ ul#species-form-list li.focus { background: #B5C0D8; }
 .promotion-price { color: #008000; font-weight: bold; }
 tr.unaffordable-total { color: #CC0000; }
 
+/* Editing Pokémon */
+/* Normal/shiny options — similar to the form list on a species page */
+ul#pokemon-color-list { padding-left: 0; list-style: none; }
+ul#pokemon-color-list li {
+    display: inline-block;
+    padding: 0 0.5em;
+    text-align: center;
+}
+
+ul#pokemon-color-list .portrait { background: #D1D8E7; }
+ul#pokemon-color-list input:checked + .portrait { background: #B5C0D8; }
+
 /* Evolving Pokémon */
 form#evolution-form { text-align: center; }
 form#evolution-form > ul { list-style: none; padding: 0; }

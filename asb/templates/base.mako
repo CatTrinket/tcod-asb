@@ -93,7 +93,9 @@ Dragonflies forums</a> •
 </p>
 
 <p>
-TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a><br>
+TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a> •
+Shiny Pokémon icon edits by
+<a href="https://github.com/msikma/pokesprite">msikma</a><br>
 
 Many thanks to
 <a href="http://forums.dragonflycave.com/member.php?u=527">Negrek</a>,

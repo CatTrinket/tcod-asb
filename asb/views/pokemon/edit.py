@@ -13,6 +13,11 @@ class EditPokemonForm(asb.forms.CSRFTokenForm):
 
     name = wtforms.TextField('Name', [asb.forms.name_validator])
     form = wtforms.SelectField(coerce=int)
+    color = wtforms.RadioField(
+        'Color',
+        choices=[('normal', 'Normal'), ('shiny', 'Shiny')],
+        coerce=lambda x: x  # Leave None as is
+    )
     save = wtforms.SubmitField('Save')
 
     def add_form_choices(self, pokemon):
@@ -81,6 +86,7 @@ def edit_pokemon(pokemon, request):
 
     form = EditPokemonForm(csrf_context=request.session)
     form.name.data = pokemon.name
+    form.color.data = 'shiny' if pokemon.is_shiny else 'normal'
     form.add_form_choices(pokemon)
 
     return {'pokemon': pokemon, 'form': form}
@@ -102,6 +108,11 @@ def edit_pokemon_commit(pokemon, request):
     if form.form is not None:
         pokemon.pokemon_form_id = form.form.data
         pokemon.form_uncertain = False
+
+    if form.color.data == 'normal':
+        pokemon.is_shiny = False
+    elif form.color.data == 'shiny':
+        pokemon.is_shiny = True
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
 
