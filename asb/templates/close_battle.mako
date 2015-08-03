@@ -44,7 +44,7 @@ ${h.form_error_list(form.pokemon.errors.values())}
         </td>
 
         <td class="icon pokemon-icon">
-            ${h.pokemon_form_icon(pokemon.form, gender=pokemon.gender, alt='')}
+            ${h.pokemon_icon(pokemon)}
         </td>
 
         <td class="focus-column">

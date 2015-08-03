@@ -30,6 +30,10 @@ ${damage_class.name.capitalize()}\
 </span>\
 </%def>
 
+<%def name="pokemon_icon(pokemon)">\
+${pokemon_form_icon(pokemon.form, gender=pokemon.gender.identifier)}\
+</%def>
+
 <%def name="pokemon_form_icon(form, gender=None, alt='')">\
 ## alt is currently unused because I can't figure out how to make it work with
 ## this trick

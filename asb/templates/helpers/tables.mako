@@ -9,11 +9,7 @@
 <%def name="name_col()"><col class="pokemon-icon"><col class="pokemon"></%def>
 <%def name="name_header()"><th colspan="2">Name</th></%def>
 <%def name="name_cell(pokemon)">
-<td class="icon">${h.pokemon_form_icon(
-    pokemon.form,
-    gender=pokemon.gender.identifier,
-    alt=''
-)}</td>
+<td class="icon">${h.pokemon_icon(pokemon)}</td>
 <td class="focus-column">${h.link(pokemon)}</td>
 </%def>
 

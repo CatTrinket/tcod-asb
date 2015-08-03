@@ -4,7 +4,7 @@
 <%block name='title'>${battle.name} - Battles - The Cave of Dragonflies ASB</%block>\
 
 <%def name="name(pokemon)">
-<td class="icon pokemon-icon">${h.pokemon_form_icon(pokemon.form)}</td>
+<td class="icon pokemon-icon">${h.pokemon_icon(pokemon)}</td>
 <td class="focus-column">\
 % if pokemon.pokemon is not None:
 ${h.link(pokemon.pokemon, text=pokemon.name)}\

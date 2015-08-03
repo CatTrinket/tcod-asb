@@ -40,7 +40,7 @@
     % if pokemon.participated:
     <tr>
         <td class="icon pokemon-icon">
-            ${h.pokemon_form_icon(pokemon.form, gender=pokemon.gender, alt='')}
+            ${h.pokemon_icon(pokemon)}
         </td>
 
         <td class="focus-column">
