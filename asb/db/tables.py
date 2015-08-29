@@ -579,6 +579,9 @@ class Battle(PlayerTable):
 
                 permissions.append((sec.Deny, ref, 'battle.e-ref'))
 
+                # Also let admins close it
+                permissions.append((sec.Allow, 'admin', 'battle.close'))
+
             # Don't let any of the battlers e-ref, either
             for trainer in trainers:
                 permissions.append((sec.Deny, trainer, 'battle.e-ref'))
@@ -598,6 +601,10 @@ class Battle(PlayerTable):
             # XXX Ideally you'd have to be a mod/admin *and* a ref
             permissions.append((sec.Allow, 'mod', 'battle.approve'))
             permissions.append((sec.Allow, 'admin', 'battle.approve'))
+
+            # Also let admins edit it by way of filling out the close form
+            # again
+            permissions.append((sec.Allow, 'admin', 'battle.close'))
 
         return permissions
 
