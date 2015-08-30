@@ -79,7 +79,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 78,stun-spore,Stun Spore,4,3,,3,75,0,1,23,20,,10,-1
 79,sleep-powder,Sleep Powder,4,3,,3,75,0,1,9,10,,30,
 80,petal-dance,Petal Dance,4,2,120,7,100,0,4,22,40,,40,
-81,string-shot,String Shot,12,3,,1,95,0,2,9,20,,30,
+81,string-shot,String Shot,12,3,,2,95,0,2,9,20,,30,
 82,dragon-rage,Dragon Rage,15,2,,2,100,0,1,31,10,-1,,
 83,fire-spin,Fire Spin,2,2,35,3,85,0,1,19,30,,,
 84,thunder-shock,Thunder Shock,5,2,40,2,100,0,1,9,40,,,
@@ -228,7 +228,7 @@ id,identifier,name,type_id,damage_class_id,power,energy,accuracy,priority,target
 227,encore,Encore,1,3,,4,100,0,1,25,20,,,
 228,pursuit,Pursuit,16,1,40,2,100,0,1,23,20,,10,-1
 229,rapid-spin,Rapid Spin,1,1,20,1,100,0,1,17,20,,,
-230,sweet-scent,Sweet Scent,1,3,,1,100,0,2,9,10,,30,
+230,sweet-scent,Sweet Scent,1,3,,2,100,0,2,9,10,,30,
 231,iron-tail,Iron Tail,17,1,100,7,75,0,1,9,10,,30,
 232,metal-claw,Metal Claw,17,1,50,3,95,0,1,9,40,,,
 233,vital-throw,Vital Throw,7,1,70,4,,-1,1,27,30,,,
