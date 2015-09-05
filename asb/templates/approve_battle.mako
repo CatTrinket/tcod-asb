@@ -70,10 +70,16 @@
 
 <h1>Approve</h1>
 <form action="${request.path}" method="POST">
-<p>If something's wrong here, tell Zhorken (there isn't an interface for
-actually fixing mistakes here yet).  Otherwise:</p>
-
 ${h.form_error_list(*form.errors.values())}
 ${form.csrf_token}
-${form.approve}
+
+<p>${form.action.label}</p>
+
+${form.action(class_='option-list')}
+
+<p>If the battle is indeed over but there's a mistake above, you can either
+reopen the battle and tell the ref to close it again, or get Zhorken to fix it.
+There's still no actual interface for fixing things, unfortunately.</p>
+
+${form.submit}
 </form>

@@ -23,7 +23,16 @@ length_labels = collections.OrderedDict([
 class BattleApproveForm(asb.forms.CSRFTokenForm):
     """A form for letting a mod approve the prizes given out after a battle."""
 
-    approve = wtforms.SubmitField('Approve')
+    action = wtforms.RadioField(
+        'You can either:',
+        choices=[
+            ('approve', 'Approve this battle, if everything looks right, or'),
+            ('reopen', "Reopen this battle, if it shouldn't have been closed.")
+        ],
+        default='approve'
+    )
+
+    submit = wtforms.SubmitField('Go!')
 
 class BattleClosePokemonForm(wtforms.Form):
     """A subform for info about a particular Pokémon's participation in a
@@ -429,12 +438,20 @@ def approve_battle(battle, request):
 @view_config(context=db.Battle, name='approve', request_method='POST',
   renderer='/approve_battle.mako', permission='battle.approve')
 def approve_battle_submit(battle, request):
-    """Approve a battle and give out prizes."""
+    """Process a battle approval form and carry out the appropiate action."""
 
     form = BattleApproveForm(request.POST, csrf_context=request.session)
 
     if not form.validate():
         return {'form': form, 'battle': battle}
+
+    if form.action.data == 'approve':
+        return approve_battle_finalize(battle, request)
+    elif form.action.data == 'reopen':
+        return reopen_battle(battle, request)
+
+def approve_battle_finalize(battle, request):
+    """Distribute prizes and mark a battle as approved."""
 
     if battle.length == 'cancelled':
         # No prizes if the battle never got anywhere
@@ -492,6 +509,27 @@ def approve_battle_submit(battle, request):
         ref.trainer.money += ref_money
 
     battle.needs_approval = False
+
+    return httpexc.HTTPSeeOther(request.resource_path(battle))
+
+def reopen_battle(battle, request):
+    """Reopen a closed battle awaiting approval so that everything is as if it
+    had never been closed.
+    """
+
+    battle.needs_approval = False
+    battle.end_date = None
+    battle.length = None
+
+    for team in battle.teams:
+        team.outcome = None
+
+        for trainer in team.trainers:
+            for pokemon in trainer.pokemon:
+                pokemon.experience_gained = None
+                pokemon.happiness_gained = None
+                pokemon.participated = False
+                pokemon.kos = None
 
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 
