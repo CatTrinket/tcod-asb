@@ -191,9 +191,22 @@ def trainer(trainer, request):
         elif outcome == 'draw':
             draws.append(battle)
 
+    ref_open = []
+    ref_done = []
+    for battle_ref in trainer.battle_refs:
+        battle = battle_ref.battle
+
+        if battle.end_date:
+            # Battle already ended
+            ref_done.append(battle)
+        else:
+            # Battle still in progress
+            ref_open.append(battle)
+
     return {'trainer': trainer, 'profile_link': profile_link,
             'wins': wins, 'losses': losses, 'draws': draws,
-            'open_battles': open_battles}
+            'open_battles': open_battles, 'ref_open': ref_open,
+            'ref_done': ref_done}
 
 @view_config(name='edit', context=db.Trainer, renderer='/edit_trainer.mako',
   request_method='GET', permission='trainer.edit')

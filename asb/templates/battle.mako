@@ -124,6 +124,14 @@ ${h.form_error_list(*link_form.errors.values())}
     % if battle.end_date is not None:
     <dt>Ended</dt>
     <dd>${battle.end_date.strftime('%Y %B %d')}</dd>
+
+    %  if not battle.needs_approval:
+    <dt>Winners</dt>
+    <dd>${outcome}</dd>
+
+    <dt>How did it end?</dt>
+    <dd>${length}.</dd>
+    % endif
     % endif
 </dl>
 
@@ -139,9 +147,14 @@ ${h.form_error_list(*link_form.errors.values())}
 ${t.pokemon_table(
     *(trainer.pokemon for trainer in team.trainers),
     skip_cols=['name', 'trainer'],
-    subheaders=(trainer.name for trainer in team.trainers)
+    subheaders=(trainer.trainer for trainer in team.trainers)
         if team_battle else None,
-    subheader_colspan=9,
-    extra_left_cols=[{'col': t.name_col, 'th': t.name_header, 'td': name}]
+    subheader_colspan=10,
+    extra_left_cols=[{'col': t.name_col, 'th': t.name_header, 'td': name}],
+    extra_right_cols=[{'col': t.ko_col, 'th': t.ko_header, 'td': t.ko_cell}]
+        if battle.end_date is not None and not battle.needs_approval else [],
+    highlight_condition=(lambda pokemon: pokemon.participated)
+        if battle.end_date is not None and not battle.needs_approval else None,
+    link_subheaders=True
 )}
 % endfor

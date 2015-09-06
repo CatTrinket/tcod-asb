@@ -50,7 +50,7 @@ ${h.form_error_list(form.csrf_token.errors)}
     <td class="price">$${transaction.transaction.amount}</td>
     <td class="input">$${transaction.correction(size=2, maxlength=3)}</td>
     <td>
-        <a href="${transaction.transaction.link}">
+        <a href="${transaction.transaction.link}" target="_blank">
             Post #${transaction.transaction.tcod_post_id}
         </a>
     </td>

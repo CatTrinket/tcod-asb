@@ -63,9 +63,21 @@
 % endif
 </%def>
 
+# KOs
+<%def name="ko_col()"><col class="stat"></%def>
+<%def name="ko_header()"><th>KOs</th></%def>
+<%def name="ko_cell(pokemon)">
+% if pokemon.kos:
+<td class="stat">${pokemon.kos}</td>
+% else:
+<td></td>
+% endif
+</%def>
+
 # The actual table function
 <%def name="pokemon_table(*pokemon_lists, subheader_colspan=10,
-    subheaders=None, extra_left_cols=[], skip_cols=[], extra_right_cols=[])">\
+    subheaders=None, extra_left_cols=[], skip_cols=[], extra_right_cols=[],
+    highlight_condition=None, link_subheaders=False)">\
 <%
   if subheaders is None:
       subheaders = [None] * len(pokemon_lists)
@@ -101,12 +113,20 @@ ${column['col']()}
 <tbody>
 % if subheader is not None:
 <tr class="subheader-row">
-    <td colspan="${subheader_colspan}">${subheader}
+    % if link_subheaders:
+    <td colspan="${subheader_colspan}">${h.link(subheader)}</td>
+    % else:
+    <td colspan="${subheader_colspan}">${subheader}</td>
+    % endif
 </tr>
 % endif
 
 % for a_pokemon in pokemon:
+% if highlight_condition and highlight_condition(a_pokemon):
+<tr class="highlight-row">
+% else:
 <tr>
+% endif
     % for column in columns:
     ${column['td'](a_pokemon)}
     % endfor
@@ -401,7 +421,7 @@ hidden-ability\
 <tbody>
 % if subheader is not None:
 <tr class="subheader-row">
-    <td colspan="${subheader_colspan}">${subheader}
+    <td colspan="${subheader_colspan}">${subheader}</td>
 </tr>
 % endif
 % for battle in battles:

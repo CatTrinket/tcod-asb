@@ -1184,6 +1184,7 @@ BattlePokemon.pokemon = relationship(Pokemon)
 BattlePokemon.species = association_proxy('form', 'species')
 BattlePokemon.trainer = relationship(BattleTrainer, back_populates='pokemon')
 
+BattleReferee.battle = relationship(Battle)
 BattleReferee.trainer = relationship(Trainer)
 
 BattleTeam.trainers = relationship(BattleTrainer, order_by=BattleTrainer.id)
@@ -1313,6 +1314,7 @@ Trainer.pc = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad),
     order_by=Pokemon.id)
 Trainer.battle_trainers = relationship(BattleTrainer)
+Trainer.battle_refs = relationship(BattleReferee)
 
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
