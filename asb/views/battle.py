@@ -128,6 +128,7 @@ class BattleEditRefForm(wtforms.Form):
 class BattleEditForm(asb.forms.CSRFTokenForm):
     """An admin-only form for editing a battle."""
 
+    title = wtforms.TextField('Title')
     refs = wtforms.FieldList(
         wtforms.FormField(BattleEditRefForm, [wtforms.validators.Optional()]),
     )
@@ -346,6 +347,7 @@ def edit_battle(battle, request):
     """A page for editing a battle."""
 
     form = BattleEditForm(csrf_context=request.session)
+    form.title.data = battle.name
     form.set_refs(battle)
 
     return {'form': form, 'battle': battle}
@@ -371,6 +373,10 @@ def edit_battle_process(battle, request):
                 is_current_ref=row.current.data,
                 is_emergency_ref=row.emergency.data
             ))
+
+    if form.title.data:
+        battle.name = form.title.data
+        battle.set_identifier()
 
     return httpexc.HTTPSeeOther(request.resource_path(battle))
 

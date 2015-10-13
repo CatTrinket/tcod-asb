@@ -3,10 +3,20 @@
 <%block name='title'>Edit ${battle.name} - Battles - The Cave of Dragonflies ASB</%block>\
 
 <h1>Edit ${battle.name}</h1>
-<h2>Refs</h2>
+
 <form action="${request.path}" method="POST">
 ${form.csrf_token()}
 ${h.form_error_list(form.csrf_token.errors)}
+
+<dl>
+    <dt>Title</dt>
+    <dd>${form.title(size=50)}</dd>
+</dl>
+
+${h.form_error_list(form.title.errors)}
+
+
+<h2>Refs</h2>
 
 <table>
 <thead>
