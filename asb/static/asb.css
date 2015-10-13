@@ -100,6 +100,34 @@ dt, dd { padding: 0.5em; }
 dd > p:first-child { margin-top: 0; }
 dd > p:last-child { margin-bottom: 0; }
 
+/* Fieldsets */
+fieldset {
+    position: relative;
+    margin-top: calc(1rem + 1.3em);  /* Extra space for the legend */
+    margin-bottom: 1rem;
+
+    background: #DEE6F5;
+    border: none;
+    border-top: 3px solid #7799EE;
+}
+
+fieldset > :first-child:not(legend),
+fieldset > legend + * {
+    margin-top: 0;
+}
+
+fieldset > :last-child { margin-bottom: 0; }
+
+legend {
+    /* Mimic an h2 sitting on top of the fieldset */
+    position: absolute;
+    top: -1.3em;
+    left: 0;
+
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
 /* Tables */
 table {
     border-width: 0;

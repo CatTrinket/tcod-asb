@@ -17,8 +17,10 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     To be expanded as need arises.
     """
 
+    # Basics
     roles = asb.forms.MultiCheckboxField('Roles')
 
+    # Items
     move_item = wtforms.StringField(validators=[wtforms.validators.Optional()])
     item_recipient = asb.forms.TrainerField()
     trainer_item = None
@@ -26,6 +28,23 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
     give_item = wtforms.StringField(validators=[wtforms.validators.Optional()])
     item = None
 
+    # Money
+    money_add = wtforms.IntegerField(validators=[
+        wtforms.validators.Optional(),
+        wtforms.validators.NumberRange(min=1, message='$1 minimum')
+    ])
+
+    money_subtract = wtforms.IntegerField(validators=[
+        wtforms.validators.Optional(),
+        wtforms.validators.NumberRange(min=1, message='$1 minimum')
+    ])
+
+    money_note = wtforms.StringField(
+        'Note (required)',
+        filters=[lambda note: note if note is None else note.strip()]
+    )
+
+    submit = wtforms.SubmitField('Cha-ching')
     save = wtforms.SubmitField('Save')
 
     def set_roles(self, trainer):
@@ -54,11 +73,9 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
             )
 
     def validate_move_item(form, field):
-        """Make sure an item was found.
+        """Make sure an item was found if applicable."""
 
-        n.b. the Optional validator will go first.
-        """
-
+        # n.b. the Optional validator will go first
         if form.trainer_item is None:
             raise wtforms.validators.ValidationError('Item not found in bag')
 
@@ -82,35 +99,24 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
         except sqla.orm.exc.NoResultFound:
             raise wtforms.validators.ValidationError('Unknown item')
 
-class TrainerMoneyForm(asb.forms.CSRFTokenForm):
-    """A form for manually giving a trainer money."""
-
-    add = wtforms.IntegerField(validators=[
-        wtforms.validators.Optional(),
-        wtforms.validators.NumberRange(min=1, message='$1 minimum')
-    ])
-
-    subtract = wtforms.IntegerField(validators=[
-        wtforms.validators.Optional(),
-        wtforms.validators.NumberRange(min=1, message='$1 minimum')
-    ])
-
-    note = wtforms.StringField(
-        'Note (required)',
-        [wtforms.validators.Required()],
-        filters=[lambda note: note if note is None else note.strip()]
-    )
-
-    submit = wtforms.SubmitField('Cha-ching')
-
-    def validate_subtract(form, field):
+    def validate_money_subtract(form, field):
         """Complain if a number has been entered in both money_add and
         money_subtract.
         """
 
-        if form.add.data:
+        # n.b. the Optional validator will go first
+        if form.money_add.data:
             raise wtforms.validators.ValidationError(
                 "You can't add and subtract money in one transaction."
+            )
+
+    def validate_money_note(form, field):
+        """Require a note, but only if an amount was entered."""
+
+        if ((form.money_add.data or form.money_subtract.data) and
+                not field.data):
+            raise wtforms.validators.ValidationError(
+                'Please write a note for the transaction.'
             )
 
 class TrainerPasswordResetForm(asb.forms.CSRFTokenForm):
@@ -218,9 +224,6 @@ def edit(trainer, request):
     stuff = {
         'trainer': trainer,
         'form': TrainerEditForm(prefix='edit', csrf_context=request.session),
-        'money_form': TrainerMoneyForm(
-            prefix='money', csrf_context=request.session
-        ),
         'password_form': TrainerPasswordResetForm(
             prefix='password', csrf_context=request.session
         ),
@@ -240,14 +243,12 @@ def edit_commit(trainer, request):
                            csrf_context=request.session)
     form.set_roles(trainer)
     form.get_item(trainer)
-    money_form = TrainerMoneyForm(request.POST, prefix='money',
-                                  csrf_context=request.session)
     password_form = TrainerPasswordResetForm(request.POST, prefix='password',
                                              csrf_context=request.session)
     ban_form = TrainerBanForm(request.POST, prefix='ban',
                               csrf_context=request.session)
 
-    return_dict = {'trainer': trainer, 'form': form, 'money_form': money_form,
+    return_dict = {'trainer': trainer, 'form': form,
                    'password_form': password_form, 'ban_form': ban_form}
 
     if form.save.data:
@@ -255,48 +256,50 @@ def edit_commit(trainer, request):
         if not form.validate():
             return return_dict
 
-        # Update roles
         if form.roles.data is not None:
+            # Update roles
             trainer.roles = (
                 db.DBSession.query(db.Role)
                 .filter(db.Role.identifier.in_(form.roles.data))
                 .all()
             )
 
-        # Move item
         if form.trainer_item is not None:
+            # Move item
             form.trainer_item.trainer_id = form.item_recipient.trainer.id
 
-        # Give item
         if form.give_item.data:
+            # Give item
             db.DBSession.add(db.TrainerItem(
                 trainer_id=trainer.id,
                 item_id=form.item.id
             ))
-    elif money_form.submit.data:
-        # Handle the money form
-        if not money_form.validate():
-            return return_dict
 
-        amount = money_form.add.data or -money_form.subtract.data
+        if not (form.money_add.data is form.money_subtract.data is None):
+            amount = form.money_add.data or -form.money_subtract.data
 
-        transaction = db.BankTransaction(
-            trainer_id=trainer.id,
-            amount=amount,
-            state='from-mod',
-            approver_id=request.user.id
-        )
-        db.DBSession.add(transaction)
-        db.DBSession.flush()
+            # Add transaction
+            transaction = db.BankTransaction(
+                trainer_id=trainer.id,
+                amount=amount,
+                state='from-mod',
+                approver_id=request.user.id
+            )
 
-        note = db.BankTransactionNote(
-            bank_transaction_id=transaction.id,
-            trainer_id=request.user.id,
-            note=money_form.note.data
-        )
-        db.DBSession.add(note)
+            db.DBSession.add(transaction)
+            db.DBSession.flush()
 
-        trainer.money += amount
+            # Add note
+            note = db.BankTransactionNote(
+                bank_transaction_id=transaction.id,
+                trainer_id=request.user.id,
+                note=form.money_note.data
+            )
+
+            db.DBSession.add(note)
+
+            # Add money (possibly negative)
+            trainer.money += amount
     elif password_form.reset.data:
         # Handle the password reset form
         if not password_form.validate():

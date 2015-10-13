@@ -5,77 +5,96 @@
 <h1>Edit ${trainer.name}</h1>
 
 <form action="${request.path}" method="POST">
-${form.csrf_token()}
-${h.form_error_list(form.csrf_token.errors)}
+    ${form.csrf_token()}
+    ${h.form_error_list(form.csrf_token.errors)}
 
-<dl>
-    <dt>${form.roles.label}</dt>
-    <dd>${form.roles(class_='option-list')}</dd>
-    % for error in form.roles.errors:
-    <dd class="form-error">${error}</dd>
-    % endfor
+    <fieldset>
+        <legend>Basics</legend>
 
-    <dt>Move item</dt>
-    <dd>Move one ${form.move_item} to ${form.item_recipient}</dd>
-    % for error in form.move_item.errors + form.item_recipient.errors:
-    <dd class="form-error">${error}</dd>
-    % endfor
+        <dl>
+            <dt>${form.roles.label}</dt>
+            <dd>${form.roles(class_='option-list')}</dd>
+            % for error in form.roles.errors:
+            <dd class="form-error">${error}</dd>
+            % endfor
+        </dl>
+    </fieldset>
 
-    <dt>Give item</dt>
-    <dd>Give one ${form.give_item}</dd>
-    % for error in form.give_item.errors:
-    <dd class="form-error">${error}</dd>
-    % endfor
-</dl>
+    <fieldset>
+        <legend>Items</legend>
 
-${form.save()}
+        <dl>
+            <dt>Move item</dt>
+            <dd>Move one ${form.move_item} to ${form.item_recipient}</dd>
+            % for error in form.move_item.errors + form.item_recipient.errors:
+            <dd class="form-error">${error}</dd>
+            % endfor
+
+            <dt>Give item</dt>
+            <dd>Give one ${form.give_item}</dd>
+            % for error in form.give_item.errors:
+            <dd class="form-error">${error}</dd>
+            % endfor
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>Money</legend>
+
+        <dl>
+            <dt>Current balance</dt>
+            <dd>$${trainer.money}</dd>
+
+            <dt>Add/subtract</dt>
+            <dd>
+                +$${form.money_add(size=2, maxlength=3)} or
+                −$${form.money_subtract(size=2, maxlength=3)}
+            </dd>
+            % for error in form.money_add.errors + form.money_subtract.errors:
+            <dd class="form-error">${error}</dd>
+            % endfor
+
+            <dt>${form.money_note.label}</dt>
+            <dd>${form.money_note(size=60)}</dd>
+            % for error in form.money_note.errors:
+            <dd class="form-error">${error}</dd>
+            % endfor
+        </dl>
+    </fieldset>
+
+    ${form.save}
 </form>
 
+<h1>Danger zone</h1>
 
-<h2>Money</h2>
 <form action="${request.path}" method="POST">
-${money_form.csrf_token()}
-${h.form_error_list(*money_form.errors.values())}
-<dl>
-    <dt>Current balance</dt>
-    <dd>$${trainer.money}</dd>
+    <fieldset>
+        <legend>Reset password</legend>
 
-    <dt>Add/subtract</dt>
-    <dd>
-        +$${money_form.add(size=2, maxlength=3)} or
-        −$${money_form.subtract(size=2, maxlength=3)}
-    </dd>
+        ${h.form_error_list(*password_form.errors.values())}
 
-    <dt>${money_form.note.label}</dt>
-    <dd>${money_form.note(size=60)}</dd>
-</dl>
+        <p>${password_form.confirm.label} ${password_form.confirm}</p>
 
-${money_form.submit}
+        ${password_form.csrf_token}
+        ${password_form.reset}
+    </fieldset>
 </form>
 
-
-<h2>Reset password</h2>
 <form action="${request.path}" method="POST">
-${password_form.csrf_token()}
-${h.form_error_list(*password_form.errors.values())}
-<p>${password_form.confirm.label} ${password_form.confirm}</p>
+    <fieldset>
+        <legend>Ban</legend>
 
-${password_form.reset}
-</form>
+        ${h.form_error_list(*ban_form.errors.values())}
 
+        <dl>
+            <dt>Confirm</dt>
+            <dd>Yes, I want to ban this user ${ban_form.confirm}</dd>
 
-<h2>Ban</h2>
-<form action="${request.path}" method="POST">
-${ban_form.csrf_token()}
-${h.form_error_list(*ban_form.errors.values())}
+            <dt>${ban_form.reason.label}</dt>
+            <dd>${ban_form.reason(size=60)}</dd>
+        </dl>
 
-<dl>
-    <dt>Confirm</dt>
-    <dd>Yes, I want to ban this user ${ban_form.confirm}</dd>
-
-    <dt>${ban_form.reason.label}</dt>
-    <dd>${ban_form.reason(size=60)}</dd>
-</dl>
-
-${ban_form.ban}
+        ${ban_form.csrf_token}
+        ${ban_form.ban}
+    </fieldset>
 <form>
