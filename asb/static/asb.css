@@ -477,6 +477,7 @@ form#news-form dd + dd { margin-left: 5.5em; }
 /* Battle histories */
 dl.stats dt, dl.stats dd {
     flex: none;
+    -ms-flex: none;
     width: auto;
     min-width: 0;
     padding-top: 0;
