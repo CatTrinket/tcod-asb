@@ -5,17 +5,44 @@ html {
 }
 
 body {
-    font-family: DejaVu Sans, Verdana, sans-serif;
+    display: flex;
+    display: -ms-flexbox;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    height: 100vh;
     margin: 0;
+    background: #F0F0F0;
+    font-family: DejaVu Sans, Verdana, sans-serif;
     word-wrap: break-word;
+}
 
-    /* This is the background colour intended for the footer, but we want the
-    space under the footer to be this colour, too, on short pages */
-    background: #D8D8D8;
+header {
+    flex: none;
+    -ms-flex: none;
+    background: #5577BB;
+    text-align: center;
+}
+
+header img { max-width: 100%; }
+
+main {
+    display: block;
+    flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    padding: 2rem;
 }
 
 main > :first-child { margin-top: 0; }
 main > :last-child { margin-bottom: 0; }
+
+footer {
+    flex: none;
+    -ms-flex: none;
+    padding: 0 2rem;
+    background: #D8D8D8;
+    font-size: 14px;
+    text-align: center;
+}
 
 a { text-decoration: none; color: #144BB8; }
 a:hover { color: #759EF0; }
@@ -27,16 +54,6 @@ h1 a:hover, h2 a:hover, .type a:hover {
 }
 
 abbr { border-bottom: 1px dotted black; }
-
-header, main, footer { margin: 0; display: block; }
-header { background: #5577BB; text-align: center; }
-header img { max-width: 100%; }
-main { padding: 2em; background: #F0F0F0; }
-footer {
-    padding: 0 2rem;
-    font-size: 14px;
-    text-align: center;
-}
 
 /* Headers */
 h1 {
