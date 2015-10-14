@@ -4,7 +4,7 @@
 <% from asb.markdown import md, chomp %>
 
 <h1>Edit ${thing.name}</h1>
-<form action="${request.path}" method="POST" class="flavor-editor">
+<form action="${request.path}" method="POST" class="editor">
 ${form.csrf_token}
 ${form.edit_time}
 ${h.form_error_list(*form.errors.values())}

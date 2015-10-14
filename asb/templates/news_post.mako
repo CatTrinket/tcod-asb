@@ -5,7 +5,7 @@
 <% from asb.markdown import md %>
 
 <h1>Post news</h1>
-<form id="news-form" action="${request.path}" method="POST">
+<form id="news-form" action="${request.path}" method="POST" class="editor">
 ${form.csrf_token}
 ${h.form_error_list(*form.errors.values())}
 <dl>
