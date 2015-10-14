@@ -83,22 +83,43 @@ img { vertical-align: middle; }
 .form-error, .warning{ color: #CC0000; }
 
 /* Definition lists with dt and dd on the same line */
-dl { overflow: hidden /* New float context */; }
+dl {
+    display: flex;
+    display: -ms-flexbox;
+    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    align-items: baseline;
+    -ms-flex-align: baseline;
+}
 
 dt {
-    float: left;
-    clear: left;
-    font-weight: bold;
     width: 10em;
+    padding: 0.5em;
+    padding-right: 0;
+    font-weight: bold;
     text-align: right;
 }
 
-dt:after { content: ':'; }
-dd { margin-left: 10.5em /* factor in dt + padding */; }
-dt, dd { padding: 0.5em; }
+dd + dd {
+    /* Indent further dds — dt width + left padding */
+    margin-left: 10.5em;
+}
 
-dd > p:first-child { margin-top: 0; }
-dd > p:last-child { margin-bottom: 0; }
+dd {
+    flex: 1 1;
+    -ms-flex: 1 1;
+    margin-left: 0;
+    padding: 0.5em;
+    padding-left: 0;
+
+    /* Force a line wrap: 100% - (padding + dt width) */
+    min-width: calc(100% - 11em);
+}
+
+dt:after { content: ': '; }  /* n.b. that's a non-breaking space */
+
+dd > :first-child { margin-top: 0; }
+dd > :last-child { margin-bottom: 0; }
 
 /* Fieldsets */
 fieldset {
@@ -265,7 +286,8 @@ table.effect-table td.damage-class-cell > .damage-class
 
 /* Type matchup dls have long dts */
 dl.type-matchups > dt { width: 15em; }
-dl.type-matchups > dd { margin-left: 15.5em; }
+dl.type-matchups > dd { min-width: calc(100% - 16em); }
+dl.type-matchups > dd + dd { margin-left: 15.5em; }
 
 /* Misc. */
 .hidden-ability { font-style: italic; }
@@ -449,16 +471,15 @@ form#news-form textarea {
 }
 
 form#news-form dt { width: 5em; }
-form#news-form dd { margin-left: 5.5em; }
+form#news-form dd { min-width: calc(100% - 6em); }
+form#news-form dd + dd { margin-left: 5.5em; }
 
 /* Battle histories */
 dl.stats dt, dl.stats dd {
-    display: inline;
-    float: none;
-    margin: auto;
+    width: auto;
+    min-width: 0;
+    padding-top: 0;
 }
-dl.stats dt { padding-right: 0.2em; }
-dl.stats dd { padding-left: 0.2em; }
 
 tr.subheader-row a { color: inherit; }
 tr.subheader-row a:hover { text-decoration: underline; }
