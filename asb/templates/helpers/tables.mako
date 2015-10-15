@@ -403,7 +403,14 @@ hidden-ability\
     if subheaders is None:
         subheaders = [None] * len(battle_lists)
 %>
-<table class="battle-table">
+<table class="standard-table">
+<col class="battle">
+<col class="trainer">
+<col class="date-full">
+% if show_end:
+<col class="date-full">
+% endif
+
 <thead>
 <tr>
     <th>Battle</th>

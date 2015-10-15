@@ -232,8 +232,10 @@ td.ticky { padding-right: 0; }
 td.ticky + td { padding-left: 0; }
 
 col.ability { width: 10rem; }
+col.battle { width: 25rem; }
 col.damage-class-col { width: 90px; }
 col.date { width: 5rem; }
+col.date-full { width: 12rem; }
 col.gender { width: 2rem; }
 col.give { width: 4rem; }
 col.input-small { width: 2.5rem; }
