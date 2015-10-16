@@ -202,7 +202,9 @@ def trainer(trainer, request):
     for battle_ref in trainer.battle_refs:
         battle = battle_ref.battle
 
-        if battle.end_date:
+        if battle.length == 'cancelled':
+            continue
+        elif battle.end_date:
             # Battle already ended
             ref_done.append(battle)
         else:
