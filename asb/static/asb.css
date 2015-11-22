@@ -464,6 +464,7 @@ div#move-info:after { display: block; content: ''; clear: both; }
 /* Bank */
 table.transactions { white-space: nowrap; }
 table.transactions tr { vertical-align: baseline; }
+table.transactions td.input { line-height: 2rem; }
 table.transactions td.notes { white-space: normal; }
 table.transactions ul { margin: 0; padding-left: 1rem; }
 
