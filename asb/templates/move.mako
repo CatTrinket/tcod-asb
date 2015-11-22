@@ -85,6 +85,11 @@ ${move.summary | md.convert, n}
 <h1>Description</h1>
 ${move.description | md.convert, n}
 
+% if move.notes:
+<h2>Notes</h2>
+${move.notes | md.convert, n}
+% endif
+
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>
 ${t.move_table(move_category.moves)}

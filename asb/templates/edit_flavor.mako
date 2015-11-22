@@ -15,6 +15,9 @@ ${h.form_error_list(*form.errors.values())}
 
     <dt>${form.description.label}</dt>
     <dd>${form.description(rows=10, cols=100)}</dd>
+
+    <dt>${form.notes.label}</dt>
+    <dd>${form.notes(rows=10, cols=100)}</dd>
 </dl>
 
 ${form.preview}
@@ -24,11 +27,23 @@ ${form.save}
 % if form.edit_time.errors:
 <h1>Current revision</h1>
 <p><b>Summary:</b> ${thing.summary | md.convert, chomp, n}</p>
-<hr>
+
+<h2>Description</h2>
 ${thing.description | md.convert, n}
+
+% if thing.notes:
+<h2>Notes</h2>
+${thing.notes | md.convert, n}
+% endif
 % endif
 
 <h1>Preview</h1>
 <p><b>Summary:</b> ${form.summary.data | md.convert, chomp, n}</p>
-<hr>
+
+<h2>Description</h2>
 ${form.description.data | md.convert, n}
+
+% if form.notes.data:
+<h2>Notes</h2>
+${form.notes.data | md.convert, n}
+% endif

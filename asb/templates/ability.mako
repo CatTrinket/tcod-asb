@@ -10,8 +10,13 @@
 <h1>${ability.name}</h1>
 ${'**Summary:** ' + ability.summary | md.convert, n}
 
-<h2>Description</h2>
+<h1>Description</h1>
 ${ability.description | md.convert, n}
+
+% if ability.notes:
+<h2>Notes</h2>
+${ability.notes | md.convert, n}
+% endif
 
 % if move_category is not None:
 <h2>${move_category.name} moves</h2>

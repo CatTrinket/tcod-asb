@@ -434,6 +434,7 @@ class AbilityEffect(PlayerTable):
         nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
+    notes = Column(Unicode, nullable=False)
     is_current = Column(Boolean, nullable=False, default=True)
 
 class BankTransaction(PlayerTable):
@@ -728,6 +729,7 @@ class ItemEffect(PlayerTable):
         nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
+    notes = Column(Unicode, nullable=False)
     is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveEffect(PlayerTable):
@@ -741,6 +743,7 @@ class MoveEffect(PlayerTable):
         nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
+    notes = Column(Unicode, nullable=False)
     is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveModification(PlayerTable):
@@ -1150,6 +1153,7 @@ Ability.effect = relationship(AbilityEffect, uselist=False,
                      AbilityEffect.is_current == True))
 Ability.summary = association_proxy('effect', 'summary')
 Ability.description = association_proxy('effect', 'description')
+Ability.notes = association_proxy('effect', 'notes')
 
 AbilityEffect.editor = relationship(Trainer)
 
@@ -1209,6 +1213,7 @@ Item.effect = relationship(ItemEffect, uselist=False,
                      ItemEffect.is_current == True))
 Item.summary = association_proxy('effect', 'summary')
 Item.description = association_proxy('effect', 'description')
+Item.notes = association_proxy('effect', 'notes')
 
 ItemCategory.items = relationship(Item, back_populates='category',
     order_by=(Item.order, Item.name))
@@ -1222,6 +1227,7 @@ Move.effect = relationship(MoveEffect, uselist=False,
                      MoveEffect.is_current == True))
 Move.summary = association_proxy('effect', 'summary')
 Move.description = association_proxy('effect', 'description')
+Move.notes = association_proxy('effect', 'notes')
 
 Move.target = relationship(MoveTarget)
 Move.type = relationship(Type, back_populates='moves')

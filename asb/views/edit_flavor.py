@@ -13,6 +13,7 @@ class FlavorEditForm(asb.forms.CSRFTokenForm):
     edit_time = wtforms.HiddenField()
     summary = wtforms.StringField('Summary')
     description = wtforms.TextAreaField('Description')
+    notes = wtforms.TextAreaField('Notes')
     preview = wtforms.SubmitField('Preview')
     save = wtforms.SubmitField('Save')
 
@@ -32,6 +33,7 @@ def edit_flavor(thing, request):
     form = FlavorEditForm(csrf_context=request.session)
     form.summary.data = thing.summary
     form.description.data = thing.description
+    form.notes.data = thing.notes
     form.edit_time.data = timestamp(thing.effect)
 
     return {'form': form, 'thing': thing}
@@ -61,6 +63,7 @@ def process_edit_flavor(thing, request, effect_class, foreign_key_name):
         edited_by_trainer_id=request.user.id,
         summary=form.summary.data,
         description=form.description.data,
+        notes=form.notes.data,
         is_current=True
     )
     setattr(new_effect, foreign_key_name, thing.id)
