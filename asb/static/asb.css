@@ -1,8 +1,6 @@
-/**** GLOBAL STUFF ****/
+/*** PAGE LAYOUT ***/
 
-html {
-    font-size: 16px;
-}
+html { font-size: 16px; }
 
 body {
     display: flex;
@@ -11,6 +9,7 @@ body {
     -ms-flex-direction: column;
     height: 100vh;
     margin: 0;
+
     background: #F0F0F0;
     font-family: DejaVu Sans, Verdana, sans-serif;
     word-wrap: break-word;
@@ -26,80 +25,81 @@ header {
 header img { max-width: 100%; }
 
 main {
-    display: block;
     flex: 1 0 auto;
     -ms-flex: 1 0 auto;
     padding: 2rem;
 }
 
-main > :first-child { margin-top: 0; }
-main > :last-child { margin-bottom: 0; }
+main > *:first-child { margin-top: 0; }
+main > *:last-child { margin-bottom: 0; }
 
 footer {
     flex: none;
     -ms-flex: none;
     padding: 0 2rem;
     background: #D8D8D8;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-align: center;
 }
 
-a { text-decoration: none; color: #144BB8; }
-a:hover { color: #759EF0; }
-
-h1 a, h2 a, .type a { color: inherit; }
-h1 a:hover, h2 a:hover, .type a:hover {
-    color: inherit;
-    text-decoration: underline;
-}
-
-abbr { border-bottom: 1px dotted black; }
-
-/* Headers */
-h1 {
-    border: 3px solid #335599;
-    background: #5577BB;
-    color: white;
-    border-radius: 2em;
-    margin: 2rem -1rem 1rem;
-    padding: 0.25rem 1rem;
-    font-size: 1.3rem;
-}
-
-h2 {
-    font-size: 1.3em;
-    border-bottom: 3px solid #7799EE;
-}
+header, nav, main, footer { display: block; }  /* For IE10 */
 
 /* Menu */
 nav { margin: 0; background: #335599; color: #C0CCE6; }
 nav a { color: white; }
 nav a:hover { color: #C0CCE6; }
 
-nav > ul { list-style: none; padding: 0; text-align: center; margin: 0; }
+nav > ul { list-style: none; margin: 0; padding: 0; text-align: center; }
 nav > ul > li { display: inline-block; padding: 0; }
 nav > ul > li + li::before { content: ' • '; }
 
-.menu-focus-link > a { font-weight: bold; }
+li.menu-focus-link > a { font-weight: bold; }
 
-/* Login form */
-#login { display: inline; }
-#login #username, #login #password { width: 10em; }
+form#login { display: inline; }
+input#username, input#password { width: 10rem; }
 
 /* Flash messages */
-#flash { background: #DDF8E2; border-bottom: 2px solid #085415; }
-#flash ul { margin: 0 1em; padding: 1em; }
+div#flash { background: #DDF8E2; border-bottom: 2px solid #085415; }
+div#flash > ul { margin: 0 1rem; padding: 1rem; }
 
 
-/**** SHARED STUFF ****/
+/*** ELEMENTS AND SHARED CLASSES ***/
+
+/* Links */
+a { color: #144BB8; text-decoration: none; }
+a:hover { color: #759EF0; }
+
+/* abbr — pseudo double dotted underline */
+abbr { border-bottom: 1px dotted black; text-decoration: dotted underline; }
 
 /* Images — align nicely with text */
 img { vertical-align: middle; }
 
-/* Error/warning messages */
-.form-error, .warning{ color: #CC0000; }
+/* Headings */
+h1 {
+    color: white;
+    font-size: 1.3rem;
 
-/* Definition lists with dt and dd on the same line */
+    border: 3px solid #335599;
+    border-radius: 2.6rem;
+    background: #5577BB;
+
+    margin: 2rem -1rem 1rem;
+    padding: 0.25rem 1rem;
+}
+
+h2 {
+    font-size: 1.3rem;
+    border-bottom: 3px solid #7799EE;
+}
+
+h1 a, h2 a { color: inherit; }
+h1 a:hover, h2 a:hover {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* Definition lists, with dt and dd on the same line */
 dl {
     display: flex;
     display: -ms-flexbox;
@@ -110,40 +110,40 @@ dl {
 }
 
 dt {
-    width: 10em;
-    padding: 0.5em;
+    width: 10rem;
+    padding: 0.5rem;
     padding-right: 0;
     font-weight: bold;
     text-align: right;
 }
 
+dt:after { content: ': '; }  /* n.b. that's a non-breaking space */
+
 dd + dd {
     /* Indent further dds — dt width + left padding */
-    margin-left: 10.5em;
+    margin-left: 10.5rem;
 }
 
 dd {
     flex: 1 1;
     -ms-flex: 1 1;
     margin-left: 0;
-    padding: 0.5em;
+    padding: 0.5rem;
     padding-left: 0;
 
     /* Force a line wrap: 100% - (padding + dt width) */
-    min-width: calc(100% - 11em);
+    min-width: calc(100% - 11rem);
 }
 
-dt:after { content: ': '; }  /* n.b. that's a non-breaking space */
-
-dd > :first-child { margin-top: 0; }
-dd > :last-child { margin-bottom: 0; }
+dd > *:first-child { margin-top: 0; }
+dd > *:last-child { margin-bottom: 0; }
 
 /* Forms */
 textarea { display: block; }
 
 fieldset {
     position: relative;
-    margin-top: calc(1rem + 1.3em);  /* Extra space for the legend */
+    margin-top: 2.3rem;  /* Extra space for the legend */
     margin-bottom: 1rem;
 
     background: #DEE6F5;
@@ -151,24 +151,24 @@ fieldset {
     border-top: 3px solid #7799EE;
 }
 
-fieldset > :first-child:not(legend),
+fieldset > *:first-child:not(legend),
 fieldset > legend + * {
     margin-top: 0;
 }
 
-fieldset > :last-child { margin-bottom: 0; }
+fieldset > *:last-child { margin-bottom: 0; }
 
 legend {
     /* Mimic an h2 sitting on top of the fieldset */
     position: absolute;
-    top: -1.3em;
+    top: -1.3rem;
     left: 0;
 
-    font-size: 1.3em;
+    font-size: 1.3rem;
     font-weight: bold;
 }
 
-ul.option-list { list-style-type: none; padding-left: 1em; }
+ul.option-list { list-style-type: none; padding-left: 1rem; }
 
 form.editor input[type="text"],
 form.editor textarea {
@@ -191,17 +191,13 @@ table {
 
 table.standard-table {
     table-layout: fixed;
-    width: 0;  /* let the columns determine the width */
+    width: 0;  /* Let the columns determine the width */
 }
 
 table.effect-table { width: 100%; }
+table.effect-table > tbody { vertical-align: baseline; }
 
-td, th { padding: 0.5rem; line-height: 1rem; }
-th { word-wrap: normal; }
-
-thead { border-bottom: 2px solid #7799EE; }
-tfoot { border-top: 2px solid #7799EE; }
-tbody + tbody { border-top: 2px solid #7799EE; }
+tbody, tfoot { border-top: 2px solid #7799EE; }
 
 tbody > tr:hover:not(.subheader-row) { background: #D1D8E7; }
 
@@ -211,41 +207,43 @@ tr.subheader-row {
     background: #DEE6F5;
 }
 
+tr.subheader-row a { color: inherit; }
+tr.subheader-row a:hover { text-decoration: underline; }
+
+th, td { padding: 0.5rem; line-height: 1rem; }
+th { word-wrap: normal; }
+
 td.focus-column { font-weight: bold; }
-td.gender, td.stat, td.price { text-align: center; }
 
-.effect-table tbody tr { vertical-align: top; }
+td.icon, td.stat, td.price, td.gender, td.input { text-align: center; }
 
-td.icon {
-    padding: 0 0 0 8px;  /* px so we can specify column width in px */
-    text-align: center;
+td.icon, td.squad, td.type-cell, td.damage-class-cell, td.input {
+    /* Things only slightly taller than text shouldn't stretch rows */
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
-td.icon + td { padding-left: 0; }
-.effect-table td.icon { line-height: 2em; }
+td.icon, td.ticky {
+    /* Pretend to be part of the next cell */
+    padding-right: 0;
+}
 
-td.squad { padding-top: 0; padding-bottom: 0; }
-
-td.input { padding: 0 0.5em; height: 2rem; line-height: 2rem; text-align: center; }
-
-td.ticky { padding-right: 0; }
-td.ticky + td { padding-left: 0; }
+td.icon + td, td.ticky + td {
+    padding-left: 0;
+}
 
 col.ability { width: 10rem; }
 col.battle { width: 25rem; }
-col.damage-class-col { width: 90px; }
 col.date { width: 5rem; }
 col.date-full { width: 12rem; }
 col.gender { width: 2rem; }
 col.give { width: 4rem; }
 col.input-small { width: 2.5rem; }
 col.item { width: 10rem; }
-col.item-icon { width: 38px; }
 col.move { width: 13rem; }
 col.percentage { width: 4rem; }
 col.pokemon { width: 13rem; }
 col.pokemon-form { width: 13rem; }
-col.pokemon-icon { width: 48px; }
 col.pokemon-species { width: 8rem; }
 col.population { width: 3.5rem; }
 col.price { width: 4rem; }
@@ -254,112 +252,141 @@ col.stat { width: 3rem; }
 col.stat-speed { width: 5rem; }  /* Wide header */
 col.ticky { width: 2rem; }
 col.trainer { width: 13rem; }
-col.type-col { width: 90px; }
-col.two-types { width: 164px; }
+
+col.pokemon-icon { width: calc(40px + 0.5rem); }
+col.item-icon { width: calc(30px + 0.5rem); }
+
+col.type-col, col.damage-class-col {
+    width: calc(4.375rem + 4px + 1rem);
+}
+
+col.two-types {
+    width: calc((4.375rem + 4px) * 2 + 1rem);
+}
 
 /* Big Pokémon sprite */
-.portrait-block { float: left; text-align: center; width: 175px; }
+div.portrait-block {
+    float: left;
+    text-align: center;
+    width: 175px;
+}
 
-.portrait {
+div.portrait {
+    margin: 10px auto;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background: #C0CCE6;
-    width: 120px;  height: 120px;
-    margin: 10px auto;
 }
 
-.beside-portrait:after { clear: both; display: block; content: ""; }
+div.beside-portrait:after {
+    display: block;
+    clear: both;
+    content: '';
+}
 
 /* Type and damage class icons */
-.type, .damage-class {
+*.type,
+*.damage-class {
     display: inline-block;
-    width: 70px; height: 20px; border: 2px solid; border-radius: 12px;
-    text-align: center; vertical-align: middle; line-height: 20px;
-    font-weight: normal !important;
-    color: white; text-shadow: black 1px 1px;
+
+    width: 4.375rem;
+    height: 1.25rem;
+    border: 2px solid;
+    border-radius: 12px;
+
+    text-align: center;
+    line-height: 1.25rem;
+
+    color: white;
+    text-shadow: black 1px 1px;
+    font-weight: normal;
 }
 
-.type-normal { background: #ADAD7B; border-color: #735A4A; }
-.type-fire { background: #F75231; border-color: #943129; }
-.type-water { background: #6B94F7; border-color: #847B73; }
-.type-grass { background: #7BCE52; border-color: #5A8442; }
-.type-electric { background: #FFD631; border-color: #BDA53A; }
-.type-ice { background: #9CDEDE; border-color: #9494A5; }
-.type-fighting { background: #943129; border-color: #4A423A; }
-.type-poison { background: #A542A5; border-color: #4A3A52; }
-.type-ground { background: #E6C56B; border-color: #8C6B31; }
-.type-flying { background: #AD94F7; border-color: #7A5A9C; }
-.type-psychic { background: #FF5A8C; border-color: #946363; }
-.type-bug { background: #ADBD21; border-color: #7B9410; }
-.type-rock { background: #BDA53A; border-color: #8C6B31; }
-.type-ghost { background: #735A9C; border-color: #4A3A52; }
-.type-dragon { background: #733AFF; border-color: #4A3A94; }
-.type-dark { background: #735A4A; border-color: #4A423A; }
-.type-steel { background: #BDBDD6; border-color: #847B73; }
-.type-fairy { background: #FFA5E6; border-color: #B56B84; }
+*.type > a,
+*.damage-class > a {
+    color: inherit;
+}
 
-.damage-class-physical { background: #CE2918; border-color: #5A3929; }
-.damage-class-special { background: #5A637B; border-color: #424A5A; }
-.damage-class-non-damaging { background: #CCCCCC; border-color: #AAAAAA; }
+*.type > a:hover,
+*.damage-class > a:hover {
+    text-decoration: underline;
+}
 
-/* Type icons shouldn't stretch table rows */
-td.type-cell, td.damage-class-cell { padding: 0 8px; }
+*.type-normal { background: #ADAD7B; border-color: #735A4A; }
+*.type-fire { background: #F75231; border-color: #943129; }
+*.type-water { background: #6B94F7; border-color: #847B73; }
+*.type-grass { background: #7BCE52; border-color: #5A8442; }
+*.type-electric { background: #FFD631; border-color: #BDA53A; }
+*.type-ice { background: #9CDEDE; border-color: #9494A5; }
+*.type-fighting { background: #943129; border-color: #4A423A; }
+*.type-poison { background: #A542A5; border-color: #4A3A52; }
+*.type-ground { background: #E6C56B; border-color: #8C6B31; }
+*.type-flying { background: #AD94F7; border-color: #7A5A9C; }
+*.type-psychic { background: #FF5A8C; border-color: #946363; }
+*.type-bug { background: #ADBD21; border-color: #7B9410; }
+*.type-rock { background: #BDA53A; border-color: #8C6B31; }
+*.type-ghost { background: #735A9C; border-color: #4A3A52; }
+*.type-dragon { background: #733AFF; border-color: #4A3A94; }
+*.type-dark { background: #735A4A; border-color: #4A423A; }
+*.type-steel { background: #BDBDD6; border-color: #847B73; }
+*.type-fairy { background: #FFA5E6; border-color: #B56B84; }
 
-/* Type icons need to be re-aligned with the rest of the text in vertically-
-   aligned tables (XXX this is kind of a gross way of doing it) */
-table.effect-table td.type-cell,
-table.effect-table td.damage-class-cell
-    { padding-top: 0.5em; }
-
-table.effect-table td.type-cell > .type,
-table.effect-table td.damage-class-cell > .damage-class
-    { margin-top: -4px; }
+*.damage-class-physical { background: #CE2918; border-color: #5A3929; }
+*.damage-class-special { background: #5A637B; border-color: #424A5A; }
+*.damage-class-non-damaging { background: #CCCCCC; border-color: #AAAAAA; }
 
 /* Gender symbols */
-.gender-symbol-female { color: #FF4273; }
-.gender-symbol-male { color: #00C5AD; }
-.gender-symbol-genderless { color: black; }
+*.gender-symbol-female { color: #FF4273; }
+*.gender-symbol-male { color: #00C5AD; }
+*.gender-symbol-genderless { color: black; }
 
-/* Type matchup dls have long dts */
-dl.type-matchups > dt { width: 15em; }
-dl.type-matchups > dd { min-width: calc(100% - 16em); }
-dl.type-matchups > dd + dd { margin-left: 15.5em; }
+/* Type matchup dls */
+dl.type-matchups > dt { width: 15rem; }
+
+dl.type-matchups > dd {
+    min-width: calc(100% - 16rem);
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
 /* Misc. */
-.hidden-ability { font-style: italic; }
-.redundant-ability a { color: #AAAAAA; }
-.redundant-ability a:hover { color: #CCCCCC; }
+*.hidden-ability { font-style: italic; }
+*.redundant-ability a { color: #AAAAAA; }
+*.redundant-ability a:hover { color: #CCCCCC; }
 
-.positive-priority { color: #008000; }
-.negative-priority { color: #FF0000; }
+*.positive-priority { color: #008000; }
+*.negative-priority { color: #FF0000; }
 
-/**** SPECIFIC PAGES ****/
+
+/*** SPECIFIC PAGES ***/
 
 /* Registration form */
-#registration-form label { display: block; font-weight: bold; }
-#registration-form input { display: block; margin-left: 1.5em; }
-#registration-form p { font-style: italic; font-size: 0.9em; }
-#registration-form #submit { margin-left: 0; }
+form#registration-form label { display: block; font-weight: bold; }
+form#registration-form input { display: block; margin-left: 1.5rem; }
+form#registration-form p { font-style: italic; font-size: 0.9rem; }
+form#registration-form input[type="submit"] { margin-left: 0; }
 
 /* Login page */
-#login-page-form { text-align: center; }
+form#login-page-form { text-align: center; }
 
 /* Settings form — a lot like the registration form */
-#settings-form label { display: block; font-weight: bold; }
+form#settings-form label { display: block; font-weight: bold; }
 
-#settings-form input[type="password"],
-#settings-form input[type="text"] {
-    display: block; margin-left: 1.5em;
+form#settings-form input[type="password"],
+form#settings-form input[type="text"] {
+    display: block;
+    margin-left: 1.5rem;
 }
 
-#settings-form div + div {
+form#settings-form div + div {
     border-top: 1px solid black;
-    padding-top: 0.5em;
-    margin-top: 0.5em;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-/* Manage items page */
-/* I'M SO ANNOYED that this doesn't really fit into any of the other "centered
-   column" classes */
+/* Manage items page — I'M SO ANNOYED that this doesn't really fit into any of
+   the other "centered column" classes */
 td.give { text-align: center }
 
 /* Pokémon species list */
@@ -373,8 +400,8 @@ table.evolution-tree {
 }
 
 table.evolution-tree td {
-    width: 11em;
-    height: 3em;
+    width: 11rem;
+    height: 3rem;
     background: #DEE6F5;
     border: 1px solid #7799EE;
     text-align: center;
@@ -396,10 +423,10 @@ ul#species-form-list li:hover { background: #D1D8E7; }
 ul#species-form-list li.focus { background: #B5C0D8; }
 
 /* Pokémon pages */
-.evolution-progress { font-size: 14px; }
+span.evolution-progress { font-size: 14px; }
 
 /* Buying stuff */
-.promotion-price { color: #008000; font-weight: bold; }
+td.promotion-price { color: #008000; font-weight: bold; }
 tr.unaffordable-total { color: #CC0000; }
 
 /* Editing Pokémon */
@@ -407,12 +434,12 @@ tr.unaffordable-total { color: #CC0000; }
 ul#pokemon-color-list { padding-left: 0; list-style: none; }
 ul#pokemon-color-list li {
     display: inline-block;
-    padding: 0 0.5em;
+    padding: 0 0.5rem;
     text-align: center;
 }
 
-ul#pokemon-color-list .portrait { background: #D1D8E7; }
-ul#pokemon-color-list input:checked + .portrait { background: #B5C0D8; }
+ul#pokemon-color-list div.portrait { background: #D1D8E7; }
+ul#pokemon-color-list input:checked + div.portrait { background: #B5C0D8; }
 
 /* Evolving Pokémon */
 form#evolution-form { text-align: center; }
@@ -436,60 +463,69 @@ div#move-info:after { display: block; content: ''; clear: both; }
 
 /* Bank */
 table.transactions { white-space: nowrap; }
-table.transactions tr { vertical-align: top; }
+table.transactions tr { vertical-align: baseline; }
 table.transactions td.notes { white-space: normal; }
-table.transactions ul { margin: 0; padding-left: 1em; }
+table.transactions ul { margin: 0; padding-left: 1rem; }
 
 /* Type chart */
-#type-chart { table-layout: fixed; width: 0; }
-#type-chart col#left-axis { width: 1rem; }
-#type-chart col#attacking-types { width: 96px; }
-#type-chart colgroup#matchups > col { width: 40px; }
-#type-chart tr { height: 40px; }
-#type-chart tr#defending-types > th { height: 70px; vertical-align: bottom; }
+table#type-chart { table-layout: fixed; width: 0; }
 
-#type-chart colgroup + colgroup { border-left: 2px solid #7799EE; }
-#type-chart td { font-weight: bold; text-align: center; }
+col#left-axis { width: 2rem; }
+colgroup#matchups { border-left: 2px solid #7799EE; }
+colgroup#matchups > col { width: 40px; }
 
-#type-chart tr#defending-types .type {
+table#type-chart tr { height: 40px; }
+
+tr#defending-types > th {
+    height: calc(4.375rem + 4px);
+    vertical-align: bottom;
+}
+
+tr#defending-types *.type {
     transform: translateY(100%) rotate(-0.25turn);
     transform-origin: 0 0;
 }
 
-#type-chart th#left-axis-label { background: #F0F0F0 !important; }
-#type-chart th#left-axis-label span {
+th#left-axis-label {
+    /* "Attacking type" label — cover up tr hover colour */
+    background: #F0F0F0;
+}
+
+th#left-axis-label > span {
     display: inline-block;
-    width: 10rem;
-    transform: translateY(5rem) rotate(-0.25turn);
+    white-space: nowrap;
+    transform: rotate(-0.25turn) translate(-50%, 50%);
     transform-origin: 0 50%;
 }
 
-.super-effective {
+table#type-chart td { font-weight: bold; text-align: center; }
+
+td.super-effective {
     color: #008000;
     background: #C0E8A8;
     border: 2px solid #004000;
 }
 
-.not-very-effective {
+td.not-very-effective {
     color: #F0E0E0;
     background: #D85050;
     border: 2px solid #300000;
 }
 
-.ineffective {
+td.ineffective {
     color: #F0F0F0;
     background: #404040;
     border: 2px solid #000000;
 }
 
 /* News */
-.news-timestamp { font-style: italic; }
+p.news-timestamp { font-style: italic; }
 
-form#news-form dt { width: 5em; }
-form#news-form dd { min-width: calc(100% - 6em); }
-form#news-form dd + dd { margin-left: 5.5em; }
+form#news-form dt { width: 5rem; }
+form#news-form dd { min-width: calc(100% - 6rem); }
+form#news-form dd + dd { margin-left: 5.5rem; }
 
-/* Battle histories */
+/* Trainer page battle histories */
 dl.stats dt, dl.stats dd {
     flex: none;
     -ms-flex: none;
@@ -498,7 +534,5 @@ dl.stats dt, dl.stats dd {
     padding-top: 0;
 }
 
-tr.subheader-row a { color: inherit; }
-tr.subheader-row a:hover { text-decoration: underline; }
-
+/* Battle pages */
 tr.highlight-row { background-color: #D1DDF7; }

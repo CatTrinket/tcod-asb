@@ -6,7 +6,7 @@
 <table id="type-chart">
 <colgroup>
     <col id="left-axis">
-    <col id="attacking-types">
+    <col class="type-col">
 </colgroup>
 
 <colgroup id="matchups">
