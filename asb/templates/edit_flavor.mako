@@ -17,7 +17,7 @@ ${h.form_error_list(*form.errors.values())}
     <dd>${form.description(rows=10, cols=100)}</dd>
 
     <dt>${form.notes.label}</dt>
-    <dd>${form.notes(rows=10, cols=100)}</dd>
+    <dd>${form.notes(rows=7, cols=100)}</dd>
 </dl>
 
 ${form.preview}
