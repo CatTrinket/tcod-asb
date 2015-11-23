@@ -25,13 +25,14 @@
 
         <dl>
             <dt>Move item</dt>
-            <dd>Move one ${form.move_item} to ${form.item_recipient}</dd>
+            <dd>Move one ${form.move_item(placeholder='item name')}
+                to ${form.item_recipient(placeholder='other trainer')}</dd>
             % for error in form.move_item.errors + form.item_recipient.errors:
             <dd class="form-error">${error}</dd>
             % endfor
 
             <dt>Give item</dt>
-            <dd>Give one ${form.give_item}</dd>
+            <dd>Give one ${form.give_item(placeholder='item name')}</dd>
             % for error in form.give_item.errors:
             <dd class="form-error">${error}</dd>
             % endfor
