@@ -384,6 +384,26 @@ class Role(PokedexTable):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
+class TradeLotState(PokedexTable):
+    """A possible state for trade lots.
+
+    Possible values:
+    - draft: The sender needs to confirm the offer.
+    - proposed: This offer has been proposed to the other trainer.
+    - accepted: The other trainer has accepted this offer.
+    - rejected: The other trainer has rejected this offer.
+
+    The primary key is an identifier to mimic an Enum, while not being as
+    impossible to update with alembic as an Enum.
+    """
+
+    # XXX Is there any particular reason to keep rejected trades around?  May
+    # as well for now I guess.
+
+    __tablename__ = 'trade_lot_states'
+
+    identifier = Column(Unicode, primary_key=True)
+
 class Type(PokedexTable):
     """A type (Normal, Fire, etc.)"""
 
@@ -843,7 +863,6 @@ class Pokemon(PlayerTable):
     was_from_hack = Column(Boolean, nullable=False, default=False)
     original_trainer_id = Column(Integer, ForeignKey('trainers.id',
         onupdate='cascade', ondelete='set null'))
-    trade_id = Column(Integer, ForeignKey('trades.id'), nullable=True)
 
     __table_args__ = (
         # Set up a composite foreign key for ability
@@ -852,14 +871,6 @@ class Pokemon(PlayerTable):
             [PokemonFormAbility.pokemon_form_id, PokemonFormAbility.slot],
             name='pokemon_ability_fkey', use_alter=True
         ),
-
-        # If this Pokémon is being offered in a trade, make sure it's being
-        # offered by its actual trainer
-        ForeignKeyConstraint(
-            ['trade_id', 'trainer_id'],
-            ['trade_trainers.trade_id', 'trade_trainers.trainer_id'],
-            name='pokemon_trader_fkey'
-        )
     )
 
     def update_identifier(self):
@@ -971,31 +982,99 @@ class Trade(PlayerTable):
 
     id = Column(Integer, trades_id_seq, primary_key=True)
     is_gift = Column(Boolean, nullable=False)
-    approved = Column(Boolean, nullable=False, default=False)
+    reveal_date = Column(Date, nullable=True)
+    completed = Column(Boolean, nullable=False, default=False)
 
     @property
-    def needs_approval(self):
-        """Return True if this trade needs to be approved by a mod.
+    def __name__(self):
+        """Return this trade's resource name for traversal."""
 
-        Trades are only submitted for approval after all the trainers have
-        finalized the trade.  Gifts are submitted for approval and the
-        recipient's acceptance simultaneously.
-        """
+        return str(self.id)
 
-        return not self.approved and (
-            self.is_gift or
-            all(trainer.accepted for trainer in self.trainers)
+class TradeLot(PlayerTable):
+    """A package of money, items, and/or Pokémon offered in a trade.
+
+    sender_id and recipient_id are nullable so that mods can still see trade
+    history even if someone deletes their account.
+    """
+
+    __tablename__ = 'trade_lots'
+
+    trade_lots_id_seq = Sequence('trade_lots_id_seq')
+
+    id = Column(Integer, trade_lots_id_seq, primary_key=True)
+    trade_id = Column(Integer, ForeignKey('trades.id'), nullable=False)
+    in_exchange_for_id = Column(Integer, ForeignKey('trade_lots.id'),
+        nullable=True)
+    sender_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
+    recipient_id = Column(Integer, ForeignKey('trainers.id'), nullable=True)
+    state = Column(Unicode, ForeignKey(TradeLotState.identifier),
+        nullable=False, default='draft')
+    money = Column(Integer, nullable=True)
+    notify_recipient = Column(Boolean, nullable=False, default=False)
+
+    # Big complicated key to make sure that if this lot is in exchange for
+    # another, the other lot belongs to the same trade, and is to/from the
+    # right trainers
+    __table_args__ = (
+        UniqueConstraint('id', 'trade_id', 'sender_id', 'recipient_id'),
+        ForeignKeyConstraint(
+            ['in_exchange_for_id', 'trade_id', 'recipient_id', 'sender_id'],
+            ['trade_lots.id', 'trade_lots.trade_id', 'trade_lots.sender_id',
+             'trade_lots.recipient_id']
+        )
+    )
+
+    def grouped_items(self):
+        items = (
+            DBSession.query(TradeLotItem.item_id, func.count('*').label('qty'))
+            .join(TrainerItem)
+            .filter(TradeLotItem.trade_lot_id == self.id,
+                    TrainerItem.pokemon_id.is_(None))
+            .group_by(TradeLotItem.item_id)
+            .subquery()
         )
 
-class TradeTrainer(PlayerTable):
-    """A trainer participating in a trade."""
+        return (
+            DBSession.query(Item, items.c.qty)
+            .join(items)
+            .order_by(Item.name)
+            .all()
+        )
 
-    __tablename__ = 'trade_trainers'
+class TradeLotItem(PlayerTable):
+    """An item included in a trade lot.
 
-    trade_id = Column(Integer, ForeignKey('trades.id'), primary_key=True)
-    trainer_id = Column(Integer, ForeignKey('trainers.id'), primary_key=True)
-    accepted = Column(Boolean, nullable=False, default=False)
-    money = Column(Integer, nullable=True)
+    trainer_item_id is nullable and item_id is kept track of separately in case
+    the item is used up later, so that anyone looking at trade history can still
+    see what the item was.
+    """
+
+    __tablename__ = 'trade_lot_items'
+
+    trade_lot_items_id_seq = Sequence('trade_lot_items_id_seq')
+
+    id = Column(Integer, trade_lot_items_id_seq, primary_key=True)
+    trade_lot_id = Column(Integer, ForeignKey('trade_lots.id'), nullable=False)
+    trainer_item_id = Column(Integer, ForeignKey('trainer_items.id'),
+        nullable=True)
+    item_id = Column(Integer, ForeignKey(Item.id), nullable=False)
+
+class TradeLotPokemon(PlayerTable):
+    """A Pokémon included in a trade lot.
+
+    pokemon_id is nullable and pokemon_form_id is kept track of separately in
+    case the Pokémon is deleted later, so that anyone looking at trade history
+    can still see what the Pokémon was.
+    """
+
+    __tablename__ = 'trade_lot_pokemon'
+
+    trade_lot_pokemon_id_seq = Sequence('trade_lot_pokemon_id_seq')
+
+    id = Column(Integer, trade_lot_pokemon_id_seq, primary_key=True)
+    trade_lot_id = Column(Integer, ForeignKey('trade_lots.id'), nullable=False)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'), nullable=True)
 
 class Trainer(PlayerTable):
     """A member of the ASB league and user of this app thing."""
@@ -1125,17 +1204,6 @@ class TrainerItem(PlayerTable):
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
-    trade_id = Column(Integer, ForeignKey('trades.id'), nullable=True)
-
-    # If this item is being offered in a trade, make sure it's being offered by
-    # the trainer who owns it
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ['trade_id', 'trainer_id'],
-            ['trade_trainers.trade_id', 'trade_trainers.trainer_id'],
-            name='item_trader_fkey'
-        ),
-    )
 
 class TrainerRole(PlayerTable):
     """A role that a trainer has."""
