@@ -128,7 +128,9 @@ def start_trade(context, request):
         state = trade_info['state']
 
         if 'back' in request.GET or state == 'new':
-            form = NewTradeForm(trade_info, csrf_context=request.session)
+            form = NewTradeForm(csrf_context=request.session)
+            form.recipient_name.data = trade_info.get('recipient_name')
+            form.contents.data = trade_info.get('contents')
             trade_info['state'] = 'new'
         else:
             return trade_redirect(state)
