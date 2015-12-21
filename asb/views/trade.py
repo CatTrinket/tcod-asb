@@ -131,7 +131,7 @@ def start_trade(context, request):
             form = NewTradeForm(csrf_context=request.session)
             form.recipient_name.data = trade_info.get('recipient_name')
             form.contents.data = trade_info.get('contents')
-            trade_info['state'] = 'new'
+            del request.session['trade']
         else:
             return trade_redirect(state)
     else:
@@ -151,7 +151,9 @@ def start_trade_process(context, request):
     """Process the start trade form."""
 
     if 'trade' in request.session:
-        return httpexc.HTTPSeeOther('/trade/new')
+        request.session.flash('Please finish this gift or click "Back" before '
+                              'starting a new gift')
+        return trade_redirect(request.session['trade']['state'])
 
     form = NewTradeForm(request.POST, csrf_context=request.session)
 
