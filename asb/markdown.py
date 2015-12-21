@@ -18,15 +18,18 @@ class ASBMarkdown(markdown.Markdown):
     given an effect yet, its summary and description will both be None.
     """
 
-    # Allowed elements: everything that Markdown can produce, unless I missed
-    # something
+    # Allowed elements
     tags = [
+        # Everything Markdown can produce
         'p', 'br',
         'a', 'strong', 'em',
         'ul', 'ol', 'li',
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
         'img', 'blockquote', 'hr',
-        'code', 'pre'
+        'code', 'pre',
+
+        # Extras
+        'del'
     ]
 
     # Allowed attributes
