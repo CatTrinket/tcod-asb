@@ -873,6 +873,21 @@ class Pokemon(PlayerTable):
         ),
     )
 
+    def is_being_traded(self):
+        """Check if this Pokémon is being traded."""
+
+        trade = (
+            DBSession.query(TradeLotPokemon)
+            .join(TradeLot, TradeLotPokemon.trade_lot_id == TradeLot.id)
+            .join(TradeLot.trade)
+            .filter(TradeLotPokemon.pokemon_id == self.id)
+            .filter(~Trade.completed)
+        )
+
+        (trade_exists,) = DBSession.query(trade.exists()).one()
+
+        return trade_exists
+
     def update_identifier(self):
         """Update this Pokémon's identifier."""
 
@@ -1121,6 +1136,7 @@ class Trainer(PlayerTable):
             DBSession.query(TrainerItem.item_id, func.count('*').label('qty'))
             .filter_by(trainer_id=self.id)
             .filter(TrainerItem.pokemon_id.is_(None))
+            .filter(~TrainerItem.trades.any(~Trade.completed))
             .group_by(TrainerItem.item_id)
             .subquery()
         )
@@ -1155,6 +1171,21 @@ class Trainer(PlayerTable):
             .exists())
         pokemon_exist, = DBSession.query(existence_subquery).one()
         return pokemon_exist
+
+    @property
+    def pc(self):
+        """Return all the Pokémon in this trainer's PC, excluding those that
+        are currently being offered in trades.
+        """
+
+        return (
+            DBSession.query(Pokemon)
+            .filter_by(trainer_id=self.id)
+            .filter_by(is_in_squad=False)
+            .filter(~Pokemon.trades.any(~Trade.completed))
+            .order_by(Pokemon.id)
+            .all()
+        )
 
     @property
     def promotions(self):
@@ -1325,6 +1356,9 @@ Pokemon.move_modification = relationship(MoveModification, uselist=False)
 Pokemon.species = association_proxy('form', 'species')
 Pokemon.trainer = relationship(Trainer, foreign_keys=[Pokemon.trainer_id],
     back_populates='pokemon')
+Pokemon.trade_lots = relationship(TradeLot,
+    secondary=TradeLotPokemon.__table__, order_by=TradeLot.id)
+Pokemon.trades = association_proxy('trade_lots', 'trade')
 Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
     secondary=PokemonUnlockedEvolution.__table__)
 
@@ -1377,6 +1411,17 @@ Promotion.pokemon_species = relationship(PokemonSpecies,
 Rarity.pokemon_species = relationship(PokemonSpecies,
     order_by=PokemonSpecies.order, back_populates='rarity')
 
+Trade.lots = relationship(TradeLot, order_by=TradeLot.id)
+
+TradeLot.items = relationship(TrainerItem, secondary=TradeLotItem.__table__,
+    order_by=TrainerItem.item_id)
+TradeLot.pokemon = relationship(Pokemon, secondary=TradeLotPokemon.__table__,
+    order_by=Pokemon.id)
+TradeLot.trade = relationship(Trade)
+TradeLot.sender = relationship(Trainer, foreign_keys=[TradeLot.sender_id])
+TradeLot.recipient = relationship(Trainer,
+    foreign_keys=[TradeLot.recipient_id])
+
 Trainer.ban = relationship(BannedTrainer,
     foreign_keys=[BannedTrainer.trainer_id], uselist=False)
 Trainer.pokemon = relationship(Pokemon, foreign_keys=[Pokemon.trainer_id],
@@ -1384,14 +1429,15 @@ Trainer.pokemon = relationship(Pokemon, foreign_keys=[Pokemon.trainer_id],
 Trainer.squad = relationship(Pokemon,
     primaryjoin=and_(Pokemon.trainer_id == Trainer.id, Pokemon.is_in_squad),
     order_by=Pokemon.id)
-Trainer.pc = relationship(Pokemon,
-    primaryjoin=and_(Pokemon.trainer_id == Trainer.id, ~Pokemon.is_in_squad),
-    order_by=Pokemon.id)
 Trainer.battle_trainers = relationship(BattleTrainer)
 Trainer.battle_refs = relationship(BattleReferee)
 
 Trainer.items = relationship(Item, secondary=TrainerItem.__table__)
 Trainer.roles = relationship(Role, secondary=TrainerRole.__table__)
+
+TrainerItem.trade_lots = relationship(TradeLot,
+    secondary=TradeLotItem.__table__, order_by=TradeLot.id)
+TrainerItem.trades = association_proxy('trade_lots', 'trade')
 
 Type.attacking_matchups = relationship(TypeMatchup,
     foreign_keys=[TypeMatchup.attacking_type_id],

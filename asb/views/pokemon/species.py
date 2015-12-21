@@ -31,7 +31,11 @@ def species_index(context, request):
             sqla.func.count('*').label('population'))
         .select_from(db.Pokemon)
         .join(db.Pokemon.trainer)
-        .filter(db.Trainer.is_validated, ~db.Trainer.ban.has())
+        .filter(
+            db.Trainer.is_validated,
+            ~db.Trainer.ban.has(),
+            ~db.Pokemon.trades.any(~db.Trade.completed)
+        )
         .group_by(db.Pokemon.pokemon_form_id)
         .subquery()
     )
@@ -132,7 +136,11 @@ def species(pokemon, request):
         db.DBSession.query(db.Pokemon)
         .join(db.Pokemon.trainer)
         .filter(db.Pokemon.pokemon_form_id == pokemon.id)
-        .filter(db.Trainer.is_validated, ~db.Trainer.ban.has())
+        .filter(
+            db.Trainer.is_validated,
+            ~db.Trainer.ban.has(),
+            ~db.Pokemon.trades.any(~db.Trade.completed)
+        )
         .options(
              sqla.orm.joinedload('ability'),
              sqla.orm.joinedload('trainer'),

@@ -3,6 +3,7 @@
 import pyramid
 import pyramid.httpexceptions as httpexc
 import pyramid.security as sec
+import pyramid.threadlocal
 from sqlalchemy.orm.exc import NoResultFound
 
 from asb import db
@@ -110,6 +111,15 @@ class IDRedirectResource(DexIndex):
         else:
             return item
 
+class IDIndex(DexIndex):
+    """A DexIndex resource that uses id instead of an identifier."""
+
+    def __getitem__(self, id):
+        try:
+            return db.DBSession.query(self.table).get(int(id))
+        except (ValueError, NoResultFound):
+            raise KeyError
+
 class TrainerIndex(IDRedirectResource):
     __name__ = 'trainers'
     table = db.Trainer
@@ -118,6 +128,34 @@ class PokemonIndex(IDRedirectResource):
     __name__ = 'pokemon'
     table = db.Pokemon
 
+    def __getitem__(self, identifier):
+        """Intercept the Pokémon and check if it's currently being offered as a
+        gift (and the sender is not the current user).  If so, pretend nothing
+        was found.
+        """
+
+        pokemon = super().__getitem__(identifier)
+
+        if (isinstance(pokemon, db.Pokemon) and pokemon.is_being_traded() and
+                pokemon.trainer_id != current_trainer_id()):
+            return None
+
+        return pokemon
+
+    def _redirect(self, identifier):
+        """Intercept the redirect and check if the Pokémon is currently being
+        offered as a gift (and the sender is not the current user).  If so,
+        pretend nothing was found.
+        """
+
+        pokemon = super()._redirect(identifier)
+
+        if (pokemon is not None and pokemon.is_being_traded() and
+                pokemon.trainer_id != current_trainer_id()):
+            return None
+
+        return pokemon
+
 class BattleIndex(IDRedirectResource):
     __name__ = 'battles'
     table = db.Battle
@@ -125,6 +163,10 @@ class BattleIndex(IDRedirectResource):
 class NewsIndex(IDRedirectResource):
     __name__ = 'news'
     table = db.NewsPost
+
+class TradeIndex(IDIndex):
+    __name__ = 'trade'  # [sic]
+    table = db.Trade
 
 class SpeciesIndex(DexIndex):
     """Actually a form index."""
@@ -162,6 +204,15 @@ class TypeIndex(DexIndex):
     __name__ = 'types'
     table = db.Type
 
+def current_trainer_id():
+    """Return the trainer ID of the current user.
+
+    XXX The Pyramid docs warn heavily against using get_current_request()
+    lightly.  Figure out something bettter ASAP.
+    """
+
+    return pyramid.threadlocal.get_current_request().authenticated_userid
+
 def get_root(request):
     """Get a root object."""
 
@@ -170,6 +221,7 @@ def get_root(request):
         'pokemon': PokemonIndex(),
         'battles': BattleIndex(),
         'news': NewsIndex(),
+        'trade': TradeIndex(),
         'species': SpeciesIndex(),
         'moves': MoveIndex(),
         'abilities': AbilityIndex(),

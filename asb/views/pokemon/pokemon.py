@@ -13,7 +13,11 @@ def pokemon_index(context, request):
     pokemon = (
         db.DBSession.query(db.Pokemon)
         .join(db.Pokemon.trainer)
-        .filter(db.Trainer.is_validated, ~db.Trainer.ban.has())
+        .filter(
+             db.Trainer.is_validated,
+             ~db.Trainer.ban.has(),
+             ~db.Pokemon.trades.any(~db.Trade.completed)
+        )
         .join(db.PokemonForm)
         .join(db.PokemonSpecies)
         .order_by(db.PokemonSpecies.order, db.Pokemon.name)
