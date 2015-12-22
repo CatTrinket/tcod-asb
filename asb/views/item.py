@@ -70,6 +70,7 @@ def get_holders(trainer):
     holders = (
         db.DBSession.query(db.Pokemon)
         .filter_by(trainer_id=trainer.id)
+        .filter(~db.Pokemon.trades.any(~db.Trade.completed))
         .join(db.TrainerItem)
         .join(db.Item)
         .order_by(db.Pokemon.is_in_squad.desc(), db.Item.name,
@@ -148,6 +149,7 @@ def item_pokemon_choices(trainer, item, form):
     query = (
         db.DBSession.query(db.Pokemon)
         .filter_by(trainer_id=trainer.id)
+        .filter(~db.Pokemon.trades.any(~db.Trade.completed))
         .order_by(db.Pokemon.is_in_squad.desc(), db.Pokemon.id)
     )
 
