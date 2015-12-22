@@ -17,20 +17,13 @@ class PokemonMovingForm(asb.forms.CSRFTokenForm):
     submit = wtforms.SubmitField()
 
 
-def pokemon_deposit_form(trainer, request, use_post=True):
+def pokemon_deposit_form(trainer, request):
     """Return a PokemonMovingForm for depositing Pokémon."""
 
-    post = request.POST if use_post else None
-    form = PokemonMovingForm(post, csrf_context=request.session)
+    form = PokemonMovingForm(request.POST, prefix='deposit',
+                             csrf_context=request.session)
 
     form.pokemon.choices = [(p.id, '') for p in trainer.squad]
-
-    # The Length validator is intended for strings, but this works so whatever
-    form.pokemon.validators.append(
-        wtforms.validators.Length(max=len(trainer.squad) - 1,
-            message='You must keep at least one Pokémon in your active squad')
-    )
-
     form.submit.label = wtforms.fields.Label('submit', 'Deposit')
 
     return form
@@ -38,8 +31,8 @@ def pokemon_deposit_form(trainer, request, use_post=True):
 def pokemon_withdraw_form(trainer, request, use_post=True):
     """Return a PokemonMovingForm for withdrawing Pokémon."""
 
-    post = request.POST if use_post else None
-    form = PokemonMovingForm(post, csrf_context=request.session)
+    form = PokemonMovingForm(request.POST, prefix='withdraw',
+                             csrf_context=request.session)
 
     form.pokemon.choices = [(p.id, '') for p in trainer.pc]
 
@@ -89,26 +82,30 @@ def manage_pokemon_commit(context, request):
     """Process a request to deposit or withdraw Pokémon."""
 
     trainer = request.user
+    deposit = pokemon_deposit_form(trainer, request)
+    withdraw = pokemon_withdraw_form(trainer, request)
 
-    if request.POST['submit'] == 'Deposit':
-        deposit = pokemon_deposit_form(trainer, request)
-        withdraw = pokemon_withdraw_form(trainer, request, use_post=False)
+    # Handle forms
+    if deposit.submit.data:
         form = deposit
         is_in_squad = False
-    elif request.POST['submit'] == 'Withdraw':
-        deposit = pokemon_deposit_form(trainer, request, use_post=False)
-        withdraw = pokemon_withdraw_form(trainer, request)
+    elif withdraw.submit.data:
         form = withdraw
         is_in_squad = True
+    else:
+        form = None
 
-    if not form.validate():
+    if form is None or not form.validate():
         return {'trainer': trainer, 'deposit': deposit, 'withdraw': withdraw}
 
-    to_toggle = (db.DBSession.query(db.Pokemon)
+    # Move Pokémon
+    pokemon = (
+        db.DBSession.query(db.Pokemon)
         .filter(db.Pokemon.id.in_(form.pokemon.data))
-        .all())
+        .all()
+    )
 
-    for pokemon in to_toggle:
-        pokemon.is_in_squad = is_in_squad
+    for a_pokemon in pokemon:
+        a_pokemon.is_in_squad = is_in_squad
 
     return httpexc.HTTPSeeOther('/pokemon/manage')

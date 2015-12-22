@@ -204,23 +204,32 @@ class BattleTrainerField(wtforms.TextAreaField):
 
         # Make sure there are at least two trainers
         if len(self.data) == 1:
-            self.errors.append(
-                'A battle has to involve at least two trainers'
-            )
+            self.errors.append('A battle has to involve at least two trainers')
 
         # Make sure nobody is listed more than once
-        counts = collections.Counter(name for team in self.data for name in team)
+        counts = collections.Counter(name for team in self.data
+                                     for name in team)
+
         for name, count in counts.items():
             if count > 1:
                 self.errors.append('{} is listed more than once'.format(name))
 
         # Make sure all these trainers exist
         try:
-            self.teams
+            teams = self.teams
         except KeyError as error:
-            self.errors.append(
-                "Unknown trainer: {}".format(*error.args)
-            )
+            self.errors.append("Unknown trainer: {}".format(*error.args))
+
+        # Make sure the ref isn't listed, and everyone has at least one Pokémon
+        for team in teams:
+            for trainer in team:
+                if trainer == form._ref:
+                    self.errors.append("You can't battle if you're the ref!")
+                elif not trainer.squad:
+                    self.errors.append(
+                        '{} has no Pokémon in their active squad'
+                        .format(trainer.name)
+                    )
 
     @property
     def teams(self):
@@ -263,6 +272,7 @@ class NewBattleForm(asb.forms.CSRFTokenForm):
 
     trainers = BattleTrainerField()
     submit = wtforms.SubmitField('Submit')
+    _ref = None
 
 def format_outcome(battle):
     """
@@ -571,14 +581,9 @@ def new_battle_process(context, request):
     """Create a new battle."""
 
     form = NewBattleForm(request.POST, csrf_context=request.session)
+    form._ref = request.user
 
     if not form.validate():
-        return {'form': form}
-
-    # Make sure the ref hasn't listed themselves
-    if any(trainer == request.user for team in form.trainers.teams
-      for trainer in team):
-        form.trainers.errors.append("You can't battle if you're the ref!")
         return {'form': form}
 
     # Create battle
