@@ -28,7 +28,7 @@ def pokemon_deposit_form(trainer, request):
 
     return form
 
-def pokemon_withdraw_form(trainer, request, use_post=True):
+def pokemon_withdraw_form(trainer, request):
     """Return a PokemonMovingForm for withdrawing Pokémon."""
 
     form = PokemonMovingForm(request.POST, prefix='withdraw',
