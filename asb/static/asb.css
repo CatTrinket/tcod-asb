@@ -99,6 +99,17 @@ h1 a:hover, h2 a:hover {
     text-decoration: underline;
 }
 
+/* Monospace text */
+pre,
+code,
+form.editor input[type="text"],
+form.editor textarea {
+    /* Try to cover everyone (and hopefully avoid Courier) */
+    font-family: DejaVu Sans Mono, Monaco, Droid Sans Mono, Lucida Console,
+                 monospace;
+    font-size: 1rem;
+}
+
 /* Definition lists, with dt and dd on the same line */
 dl {
     display: flex;
@@ -168,6 +179,8 @@ legend {
     font-weight: bold;
 }
 
+*.form-error, *.warning { color: #CC0000 }
+
 ul.option-list { list-style-type: none; padding-left: 1rem; }
 
 form.editor input[type="text"],
@@ -175,11 +188,6 @@ form.editor textarea {
     display: inline;
     vertical-align: baseline;
     width: 100%;
-
-    /* Try to cover everyone (and hopefully avoid Courier) */
-    font-family: DejaVu Sans Mono, Monaco, Droid Sans Mono, Lucida Console,
-                 monospace;
-    font-size: 1rem;
 }
 
 /* Tables */
@@ -271,7 +279,7 @@ div.portrait-block {
     width: 175px;
 }
 
-div.portrait {
+*.portrait {
     margin: 10px auto;
     width: 120px;
     height: 120px;
