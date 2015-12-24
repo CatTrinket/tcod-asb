@@ -154,6 +154,7 @@ def trainer_index(context, request):
         db.DBSession.query(db.Pokemon.trainer_id, sqla.func.count('*')
             .label('count'))
         .select_from(db.Pokemon)
+        .filter(~db.Pokemon.trades.any(~db.Trade.completed))
         .group_by(db.Pokemon.trainer_id)
         .subquery()
     )
