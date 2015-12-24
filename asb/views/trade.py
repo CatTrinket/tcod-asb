@@ -12,6 +12,7 @@ from asb.resources import TradeIndex
 class NewTradeForm(asb.forms.CSRFTokenForm):
     """A form for beginning the trade process."""
 
+    sender = None
     recipient = None
     recipient_name = wtforms.StringField(
         'Who do you want to give a gift?',
@@ -47,6 +48,10 @@ class NewTradeForm(asb.forms.CSRFTokenForm):
             )
         except sqla.orm.exc.NoResultFound:
             raise wtforms.validators.ValidationError('Unknown trainer')
+
+        if form.recipient == form.sender:
+            raise wtforms.validators.ValidationError(
+                "You can't give a gift to yourself!")
 
 class ConfirmTradeForm(asb.forms.CSRFTokenForm):
     """A form for deciding whether to edit, confirm, or cancel a trade."""
@@ -156,6 +161,7 @@ def start_trade_process(context, request):
         return trade_redirect(request.session['trade']['state'])
 
     form = NewTradeForm(request.POST, csrf_context=request.session)
+    form.sender = request.user
 
     if not form.validate():
         return {'form': form}
