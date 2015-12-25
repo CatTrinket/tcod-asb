@@ -874,15 +874,22 @@ class Pokemon(PlayerTable):
         ),
     )
 
-    def is_being_traded(self):
-        """Check if this Pokémon is being traded."""
+    def is_hidden_gift(self):
+        """Check if this Pokémon should be hidden if someone tries to access
+        its page.
+
+        This is not used to filter it out of lists in general.
+        """
 
         trade = (
             DBSession.query(TradeLotPokemon)
             .join(TradeLot, TradeLotPokemon.trade_lot_id == TradeLot.id)
             .join(TradeLot.trade)
-            .filter(TradeLotPokemon.pokemon_id == self.id)
-            .filter(~Trade.completed)
+            .filter(
+                TradeLotPokemon.pokemon_id == self.id,
+                ~Trade.completed,
+                Trade.reveal_date > datetime.datetime.utcnow().date()
+            )
         )
 
         (trade_exists,) = DBSession.query(trade.exists()).one()

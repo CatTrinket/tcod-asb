@@ -136,7 +136,7 @@ class PokemonIndex(IDRedirectResource):
 
         pokemon = super().__getitem__(identifier)
 
-        if (isinstance(pokemon, db.Pokemon) and pokemon.is_being_traded() and
+        if (isinstance(pokemon, db.Pokemon) and pokemon.is_hidden_gift() and
                 pokemon.trainer_id != current_trainer_id()):
             return None
 
@@ -150,7 +150,7 @@ class PokemonIndex(IDRedirectResource):
 
         pokemon = super()._redirect(identifier)
 
-        if (pokemon is not None and pokemon.is_being_traded() and
+        if (pokemon is not None and pokemon.is_hidden_gift() and
                 pokemon.trainer_id != current_trainer_id()):
             return None
 
