@@ -124,6 +124,13 @@ def home(context, request):
 
             bulletin.append((message, '/bank#recent'))
 
+        # Check if they have any gifts to claim
+        for gift in trainer.pending_gifts():
+            bulletin.append((
+                'You have a gift from {0}!'.format(gift.lots[0].sender.name),
+                request.resource_path(gift.__parent__, gift.__name__)
+            ))
+
         stuff['bulletin'] = bulletin
 
     # Find stuff to display on the Mod Bulletin, if applicable

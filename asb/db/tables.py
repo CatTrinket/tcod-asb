@@ -1187,6 +1187,23 @@ class Trainer(PlayerTable):
             .all()
         )
 
+    def pending_gifts(self):
+        """Return any gifts waiting for this trainer to claim."""
+
+        return (
+            DBSession.query(Trade)
+            .join(Trade.lots)
+            .filter(
+                TradeLot.recipient_id == self.id,
+                TradeLot.state == 'proposed',
+                Trade.is_gift,
+                or_(Trade.reveal_date.is_(None),
+                    Trade.reveal_date >= datetime.datetime.utcnow().date())
+            )
+            .order_by(Trade.id)
+            .all()
+        )
+
     @property
     def promotions(self):
         """Return any promotions this trainer is eligible to receive."""
