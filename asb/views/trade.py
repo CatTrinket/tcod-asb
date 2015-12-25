@@ -68,6 +68,24 @@ class ReconsiderTradeForm(asb.forms.CSRFTokenForm):
     draft = wtforms.SubmitField('Return to draft stage')
     cancel = wtforms.SubmitField('Cancel')
 
+class AcceptGiftForm(asb.forms.CSRFTokenForm):
+    """A form for accepting (or not) a gift."""
+
+    accept = wtforms.SubmitField('Accept')
+    decline = wtforms.SubmitField('Decline')
+    really_decline = wtforms.BooleanField('Really decline this gift')
+
+    def validate_decline(form, field):
+        """Make sure the user has checked "Really decline" if they clicked
+        "Decline".
+        """
+
+        if field.data and not form.really_decline.data:
+            raise wtforms.ValidationError(
+                'Please check the "Really decline" box if you really want to '
+                'decline this gift.'
+            )
+
 def trade_form(request, contents):
     """Dynamically build a trade form with the required pieces."""
 
@@ -145,6 +163,7 @@ def start_trade(context, request):
     pending_trades = (
         db.DBSession.query(db.TradeLot)
         .filter_by(sender_id=request.user.id)
+        .filter(db.TradeLot.state.in_(['draft', 'proposed']))
         .all()
     )
 
@@ -300,6 +319,10 @@ def trade(context, request):
             elif lot.state == 'proposed':
                 form = ReconsiderTradeForm(csrf_context=request.session)
                 stuff['reconsider_form'] = form
+        else:
+            if lot.state == 'proposed':
+                form = AcceptGiftForm(csrf_context=request.session)
+                stuff['accept_form'] = form
 
     return stuff
 
@@ -316,6 +339,9 @@ def trade_process(context, request):
                 return trade_confirm(lot, request)
             elif lot.state == 'proposed':
                 return trade_reconsider(lot, request)
+        else:
+            if lot.state == 'proposed':
+                return gift_accept(lot, request)
 
     # Not sure what they're here for
     return httpexc.HTTPSeeOther(request.path)
@@ -375,3 +401,48 @@ def cancel_lot(lot, request):
         # It's an actual trade, and the other person still has a lot.  I don't
         # know what to do with this yet.
         raise ValueError("Two-way trading hasn't been implemented yet")
+
+def gift_accept(lot, request):
+    """Process an AcceptGiftForm."""
+
+    form = AcceptGiftForm(request.POST, csrf_context=request.session)
+    trade = lot.trade
+
+    if not form.validate():
+        return {'trade': trade, 'accept_form': form}
+
+    if form.accept.data:
+        lot.state = 'accepted'
+
+        if lot.money is not None:
+            lot.recipient.money += lot.money
+
+        for item in lot.items:
+            item.trainer_id = lot.recipient_id
+
+        for pokemon in lot.pokemon:
+            pokemon.trainer_id = lot.recipient_id
+
+        trade.completed = True
+
+        request.session.flash('Gift accepted!')
+        return httpexc.HTTPSeeOther(
+            request.resource_path(request.user.__parent__,
+                                  request.user.__name__)
+        )
+    elif form.decline.data:
+        lot.state = 'rejected'
+
+        if lot.money is not None:
+            lot.sender.money += lot.money
+
+        trade.completed = True
+
+        request.session.flash('Gift declined.')
+        return httpexc.HTTPSeeOther(
+            request.resource_path(request.user.__parent__,
+                                  request.user.__name__)
+        )
+    else:
+        # ?????
+        return {'trade': trade, 'accept_form': form}

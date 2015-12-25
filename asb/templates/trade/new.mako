@@ -3,7 +3,7 @@
 <%block name="title">Trade - The Cave of Dragonflies ASB</%block>\
 
 % if pending_trades:
-    <h1>Pending gifts</h1>
+    <h1>Gifts in progress</h1>
 
     <ul>
         % for lot in pending_trades:

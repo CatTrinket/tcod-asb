@@ -1041,6 +1041,8 @@ class TradeLot(PlayerTable):
     )
 
     def grouped_items(self):
+        """Return this trade's items, with multiples grouped together."""
+
         items = (
             DBSession.query(TradeLotItem.item_id, func.count('*').label('qty'))
             .join(TrainerItem)
@@ -1056,6 +1058,19 @@ class TradeLot(PlayerTable):
             .order_by(Item.name)
             .all()
         )
+
+    @property
+    def __acl__(self):
+        """Return a list of permissions for Pyramid's authorization."""
+
+        sender = 'user:{0}'.format(self.sender_id)
+        permissions = [(sec.Allow, sender, 'trade.lot.view')]
+
+        if (self.state != 'draft' and
+                self.trade.reveal_date >= datetime.datetime.utcnow().date()):
+            permissions.append((sec.Allow, sec.Everyone, 'trade.lot.view'))
+
+        return permissions
 
 class TradeLotItem(PlayerTable):
     """An item included in a trade lot.

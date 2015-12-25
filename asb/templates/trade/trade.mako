@@ -6,8 +6,7 @@
 <% from asb.markdown import md, chomp %>
 
 % for lot in trade.lots:
-    ## % if lot.state != 'draft' or lot.sender_id == request.user.id:
-    % if lot.sender_id == request.user.id:
+    % if request.has_permission('trade.lot.view', lot):
         % if lot.state == 'draft':
             <h1>Confirm your gift</h1>
         % elif lot.sender_id == request.user.id:
@@ -74,7 +73,7 @@
             ${t.pokemon_table(lot.pokemon, skip_cols=['trainer'])}
         % endif
 
-        % if lot.sender_id == request.user.id:
+        % if lot.sender_id == request.authenticated_userid:
             % if lot.state == 'draft':
                 <form action="${request.path}" method="POST">
                     ${h.form_error_list(*confirm_form.errors.values())}
@@ -96,6 +95,28 @@
                     ${reconsider_form.cancel}
                 </form>
             % endif
-         % endif
+        % elif lot.recipient_id == request.authenticated_userid:
+            % if lot.state == 'proposed':
+                <h1>Accept this gift</h1>
+                <form action="${request.path}" method="POST">
+                    ${accept_form.csrf_token}
+                    ${h.form_error_list(accept_form.csrf_token.errors,
+                                        accept_form.accept.errors)}
+
+                    <p>${accept_form.accept}</p>
+
+
+                    <h2>Decline</h2>
+
+                    ${h.form_error_list(accept_form.really_decline.errors,
+                                        accept_form.decline.errors)}
+
+                    <p>${accept_form.really_decline}
+                    ${accept_form.really_decline.label.text}</p>
+
+                    <p>${accept_form.decline}</p>
+                </form>
+            % endif
+        % endif
     % endif
 % endfor
