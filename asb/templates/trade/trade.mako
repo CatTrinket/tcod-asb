@@ -42,7 +42,8 @@
             % endif
         </p>
 
-        % if lot.items:
+        <% items = lot.grouped_items() %>
+        % if items:
             <h2>Items</h2>
             <table class="standard-table effect-table">
             <col class="icon item-icon">
@@ -57,7 +58,7 @@
                 </tr>
             </thead>
             <tbody>
-                % for (item, qty) in lot.grouped_items():
+                % for (item, qty) in items:
                     <tr>
                         <td class="icon item-icon">
                             <img src="/static/images/items/${item.identifier}.png"
