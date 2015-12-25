@@ -312,7 +312,7 @@ def trade(context, request):
     stuff = {'trade': context}
 
     for lot in context.lots:
-        if lot.sender_id == request.user.id:
+        if lot.sender_id == request.authenticated_userid:
             if lot.state == 'draft':
                 form = ConfirmTradeForm(csrf_context=request.session)
                 stuff['confirm_form'] = form

@@ -7,12 +7,16 @@
 
 % for lot in trade.lots:
     % if request.has_permission('trade.lot.view', lot):
-        % if lot.state == 'draft':
-            <h1>Confirm your gift</h1>
-        % elif lot.sender_id == request.user.id:
-            <h1>Your gift</h1>
-        % else:
+        % if lot.sender == request.user:
+            % if lot.state == 'draft':
+                <h1>Confirm your gift</h1>
+            % else:
+                <h1>Your gift</h1>
+            % endif
+        % elif lot.recipient == request.user:
             <h1>A gift from ${lot.sender.name}</h1>
+        % else:
+            <h1>A gift from ${lot.sender.name} to ${lot.recipient.name}</h1>
         % endif
 
         % if lot.state == 'draft':
@@ -23,7 +27,7 @@
         % endif
 
         <p>
-            % if lot.sender_id == request.user.id:
+            % if lot.sender == request.user:
             You offered
             % else:
             ${lot.sender.name} offered
@@ -73,7 +77,7 @@
             ${t.pokemon_table(lot.pokemon, skip_cols=['trainer'])}
         % endif
 
-        % if lot.sender_id == request.authenticated_userid:
+        % if lot.sender == request.user:
             % if lot.state == 'draft':
                 <form action="${request.path}" method="POST">
                     ${h.form_error_list(*confirm_form.errors.values())}
@@ -95,7 +99,7 @@
                     ${reconsider_form.cancel}
                 </form>
             % endif
-        % elif lot.recipient_id == request.authenticated_userid:
+        % elif lot.recipient == request.user:
             % if lot.state == 'proposed':
                 <h1>Accept this gift</h1>
                 <form action="${request.path}" method="POST">
