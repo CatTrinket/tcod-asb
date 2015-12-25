@@ -874,6 +874,44 @@ class Pokemon(PlayerTable):
         ),
     )
 
+    @hybrid_method
+    def is_active(self, check_trainer=True):
+        """Check whether or not this Pokémon is "active", i.e. it should be
+        displayed wherever Pokémon are displayed.
+        """
+
+        active = not self.is_in_trade()
+
+        if check_trainer:
+            active = active and self.trainer.is_active()
+
+        return active
+
+    @is_active.expression
+    def is_active(class_, check_trainer=True):
+        """Return the corresponding SQLAlchemy expression to check whether this
+        Pokémon is active.
+        """
+
+        active = ~class_.trades.any(~Trade.completed)
+
+        if check_trainer:
+            active = and_(active, class_.trainer.has(Trainer.is_active()))
+
+        return active
+
+    def is_in_trade(self):
+        """Check whether or not this Pokémon is currently part of a trade."""
+
+        trade = (
+            DBSession.query(TradeLotPokemon)
+            .join(TradeLot, Trade)
+            .filter(TradeLotPokemon.pokemon_id == self.id, ~Trade.completed)
+        )
+
+        (exists,) = DBSession.query(trade.exists()).one()
+        return exists
+
     def is_hidden_gift(self):
         """Check if this Pokémon should be hidden if someone tries to access
         its page.
@@ -1194,6 +1232,20 @@ class Trainer(PlayerTable):
         pokemon_exist, = DBSession.query(existence_subquery).one()
         return pokemon_exist
 
+    @hybrid_method
+    def is_active(self):
+        """Return whether this trainer is currently able to play ASB."""
+
+        return self.is_validated and self.ban is None
+
+    @is_active.expression
+    def is_active(class_):
+        """Return the corresponding SQLAlchemy expression to determine whether
+        this trainer is active.
+        """
+
+        return and_(class_.is_validated, ~class_.ban.has())
+
     @property
     def pc(self):
         """Return all the Pokémon in this trainer's PC, excluding those that
@@ -1202,9 +1254,8 @@ class Trainer(PlayerTable):
 
         return (
             DBSession.query(Pokemon)
-            .filter_by(trainer_id=self.id)
-            .filter_by(is_in_squad=False)
-            .filter(~Pokemon.trades.any(~Trade.completed))
+            .filter_by(trainer_id=self.id, is_in_squad=False)
+            .filter(Pokemon.is_active(check_trainer=False))
             .order_by(Pokemon.id)
             .all()
         )

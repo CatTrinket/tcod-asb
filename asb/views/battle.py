@@ -219,6 +219,7 @@ class BattleTrainerField(wtforms.TextAreaField):
             teams = self.teams
         except KeyError as error:
             self.errors.append("Unknown trainer: {}".format(*error.args))
+            return
 
         # Make sure the ref isn't listed, and everyone has at least one Pokémon
         for team in teams:
@@ -244,8 +245,8 @@ class BattleTrainerField(wtforms.TextAreaField):
         names = [trainer.lower() for team in self.data for trainer in team]
         trainers = (
             db.DBSession.query(db.Trainer)
-            .filter(sqla.func.lower(db.Trainer.name).in_(names))
-            .filter_by(is_validated=True)
+            .filter(sqla.func.lower(db.Trainer.name).in_(names),
+                    db.Trainer.is_active())
             .all()
         )
         trainers = {trainer.name.lower(): trainer for trainer in trainers}

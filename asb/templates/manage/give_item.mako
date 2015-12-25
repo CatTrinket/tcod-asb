@@ -24,7 +24,8 @@ ${h.form_error_list(*form.errors.values())}
 
 ${t.pokemon_table(
     *pokemon,
-    subheaders=['Active squad', 'PC'],
+    subheaders=['Active Squad' if group[0].is_in_squad else 'PC'
+                for group in pokemon],
     skip_cols=['trainer'],
     extra_left_cols=[{'col': give_col, 'th': give_header, 'td': give}]
 )}

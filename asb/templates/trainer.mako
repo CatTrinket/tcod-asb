@@ -26,7 +26,7 @@ following reason: ${trainer.ban.reason}</strong></p>
     <dd>$${trainer.money}</dd>
 
     <dt>Pokémon count</dt>
-    <dd>${len(trainer.pokemon)}</dd>
+    <dd>${len(trainer.squad) + len(trainer.pc)}</dd>
 </dl>
 
 <h1>Pokémon</h1>
