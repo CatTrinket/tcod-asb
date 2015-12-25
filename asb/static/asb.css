@@ -451,19 +451,31 @@ ul#pokemon-color-list div.portrait { background: #D1D8E7; }
 ul#pokemon-color-list input:checked + div.portrait { background: #B5C0D8; }
 
 /* Evolving Pokémon */
-form#evolution-form { text-align: center; }
-form#evolution-form > ul { list-style: none; padding: 0; }
-form#evolution-form > ul > li {
-    display: inline-block;
-    margin: 0 1rem;
-    width: 10rem;
-    vertical-align: top;
+form#evolution-form > ul {
+    display: flex;
+    display: -ms-flexbox;
+    justify-content: center;
+    -ms-flex-pack: center;
+    list-style: none;
+    padding: 0;
 }
 
-form#evolution-form > ul > li > option { display: block; }
+form#evolution-form label {
+    display: flex;
+    display: -ms-flexbox;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+    width: 10rem;
+}
 
 form#evolution-form p { margin: 0; }
 form#evolution-form p.evolution-name { font-size: 1.5rem; }
+
+form#evolution-form input[type="submit"] { display: block; margin: auto; }
+
+*.topsy-turvy { transform: rotate(0.5turn); }
 
 /* Move pages */
 div#move-info > dl { float: left; width: 33%; margin: 0; }

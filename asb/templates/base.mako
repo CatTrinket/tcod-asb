@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/static/icons.css">
     <link rel="icon" href="/static/images/favicon.png">
 </head>
-<body>
+
+<%block name='body_tag'><body></%block>
 <header>
 <a href="/">
     <img src="/static/images/banner.png"

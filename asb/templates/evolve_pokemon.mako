@@ -1,6 +1,14 @@
 <%inherit file='/base.mako'/>\
 <%namespace name='h' file='/helpers/helpers.mako'/>\
-<%block name='title'>Evolve ${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
+<%block name='title'>Evolve ${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>
+
+<%block name='body_tag'>
+% if pokemon.species.identifier == 'inkay':
+<body class="topsy-turvy">
+% else:
+<body>
+% endif
+</%block>
 
 <h1>What?  ${pokemon.name} is evolving!</h1>
 
