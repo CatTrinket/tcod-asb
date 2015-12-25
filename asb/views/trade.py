@@ -420,7 +420,7 @@ def gift_accept(lot, request):
         for pokemon in lot.pokemon:
             pokemon.trainer_id = lot.recipient_id
 
-        trade.completed = True
+        trade.completed_date = datetime.datetime.utcnow().date()
 
         request.session.flash('Gift accepted!')
         return httpexc.HTTPSeeOther(
@@ -433,7 +433,7 @@ def gift_accept(lot, request):
         if lot.money is not None:
             lot.sender.money += lot.money
 
-        trade.completed = True
+        trade.completed_date = datetime.datetime.utcnow().date()
 
         request.session.flash('Gift declined.')
         return httpexc.HTTPSeeOther(

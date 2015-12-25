@@ -893,7 +893,7 @@ class Pokemon(PlayerTable):
         Pokémon is active.
         """
 
-        active = ~class_.trades.any(~Trade.completed)
+        active = ~class_.trades.any(Trade.completed_date.is_(None))
 
         if check_trainer:
             active = and_(active, class_.trainer.has(Trainer.is_active()))
@@ -906,7 +906,8 @@ class Pokemon(PlayerTable):
         trade = (
             DBSession.query(TradeLotPokemon)
             .join(TradeLot, Trade)
-            .filter(TradeLotPokemon.pokemon_id == self.id, ~Trade.completed)
+            .filter(TradeLotPokemon.pokemon_id == self.id,
+                    Trade.completed_date.is_(None))
         )
 
         (exists,) = DBSession.query(trade.exists()).one()
@@ -925,7 +926,7 @@ class Pokemon(PlayerTable):
             .join(TradeLot.trade)
             .filter(
                 TradeLotPokemon.pokemon_id == self.id,
-                ~Trade.completed,
+                Trade.completed_date.is_(None),
                 Trade.reveal_date > datetime.datetime.utcnow().date()
             )
         )
@@ -1044,7 +1045,7 @@ class Trade(PlayerTable):
     id = Column(Integer, trades_id_seq, primary_key=True)
     is_gift = Column(Boolean, nullable=False)
     reveal_date = Column(Date, nullable=True)
-    completed = Column(Boolean, nullable=False, default=False)
+    completed_date = Column(Date, nullable=True)
 
     @property
     def __name__(self):
@@ -1341,7 +1342,7 @@ class TrainerItem(PlayerTable):
         """
 
         return and_(class_.pokemon_id.is_(None),
-                    ~class_.trades.any(~Trade.completed))
+                    ~class_.trades.any(Trade.completed_date.is_(None)))
 
     def is_in_trade(self):
         """Return whether or not this item is currently in a trade."""
@@ -1351,7 +1352,7 @@ class TrainerItem(PlayerTable):
             .join(TradeLot, Trade)
             .filter(
                 TradeLotItem.trainer_item_id == self.id,
-                ~Trade.completed
+                Trade.completed_date.is_(None)
             )
         )
 
