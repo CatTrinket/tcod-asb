@@ -260,11 +260,8 @@ def build_trade_post(context, request):
             if field.data:
                 bag_items = (
                     db.DBSession.query(db.TrainerItem)
-                    .filter_by(
-                        item_id=item.id,
-                        trainer_id=request.user.id,
-                        pokemon_id=None
-                    )
+                    .filter_by(item_id=item.id, trainer_id=request.user.id)
+                    .filter(db.TrainerItem.is_in_bag())
                     .limit(field.data)
                     .all()
                 )

@@ -219,7 +219,8 @@ def give_item_commit(item, request):
     # Find this item in the trainer's bag
     trainer_item = (
         db.DBSession.query(db.TrainerItem)
-        .filter_by(trainer_id=trainer.id, item_id=item.id, pokemon_id=None)
+        .filter_by(trainer_id=trainer.id, item_id=item.id)
+        .filter(db.TrainerItem.is_in_bag())
         .first()
     )
 

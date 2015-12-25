@@ -6,6 +6,7 @@ from sqlalchemy import (Column, ForeignKey, ForeignKeyConstraint,
     UniqueConstraint, Sequence, func)
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 import sqlalchemy.schema
 from sqlalchemy.sql import and_, or_
@@ -1150,8 +1151,7 @@ class Trainer(PlayerTable):
         trainer_items = (
             DBSession.query(TrainerItem.item_id, func.count('*').label('qty'))
             .filter_by(trainer_id=self.id)
-            .filter(TrainerItem.pokemon_id.is_(None))
-            .filter(~TrainerItem.trades.any(~Trade.completed))
+            .filter(TrainerItem.is_in_bag())
             .group_by(TrainerItem.item_id)
             .subquery()
         )
@@ -1267,6 +1267,38 @@ class TrainerItem(PlayerTable):
     # XXX Some RDBMSes don't do nullable + unique right (but postgres does)
     pokemon_id = Column(Integer, ForeignKey('pokemon.id', onupdate='cascade'),
         nullable=True, unique=True)
+
+    @hybrid_method
+    def is_in_bag(self):
+        """Return whether or not this item is currently in the trainer's bag,
+        and available to do things with, e.g. equip to a Pokémon.
+        """
+
+        return self.pokemon_id is None and not self.is_in_trade()
+
+    @is_in_bag.expression
+    def is_in_bag(class_):
+        """Return the equivalent SQLAlchemy expression to determine whether
+        this item is in the bag.
+        """
+
+        return and_(class_.pokemon_id.is_(None),
+                    ~class_.trades.any(~Trade.completed))
+
+    def is_in_trade(self):
+        """Return whether or not this item is currently in a trade."""
+
+        trade = (
+            DBSession.query(TradeLotItem)
+            .join(TradeLot, Trade)
+            .filter(
+                TradeLotItem.trainer_item_id == self.id,
+                ~Trade.completed
+            )
+        )
+
+        (exists,) = DBSession.query(trade.exists()).one()
+        return exists
 
 class TrainerRole(PlayerTable):
     """A role that a trainer has."""
