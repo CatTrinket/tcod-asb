@@ -1272,7 +1272,7 @@ class Trainer(PlayerTable):
                 TradeLot.state == 'proposed',
                 Trade.is_gift,
                 or_(Trade.reveal_date.is_(None),
-                    Trade.reveal_date >= datetime.datetime.utcnow().date())
+                    Trade.reveal_date <= datetime.datetime.utcnow().date())
             )
             .order_by(Trade.id)
             .all()
