@@ -1114,7 +1114,7 @@ class TradeLot(PlayerTable):
         permissions = [(sec.Allow, sender, 'trade.lot.view')]
 
         if (self.state != 'draft' and
-                self.trade.reveal_date >= datetime.datetime.utcnow().date()):
+                self.trade.reveal_date <= datetime.datetime.utcnow().date()):
             permissions.append((sec.Allow, sec.Everyone, 'trade.lot.view'))
 
         return permissions
