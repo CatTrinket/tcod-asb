@@ -440,12 +440,21 @@ tr.unaffordable-total { color: #CC0000; }
 
 /* Editing Pokémon */
 /* Normal/shiny options — similar to the form list on a species page */
-ul#pokemon-color-list { padding-left: 0; list-style: none; }
-ul#pokemon-color-list li {
-    display: inline-block;
+ul#pokemon-color-list {
+    display: inline-flex;
+    display: -ms-inline-flexbox;
+    align-items: baseline;
+    -ms-flex-align: baseline;
+    padding-left: 0;
+}
+
+ul#pokemon-color-list label {
+    display: block;
     padding: 0 0.5rem;
     text-align: center;
 }
+
+ul#pokemon-color-list input { margin: 0; }
 
 ul#pokemon-color-list div.portrait { background: #D1D8E7; }
 ul#pokemon-color-list input:checked + div.portrait { background: #B5C0D8; }
@@ -466,6 +475,7 @@ form#evolution-form label {
     flex-direction: column;
     -ms-flex-direction: column;
     align-items: center;
+    -ms-flex-align: center;
     margin: 0 1rem;
     width: 10rem;
 }
