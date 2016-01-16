@@ -326,7 +326,7 @@ def edit_commit(trainer, request):
             # Add money (possibly negative)
             trainer.money += amount
 
-        if form.promo_pokemon.data is not None:
+        if form.promo_name.data:
             promotion = db.Promotion(
                 name=form.promo_name.data,
                 is_public=False,
