@@ -91,6 +91,64 @@ class TrainerField(wtforms.StringField):
         except sqla.orm.exc.NoResultFound:
             pass
 
+class PokemonSpeciesField(wtforms.StringField):
+    """A field for a Pokémon species that also fetches the corresponding
+    species from the database.
+
+    When I get lookup working, it will replace this.
+    """
+
+    def _value(self):
+        """Retrieve the original input string from the (input, species)
+        tuple.
+        """
+
+        if self.data:
+            return self.data[0]
+        else:
+            return ''
+
+    def process_data(self, value):
+        """Store the (input, species) tuple given just a species."""
+
+        if value is None:
+            self.data = ('', None)
+        else:
+            self.data = (value.name, value)
+
+    def process_formdata(self, valuelist):
+        """Take the initial string input and retrieve the corresponding
+        species, if possible.  Store both as an (input, species) tuple.
+        """
+
+        [name] = valuelist
+
+        try:
+            identifier = db.helpers.identifier(name)
+        except ValueError:
+            # Reduces to empty identifier; obviously not going to be a species
+            self.data = (name, None)
+            return
+
+        # Deal with the Nidorans
+        if identifier in ['nidoran-female', 'nidoranf']:
+            identifier = 'nidoran-f'
+        elif identifier in ['nidoran-male', 'nidoranm']:
+            identifier = 'nidoran-m'
+
+        # Try to fetch the species
+        try:
+            species = (
+                db.DBSession.query(db.PokemonSpecies)
+                .filter_by(identifier=identifier)
+                .options(sqla.orm.joinedload('default_form'))
+                .one()
+            )
+
+            self.data = (name, species)
+        except sqla.orm.exc.NoResultFound:
+            self.data = (name, None)
+
 def name_validator(form, field):
     """Validate a Pokémon or trainer name."""
 

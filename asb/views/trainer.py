@@ -44,7 +44,10 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
         filters=[lambda note: note if note is None else note.strip()]
     )
 
-    submit = wtforms.SubmitField('Cha-ching')
+    # New Pokémon w/ hidden ability
+    promo_name = wtforms.StringField('Promo name')
+    promo_pokemon = asb.forms.PokemonSpeciesField('Species')
+
     save = wtforms.SubmitField('Save')
 
     def set_roles(self, trainer):
@@ -118,6 +121,25 @@ class TrainerEditForm(asb.forms.CSRFTokenForm):
             raise wtforms.validators.ValidationError(
                 'Please write a note for the transaction.'
             )
+
+    def validate_promo_pokemon(form, field):
+        """Make sure we got an actual species and a promo name, assuming
+        either field got any input.
+        """
+
+        (input, species) = field.data or ('', None)
+        promo_name = form.promo_name.data
+
+        if not input and not promo_name:
+            # No input whatsoever, that's fine
+            return
+        elif not input:
+            raise wtforms.validators.ValidationError('Enter a Pokémon')
+        elif not species:
+            raise wtforms.validators.ValidationError('No such Pokémon found')
+        elif not promo_name:
+            raise wtforms.validators.ValidationError(
+                'Enter a title for the prize to appear under')
 
 class TrainerPasswordResetForm(asb.forms.CSRFTokenForm):
     """A form for resetting a trainer's password."""
@@ -303,6 +325,28 @@ def edit_commit(trainer, request):
 
             # Add money (possibly negative)
             trainer.money += amount
+
+        if form.promo_pokemon.data is not None:
+            promotion = db.Promotion(
+                name=form.promo_name.data,
+                is_public=False,
+                price=0,
+                hidden_ability=True
+            )
+
+            promotion.update_identifier()
+            promotion.pokemon_species.append(form.promo_pokemon.data[1])
+
+            db.DBSession.add(promotion)
+            db.DBSession.flush()
+
+            recipient = db.PromotionRecipient(
+                promotion_id=promotion.id,
+                trainer_id=trainer.id,
+                received=False
+            )
+
+            db.DBSession.add(recipient)
     elif password_form.reset.data:
         # Handle the password reset form
         if not password_form.validate():

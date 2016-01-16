@@ -63,6 +63,23 @@
         </dl>
     </fieldset>
 
+    <fieldset>
+        <legend>Prize Pokémon</legend>
+
+        <p>Let the trainer recieve one specific Pokémon with its hidden ability
+        from Buy Pokémon.</p>
+
+        <dl>
+            <dt>${form.promo_name.label}</dt>
+            <dd>${form.promo_name(placeholder='e.g. "Grand Prize Eevee"')}</dd>
+
+            <dt>${form.promo_pokemon.label}</dt>
+            <dd>${form.promo_pokemon}</dd>
+        </dl>
+
+        ${h.form_error_list(form.promo_name.errors, form.promo_pokemon.errors)}
+    </fieldset>
+
     ${form.save}
 </form>
 

@@ -997,6 +997,11 @@ class Promotion(PlayerTable):
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
 
+    def update_identifier(self):
+        """Update the promotion's identifier."""
+
+        self.identifier = helpers.identifier(self.name)
+
 class PromotionItem(PlayerTable):
     """An item available through a promotion."""
 
