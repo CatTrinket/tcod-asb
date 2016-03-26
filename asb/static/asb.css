@@ -136,8 +136,8 @@ dd + dd {
 }
 
 dd {
-    flex: 1 1;
-    -ms-flex: 1 1;
+    flex: 1 1 calc(100% - 11rem);
+    -ms-flex: 1 1 calc(100% - 11rem);
     margin-left: 0;
     padding: 0.5rem;
     padding-left: 0;
@@ -354,6 +354,7 @@ div.beside-portrait:after {
 dl.type-matchups > dt { width: 15rem; }
 
 dl.type-matchups > dd {
+    flex-basis: calc(100% - 16rem);
     min-width: calc(100% - 16rem);
     padding-top: 0;
     padding-bottom: 0;
@@ -554,7 +555,7 @@ td.ineffective {
 p.news-timestamp { font-style: italic; }
 
 form#news-form dt { width: 5rem; }
-form#news-form dd { min-width: calc(100% - 6rem); }
+form#news-form dd { flex-basis: calc(100% - 6rem); min-width: calc(100% - 6rem); }
 form#news-form dd + dd { margin-left: 5.5rem; }
 
 /* Trainer page battle histories */
