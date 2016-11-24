@@ -83,7 +83,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 82,magneton,82,,,1,True,70,97
 83,farfetchd,83,,,1,True,60,99
 84,doduo,84,,,1,True,75,100
-85,dodrio,85,,,1,True,100,101
+85,dodrio,85,,,1,True,110,101
 86,seel,86,,,1,True,45,102
 87,dewgong,87,,,1,True,70,103
 88,grimer,88,,,1,True,25,104
@@ -99,7 +99,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 98,krabby,98,,,1,True,50,117
 99,kingler,99,,,1,True,75,118
 100,voltorb,100,,,1,True,100,119
-101,electrode,101,,,1,True,140,120
+101,electrode,101,,,1,True,150,120
 102,exeggcute,102,,,1,True,40,121
 103,exeggutor,103,,,1,True,55,122
 104,cubone,104,,,1,True,35,123
@@ -282,7 +282,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 281,kirlia,281,,,1,True,50,357
 282,gardevoir,282,,,1,True,80,358
 283,surskit,283,,,1,True,65,362
-284,masquerain,284,,,1,True,60,363
+284,masquerain,284,,,1,True,80,363
 285,shroomish,285,,,1,True,35,364
 286,breloom,286,,,1,True,70,365
 287,slakoth,287,,,1,True,30,366
@@ -299,7 +299,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 298,azurill,298,,,1,True,20,229
 299,nosepass,299,,,1,True,30,377
 300,skitty,300,,,1,True,50,379
-301,delcatty,301,,,1,True,70,380
+301,delcatty,301,,,1,True,90,380
 302,sableye,302,,,1,True,50,381
 303,mawile,303,,,1,True,50,383
 304,aron,304,,,1,True,30,385
@@ -716,10 +716,82 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 715,noivern,715,,,1,True,123,895
 716,xerneas-active,716,Active Mode,Active Xerneas,2,True,99,897
 717,yveltal,717,,,1,True,99,898
-718,zygarde,718,,,1,True,95,899
+718,zygarde-50-percent,718,50% Forme,50% Zygarde,2,True,95,899
 719,diancie,719,,,1,True,50,900
 720,hoopa-confined,720,Hoopa Confined,Hoopa Confined,1,True,70,902
 721,volcanion,721,,,1,True,70,904
+722,rowlet,722,,,1,True,42,925
+723,dartrix,723,,,1,True,52,926
+724,decidueye,724,,,1,True,70,927
+725,litten,725,,,1,True,70,928
+726,torracat,726,,,1,True,90,929
+727,incineroar,727,,,1,True,60,930
+728,popplio,728,,,1,True,40,931
+729,brionne,729,,,1,True,50,932
+730,primarina,730,,,1,True,60,933
+731,pikipek,731,,,1,True,65,934
+732,trumbeak,732,,,1,True,75,935
+733,toucannon,733,,,1,True,60,936
+734,yungoos,734,,,1,True,45,937
+735,gumshoos,735,,,1,True,45,938
+736,grubbin,736,,,1,True,46,939
+737,charjabug,737,,,1,True,36,940
+738,vikavolt,738,,,1,True,43,941
+739,crabrawler,739,,,1,True,63,942
+740,crabominable,740,,,1,True,43,943
+741,oricorio-baile,741,Baile Style,Baile Oricorio,1,True,93,944
+742,cutiefly,742,,,1,True,84,948
+743,ribombee,743,,,1,True,124,949
+744,rockruff,744,,,1,True,60,950
+745,lycanroc-midday,745,Midday Form,Midday Lycanroc,1,True,112,951
+746,wishiwashi-solo,746,Solo Form,Solo Wishiwashi,1,True,40,953
+747,mareanie,747,,,1,True,45,955
+748,toxapex,748,,,1,True,35,956
+749,mudbray,749,,,1,True,45,957
+750,mudsdale,750,,,1,True,35,958
+751,dewpider,751,,,1,True,27,959
+752,araquanid,752,,,1,True,42,960
+753,fomantis,753,,,1,True,35,961
+754,lurantis,754,,,1,True,45,962
+755,morelull,755,,,1,True,15,963
+756,shiinotic,756,,,1,True,30,964
+757,salandit,757,,,1,True,77,965
+758,salazzle,758,,,1,True,117,966
+759,stufful,759,,,1,True,50,967
+760,bewear,760,,,1,True,60,968
+761,bounsweet,761,,,1,True,32,969
+762,steenee,762,,,1,True,62,970
+763,tsareena,763,,,1,True,72,971
+764,comfey,764,,,1,True,100,972
+765,oranguru,765,,,1,True,60,973
+766,passimian,766,,,1,True,80,974
+767,wimpod,767,,,1,True,80,975
+768,golisopod,768,,,1,True,40,976
+769,sandygast,769,,,1,True,15,977
+770,palossand,770,,,1,True,35,978
+771,pyukumuku,771,,,1,True,5,979
+772,type-null,772,,,1,True,59,980
+773,silvally-normal,773,Type: Normal,Normal Silvally,1,True,95,981
+774,minior-meteor,774,Meteor Form,Meteor Minior,1,True,60,999
+775,komala,775,,,1,True,65,1007
+776,turtonator,776,,,1,True,36,1008
+777,togedemaru,777,,,1,True,96,1009
+778,mimikyu-disguised,778,Disguised Form,Disguised Mimikyu,1,True,96,1010
+779,bruxish,779,,,1,True,92,1012
+780,drampa,780,,,1,True,36,1013
+781,dhelmise,781,,,1,True,40,1014
+782,jangmo-o,782,,,1,True,45,1015
+783,hakamo-o,783,,,1,True,65,1016
+784,kommo-o,784,,,1,True,85,1017
+785,tapu-koko,785,,,1,True,130,1018
+786,tapu-lele,786,,,1,True,95,1019
+787,tapu-bulu,787,,,1,True,75,1020
+788,tapu-fini,788,,,1,True,85,1021
+789,cosmog,789,,,1,True,37,1022
+790,cosmoem,790,,,1,True,37,1023
+791,solgaleo,791,,,1,True,97,1024
+792,lunala,792,,,1,True,97,1025
+801,magearna,801,,,1,True,65,1034
 10001,unown-b,201,B,Unown B,2,False,48,250
 10002,unown-c,201,C,Unown C,3,False,48,251
 10003,unown-d,201,D,Unown D,4,False,48,252
@@ -903,3 +975,54 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 10181,audino-mega,531,Mega Audino,Mega Audino,2,False,50,645
 10182,diancie-mega,719,Mega Diancie,Mega Diancie,2,False,110,901
 10183,hoopa-unbound,720,Hoopa Unbound,Hoopa Unbound,2,False,80,903
+10184,oricorio-pom-pom,741,Pom-Pom Style,Pom-Pom Oricorio,2,False,93,945
+10185,oricorio-pau,741,Pa'u Style,Pa'u Oricorio,3,False,93,946
+10186,oricorio-sensu,741,Sensu Style,Sensu Oricorio,4,False,93,947
+10187,lycanroc-midnight,745,Midnight Form,Midnight Lycanroc,2,False,82,952
+10188,wishiwashi-school,746,School Form,School Wishiwashi,2,False,30,954
+10189,silvally-fire,773,Type: Fire,Fire Silvally,2,False,95,982
+10190,silvally-water,773,Type: Water,Water Silvally,3,False,95,983
+10191,silvally-grass,773,Type: Grass,Grass Silvally,4,False,95,984
+10192,silvally-electric,773,Type: Electric,Electric Silvally,5,False,95,985
+10193,silvally-ice,773,Type: Ice,Ice Silvally,6,False,95,986
+10194,silvally-fighting,773,Type: Fighting,Fighting Silvally,7,False,95,987
+10195,silvally-poison,773,Type: Poison,Poison Silvally,8,False,95,988
+10196,silvally-ground,773,Type: Ground,Ground Silvally,9,False,95,989
+10197,silvally-flying,773,Type: Flying,Flying Silvally,10,False,95,990
+10198,silvally-psychic,773,Type: Psychic,Psychic Silvally,11,False,95,991
+10199,silvally-bug,773,Type: Bug,Bug Silvally,12,False,95,992
+10200,silvally-rock,773,Type: Rock,Rock Silvally,13,False,95,993
+10201,silvally-ghost,773,Type: Ghost,Ghost Silvally,14,False,95,994
+10202,silvally-dragon,773,Type: Dragon,Dragon Silvally,15,False,95,995
+10203,silvally-dark,773,Type: Dark,Dark Silvally,16,False,95,996
+10204,silvally-steel,773,Type: Steel,Steel Silvally,17,False,95,997
+10205,silvally-fairy,773,Type: Fairy,Fairy Silvally,18,False,95,998
+10206,minior-red,774,Red Core,Red Minior,2,False,120,1000
+10207,minior-orange,774,Orange Core,Orange Minior,3,False,120,1001
+10208,minior-yellow,774,Yellow Core,Yellow Minior,4,False,120,1002
+10209,minior-green,774,Green Core,Green Minior,5,False,120,1003
+10210,minior-blue,774,Blue Core,Blue Minior,6,False,120,1004
+10211,minior-indigo,774,Indigo Core,Indigo Minior,7,False,120,1005
+10212,minior-violet,774,Violet Core,Violet Minior,8,False,120,1006
+10213,mimikyu-busted,778,Busted Form,Busted Mimikyu,2,False,96,1011
+10214,magearna-original,801,Original Color,Original Magearna,2,False,65,1035
+10215,rattata-alola,19,Alola Form,Alolan Rattata,2,False,72,905
+10216,raticate-alola,20,Alola Form,Alolan Raticate,2,False,77,906
+10217,raichu-alola,26,Alola Form,Alolan Raichu,2,False,110,907
+10218,sandshrew-alola,27,Alola Form,Alolan Sandshrew,2,False,40,908
+10219,sandslash-alola,28,Alola Form,Alolan Sandslash,2,False,65,909
+10220,vulpix-alola,37,Alola Form,Alolan Vulpix,2,False,65,910
+10221,ninetales-alola,38,Alola Form,Alolan Ninetales,2,False,109,911
+10222,diglett-alola,50,Alola Form,Alolan Diglett,2,False,90,912
+10223,dugtrio-alola,51,Alola Form,Alolan Dugtrio,2,False,110,913
+10224,meowth-alola,52,Alola Form,Alolan Meowth,2,False,90,914
+10225,persian-alola,53,Alola Form,Alolan Persian,2,False,115,915
+10226,geodude-alola,74,Alola Form,Alolan Geodude,2,False,20,916
+10227,graveler-alola,75,Alola Form,Alolan Graveler,2,False,35,917
+10228,golem-alola,76,Alola Form,Alolan Golem,2,False,45,918
+10229,grimer-alola,88,Alola Form,Alolan Grimer,2,False,25,919
+10230,muk-alola,89,Alola Form,Alolan Muk,2,False,50,920
+10231,exeggutor-alola,103,Alola Form,Alolan Exeggutor,2,False,45,921
+10232,marowak-alola,105,Alola Form,Alolan Marowak,2,False,45,922
+10233,zygarde-10-percent,718,10% Forme,10% Zygarde,1,False,115,923
+10234,zygarde-complete,718,Complete Forme,Complete Zygarde,3,False,85,924
