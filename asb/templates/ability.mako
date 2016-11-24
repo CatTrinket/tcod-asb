@@ -8,7 +8,7 @@
 % endif
 
 <h1>${ability.name}</h1>
-${'**Summary:** ' + ability.summary | md.convert, n}
+${'**Summary:** {0}'.format(ability.summary) | md.convert, n}
 
 <h1>Description</h1>
 ${ability.description | md.convert, n}
