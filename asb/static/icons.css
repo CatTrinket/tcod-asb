@@ -734,7 +734,7 @@ span.pokemon-icon.shiny {
 .noivern { background-position: -40px -690px; }
 .xerneas, .xerneas-active { background-position: -80px -690px; }
 .yveltal { background-position: -120px -690px; }
-.zygarde { background-position: -160px -690px; }
+.zygarde, .zygarde-50-percent { background-position: -160px -690px; }
 .diancie { background-position: -200px -690px; }
 .hoopa, .hoopa-confined { background-position: -240px -690px; }
 .volcanion { background-position: -280px -690px; }
@@ -898,3 +898,114 @@ span.pokemon-icon.shiny {
 .frillish.male { background-position: -400px -840px; }
 .jellicent.male { background-position: -440px -840px; }
 .pyroar.male { background-position: -480px -840px; }
+.rowlet { background-position: -0px -870px; }
+.dartrix { background-position: -40px -870px; }
+.decidueye { background-position: -80px -870px; }
+.litten { background-position: -120px -870px; }
+.torracat { background-position: -160px -870px; }
+.incineroar { background-position: -200px -870px; }
+.popplio { background-position: -240px -870px; }
+.brionne { background-position: -280px -870px; }
+.primarina { background-position: -320px -870px; }
+.pikipek { background-position: -360px -870px; }
+.trumbeak { background-position: -400px -870px; }
+.toucannon { background-position: -440px -870px; }
+.yungoos { background-position: -480px -870px; }
+.gumshoos { background-position: -520px -870px; }
+.grubbin { background-position: -560px -870px; }
+.charjabug { background-position: -600px -870px; }
+.vikavolt { background-position: -640px -870px; }
+.crabrawler { background-position: -680px -870px; }
+.crabominable { background-position: -720px -870px; }
+.oricorio, .oricorio-baile { background-position: -760px -870px; }
+.cutiefly { background-position: -800px -870px; }
+.ribombee { background-position: -840px -870px; }
+.rockruff { background-position: -880px -870px; }
+.lycanroc, .lycanroc-midday { background-position: -920px -870px; }
+.wishiwashi, .wishiwashi-solo { background-position: -960px -870px; }
+.mareanie { background-position: -1000px -870px; }
+.toxapex { background-position: -1040px -870px; }
+.mudbray { background-position: -1080px -870px; }
+.mudsdale { background-position: -1120px -870px; }
+.dewpider { background-position: -1160px -870px; }
+.araquanid { background-position: -1200px -870px; }
+.fomantis { background-position: -0px -900px; }
+.lurantis { background-position: -40px -900px; }
+.morelull { background-position: -80px -900px; }
+.shiinotic { background-position: -120px -900px; }
+.salandit { background-position: -160px -900px; }
+.salazzle { background-position: -200px -900px; }
+.stufful { background-position: -240px -900px; }
+.bewear { background-position: -280px -900px; }
+.bounsweet { background-position: -320px -900px; }
+.steenee { background-position: -360px -900px; }
+.tsareena { background-position: -400px -900px; }
+.comfey { background-position: -440px -900px; }
+.oranguru { background-position: -480px -900px; }
+.passimian { background-position: -520px -900px; }
+.wimpod { background-position: -560px -900px; }
+.golisopod { background-position: -600px -900px; }
+.sandygast { background-position: -640px -900px; }
+.palossand { background-position: -680px -900px; }
+.pyukumuku { background-position: -720px -900px; }
+.type-null { background-position: -760px -900px; }
+.silvally, .silvally-normal, .silvally-fire, .silvally-water, .silvally-grass,
+    .silvally-electric, .silvally-ice, .silvally-fighting, .silvally-poison,
+    .silvally-ground, .silvally-flying, .silvally-psychic, .silvally-bug,
+    .silvally-rock, .silvally-ghost, .silvally-dragon, .silvally-dark,
+    .silvally-steel, .silvally-fairy
+    { background-position: -800px -900px; }
+.minior, .minior-meteor { background-position: -840px -900px; }
+.komala { background-position: -880px -900px; }
+.turtonator { background-position: -920px -900px; }
+.togedemaru { background-position: -960px -900px; }
+.mimikyu, .mimikyu-disguised, .mimikyu-busted
+    { background-position: -1000px -900px; }
+.bruxish { background-position: -1040px -900px; }
+.drampa { background-position: -1080px -900px; }
+.dhelmise { background-position: -1120px -900px; }
+.jangmo-o { background-position: -1160px -900px; }
+.hakamo-o { background-position: -1200px -900px; }
+.kommo-o { background-position: -0px -930px; }
+.tapu-koko { background-position: -40px -930px; }
+.tapu-lele { background-position: -80px -930px; }
+.tapu-bulu { background-position: -120px -930px; }
+.tapu-fini { background-position: -160px -930px; }
+.cosmog { background-position: -200px -930px; }
+.cosmoem { background-position: -240px -930px; }
+.solgaleo { background-position: -280px -930px; }
+.lunala { background-position: -320px -930px; }
+.magearna { background-position: -680px -930px; }
+.oricorio-pom-pom { background-position: -760px -930px; }
+.oricorio-pau { background-position: -800px -930px; }
+.oricorio-sensu { background-position: -840px -930px; }
+.lycanroc-midnight { background-position: -880px -930px; }
+.wishiwashi-school { background-position: -920px -930px; }
+.minior-red { background-position: -960px -930px; }
+.minior-orange { background-position: -1000px -930px; }
+.minior-yellow { background-position: -1040px -930px; }
+.minior-green { background-position: -1080px -930px; }
+.minior-blue { background-position: -1120px -930px; }
+.minior-indigo { background-position: -1160px -930px; }
+.minior-violet { background-position: -1200px -930px; }
+.magearna-original { background-position: -0px -960px; }
+.rattata-alola { background-position: -40px -960px; }
+.raticate-alola { background-position: -80px -960px; }
+.raichu-alola { background-position: -120px -960px; }
+.sandshrew-alola { background-position: -160px -960px; }
+.sandslash-alola { background-position: -200px -960px; }
+.vulpix-alola { background-position: -240px -960px; }
+.ninetales-alola { background-position: -280px -960px; }
+.diglett-alola { background-position: -320px -960px; }
+.dugtrio-alola { background-position: -360px -960px; }
+.meowth-alola { background-position: -400px -960px; }
+.persian-alola { background-position: -440px -960px; }
+.geodude-alola { background-position: -480px -960px; }
+.graveler-alola { background-position: -520px -960px; }
+.golem-alola { background-position: -560px -960px; }
+.grimer-alola { background-position: -600px -960px; }
+.muk-alola { background-position: -640px -960px; }
+.exeggutor-alola { background-position: -680px -960px; }
+.marowak-alola { background-position: -720px -960px; }
+.zygarde-10-percent { background-position: -760px -960px; }
+.zygarde-complete { background-position: -800px -960px; }
