@@ -286,7 +286,7 @@ div.portrait-block {
     background: #C0CCE6;
 }
 
-*.portrait > img { width: 120px; height: 120px; }
+*.portrait img { width: 120px; height: 120px; }
 
 div.portrait-block > *.portrait { margin: 10px auto; }
 
