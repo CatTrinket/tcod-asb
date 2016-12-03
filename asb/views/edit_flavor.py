@@ -78,7 +78,7 @@ def process_edit_flavor(thing, request, effect_class, foreign_key_name,
 
     setattr(new_effect, foreign_key_name, thing.id)
 
-    if is_instance(new_effect, db.MoveEffect):
+    if isinstance(new_effect, db.MoveEffect):
         new_effect.energy = form.energy.data
 
     if thing.effect is not None:
