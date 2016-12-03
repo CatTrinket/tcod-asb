@@ -17,6 +17,11 @@ class FlavorEditForm(asb.forms.CSRFTokenForm):
     preview = wtforms.SubmitField('Preview')
     save = wtforms.SubmitField('Save')
 
+class MoveEditForm(FlavorEditForm):
+    """A form for editing a move's flavor and energy."""
+
+    energy = wtforms.IntegerField('Energy', [wtforms.validators.Optional()])
+
 def timestamp(effect):
     """Return a string timestamp representing the edit time of the given
     effect, which may be None.
@@ -27,21 +32,25 @@ def timestamp(effect):
     else:
         return effect.edit_time.isoformat()
 
-def edit_flavor(thing, request):
+def edit_flavor(thing, request, form_class=FlavorEditForm):
     """A flavor-editing page for whatever."""
 
-    form = FlavorEditForm(csrf_context=request.session)
+    form = form_class(csrf_context=request.session)
     form.summary.data = thing.summary
     form.description.data = thing.description
     form.notes.data = thing.notes
     form.edit_time.data = timestamp(thing.effect)
 
+    if hasattr(form, 'energy'):
+        form.energy.data = thing.energy
+
     return {'form': form, 'thing': thing}
 
-def process_edit_flavor(thing, request, effect_class, foreign_key_name):
+def process_edit_flavor(thing, request, effect_class, foreign_key_name,
+                        form_class=FlavorEditForm):
     """Process a flavor editing form."""
 
-    form = FlavorEditForm(request.POST, csrf_context=request.session)
+    form = form_class(request.POST, csrf_context=request.session)
     valid = form.validate()
     edit_time = timestamp(thing.effect)
 
@@ -66,7 +75,11 @@ def process_edit_flavor(thing, request, effect_class, foreign_key_name):
         notes=form.notes.data,
         is_current=True
     )
+
     setattr(new_effect, foreign_key_name, thing.id)
+
+    if is_instance(new_effect, db.MoveEffect):
+        new_effect.energy = form.energy.data
 
     if thing.effect is not None:
         thing.effect.is_current = False
@@ -80,12 +93,13 @@ def process_edit_flavor(thing, request, effect_class, foreign_key_name):
 @view_config(name='edit', context=db.Move, permission='flavor.edit',
   request_method='GET', renderer='/edit_flavor.mako')
 def edit_move(move, request):
-    return edit_flavor(move, request)
+    return edit_flavor(move, request, form_class=MoveEditForm)
 
 @view_config(name='edit', context=db.Move, permission='flavor.edit',
   request_method='POST', renderer='/edit_flavor.mako')
 def process_edit_move(move, request):
-    return process_edit_flavor(move, request, db.MoveEffect, 'move_id')
+    return process_edit_flavor(move, request, db.MoveEffect, 'move_id',
+                               form_class=MoveEditForm)
 
 @view_config(name='edit', context=db.Item, permission='flavor.edit',
   request_method='GET', renderer='/edit_flavor.mako')

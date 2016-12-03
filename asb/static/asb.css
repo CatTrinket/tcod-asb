@@ -190,6 +190,8 @@ form.editor textarea {
     width: 100%;
 }
 
+form.editor input.energy-field { width: 2ch; }
+
 /* Tables */
 table {
     border-width: 0;

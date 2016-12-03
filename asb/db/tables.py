@@ -190,7 +190,6 @@ class Move(PokedexTable):
     damage_class_id = Column(Integer, ForeignKey('damage_classes.id'),
         nullable=False)
     power = Column(Integer, nullable=True)
-    energy = Column(Integer, nullable=True)
     accuracy = Column(Integer, nullable=True)
     priority = Column(Integer, nullable=False)
     target_id = Column(Integer, ForeignKey('move_targets.id'), nullable=False)
@@ -754,7 +753,7 @@ class ItemEffect(PlayerTable):
     is_current = Column(Boolean, nullable=False, default=True)
 
 class MoveEffect(PlayerTable):
-    """A move's flavour text."""
+    """The editable parts of a move (its flavour text and energy)."""
 
     __tablename__ = 'move_effects'
 
@@ -762,6 +761,7 @@ class MoveEffect(PlayerTable):
     edit_time = Column(DateTime, primary_key=True)
     edited_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
         nullable=True)
+    energy = Column(Integer, nullable=True)
     summary = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
     notes = Column(Unicode, nullable=False)
@@ -1452,6 +1452,7 @@ Move.categories = relationship(MoveCategory, order_by=MoveCategory.id,
 Move.effect = relationship(MoveEffect, uselist=False,
     primaryjoin=and_(Move.id == MoveEffect.move_id,
                      MoveEffect.is_current == True))
+Move.energy = association_proxy('effect', 'energy')
 Move.summary = association_proxy('effect', 'summary')
 Move.description = association_proxy('effect', 'description')
 Move.notes = association_proxy('effect', 'notes')
