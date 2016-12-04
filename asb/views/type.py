@@ -60,9 +60,11 @@ def type_(context, request):
         db.DBSession.query(db.PokemonForm)
         .join(db.PokemonSpecies)
         .filter(db.PokemonForm.types.any(db.Type.id == context.id))
-        .filter(or_(db.PokemonSpecies.forms_are_squashable == False,
-                    db.PokemonForm.is_default == True,
-                    db.PokemonSpecies.identifier == 'arceus'))
+        .filter(or_(
+            ~db.PokemonSpecies.forms_are_squashable,
+            db.PokemonForm.is_default,
+            db.PokemonSpecies.identifier.in_(['arceus', 'silvally'])
+        ))
         .options(
             joinedload('species'),
             subqueryload('types'),
