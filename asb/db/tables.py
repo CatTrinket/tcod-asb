@@ -306,7 +306,6 @@ class PokemonFormCondition(PokedexTable):
         primary_key=True)
     is_optional = Column(Boolean, nullable=False)
     item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
-    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
     ability_id = Column(Integer, ForeignKey('abilities.id'), nullable=True)
 
 class PokemonFormMove(PokedexTable):
