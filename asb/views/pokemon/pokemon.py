@@ -1,7 +1,7 @@
 from pyramid.view import view_config
 import sqlalchemy as sqla
 
-from . import can_evolve
+from . import can_evolve, can_potentially_evolve_into
 from asb import db
 from asb.resources import PokemonIndex
 
@@ -34,18 +34,22 @@ def pokemon(pokemon, request):
 
     evo_info = {}
 
-    for evo in pokemon.species.evolutions:
-        if evo.evolution_method is None:
-            continue
+    for evo_species in pokemon.species.evolutions:
+        for evo_form in evo_species.forms:
+            if can_potentially_evolve_into(pokemon, evo_form):
+                method = evo_form.evolution_method
 
-        if evo.evolution_method.happiness:
-            evo_info['happiness'] = evo.evolution_method.happiness
+                if method is None:
+                    continue
 
-        if evo.evolution_method.experience:
-            evo_info['experience'] = evo.evolution_method.experience
+                if method.happiness:
+                    evo_info['happiness'] = method.happiness
+
+                if method.experience:
+                    evo_info['experience'] = method.experience
 
     return {'pokemon': pokemon, 'can_evolve': can_evolve(pokemon),
-        'evo_info': evo_info}
+            'evo_info': evo_info}
 
 @view_config(name='sigstuff', context=db.Pokemon, renderer='/sig_stuff.mako')
 def sig_stuff(pokemon, request):

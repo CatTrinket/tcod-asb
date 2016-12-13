@@ -122,8 +122,8 @@ ${next(or_) | n}pay $${method.buyable_price}\
             ${h.pokemon_form_icon(evo, alt='')}${h.link(evo.default_form, text=evo.name)}
             % endif
 
-            % if evo.evolution_method is not None:
-            <p class="evolution-method">${evo_method(evo.evolution_method)}</p>
+            % if evo.default_form.evolution_method is not None:
+            <p class="evolution-method">${evo_method(evo.default_form.evolution_method)}</p>
             % endif
         </td>
         % endfor

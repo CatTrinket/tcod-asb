@@ -137,6 +137,19 @@ class DamageClass(PokedexTable):
     identifier = Column(Unicode, unique=True, nullable=False)
     name = Column(Unicode, nullable=False)
 
+class EvolutionMethod(PokedexTable):
+    """The evolution requirements for a Pokémon form."""
+
+    __tablename__ = 'evolution_methods'
+
+    evolved_form_id = Column(Integer, ForeignKey('pokemon_forms.id'),
+        primary_key=True)
+    experience = Column(Integer, nullable=True)
+    happiness = Column(Integer, nullable=True)
+    item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
+    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
+    buyable_price = Column(Integer, nullable=True)
+
 class Gender(PokedexTable):
     """An enigma."""
 
@@ -344,19 +357,6 @@ class PokemonSpecies(PokedexTable):
             ['pokemon_species.id', 'pokemon_species.pokemon_family_id'],
         ),
     )
-
-class PokemonSpeciesEvolution(PokedexTable):
-    """The method by which a Pokémon species evolves."""
-
-    __tablename__ = 'pokemon_species_evolution'
-
-    evolved_species_id = Column(Integer, ForeignKey('pokemon_species.id'),
-        primary_key=True)
-    experience = Column(Integer, nullable=True)
-    happiness = Column(Integer, nullable=True)
-    item_id = Column(Integer, ForeignKey('items.id'), nullable=True)
-    gender_id = Column(Integer, ForeignKey('genders.id'), nullable=True)
-    buyable_price = Column(Integer, nullable=True)
 
 class PokemonSpeciesGender(PokedexTable):
     """A gender a Pokémon species can have."""
@@ -1491,10 +1491,10 @@ Pokemon.trades = association_proxy('trade_lots', 'trade')
 Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
     secondary=PokemonUnlockedEvolution.__table__)
 
-PokemonSpeciesEvolution.gender = relationship(Gender,
-    primaryjoin=PokemonSpeciesEvolution.gender_id == Gender.id, uselist=False)
-PokemonSpeciesEvolution.item = relationship(Item,
-    primaryjoin=PokemonSpeciesEvolution.item_id == Item.id, uselist=False)
+EvolutionMethod.gender = relationship(Gender,
+    primaryjoin=EvolutionMethod.gender_id == Gender.id, uselist=False)
+EvolutionMethod.item = relationship(Item,
+    primaryjoin=EvolutionMethod.item_id == Item.id, uselist=False)
 
 PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
     order_by=PokemonSpecies.order)
@@ -1502,6 +1502,7 @@ PokemonFamily.species = relationship(PokemonSpecies, back_populates='family',
 PokemonForm.abilities = relationship(PokemonFormAbility,
     order_by=PokemonFormAbility.slot)
 PokemonForm.condition = relationship(PokemonFormCondition, uselist=False)
+PokemonForm.evolution_method = relationship(EvolutionMethod, uselist=False)
 PokemonForm.species = relationship(PokemonSpecies, back_populates='forms')
 PokemonForm.moves = relationship(Move, secondary=PokemonFormMove.__table__,
     order_by=Move.name, back_populates='pokemon_forms')
@@ -1516,9 +1517,6 @@ PokemonSpecies.forms = relationship(PokemonForm, back_populates='species',
 PokemonSpecies.default_form = relationship(PokemonForm,
     primaryjoin=and_(PokemonForm.species_id == PokemonSpecies.id,
         PokemonForm.is_default),
-    uselist=False)
-PokemonSpecies.evolution_method = relationship(PokemonSpeciesEvolution,
-    primaryjoin=PokemonSpecies.id == PokemonSpeciesEvolution.evolved_species_id,
     uselist=False)
 PokemonSpecies.evolutions = relationship(PokemonSpecies,
     primaryjoin=PokemonSpecies.id == PokemonSpecies.evolves_from_species_id,

@@ -2,7 +2,7 @@ import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
 import wtforms
 
-from . import can_evolve_species, check_form_condition
+from . import can_evolve_into
 from asb import db
 import asb.forms
 
@@ -21,28 +21,11 @@ def get_evolutions(pokemon):
     evo_forms = []  # Each element will be (form, needs_buying, needs_item)
 
     for species in pokemon.species.evolutions:
-        # Figure out if this species is a possibility
-        can_evolve, buy, item = can_evolve_species(pokemon, species)
+        for form in species.forms:
+            (can_evolve, buy, item) = can_evolve_into(pokemon, form)
 
-        if can_evolve:
-            # Figure out which of this species' forms are possibliities
-            can_pick_forms = (len(pokemon.species.forms) == 1 or
-                pokemon.species.can_switch_forms)
-
-            for form in species.forms:
-                if can_pick_forms:
-                    # If this Pokémon can switch forms, or doesn't have forms
-                    # (yet), it gets to choose its post-evolution form
-                    # e.g. Burmy, Spewpa, technically Pikachu
-                    can_evolve = check_form_condition(pokemon, form)
-                else:
-                    # But if it's already constrained to a particular form, it
-                    # needs to evolve into the corresponding one
-                    # e.g. Shellos, Flabébé
-                    can_evolve = form.form_order == pokemon.form.form_order
-
-                if can_evolve:
-                    evo_forms.append((form, buy, item))
+            if can_evolve:
+                evo_forms.append((form, buy, item))
 
     return evo_forms
 
