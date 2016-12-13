@@ -18,6 +18,15 @@ def or_iter():
     while True:
         yield ' <em>OR</em> '
 
+def show_form_evo(form):
+    """Determine whether to show this Pokémon form's evolution method
+    separately.
+    """
+
+    # XXX Sighhhh I'd like to not special-case this someday
+    return (form.is_default or form.identifier.endswith('-alola') or
+            form.species.identifier == 'meowstic')
+
 @view_config(context=SpeciesIndex, renderer='/indices/pokemon_species.mako')
 def species_index(context, request):
     """The index page for all the species of Pokémon.
@@ -112,13 +121,20 @@ def species(pokemon, request):
 
     # Start with all the final evolutions
     prevos = set(species.pre_evolution for species in family.species)
-    finals = [pokemon for pokemon in family.species if pokemon not in prevos]
+    finals = []
+
+    for species in family.species:
+        if species not in prevos:
+            for form in species.forms:
+                if show_form_evo(form):
+                    finals.append(form)
+
     evo_tree = [finals]
 
     # Build backwards, with each pre-evo appearing "above" its evo.  Pokémon
     # with multiple evos (now or at a later stage) will appear multiple times.
-    while evo_tree[0][0].evolves_from_species_id is not None:
-        evo_tree.insert(0, [evo.pre_evolution for evo in evo_tree[0]])
+    while evo_tree[0][0].species.evolves_from_species_id is not None:
+        evo_tree.insert(0, [evo.pre_evolution_form for evo in evo_tree[0]])
 
     # Collapse each layer; for example, [A, A, B] would become [(A, 2), (B, 1)]
     for n, layer in enumerate(evo_tree):

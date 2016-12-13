@@ -284,6 +284,24 @@ class PokemonForm(PokedexTable):
 
         return self.identifier
 
+    @property
+    def pre_evolution_form(self):
+        """Return the corresponding form for this Pokémon's pre-evoluion.
+
+        Assuming based on form order is a little weird; I'd like to explicitly
+        associate them at some point.
+        """
+
+        default_form = None
+
+        for form in self.species.pre_evolution.forms:
+            if form.form_order == self.form_order:
+                return form
+            elif form.is_default:
+                default_form = form
+
+        return default_form
+
 class PokemonFormAbility(PokedexTable):
     """One of a Pokémon form's abilities."""
 

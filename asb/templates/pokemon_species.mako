@@ -114,16 +114,24 @@ ${next(or_) | n}pay $${method.buyable_price}\
     % for layer in evo_tree:
     <tr>
         % for evo, colspan in layer:
-        <% current = evo == pokemon.species %>
+        <%
+            current = evo == pokemon.species
+
+            if (evo.identifier.endswith('-alola') or
+                  evo.species.identifier == 'meowstic'):
+                text = evo.name
+            else:
+                text = evo.species.name
+        %>
         <td colspan="${colspan}" class="${'focus' if current else ''}">
             % if current:
             ${h.pokemon_form_icon(pokemon, alt='')}${evo.name}
             % else:
-            ${h.pokemon_form_icon(evo, alt='')}${h.link(evo.default_form, text=evo.name)}
+            ${h.pokemon_form_icon(evo, alt='')}${h.link(evo, text=text)}
             % endif
 
-            % if evo.default_form.evolution_method is not None:
-            <p class="evolution-method">${evo_method(evo.default_form.evolution_method)}</p>
+            % if evo.evolution_method is not None:
+            <p class="evolution-method">${evo_method(evo.evolution_method)}</p>
             % endif
         </td>
         % endfor
