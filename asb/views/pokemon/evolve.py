@@ -75,7 +75,7 @@ def evolve_pokemon_commit(pokemon, request):
     # Make sure it's holding the right item, and take it away if so
     if item:
         if (pokemon.trainer_item is None or pokemon.trainer_item.item_id !=
-          evo.species.evolution_method.item_id):
+                evo.evolution_method.item_id):
             # Not holding the right item; back to the form after all
             form.evolution.errors.append(
                 '{} must be holding the right item.'.format(pokemon.name))
@@ -85,7 +85,7 @@ def evolve_pokemon_commit(pokemon, request):
 
     # Take money if appropriate
     if buy:
-        pokemon.trainer.money -= evo.species.evolution_method.buyable_price
+        pokemon.trainer.money -= evo.evolution_method.buyable_price
 
     # If it's not nicknamed, we'll need to update its name
     not_nicknamed = pokemon.name == pokemon.species.name

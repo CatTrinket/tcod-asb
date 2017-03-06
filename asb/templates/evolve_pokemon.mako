@@ -39,13 +39,13 @@
 
             % if buy:
             <p class="evolution-note">
-                (Costs $${evo.species.evolution_method.buyable_price})
+                (Costs $${evo.evolution_method.buyable_price})
             </p>
             % endif
 
             % if item:
             <p class="evolution-note">
-                (Uses up a held ${evo.species.evolution_method.item.name})
+                (Uses up a held ${evo.evolution_method.item.name})
             </p>
             % endif
 

@@ -490,6 +490,7 @@ form#evolution-form p.evolution-name { font-size: 1.5rem; }
 
 form#evolution-form input[type="submit"] { display: block; margin: auto; }
 
+*.evolution-note { text-align: center; font-size: 0.875rem; }
 *.topsy-turvy { transform: rotate(0.5turn); }
 
 /* Move pages */
