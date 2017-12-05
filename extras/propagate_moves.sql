@@ -1,6 +1,8 @@
 -- Insert moves that Pokémon should get from alternate forms/pre-evolutions.
 
 -- 2014-11-29
+-- Updated 2016-11-28 for Sun/Moon
+-- Updated 2017-12-05 for Ultra Sun/Moon (slightly)
 
 begin;
 
@@ -45,7 +47,7 @@ join pokemon_forms pf2 on pf.species_id=pf2.species_id
 join pokemon_form_moves pfa2 on pf2.id=pfa2.pokemon_form_id
 where pf.species_id not in (
     select id from pokemon_species
-    where identifier in ('rotom', 'kyurem') or not can_switch_forms
+    where identifier in ('rotom', 'kyurem', 'necrozma') or not can_switch_forms
 )
 except select * from pokemon_form_moves;
 
