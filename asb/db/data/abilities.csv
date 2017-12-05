@@ -221,6 +221,7 @@ id,identifier,name
 221,tangling-hair,Tangling Hair
 222,receiver,Receiver
 223,power-of-alchemy,Power of Alchemy
+224,beast-boost,Beast Boost
 225,rks-system,RKS System
 226,electric-surge,Electric Surge
 227,psychic-surge,Psychic Surge
@@ -228,3 +229,5 @@ id,identifier,name
 229,grassy-surge,Grassy Surge
 230,full-metal-body,Full Metal Body
 231,shadow-shield,Shadow Shield
+232,prism-armor,Prism Armor
+233,neuroforce,Neuroforce

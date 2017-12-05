@@ -385,6 +385,7 @@ evolved_form_id,experience,happiness,item_id,gender_id,buyable_price
 790,4,,,,
 791,8,,,,
 792,8,,,,
+804,3,,,,
 10036,2,,,1,30
 10037,2,,,1,30
 10038,3,,,,
@@ -488,3 +489,4 @@ evolved_form_id,experience,happiness,item_id,gender_id,buyable_price
 10230,4,,,,
 10231,,,130,,
 10232,3,,,,
+10235,3,,,,

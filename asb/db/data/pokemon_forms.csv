@@ -791,7 +791,21 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 790,cosmoem,790,,,1,True,37,1023
 791,solgaleo,791,,,1,True,97,1024
 792,lunala,792,,,1,True,97,1025
+793,nihilego,793,,,1,True,103,1026
+794,buzzwole,794,,,1,True,79,1027
+795,pheromosa,795,,,1,True,151,1028
+796,xurkitree,796,,,1,True,83,1029
+797,celesteela,797,,,1,True,61,1030
+798,kartana,798,,,1,True,109,1031
+799,guzzlord,799,,,1,True,43,1032
+800,necrozma,800,,,1,True,79,1033
 801,magearna,801,,,1,True,65,1034
+802,marshadow,802,,,1,True,125,1036
+803,poipole,803,,,1,True,73,1037
+804,naganadel,804,,,1,True,121,1038
+805,stakataka,805,,,1,True,13,1039
+806,blacephalon,806,,,1,True,107,1040
+807,zeraora,807,,,1,True,143,1041
 10001,unown-b,201,B,Unown B,2,False,48,268
 10002,unown-c,201,C,Unown C,3,False,48,269
 10003,unown-d,201,D,Unown D,4,False,48,270
@@ -1026,3 +1040,7 @@ id,identifier,species_id,form_name,full_name,form_order,is_default,speed,order
 10232,marowak-alola,105,Alola Form,Alolan Marowak,2,False,45,142
 10233,zygarde-10-percent,718,10% Forme,10% Zygarde,1,False,115,917
 10234,zygarde-complete,718,Complete Forme,Complete Zygarde,3,False,85,919
+10235,lycanroc-dusk,745,Dusk Form,Dusk Lycanroc,3,False,110,1042
+10236,necrozma-dusk-mane,800,Dusk Mane,Dusk Mane Necrozma,2,False,77,1043
+10237,necrozma-dawn-wings,800,Dawn Wings,Dawn Wings Necrozma,3,False,77,1044
+10238,necrozma-ultra,800,Ultra Necrozma,Ultra Necrozma,4,False,129,1045
