@@ -27,12 +27,14 @@ bank_state_labels = [
     ('from-mod', 'manually added by a mod')
 ]
 
+(max_pokemon,) = db.DBSession.query(sqla.func.max(db.PokemonSpecies.id)).one()
+
 def empty_bulletin_message():
     """Return a silly message for when the trainer/mod bulletin is empty."""
 
     pokemon = (
         db.DBSession.query(db.PokemonSpecies)
-        .get(random.randrange(1, 722))
+        .get(random.randrange(1, max_pokemon + 1))
     )
 
     return random.choice(empty_bulletin_messages).format(pokemon=pokemon.name)
