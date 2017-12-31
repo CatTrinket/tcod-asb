@@ -17,16 +17,16 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 16,pidgey,Pidgey,6,,1,False,False,False,16,
 17,pidgeotto,Pidgeotto,6,16,,False,False,False,17,
 18,pidgeot,Pidgeot,6,17,,False,False,False,18,Mega Evolution is coming soon.
-19,rattata,Rattata,7,,1,False,True,False,19,
-20,raticate,Raticate,7,19,,False,True,False,20,
+19,rattata,Rattata,7,,1,False,True,False,19,"Alola Forms have different types, abilities, movepools, and stats.  Rattata's form is chosen when it is bought, and cannot be changed."
+20,raticate,Raticate,7,19,,False,True,False,20,"Alola Forms have different types, abilities, movepools, and stats.  Raticate's form is chosen as a Rattata, and cannot be changed."
 21,spearow,Spearow,8,,1,False,False,False,21,
 22,fearow,Fearow,8,21,,False,False,False,22,
 23,ekans,Ekans,9,,1,False,False,False,23,
 24,arbok,Arbok,9,23,,False,False,False,24,
 25,pikachu,Pikachu,10,172,,False,False,False,26,
-26,raichu,Raichu,10,25,,False,True,False,27,
-27,sandshrew,Sandshrew,11,,1,False,True,False,28,
-28,sandslash,Sandslash,11,27,,False,True,False,29,
+26,raichu,Raichu,10,25,,False,True,False,27,"Alola Forms have different types, abilities, movepools, and stats.  Raichu's form is chosen when evolving Pikachu, and cannot be changed."
+27,sandshrew,Sandshrew,11,,1,False,True,False,28,"Alola Forms have different types, abilities, movepools, and stats.  Sandshrew's form is chosen when it is bought, and cannot be changed."
+28,sandslash,Sandslash,11,27,,False,True,False,29,"Alola Forms have different types, abilities, movepools, and stats.  Sandslash's form is chosen as a Sandshrew, and cannot be changed."
 29,nidoran-f,Nidoran♀,12,,2,False,False,False,30,
 30,nidorina,Nidorina,12,29,,False,False,False,31,
 31,nidoqueen,Nidoqueen,12,30,,False,False,False,32,
@@ -35,8 +35,8 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 34,nidoking,Nidoking,13,33,,False,False,False,35,
 35,clefairy,Clefairy,14,173,,False,False,False,37,
 36,clefable,Clefable,14,35,,False,False,False,38,
-37,vulpix,Vulpix,15,,3,False,True,False,39,
-38,ninetales,Ninetales,15,37,,False,True,False,40,
+37,vulpix,Vulpix,15,,3,False,True,False,39,"Alola Forms have different types, abilities, movepools, and stats.  Vulpix's form is chosen when it is bought, and cannot be changed."
+38,ninetales,Ninetales,15,37,,False,True,False,40,"Alola Forms have different types, abilities, movepools, and stats.  Ninetales's form is chosen as a Vulpix, and cannot be changed."
 39,jigglypuff,Jigglypuff,16,174,,False,False,False,42,
 40,wigglytuff,Wigglytuff,16,39,,False,False,False,43,
 41,zubat,Zubat,17,,1,False,False,False,44,
@@ -48,10 +48,10 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 47,parasect,Parasect,19,46,,False,False,False,52,
 48,venonat,Venonat,20,,3,False,False,False,53,
 49,venomoth,Venomoth,20,48,,False,False,False,54,
-50,diglett,Diglett,21,,3,False,True,False,55,
-51,dugtrio,Dugtrio,21,50,,False,True,False,56,
-52,meowth,Meowth,22,,1,False,True,False,57,
-53,persian,Persian,22,52,,False,True,False,58,
+50,diglett,Diglett,21,,3,False,True,False,55,"Alola Forms have different types, abilities, movepools, and stats.  Diglett's form is chosen when it is bought, and cannot be changed."
+51,dugtrio,Dugtrio,21,50,,False,True,False,56,"Alola Forms have different types, abilities, movepools, and stats.  Dugtrio's form is chosen as a Diglett, and cannot be changed."
+52,meowth,Meowth,22,,1,False,True,False,57,"Alola Forms have different types, abilities, movepools, and stats.  Meowth's form is chosen when it is bought, and cannot be changed."
+53,persian,Persian,22,52,,False,True,False,58,"Alola Forms have different types, abilities, movepools, and stats.  Persian's form is chosen as a Meowth, and cannot be changed."
 54,psyduck,Psyduck,23,,2,False,False,False,59,
 55,golduck,Golduck,23,54,,False,False,False,60,
 56,mankey,Mankey,24,,3,False,False,False,61,
@@ -72,9 +72,9 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 71,victreebel,Victreebel,29,70,,False,False,False,77,
 72,tentacool,Tentacool,30,,1,False,False,False,78,
 73,tentacruel,Tentacruel,30,72,,False,False,False,79,
-74,geodude,Geodude,31,,1,False,True,False,80,
-75,graveler,Graveler,31,74,,False,True,False,81,
-76,golem,Golem,31,75,,False,True,False,82,
+74,geodude,Geodude,31,,1,False,True,False,80,"Alola Forms have different types, abilities, movepools, and stats.  Geodude's form is chosen when it is bought, and cannot be changed."
+75,graveler,Graveler,31,74,,False,True,False,81,"Alola Forms have different types, abilities, movepools, and stats.  Graveler's form is chosen as a Geodude, and cannot be changed."
+76,golem,Golem,31,75,,False,True,False,82,"Alola Forms have different types, abilities, movepools, and stats.  Golem's form is chosen as a Geodude, and cannot be changed."
 77,ponyta,Ponyta,32,,3,False,False,False,83,
 78,rapidash,Rapidash,32,77,,False,False,False,84,
 79,slowpoke,Slowpoke,33,,2,False,False,False,85,
@@ -86,8 +86,8 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 85,dodrio,Dodrio,36,84,,False,False,False,93,
 86,seel,Seel,37,,4,False,False,False,94,
 87,dewgong,Dewgong,37,86,,False,False,False,95,
-88,grimer,Grimer,38,,3,False,True,False,96,
-89,muk,Muk,38,88,,False,True,False,97,
+88,grimer,Grimer,38,,3,False,True,False,96,"Alola Forms have different types, abilities, movepools, and stats.  Grimer's form is chosen when it is bought, and cannot be changed."
+89,muk,Muk,38,88,,False,True,False,97,"Alola Forms have different types, abilities, movepools, and stats.  Muk's form is chosen as a Grimer, and cannot be changed."
 90,shellder,Shellder,39,,4,False,False,False,98,
 91,cloyster,Cloyster,39,90,,False,False,False,99,
 92,gastly,Gastly,40,,2,False,False,False,100,
@@ -101,9 +101,9 @@ id,identifier,name,pokemon_family_id,evolves_from_species_id,rarity_id,can_switc
 100,voltorb,Voltorb,44,,3,False,False,False,109,
 101,electrode,Electrode,44,100,,False,False,False,110,
 102,exeggcute,Exeggcute,45,,5,False,False,False,111,
-103,exeggutor,Exeggutor,45,102,,False,True,False,112,
+103,exeggutor,Exeggutor,45,102,,False,True,False,112,"Alola Forms have different types, abilities, movepools, and stats.  Exeggutor's form is chosen when evolving Exeggcute, and cannot be changed."
 104,cubone,Cubone,46,,4,False,False,False,113,
-105,marowak,Marowak,46,104,,False,True,False,114,
+105,marowak,Marowak,46,104,,False,True,False,114,"Alola Forms have different types, abilities, movepools, and stats.  Marowak's form is chosen when evolving Cubone, and cannot be changed."
 106,hitmonlee,Hitmonlee,47,236,,False,False,False,116,
 107,hitmonchan,Hitmonchan,47,236,,False,False,False,117,
 108,lickitung,Lickitung,48,,7,False,False,False,119,
@@ -724,7 +724,7 @@ Outside of battle, Aegislash can change formes at any time, but only for display
 715,noivern,Noivern,360,714,,False,False,False,715,
 716,xerneas,Xerneas,361,,,True,False,True,716,Xerneas's modes only differ in appearance.  The ref may handle Xerneas's mode however they feel is most dramatically appropriate.
 717,yveltal,Yveltal,362,,,False,False,False,717,
-718,zygarde,Zygarde,363,,,True,False,False,718,
+718,zygarde,Zygarde,363,,,True,False,False,718,Zygarde's formes have different stats.  It can enter battle in 10% Forme or 50% Forme; it then changes to Complete Forme at 50% health or lower if it has Power Construct.
 719,diancie,Diancie,364,,,False,False,False,719,Mega Evolution is coming soon.
 720,hoopa,Hoopa,365,,,True,True,False,720,"Hoopa's forms have different types and stats.  It may battle in either form, but cannot change forms in battle."
 721,volcanion,Volcanion,366,,,False,False,False,721,
@@ -751,8 +751,10 @@ Outside of battle, Aegislash can change formes at any time, but only for display
 742,cutiefly,Cutiefly,375,,2,False,False,False,742,
 743,ribombee,Ribombee,375,742,,False,False,False,743,
 744,rockruff,Rockruff,376,,2,False,False,False,744,
-745,lycanroc,Lycanroc,376,744,,False,True,False,745,
-746,wishiwashi,Wishiwashi,377,,3,True,False,False,746,
+745,lycanroc,Lycanroc,376,744,,False,True,False,745,"Lycanroc's forms have different abilities, movepools, and stats.  Its form is chosen when evolving Rockruff, and cannot be changed.  (Unlike in the video games, any Rockruff may evolve into Dusk Form.)"
+746,wishiwashi,Wishiwashi,377,,3,True,False,False,746,"Wishiwashi's forms have different stats.  It changes to School Form above 25% health, or Solo Form otherwise, thanks to Schooling.
+
+Outside of battle, Wishiwashi can change forms at any time, but only for display purposes."
 747,mareanie,Mareanie,378,,3,False,False,False,747,
 748,toxapex,Toxapex,378,747,,False,False,False,748,
 749,mudbray,Mudbray,379,,3,False,False,False,749,
@@ -779,12 +781,16 @@ Outside of battle, Aegislash can change formes at any time, but only for display
 770,palossand,Palossand,390,769,,False,False,False,770,
 771,pyukumuku,Pyukumuku,391,,5,False,False,False,771,
 772,type-null,Type: Null,392,,,False,False,False,772,
-773,silvally,Silvally,392,772,,True,True,True,773,
-774,minior,Minior,393,,6,True,False,True,774,
+773,silvally,Silvally,392,772,,True,True,True,773,"Silvally's forms correspond to its different types.  It changes type depending on its held Plate, thanks to RKS System."
+774,minior,Minior,393,,6,True,False,True,774,"Minior's Meteor Form and Core Form have different stats; its Core Form's various colors differ only in appearance.  It enters battle in Meteor Form and changes to Core Form below 50% health, thanks to Shields Down.
+
+Outside of battle, Minior can change forms at any time, but only for display purposes; however, the displayed form can still indicate to the ref which color of Core Form it should change to."
 775,komala,Komala,394,,6,False,False,False,775,
 776,turtonator,Turtonator,395,,7,False,False,False,776,
 777,togedemaru,Togedemaru,396,,6,False,False,False,777,
-778,mimikyu,Mimikyu,397,,6,True,False,True,778,
+778,mimikyu,Mimikyu,397,,6,True,False,True,778,"Mimikyu enters battle in Disguised Form, and can block some damage before becoming Busted Form, thanks to Disguise.
+
+Outside of battle, Mimikyu can change forms at any time, but only for display purposes."
 779,bruxish,Bruxish,398,,6,False,False,False,779,
 780,drampa,Drampa,399,,7,False,False,False,780,
 781,dhelmise,Dhelmise,400,,7,False,False,False,781,
@@ -806,8 +812,8 @@ Outside of battle, Aegislash can change formes at any time, but only for display
 797,celesteela,Celesteela,411,,,False,False,False,797,
 798,kartana,Kartana,412,,,False,False,False,798,
 799,guzzlord,Guzzlord,413,,,False,False,False,799,
-800,necrozma,Necrozma,414,,,True,False,False,800,
-801,magearna,Magearna,415,,,False,True,True,801,
+800,necrozma,Necrozma,414,,,True,False,False,800,"Necrozma's forms have different types, stats, signature moves, and abilities.  It can enter battle in its default form, Dawn Wings, or Dusk Mane; the latter two can then change to Ultra Necrozma if they are holding Ultranecrozium Z."
+801,magearna,Magearna,415,,,False,True,True,801,Magearna's forms differ only in appearance.
 802,marshadow,Marshadow,416,,,False,False,False,802,
 803,poipole,Poipole,417,,,False,False,False,803,
 804,naganadel,Naganadel,417,803,,False,False,False,804,
