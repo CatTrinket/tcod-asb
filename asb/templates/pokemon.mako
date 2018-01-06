@@ -1,5 +1,6 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 % if request.has_permission('edit.basics', pokemon):
@@ -81,3 +82,9 @@ ${h.gender_symbol(pokemon.gender)}
     </dd>
 </dl>
 </div>
+
+% if battles:
+<h1>Battles</h1>
+
+${t.battle_table(battles, show_end=True)}
+%endif
