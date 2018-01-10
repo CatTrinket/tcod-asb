@@ -21,6 +21,14 @@ ${h.form_error_list(form.csrf_token.errors)}
     <dd class="form-error">${error}</dd>
     % endfor
 
+    % if form.gender is not None:
+    <dt>${form.gender.label}</dt>
+    <dd>${form.gender()}</dd>
+    % for error in form.gender.errors:
+    <dd class="form-error">${error}</dd>
+    % endfor
+    % endif
+
     % if form.unlocked_evolutions is not None:
     <dt>${form.unlocked_evolutions.label}</dt>
     <dd>${form.unlocked_evolutions(class_='option-list')}</dd>

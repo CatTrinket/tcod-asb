@@ -43,15 +43,34 @@ class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
 
     experience = wtforms.IntegerField('Experience')
     happiness = wtforms.IntegerField('Happiness')
-    unlocked_evolutions = asb.forms.MultiCheckboxField('Manual evos',
-                                                       coerce=int)
+    gender = wtforms.SelectField('Gender', coerce=int)
+    unlocked_evolutions = asb.forms.MultiCheckboxField(
+        'Manual evos', coerce=int)
     give_to = wtforms.StringField('Give to', [wtforms.validators.Optional()])
     save = wtforms.SubmitField('Save')
 
     trainer = None
 
+    def add_gender_choices(self, pokemon):
+        """Set the choices for the gender dropdown, or delete the field
+        if there's only one possibility.
+        """
+
+        choices = [(gender.id, gender.name.capitalize())
+                   for gender in pokemon.species.genders]
+
+        if len(choices) > 1:
+            self.gender.choices = choices
+
+            if self.gender.data is None:
+                self.gender.data = pokemon.gender_id
+        else:
+            del self.gender
+
     def add_evolution_choices(self, pokemon):
-        """Set the choices for unlocked_evolutions."""
+        """Set the choices for unlocked_evolutions, or delete the field if
+        there aren't any possibilities.
+        """
 
         choices = [(evo.id, evo.name) for evo in pokemon.species.evolutions]
 
@@ -122,6 +141,7 @@ def super_edit(pokemon, request):
     """A page for editing stuff that only admins can edit."""
 
     form = SuperEditPokemonForm(csrf_context=request.session)
+    form.add_gender_choices(pokemon)
     form.add_evolution_choices(pokemon)
     form.experience.data = pokemon.experience
     form.happiness.data = pokemon.happiness
@@ -134,6 +154,7 @@ def super_edit_commit(pokemon, request):
     """Process a request to super-edit a Pokémon."""
 
     form = SuperEditPokemonForm(request.POST, csrf_context=request.session)
+    form.add_gender_choices(pokemon)
     form.add_evolution_choices(pokemon)
 
     if not form.validate():
@@ -141,6 +162,7 @@ def super_edit_commit(pokemon, request):
 
     pokemon.experience = form.experience.data
     pokemon.happiness = form.happiness.data
+    pokemon.gender_id = form.gender.data
 
     if form.unlocked_evolutions is not None:
         (db.DBSession.query(db.PokemonUnlockedEvolution)
