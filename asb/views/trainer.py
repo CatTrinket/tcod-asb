@@ -227,8 +227,8 @@ def trainer(trainer, request):
 
         if battle.length == 'cancelled':
             continue
-        elif battle.end_date:
-            # Battle already ended
+        elif battle.end_date or not battle_ref.is_current_ref:
+            # Not currently reffing; either battle ended or an e-ref took over
             ref_done.append(battle)
         else:
             # Battle still in progress

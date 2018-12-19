@@ -1507,6 +1507,7 @@ Pokemon.trade_lots = relationship(TradeLot,
 Pokemon.trades = association_proxy('trade_lots', 'trade')
 Pokemon.unlocked_evolutions = relationship(PokemonSpecies,
     secondary=PokemonUnlockedEvolution.__table__)
+Pokemon.battle_pokemon = relationship(BattlePokemon)
 
 EvolutionMethod.gender = relationship(Gender,
     primaryjoin=EvolutionMethod.gender_id == Gender.id, uselist=False)

@@ -48,8 +48,11 @@ def pokemon(pokemon, request):
                 if method.experience:
                     evo_info['experience'] = method.experience
 
+    battles = [bp.trainer.battle for bp in pokemon.battle_pokemon
+               if bp.participated]
+
     return {'pokemon': pokemon, 'can_evolve': can_evolve(pokemon),
-            'evo_info': evo_info}
+            'evo_info': evo_info, 'battles': battles}
 
 @view_config(name='sigstuff', context=db.Pokemon, renderer='/sig_stuff.mako')
 def sig_stuff(pokemon, request):
