@@ -91,11 +91,11 @@ ${next.body()}\
 <p>
 <a href="http://forums.dragonflycave.com/forumdisplay.php?f=43">The Cave of
 Dragonflies forums</a> •
-<a href="http://github.com/Zhorken/tcod-asb">tcod-asb on GitHub</a>
+<a href="https://github.com/CatTrinket/tcod-asb">tcod-asb on GitHub</a>
 </p>
 
 <p>
-TCoD ASBdb by <a href="http://github.com/Zhorken">Zhorken</a> •
+TCoD ASBdb by <a href="https://github.com/CatTrinket">Trinket</a> •
 Shiny Pokémon icon edits by
 <a href="https://github.com/msikma/pokesprite">msikma</a><br>
 
