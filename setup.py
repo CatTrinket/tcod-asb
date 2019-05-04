@@ -4,7 +4,7 @@ import setuptools
 
 # I'm going to just give exact versions that I know will work
 requires = [
-    'alembic==0.7.4',
+    'alembic==1.0.9',
     'beautifulsoup4==4.5.1',
     'bleach==1.4.3',
     'Markdown==2.4.1',
@@ -14,11 +14,11 @@ requires = [
     'pyramid_exclog==0.7',
     'pyramid_mako==1.0.2',
     'pyramid_tm==0.7',
-    'SQLAlchemy==0.9.8',
-    'transaction==1.4.1',
+    'SQLAlchemy==1.3.3',
+    'transaction==2.4.0',
     'waitress==0.8.7',
-    'WTForms==1.0.5',
-    'zope.sqlalchemy==0.7.3',
+    'WTForms==2.2.1',
+    'zope.sqlalchemy==1.1',
 ]
 
 entry_points = {
