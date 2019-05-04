@@ -4,9 +4,7 @@ html { font-size: 16px; }
 
 body {
     display: flex;
-    display: -ms-flexbox;
     flex-direction: column;
-    -ms-flex-direction: column;
     height: 100vh;
     margin: 0;
 
@@ -17,7 +15,6 @@ body {
 
 header {
     flex: none;
-    -ms-flex: none;
     background: #5577BB;
     text-align: center;
 }
@@ -26,7 +23,6 @@ header img { max-width: 100%; }
 
 main {
     flex: 1 0 auto;
-    -ms-flex: 1 0 auto;
     padding: 2rem;
 }
 
@@ -35,7 +31,6 @@ main > *:last-child { margin-bottom: 0; }
 
 footer {
     flex: none;
-    -ms-flex: none;
     padding: 0 2rem;
     background: #D8D8D8;
     font-size: 0.875rem;
@@ -471,9 +466,7 @@ tr.unaffordable-total { color: #CC0000; }
 /* Normal/shiny options — similar to the form list on a species page */
 ul#pokemon-color-list {
     display: inline-flex;
-    display: -ms-inline-flexbox;
     align-items: baseline;
-    -ms-flex-align: baseline;
     padding-left: 0;
 }
 
@@ -491,20 +484,15 @@ ul#pokemon-color-list input:checked + div.portrait { background: #B5C0D8; }
 /* Evolving Pokémon */
 form#evolution-form > ul {
     display: flex;
-    display: -ms-flexbox;
     justify-content: center;
-    -ms-flex-pack: center;
     list-style: none;
     padding: 0;
 }
 
 form#evolution-form label {
     display: flex;
-    display: -ms-flexbox;
     flex-direction: column;
-    -ms-flex-direction: column;
     align-items: center;
-    -ms-flex-align: center;
     margin: 0 1rem;
     width: 10rem;
 }
