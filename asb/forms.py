@@ -63,7 +63,7 @@ class MarkupFormatField(wtforms.RadioField):
 
         if isinstance(value, str):
             if value:
-                return asb.markup.MarkupLanuage[value]
+                return asb.markup.MarkupLanguage[value]
             else:
                 return None
 
