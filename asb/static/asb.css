@@ -136,7 +136,7 @@ textarea { display: block; }
 
 fieldset {
     position: relative;
-    margin-top: 2.56rem;  /* Extra space for the legend */
+    margin-top: 2.5rem;  /* Extra space for the legend */
     margin-bottom: 1rem;
 
     background: #DEE6F5;
@@ -154,8 +154,9 @@ fieldset > *:last-child { margin-bottom: 0; }
 legend {
     /* Mimic an h2 sitting on top of the fieldset */
     position: absolute;
-    top: calc(-1.56rem - 3px);  /* -(font-size * line-height) - border-width */
+    top: 0;
     left: 0;
+    transform: translateY(calc(-100% - 3px));
 
     font-size: 1.3rem;
     font-weight: bold;
