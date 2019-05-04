@@ -5,6 +5,7 @@ import setuptools
 # I'm going to just give exact versions that I know will work
 requires = [
     'alembic==1.0.9',
+    'bbcode==1.0.33',
     'beautifulsoup4==4.5.1',
     'bleach==1.4.3',
     'Markdown==2.4.1',
