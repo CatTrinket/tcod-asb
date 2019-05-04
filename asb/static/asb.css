@@ -485,6 +485,7 @@ ul#pokemon-color-list input:checked + div.portrait { background: #B5C0D8; }
 /* Evolving Pokémon */
 form#evolution-form > ul {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     list-style: none;
     padding: 0;
@@ -494,7 +495,7 @@ form#evolution-form label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 1rem;
+    margin: 0 1rem 1rem 0;
     width: 10rem;
 }
 
