@@ -3,7 +3,7 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name="title">Trade #${trade.id} - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 % for lot in trade.lots:
     % if request.has_permission('trade.lot.view', lot):
@@ -66,7 +66,7 @@
                         </td>
                         <td class="focus-column">${h.link(item)}</td>
                         <td class="stat">${qty}</td>
-                        <td>${item.summary | md.convert, chomp, n}</td>
+                        <td>${item.summary | md}</td>
                     </tr>
                 % endfor
             </tbody>

@@ -1,7 +1,7 @@
 import random
 
 import pyramid.httpexceptions as httpexc
-from pyramid.view import view_config
+from pyramid.view import view_config, view_defaults
 import sqlalchemy as sqla
 import sqlalchemy.orm
 import wtforms
@@ -10,6 +10,7 @@ from asb import db
 import asb.forms
 import asb.tcodf
 from asb.resources import TrainerIndex
+
 
 class TrainerEditForm(asb.forms.CSRFTokenForm):
     """A form for editing a trainer.
@@ -371,3 +372,55 @@ def edit_commit(trainer, request):
     return httpexc.HTTPSeeOther(
         request.resource_path(trainer.__parent__, trainer.__name__)
     )
+
+
+### Profile
+
+class TrainerProfileForm(asb.forms.CSRFTokenForm):
+    """A form for editing a trainer's profile."""
+
+    profile_format = asb.forms.MarkupFormatField(
+        [wtforms.validators.Required()])
+    profile = asb.forms.TextAreaField()
+    preview = wtforms.SubmitField('Preview')
+    save = wtforms.SubmitField('Save')
+
+@view_defaults(
+    name='profile', context=db.Trainer, renderer='/edit_trainer_profile.mako',
+    permission='trainer.edit.profile')
+class TrainerProfileView:
+    """A page for editing a trainer's profile."""
+
+    def __init__(self, trainer, request):
+        self.trainer = trainer
+        self.request = request
+
+    @view_config(request_method='GET')
+    def edit(self):
+        form = TrainerProfileForm(
+            obj=self.trainer, csrf_context=self.request.session)
+
+        if not form.profile_format.data:
+            form.profile_format.data = self.request.user.last_markup_format
+
+        return {'form': form, 'trainer': self.trainer}
+
+    @view_config(request_method='POST')
+    def save(self):
+        form = TrainerProfileForm(
+            self.request.POST, csrf_context=self.request.session)
+
+        if not form.validate() or form.preview.data:
+            return {'trainer': self.trainer, 'form': form}
+
+        if not form.profile.data or form.profile.data.isspace():
+            self.trainer.profile_format = None
+            self.trainer.profile = None
+        else:
+            if self.trainer.profile_format != form.profile_format.data:
+                self.request.user.last_markup_format = form.profile_format.data
+
+            form.populate_obj(self.trainer)
+
+        return httpexc.HTTPSeeOther(self.request.resource_path(
+            self.trainer.__parent__, self.trainer.__name__))

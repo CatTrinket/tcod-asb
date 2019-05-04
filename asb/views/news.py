@@ -13,7 +13,8 @@ class NewsForm(asb.forms.CSRFTokenForm):
 
     title = wtforms.StringField('Title',
         [wtforms.validators.Required('Please enter a title')])
-    text = wtforms.TextAreaField('Post',
+    format = asb.forms.MarkupFormatField()
+    text = asb.forms.TextAreaField('Post',
         [wtforms.validators.Required('Your post is empty')])
     preview = wtforms.SubmitField('Preview')
     post = wtforms.SubmitField('Post')
@@ -47,7 +48,13 @@ def news(news_post, request):
 def post_news(context, request):
     """A page for posting a news post."""
 
-    return {'form': NewsForm(csrf_context=request.session), 'post': None}
+    return {
+        'form': NewsForm(
+            format=request.user.last_markup_format,
+            csrf_context=request.session
+        ),
+        'post': None
+    }
 
 @view_config(context=NewsIndex, name='post', renderer='/news_post.mako',
   request_method='POST', permission='news.post')
@@ -61,12 +68,13 @@ def post_news_commit(context, request):
         return {'form': form, 'now': now, 'post': None}
 
     post = db.NewsPost(
-        title=form.title.data,
         identifier='temp-{0}'.format(now),
         post_time=now,
-        posted_by_trainer_id=request.user.id,
-        text=form.text.data
+        posted_by_trainer_id=request.user.id
     )
+
+    form.populate_obj(post)
+    request.user.last_markup_format = form.format.data
 
     db.DBSession.add(post)
     db.DBSession.flush()
@@ -105,8 +113,10 @@ def edit_news_commit(post, request):
     elif not form.validate() or form.preview.data:
         return {'form': form, 'delete_form': delete_form, 'post': post}
 
-    post.title = form.title.data
-    post.text = form.text.data
+    if post.format != form.format.data:
+        request.user.last_markup_format = form.format.data
+
+    form.populate_obj(post)
     post.set_identifier()
 
     return httpexc.HTTPSeeOther(

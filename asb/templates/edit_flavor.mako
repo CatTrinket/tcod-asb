@@ -1,7 +1,7 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name='title'>Edit ${thing.name} - The Cave of Dragonflies ASB</%block>\
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 <h1>Edit ${thing.name}</h1>
 <form action="${request.path}" method="POST" class="editor">
@@ -35,7 +35,7 @@ ${form.save}
 % if form.edit_time.errors:
     <h1>Current revision</h1>
 
-    <p><b>Summary:</b> ${thing.summary | md.convert, chomp, n}</p>
+    ${'**Summary:** {}'.format(thing.summary) | md}
 
     % if hasattr(form, 'energy'):
         <p>
@@ -51,16 +51,16 @@ ${form.save}
     % endif
 
     <h2>Description</h2>
-    ${thing.description | md.convert, n}
+    ${thing.description | md}
 
     % if thing.notes:
         <h2>Notes</h2>
-        ${thing.notes | md.convert, n}
+        ${thing.notes | md}
     % endif
 % endif
 
 <h1>Preview</h1>
-<p><b>Summary:</b> ${form.summary.data | md.convert, chomp, n}</p>
+${'**Summary:** {}'.format(form.summary.data) | md}
 
 % if hasattr(form, 'energy'):
     <p>
@@ -76,9 +76,9 @@ ${form.save}
 % endif
 
 <h2>Description</h2>
-${form.description.data | md.convert, n}
+${form.description.data | md}
 
 % if form.notes.data:
     <h2>Notes</h2>
-    ${form.notes.data | md.convert, n}
+    ${form.notes.data | md}
 % endif

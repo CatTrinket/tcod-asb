@@ -1,14 +1,25 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="markup" file="/helpers/markup.mako"/>\
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${trainer.name} - Trainers - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 % if request.has_permission('trainer.edit'):
-<p><a href="${request.resource_url(trainer, 'edit')}">
-    Edit ${trainer.name} →
-</a></p>
+    <p><a href="${request.resource_url(trainer, 'edit')}">
+        Edit ${trainer.name} →
+    </a></p>
+% endif
+
+% if request.has_permission('trainer.edit.profile'):
+    <p><a href="${request.resource_url(trainer, 'profile')}">
+        % if trainer == request.user:
+            Edit your profile →
+        % else:
+            Edit ${trainer.name}'s profile →
+        % endif
+    </a></p>
 % endif
 
 <h1>${trainer.name}</h1>
@@ -28,6 +39,11 @@ following reason: ${trainer.ban.reason}</strong></p>
     <dt>Pokémon count</dt>
     <dd>${len(trainer.squad) + len(trainer.pc)}</dd>
 </dl>
+
+% if trainer.profile is not None:
+    <h2>Profile</h2>
+    ${markup.markup(trainer.profile, trainer.profile_format)}
+% endif
 
 <h1>Pokémon</h1>
 ${t.pokemon_table(
@@ -59,7 +75,7 @@ ${t.pokemon_table(
         </td>
         <td class="focus-column">${h.link(item)}</td>
         <td class="stat">${qty}</td>
-        <td>${item.summary | md.convert, chomp, n}</td>
+        <td>${item.summary | md}</td>
     </tr>
     % endfor
 </tbody>

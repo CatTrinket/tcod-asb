@@ -2,10 +2,12 @@
 
 import bleach
 import markdown
+import markupsafe
 from pyramid.traversal import resource_path
 import sqlalchemy as sqla
 
 import asb.db as db
+
 
 class ASBMarkdown(markdown.Markdown):
     """A Markdown class whose output is sanitized using bleach, and which will
@@ -44,8 +46,13 @@ class ASBMarkdown(markdown.Markdown):
         if source is None:
             return ''
         else:
-            return bleach.clean(super().convert(source),
-                                tags=self.tags, attributes=self.attributes)
+            return markupsafe.Markup(
+                bleach.clean(
+                    super().convert(source),
+                    tags=self.tags,
+                    attributes=self.attributes
+                )
+            )
 
 class PokedexLinkExtension(markdown.extensions.Extension):
     def extendMarkdown(self, md, md_globals):
@@ -131,14 +138,6 @@ class SpeciesLink(PokedexLink):
 
             return (species.default_form, species.name)
 
-def chomp(html):
-    """Chomp the paragraph tags off a block of HTML.  This function is not very
-    smart and will simply chop off the first three and last four characters.
-
-    XXX There's probably some way to extend Markdown to do this more nicely
-    """
-
-    return html[3:-4]
 
 ability_link = PokedexLink('ability', db.Ability)
 item_link = PokedexLink('item', db.Item)
@@ -146,7 +145,9 @@ move_link = PokedexLink('move', db.Move)
 species_link = SpeciesLink('species', db.PokemonForm)
 type_link = PokedexLink('type', db.Type)
 
-md = ASBMarkdown(extensions=[
+parser = ASBMarkdown(extensions=[
     PokedexLinkExtension(),
     'markdown.extensions.nl2br'
 ])
+
+render = parser.convert

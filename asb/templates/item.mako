@@ -1,7 +1,7 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${item.name} - Items - The Cave of Dragonflies ASB</%block>\
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 % if request.has_permission('flavor.edit'):
 <p><a href="${request.resource_path(item, 'edit')}">Edit ${item.name} →</a></p>
@@ -20,16 +20,16 @@
     % endif
 
     <dt>Summary</dt>
-    <dd>${item.summary | md.convert, chomp, n}</dd>
+    <dd>${item.summary | md}</dd>
 </dl>
 
 
 <h1>Description</h1>
-${item.description | md.convert, n}
+${item.description | md}
 
 % if item.notes:
 <h2>Notes</h2>
-${item.notes | md.convert, n}
+${item.notes | md}
 % endif
 
 % if move_category is not None:

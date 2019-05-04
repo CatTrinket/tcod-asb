@@ -13,12 +13,14 @@ from sqlalchemy.sql import and_, or_
 from sqlalchemy.types import *
 from zope.sqlalchemy import ZopeTransactionExtension
 
+import asb.markup
 import asb.tcodf
 from . import helpers
 
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
+MarkupEnum = Enum(asb.markup.MarkupLanguage, name='markup_language')
 
 class PokedexTable(Base):
     """A class for tables holding general data for the dex pages, like Pokémon
@@ -821,7 +823,8 @@ class NewsPost(PlayerTable):
     post_time = Column(DateTime, nullable=False)
     posted_by_trainer_id = Column(Integer, ForeignKey('trainers.id'),
         nullable=False)
-    text = Column(Unicode, nullable=False)
+    format = Column(MarkupEnum, nullable=False)
+    text = Column(Unicode(65535), nullable=False)
 
     def set_identifier(self):
         """Set an identifier based on ID and title."""
@@ -881,6 +884,8 @@ class Pokemon(PlayerTable):
     was_from_hack = Column(Boolean, nullable=False, default=False)
     original_trainer_id = Column(Integer, ForeignKey('trainers.id',
         onupdate='cascade', ondelete='set null'))
+    profile_format = Column(MarkupEnum)
+    profile = Column(Unicode(65535))
 
     __table_args__ = (
         # Set up a composite foreign key for ability
@@ -1192,10 +1197,22 @@ class Trainer(PlayerTable):
     last_collected_allowance = Column(Date, nullable=True)
     unclaimed_from_hack = Column(Boolean, nullable=False, default=False)
     is_validated = Column(Boolean, nullable=False, default=False)
+    last_markup_format = Column(
+        MarkupEnum, nullable=False, default=asb.markup.MarkupLanguage.bbcode)
+    profile_format = Column(MarkupEnum)
+    profile = Column(Unicode(65535))
 
     # Prevent two trainers from having the same name, unless one is an actual
     # user and the other is just an old hack profile
     __table_args__ = (UniqueConstraint('name', 'unclaimed_from_hack'),)
+
+    def __acl__(self):
+        return [
+            (sec.Allow, 'user:{}'.format(self.id), 'trainer.edit.profile'),
+            (sec.Allow, 'admin', 'trainer.edit.profile'),
+            (sec.Allow, 'mod', 'trainer.edit.profile'),
+            (sec.Allow, 'admin', 'trainer.edit')
+        ]
 
     def set_password(self, password):
         """Hash and store the given password."""

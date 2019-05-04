@@ -102,8 +102,8 @@ h1 a:hover, h2 a:hover {
 /* Monospace text */
 pre,
 code,
-form.editor input[type="text"],
-form.editor textarea {
+*.editor input[type="text"],
+*.editor textarea {
     /* Try to cover everyone (and hopefully avoid Courier) */
     font-family: DejaVu Sans Mono, Monaco, Droid Sans Mono, Lucida Console,
                  monospace;
@@ -183,14 +183,14 @@ legend {
 
 ul.option-list { list-style-type: none; padding-left: 1rem; }
 
-form.editor input[type="text"],
-form.editor textarea {
+*.editor input[type="text"],
+*.editor textarea {
     display: inline;
     vertical-align: baseline;
     width: 100%;
 }
 
-form.editor input.energy-field { width: 2ch; }
+*.editor input.energy-field { width: 2ch; }
 
 /* Tables */
 table {
@@ -222,6 +222,9 @@ tr.subheader-row a:hover { text-decoration: underline; }
 
 th, td { padding: 0.5rem; line-height: 1rem; }
 th { word-wrap: normal; }
+
+td > p:first-child { margin-top: 0; }
+td > p:last-child { margin-bottom: 0; }
 
 td.focus-column { font-weight: bold; }
 
@@ -363,6 +366,40 @@ dl.type-matchups > dd {
     padding-top: 0;
     padding-bottom: 0;
 }
+
+/* User-entered markup (e.g. profiles, news posts) */
+blockquote, details {
+    background: #DEE6F5;
+    border: solid #7799EE;
+    border-width: 1px 1px 1px 4px;
+    margin: 0;
+    padding: 0.5rem 1rem;
+}
+
+summary { font-weight: bold; }
+
+blockquote > p:first-child { margin-top: 0; }
+blockquote > p:last-child { margin-bottom: 0; }
+
+div.plain-text,
+div.bbcode {
+    white-space: pre-wrap;
+}
+
+div.bbcode ul,
+div.bbcode ol {
+    margin: 0;
+}
+
+*.spoiler { color: #000000; background: #000000; }
+
+ul.markup-format {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+ul.markup-format > li + li { margin-left: 1rem; }
 
 /* Misc. */
 *.hidden-ability { font-style: italic; }

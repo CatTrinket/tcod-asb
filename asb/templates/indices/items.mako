@@ -1,6 +1,6 @@
 <%inherit file='/base.mako'/>\
 <%block name='title'>Items - The Cave of Dragonflies ASB</%block>\
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 % if request.has_permission('account.manage'):
 <p><a href="/items/buy">Buy items →</a></p>
@@ -33,7 +33,7 @@
         % else:
         <td class="price">—</td>
         % endif
-        <td>${item.summary | md.convert, chomp, n}</td>
+        <td>${item.summary | md}</td>
     </tr>
     % endfor
 </tbody>

@@ -2,7 +2,7 @@
 <%namespace name="h" file="/helpers/helpers.mako"/>\
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name="title">Trade with ${trade_info['recipient_name']} - The Cave of Dragonflies ASB</%block>\
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 <p><a href="/trade?back=yes">← Back</a></p>
 
@@ -49,7 +49,7 @@ ${h.form_error_list(form.money.errors)}
         <td class="focus-column">${h.link(item)}</td>
         <td class="input">${field(size=1, maxlength=2)}</td>
         <td class="stat">${quantity}</td>
-        <td class="summary">${item.summary | md.convert, chomp}</td>
+        <td class="summary">${item.summary | md}</td>
     </tr>
     % endfor
 </tbody>

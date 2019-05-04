@@ -1,8 +1,9 @@
-<%inherit file='/base.mako'/>\
-<%namespace name='h' file='/helpers/helpers.mako'/>\
-<%block name='title'>Post news - The Cave of Dragonflies ASB</%block>\
+<%inherit file='/base.mako'/>
+<%namespace name='h' file='/helpers/helpers.mako'/>
+<%namespace name='markup' file='/helpers/markup.mako'/>
 
-<% from asb.markdown import md %>
+<%block name='title'>Post news - The Cave of Dragonflies ASB</%block>
+
 
 <h1>Post news</h1>
 <form id="news-form" action="${request.path}" method="POST" class="editor">
@@ -13,7 +14,7 @@ ${h.form_error_list(*form.errors.values())}
     <dd>${form.title}</dd>
 
     <dt>${form.text.label}</dt>
-    <dd>${form.text(rows=10, cols=100)}</dd>
+    <dd>${markup.markup_editor(form.text, form.format)}</dd>
 
     <dd>${form.preview} ${form.post}</dd>
 </dl>
@@ -37,6 +38,7 @@ ${h.news_post(
     preview=True,
     title=form.title.data,
     text=form.text.data,
+    format=form.format.data
 )}
 % elif form.preview.data:
 <h1>Preview</h1>
@@ -45,6 +47,7 @@ ${h.news_post(
     title=form.title.data,
     post_time=now,
     poster=request.user,
-    text=form.text.data
+    text=form.text.data,
+    format=form.format.data
 )}
 % endif

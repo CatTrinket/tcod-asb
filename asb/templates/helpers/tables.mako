@@ -1,4 +1,5 @@
 <%namespace name="h" file="/helpers/helpers.mako"/>
+<%! from asb.markup.markdown import render as md %>
 
 <%def name="empty_header()"><th></th></%def>
 <%def name="ticky_col()"><col class="ticky"></%def>
@@ -142,7 +143,6 @@ ${column['col']()}
 ### MOVE TABLES
 # Always the same columns
 <%def name="move_table(moves, skip_type=False)">
-<% from asb.markdown import md, chomp %>\
 <table class="standard-table effect-table">
 <col class="move">
 % if not skip_type:
@@ -210,7 +210,7 @@ ${'positive' if move.priority > 0 else 'negative'}-priority\
 ">${h.num(move.priority, invisible_plus=False)}</td>
     % endif
 
-    <td>${move.summary | md.convert, chomp, n}</td>
+    <td>${move.summary | md}</td>
 </tr>
 % endfor
 </tbody>

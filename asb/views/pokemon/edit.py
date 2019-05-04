@@ -18,6 +18,9 @@ class EditPokemonForm(asb.forms.CSRFTokenForm):
         choices=[('normal', 'Normal'), ('shiny', 'Shiny')],
         coerce=lambda x: x  # Leave None as is
     )
+    profile_format = asb.forms.MarkupFormatField()
+    profile = asb.forms.TextAreaField('Profile')
+    profile_preview = wtforms.SubmitField('Preview')
     save = wtforms.SubmitField('Save')
 
     def add_form_choices(self, pokemon):
@@ -103,9 +106,15 @@ class SuperEditPokemonForm(asb.forms.CSRFTokenForm):
 def edit_pokemon(pokemon, request):
     """A page for editing a Pokémon."""
 
-    form = EditPokemonForm(csrf_context=request.session)
-    form.name.data = pokemon.name
-    form.color.data = 'shiny' if pokemon.is_shiny else 'normal'
+    form = EditPokemonForm(
+        name=pokemon.name,
+        color='shiny' if pokemon.is_shiny else 'normal',
+        profile_format=
+            pokemon.profile_format or request.user.last_markup_format,
+        profile=pokemon.profile,
+        csrf_context=request.session
+    )
+
     form.add_form_choices(pokemon)
 
     return {'pokemon': pokemon, 'form': form}
@@ -118,7 +127,7 @@ def edit_pokemon_commit(pokemon, request):
     form = EditPokemonForm(request.POST, csrf_context=request.session)
     form.add_form_choices(pokemon)
 
-    if not form.validate():
+    if not form.validate() or form.profile_preview.data:
         return {'pokemon': pokemon, 'form': form}
 
     pokemon.name = form.name.data.strip() or pokemon.species.name
@@ -132,6 +141,16 @@ def edit_pokemon_commit(pokemon, request):
         pokemon.is_shiny = False
     elif form.color.data == 'shiny':
         pokemon.is_shiny = True
+
+    if not form.profile.data or form.profile.data.isspace():
+        pokemon.profile_format = None
+        pokemon.profile = None
+    else:
+        if pokemon.profile_format != form.profile_format.data:
+            request.user.last_markup_format = form.profile_format.data
+
+        pokemon.profile_format = form.profile_format.data
+        pokemon.profile = form.profile.data.replace('\r\n', '\n')
 
     return httpexc.HTTPSeeOther(request.resource_url(pokemon))
 

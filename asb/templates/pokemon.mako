@@ -1,5 +1,6 @@
 <%inherit file='/base.mako'/>\
 <%namespace name="h" file="/helpers/helpers.mako"/>\
+<%namespace name="markup" file="/helpers/markup.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon - The Cave of Dragonflies ASB</%block>\
 
 % if request.has_permission('edit.basics', pokemon):
@@ -81,3 +82,8 @@ ${h.gender_symbol(pokemon.gender)}
     </dd>
 </dl>
 </div>
+
+% if pokemon.profile is not None:
+    <h2>Profile</h2>
+    ${markup.markup(pokemon.profile, pokemon.profile_format)}
+% endif

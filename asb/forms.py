@@ -7,6 +7,7 @@ import wtforms
 import wtforms.ext.csrf
 
 from asb import db
+import asb.markup
 import asb.tcodf
 
 class CSRFTokenForm(wtforms.ext.csrf.SecureForm):
@@ -23,6 +24,50 @@ class CSRFTokenForm(wtforms.ext.csrf.SecureForm):
         if field.data != field.current_token:
             raise wtforms.validators.ValidationError(
                 'Invalid CSRF token; the form probably expired.  Try again.')
+
+class TextAreaField(wtforms.TextAreaField):
+    r"""A TextAreaField that replaces '\r\n' newlines with '\n'.
+
+    '\r\n' is what HTTP mandates; we don't have to worry about plain '\r'.
+    """
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = valuelist[0].replace('\r\n', '\n')
+
+class MarkupFormatField(wtforms.RadioField):
+    """A set of radio buttons for choosing a markup language."""
+
+    def __init__(self, *args, choices=(), **kwargs):
+        if not choices:
+            choices = [
+                (language, language.value)
+                for language in asb.markup.MarkupLanguage
+            ]
+
+        kwargs.setdefault('default', asb.markup.MarkupLanguage.bbcode)
+        kwargs.setdefault('coerce', self.coerce)
+
+        super().__init__(*args, choices=choices, **kwargs)
+
+    def coerce(self, value):
+        """Coerce a string back to a MarkupLanguage or None.
+
+        Don't coerce any other type; form data and default values added on the
+        Python end are both passed through here.
+        """
+
+        # XXX It would be nice to use process_formdata instead and avoid
+        # checking type, but then the format is left unselected when previewing
+        # fsr.
+
+        if isinstance(value, str):
+            if value:
+                return asb.markup.MarkupLanuage[value]
+            else:
+                return None
+
+        return value
 
 class MultiCheckboxField(wtforms.SelectMultipleField):
     """A SelectMultipleField that presents its options as checkboxes.

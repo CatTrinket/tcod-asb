@@ -3,7 +3,7 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${move.name} - Moves - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 % if request.has_permission('flavor.edit'):
 <p><a href="${request.resource_path(move, 'edit')}">Edit ${move.name} →</a></p>
@@ -56,7 +56,7 @@
 <dl>
     % for category in move.categories:
     <dt>${category.name}</dt>
-    <dd>${category.description | md.convert, chomp, n}</dd>
+    <dd>${category.description | md}</dd>
     % endfor
 </dl>
 </div>
@@ -80,14 +80,14 @@ ${h.type_icon(type)}\
 % endif
 
 <h2>Summary</h2>
-${move.summary | md.convert, n}
+${move.summary | md}
 
 <h1>Description</h1>
-${move.description | md.convert, n}
+${move.description | md}
 
 % if move.notes:
 <h2>Notes</h2>
-${move.notes | md.convert, n}
+${move.notes | md}
 % endif
 
 % if move_category is not None:

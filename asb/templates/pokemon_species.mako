@@ -3,7 +3,7 @@
 <%namespace name="t" file="/helpers/tables.mako"/>\
 <%block name='title'>${pokemon.name} - Pokémon species - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 <h1>${pokemon.name}</h1>
 
@@ -52,12 +52,11 @@ ${h.type_icon(type)}\
     % if ability.is_hidden:
     <dt class="hidden-ability">${h.link(ability.ability)}</dt>
     <dd>
-        <i>(Hidden ability.)</i>
-        ${ability.ability.summary | md.convert, chomp, n}
+        ${'_(Hidden ability.)_  {}'.format(ability.ability.summary) | md}
     </dd>
     % else:
     <dt>${h.link(ability.ability)}</dt>
-    <dd>${ability.ability.summary | md.convert, chomp, n}</dd>
+    <dd>${ability.ability.summary | md}</dd>
     % endif
     % endfor
 </dl>
@@ -159,11 +158,7 @@ ${next(or_) | n}pay $${method.buyable_price}\
 </ul>
 
 % if pokemon.species.form_explanation:
-% for line in pokemon.species.form_explanation.splitlines():
-% if line:
-<p>${line}</p>
-% endif
-% endfor
+    ${pokemon.species.form_explanation | md}
 % endif
 % endif
 

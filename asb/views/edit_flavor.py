@@ -12,7 +12,7 @@ class FlavorEditForm(asb.forms.CSRFTokenForm):
 
     edit_time = wtforms.HiddenField()
     summary = wtforms.StringField('Summary')
-    description = wtforms.TextAreaField('Description')
+    description = asb.forms.TextAreaField('Description')
     notes = wtforms.TextAreaField('Notes')
     preview = wtforms.SubmitField('Preview')
     save = wtforms.SubmitField('Save')

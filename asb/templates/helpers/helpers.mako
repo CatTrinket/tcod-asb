@@ -1,3 +1,8 @@
+<%! import pkg_resources %>
+
+<%namespace name="markup" file="/helpers/markup.mako" />
+
+
 <%def name="link(db_resource, text=None, **kwargs)">\
 ## resource_url will add a trailing slash unless we do it this way
 <a href="${request.resource_url(db_resource.__parent__,
@@ -63,11 +68,9 @@ ${pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier,
    filename = '{}/{}.png'.format(path, form.identifier)
 
    if gender is not None:
-       from pkg_resources import resource_exists
-
        alt_filename = '{}/{}-{}.png'.format(path, form.identifier, gender)
 
-       if resource_exists('asb', alt_filename):
+       if pkg_resources.resource_exists('asb', alt_filename):
            filename = alt_filename
 %>\
 <div class="portrait">
@@ -126,13 +129,12 @@ ${pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier,
 
 <%def name="news_post(post=None, h1=False, preview=False, **post_info)">
 <%
-    from asb.markdown import md
-
     if post is not None:
         post_info.setdefault('title', post.title)
         post_info.setdefault('post_time', post.post_time)
         post_info.setdefault('poster', post.poster)
         post_info.setdefault('text', post.text)
+        post_info.setdefault('format', post.format)
 %>
 % if h1:
 <h1>${post_info['title']}</h1>
@@ -150,5 +152,5 @@ ${pokemon_form_sprite(pokemon.form, gender=pokemon.gender.identifier,
     % endif
 </p>
 
-${post_info['text'] | md.convert, n}
+${markup.markup(post_info['text'], post_info['format'])}
 </%def>

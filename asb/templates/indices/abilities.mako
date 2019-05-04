@@ -2,7 +2,7 @@
 <%namespace name="h" file="/helpers/helpers.mako"/>\
 <%block name='title'>Abilities - The Cave of Dragonflies ASB</%block>\
 
-<% from asb.markdown import md, chomp %>
+<%! from asb.markup.markdown import render as md %>
 
 <table class="standard-table effect-table">
 <col class="ability">
@@ -18,7 +18,7 @@
 % for ability in abilities:
 <tr>
     <td class="focus-column">${h.link(ability)}</td>
-    <td>${ability.summary | md.convert, chomp, n}</td>
+    <td>${ability.summary | md}</td>
 </tr>
 % endfor
 </tbody>
