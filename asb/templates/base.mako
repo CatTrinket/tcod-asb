@@ -102,8 +102,8 @@ Shiny Pokémon icon edits by
 Many thanks to
 <a href="http://forums.dragonflycave.com/member.php?u=527">Negrek</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=190">Eifie</a>,
-<a href="http://forums.dragonflycave.com/member.php?u=2243">Metallica Fanboy</a>,
-<a href="http://forums.dragonflycave.com/member.php?u=2844">pathos</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=2243">MF</a>,
+<a href="http://forums.dragonflycave.com/member.php?u=2844">shy</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=3374">The Omskivar</a>,
 <a href="http://forums.dragonflycave.com/member.php?u=3541">Totodile</a>, and
 <a href="http://forums.dragonflycave.com/member.php?u=95">ultraviolet</a>
