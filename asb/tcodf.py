@@ -15,8 +15,7 @@ def parse_tcodf_url(link):
         link = 'http://{}'.format(link)
         parsed_link = urllib.parse.urlparse(link)
 
-    if parsed_link.netloc not in ['forums.dragonflycave.com',
-      'tcodforums.eeveeshq.com']:
+    if parsed_link.netloc != 'forums.dragonflycave.com':
         raise ValueError('Not a TCoDf link')
 
     return parsed_link
