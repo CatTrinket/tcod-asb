@@ -112,38 +112,25 @@ code,
 
 /* Definition lists, with dt and dd on the same line */
 dl {
-    display: flex;
-    display: -ms-flexbox;
-    flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: max-content 1fr;
     align-items: baseline;
-    -ms-flex-align: baseline;
 }
 
 dt {
     width: 10rem;
-    padding: 0.5rem;
-    padding-right: 0;
-    font-weight: bold;
+    grid-column-start: 1;
     text-align: right;
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    font-weight: bold;
 }
 
-dt:after { content: ': '; }  /* n.b. that's a non-breaking space */
-
-dd + dd {
-    /* Indent further dds — dt width + left padding */
-    margin-left: 10.5rem;
-}
+dt:after { content: ':\A0'; }  /* \A0 is a non-breaking space */
 
 dd {
-    flex: 1 1 calc(100% - 11rem);
-    -ms-flex: 1 1 calc(100% - 11rem);
+    grid-column-start: 2;
     margin-left: 0;
-    padding: 0.5rem;
-    padding-left: 0;
-
-    /* Force a line wrap: 100% - (padding + dt width) */
-    min-width: calc(100% - 11rem);
+    padding: 0.5rem 0.5rem 0.5rem 0;
 }
 
 dd > *:first-child { margin-top: 0; }
@@ -598,15 +585,17 @@ p.news-timestamp { font-style: italic; }
 
 form#news-form dt { width: 5rem; }
 form#news-form dd { flex-basis: calc(100% - 6rem); min-width: calc(100% - 6rem); }
-form#news-form dd + dd { margin-left: 5.5rem; }
 
 /* Trainer page battle histories */
-dl.stats dt, dl.stats dd {
-    flex: none;
-    -ms-flex: none;
+dl.battle-stats { display: flex; }
+dl.battle-stats dt, dl.battle-stats dd {
     width: auto;
     min-width: 0;
-    padding-top: 0;
+    padding: 0;
+}
+dl.battle-stats dd + dt::before {
+    content: '•';
+    margin: 0 0.5rem;
 }
 
 /* Battle pages */

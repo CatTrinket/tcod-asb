@@ -92,7 +92,7 @@ ${t.pokemon_table(
 %>
 
 % if total_completed:
-<dl class="stats">
+<dl class="battle-stats">
     <dt>Wins</dt>
     <dd>${num_wins}</dd>
 
