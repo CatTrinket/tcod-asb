@@ -6,12 +6,6 @@
 
 <%! from asb.markup.markdown import render as md %>
 
-% if request.has_permission('trainer.edit'):
-    <p><a href="${request.resource_url(trainer, 'edit')}">
-        Edit ${trainer.name} →
-    </a></p>
-% endif
-
 % if request.has_permission('trainer.edit.profile'):
     <p><a href="${request.resource_url(trainer, 'profile')}">
         % if trainer == request.user:
@@ -19,6 +13,12 @@
         % else:
             Edit ${trainer.name}'s profile →
         % endif
+    </a></p>
+% endif
+
+% if request.has_permission('trainer.edit'):
+    <p><a href="${request.resource_url(trainer, 'edit')}">
+        Edit ${trainer.name} →
     </a></p>
 % endif
 
