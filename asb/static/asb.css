@@ -369,6 +369,32 @@ div.bbcode {
     white-space: pre-wrap;
 }
 
+div.markdown h1 {
+    all: unset;
+    display: block;
+    font-weight: bold;
+
+    font-size: 1.3rem;
+    border-bottom: 3px solid #D8D8D8;
+    margin: 0.5rem 0;
+}
+
+div.markdown h2 {
+    font-size: 1.25rem;
+    border-bottom: 2px solid #D8D8D8;
+    margin: 0.5rem 0;
+}
+
+div.markdown h3 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid #D8D8D8;
+    margin: 0.5rem 0;
+}
+
+div.markdown h4 { font-size: 1.15rem; margin: 0.5rem 0; }
+div.markdown h5 { font-size: 1.1rem; margin: 0.5rem 0; }
+div.markdown h6 { font-size: 1.05rem; margin: 0.5rem 0; }
+
 div.bbcode ul,
 div.bbcode ol {
     margin: 0;
