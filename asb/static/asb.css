@@ -171,6 +171,7 @@ ul.option-list { list-style-type: none; padding-left: 1rem; }
     display: inline;
     vertical-align: baseline;
     width: 100%;
+    resize: vertical;
 }
 
 *.editor input.energy-field { width: 2ch; }
