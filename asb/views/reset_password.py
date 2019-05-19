@@ -15,7 +15,8 @@ import asb.forms
 
 
 email_template = """\
-You can reset your password at: http://asb.dragonflycave.com/reset-password/{0}
+You can reset your password at: \
+https://asb.dragonflycave.com/reset-password/{0}
 
 This link will work for one hour.  If you didn't request a password reset, \
 then someone else is probably just being a pest and you can safely ignore \
