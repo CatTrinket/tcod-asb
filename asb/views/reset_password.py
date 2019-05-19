@@ -44,7 +44,7 @@ class PasswordResetRequestForm(asb.forms.CSRFTokenForm):
         elif not trainer.email:
             # Make sure they have an email address set
             raise wtforms.validators.ValidationError(
-                'No email address for that username.  PM Zhorken to get '
+                'No email address for that username.  PM Trinket to get '
                 'things sorted out.'
             )
         else:
@@ -126,7 +126,7 @@ def reset_password_request_process(context, request):
     message['Subject'] = 'TCoD ASBdb password reset'
     message['From'] = ('The Cave of Dragonflies ASB Database '
                        '<tcod-asb@catseyemarble.com>')
-    message['Reply-To'] = 'Zhorken <zhorken@catseyemarble.com>'
+    message['Reply-To'] = 'Trinket <trinket@catseyemarble.com>'
     message['To'] = '{0} <{1}>'.format(trainer.name, trainer.email)
 
     with smtplib.SMTP('localhost') as smtp:

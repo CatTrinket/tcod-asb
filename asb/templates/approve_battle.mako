@@ -78,7 +78,7 @@ ${form.csrf_token}
 ${form.action(class_='option-list')}
 
 <p>If the battle is indeed over but there's a mistake above, you can either
-reopen the battle and tell the ref to close it again, or get Zhorken to fix it.
+reopen the battle and tell the ref to close it again, or get Trinket to fix it.
 There's still no actual interface for fixing things, unfortunately.</p>
 
 ${form.submit}
