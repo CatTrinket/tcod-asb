@@ -1,4 +1,5 @@
 import datetime
+import email.headerregistry
 import email.mime.text
 import random
 import smtplib
@@ -127,7 +128,8 @@ def reset_password_request_process(context, request):
     message['From'] = ('The Cave of Dragonflies ASB Database '
                        '<tcod-asb@catseyemarble.com>')
     message['Reply-To'] = 'Trinket <trinket@catseyemarble.com>'
-    message['To'] = '{0} <{1}>'.format(trainer.name, trainer.email)
+    message['To'] = str(email.headerregistry.Address(
+        trainer.name, addr_spec=trainer.email))
 
     with smtplib.SMTP('localhost') as smtp:
         smtp.sendmail('tcod-asb@catseyemarble.com', [trainer.email],
