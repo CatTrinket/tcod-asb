@@ -14,7 +14,6 @@ def pokemon_index(context, request):
         db.DBSession.query(db.Pokemon)
         .filter(db.Pokemon.is_active())
         .join(db.PokemonForm, db.PokemonSpecies)
-        .order_by(db.PokemonSpecies.order, db.Pokemon.name)
         .options(
             sqla.orm.joinedload('gender'),
             sqla.orm.joinedload('trainer'),
@@ -23,10 +22,20 @@ def pokemon_index(context, request):
             sqla.orm.joinedload('ability'),
             sqla.orm.joinedload('item')
         )
-        .all()
     )
 
-    return {'pokemon': pokemon}
+    show_all = request.GET.get('show-all')
+
+    if show_all:
+        pokemon = pokemon.order_by(
+            db.PokemonSpecies.order, db.PokemonSpecies.name
+        ).all()
+        count = len(pokemon)
+    else:
+        pokemon = pokemon.order_by(db.Pokemon.id.desc()).limit(100).all()
+        count = db.DBSession.query(db.Pokemon).count()
+
+    return {'pokemon': pokemon, 'count': count, 'show_all': show_all}
 
 @view_config(context=db.Pokemon, renderer='/pokemon.mako')
 def pokemon(pokemon, request):
