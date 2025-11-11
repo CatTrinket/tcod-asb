@@ -81,7 +81,7 @@ ${h.gender_symbol(pokemon.gender)}
         % endif
     </dd>
 
-    <dt>Birthday</dt>
+    <dt>Met date</dt>
     <dd>${pokemon.birthday.strftime('%Y %B %d')}</dd>
 </dl>
 </div>
