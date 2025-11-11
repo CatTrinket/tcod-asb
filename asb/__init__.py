@@ -50,6 +50,8 @@ def main(global_config, **settings):
     config.add_route('bank.approve', '/bank/approve')
     config.add_route('bank.history', '/bank/history')
 
+    config.add_route('news.feed', '/news/feed.xml')
+
     # A route to redirect away trailing slashes instead of just 404ing
     config.add_route('slash_redirect', '/{path:.+}/')
 

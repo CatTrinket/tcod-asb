@@ -2,6 +2,7 @@ import datetime
 
 import pyramid.httpexceptions as httpexc
 from pyramid.view import view_config
+import sqlalchemy.orm
 import wtforms
 
 from asb import db
@@ -33,6 +34,7 @@ def news_index(context, request):
     return {
         'news':
             db.DBSession.query(db.NewsPost)
+            .options(sqlalchemy.orm.joinedload('poster'))
             .order_by(db.NewsPost.post_time.desc())
             .all()
     }
@@ -42,6 +44,13 @@ def news(news_post, request):
     """A single news post."""
 
     return {'post': news_post}
+
+@view_config(route_name='news.feed', renderer='/news_feed.mako')
+def news_feed(context, request):
+    """The news Atom feed."""
+
+    request.response.headers['Content-Type'] = 'application/atom+xml'
+    return news_index(context, request)
 
 @view_config(context=NewsIndex, name='post', renderer='/news_post.mako',
   request_method='GET', permission='news.post')

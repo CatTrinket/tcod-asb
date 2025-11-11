@@ -28,6 +28,7 @@ ${bulletin_list(mod_stuff)}
 
 <h1 id="news">News</h1>
 <p><a href="/news">All news →</a></p>
+<p><a href="/news/feed.xml">Atom feed →</a></p>
 % if request.has_permission('news.post'):
 <p><a href="/news/post">Post news →</a></p>
 % endif
