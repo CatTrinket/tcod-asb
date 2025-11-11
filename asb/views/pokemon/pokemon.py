@@ -28,7 +28,7 @@ def pokemon_index(context, request):
 
     if show_all:
         pokemon = pokemon.order_by(
-            db.PokemonSpecies.order, db.PokemonSpecies.name
+            db.PokemonSpecies.order, db.Pokemon.name, db.Pokemon.id
         ).all()
         count = len(pokemon)
     else:
