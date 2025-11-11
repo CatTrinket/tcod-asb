@@ -6,7 +6,6 @@ import setuptools
 requires = [
     'alembic==1.0.9',
     'bbcode==1.0.33',
-    'beautifulsoup4==4.5.1',
     'bleach==6.1.0',
     'Markdown==2.4.1',
     'pbkdf2==1.3',

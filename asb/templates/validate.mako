@@ -9,8 +9,9 @@ you'll have to link your ASB and forum profiles back and forth.</p>
 
 <hr>
 
-<p>First, paste this link to your ASB profile into the "ASB profile" field on
-your forum profile (User CP → Edit Your Details → ASB profile link):</p>
+<p>First, paste this link into the "ASB profile link" field on your forum
+profile (<a href="https://forums.dragonflycave.com/account/account-details">\
+Account details</a> → ASB profile link):</p>
 
 <p><code>
     ${request.resource_url(request.user.__parent__, request.user.__name__)}
