@@ -33,7 +33,11 @@ def pokemon_index(context, request):
         count = len(pokemon)
     else:
         pokemon = pokemon.order_by(db.Pokemon.id.desc()).limit(100).all()
-        count = db.DBSession.query(db.Pokemon).count()
+        count = (
+            db.DBSession.query(db.Pokemon)
+            .filter(db.Pokemon.is_active())
+            .count()
+        )
 
     return {'pokemon': pokemon, 'count': count, 'show_all': show_all}
 
