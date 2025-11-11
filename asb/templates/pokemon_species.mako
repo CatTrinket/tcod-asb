@@ -167,5 +167,7 @@ ${t.move_table(pokemon.moves)}
 
 % if census:
 <h1 id="census">${pokemon.name} in the league</h1>
-${t.pokemon_table(census, skip_cols=['species'])}
+${t.pokemon_table(census, skip_cols=['species'], extra_right_cols=[{
+    'col': t.birthday_col, 'th': t.birthday_header, 'td': t.birthday_cell
+}])}
 % endif

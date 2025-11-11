@@ -64,6 +64,13 @@
 % endif
 </%def>
 
+# Birthday
+<%def name="birthday_col()"><col class="date-full"></%def>
+<%def name="birthday_header()"><th>Birthday</th></%def>
+<%def name="birthday_cell(pokemon)">
+    <td>${pokemon.birthday.strftime('%Y %B %d')}</td>
+</%def>
+
 # KOs
 <%def name="ko_col()"><col class="stat"></%def>
 <%def name="ko_header()"><th>KOs</th></%def>

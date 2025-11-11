@@ -49,8 +49,11 @@ following reason: ${trainer.ban.reason}</strong></p>
 ${t.pokemon_table(
     trainer.squad, trainer.pc,
     subheaders=['Active squad', 'PC'],
-    subheader_colspan=9,
-    skip_cols=['trainer']
+    subheader_colspan=10,
+    skip_cols=['trainer'],
+    extra_right_cols=[{
+        'col': t.birthday_col, 'th': t.birthday_header, 'td': t.birthday_cell
+    }]
 )}
 
 % if trainer.bag:

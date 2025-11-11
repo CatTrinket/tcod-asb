@@ -12,4 +12,6 @@
     <p><a href="/pokemon?show-all=true">Show all ${count} Pokémon →</a></p>
 % endif
 
-${t.pokemon_table(pokemon)}
+${t.pokemon_table(pokemon, extra_right_cols=[{
+    'col': t.birthday_col, 'th': t.birthday_header, 'td': t.birthday_cell
+}])}

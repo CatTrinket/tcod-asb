@@ -80,6 +80,9 @@ ${h.gender_symbol(pokemon.gender)}
         )}</span>
         % endif
     </dd>
+
+    <dt>Birthday</dt>
+    <dd>${pokemon.birthday.strftime('%Y %B %d')}</dd>
 </dl>
 </div>
 
